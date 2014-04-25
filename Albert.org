@@ -1,19 +1,58 @@
 
 * Configuration
-** Personal information
-#+begin_src emacs-lisp
-  (setq user-full-name "Albert Zhou"
-        user-mail-address "georgealbert@qq.com")
-#+end_src
-   
 ** Emacs initialization
+
 用 *~/.emacs.d/init.el* 的话，需要把 *~/.emacs* 删掉。
    
 用init.el的好处是可以方便的注释，v5 87啊。
 
+学习了http://sachachua.com ，才知道可以这样玩，以前一直用.emacs，最大的坏处就是不方便漂亮的写注释，现在改用org-babel来搞配置。这个加拿大的mm确实是厉害。
+
 *** Common setting
 **** convenient setting
 [2014-04-25 星期五 12:51]
+
+#+begin_src emacs-lisp
+;; 不要 tool-bar 和 scroll-bar。
+(tool-bar-mode -1)
+
+;;防止页面滚动时跳动
+(setq scroll-margin 3
+      scroll-conservatively 10000)
+
+;(setq frame-title-format "emacs@%b")
+(setq frame-title-format "emacs@%f")
+
+;; 关闭起动时的那个“开机画面”
+(setq inhibit-startup-message t)
+
+;;'y' for 'yes', 'n' for 'no'
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; 禁用启动信息
+(setq inhibit-startup-message t)
+
+;; 关闭烦人的出错时的提示声
+(setq visible-bell t)
+
+;; 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
+(mouse-avoidance-mode 'animate)
+
+;;高亮显示匹配的括号。
+(show-paren-mode 1)
+
+(auto-image-file-mode)
+
+(global-font-lock-mode t)
+
+;(require 'ido)
+;(ido-mode t)
+
+;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字，不用原来的
+;; foobar<?> 形式。
+(setq uniquify-buffer-name-style 'forward)
+#+end_src
+
 **** ibuffer
 把 *c-x c-b* 那个普通的buffer menu换成非常方便的ibuffer
 #+begin_src emacs-lisp
@@ -31,43 +70,17 @@
 ))
 #+end_src
      
-**** Performance tunning
-#+begin_src emacs-lisp
-;; 中文文件名和目录乱码，为什么win7就ok呢？
-(setq file-name-coding-system 'gbk)
-#+end_src
+**** File
+[2014-04-25 星期五 12:58]
+
+所有的备份文件转移到 *~/backup* 目录下。
+
+Emacs 中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完
+全去掉(并不可取)，也可以制定备份的方式。这里采用的是，把所有的文件备
+份都放在一个固定的地方("~/var/tmp")。对于每个备份文件，保留最原始的
+两个版本和最新的五个版本。并且备份的时候，备份文件是复本，而不是原件。
 
 #+begin_src emacs-lisp
-
-;; 中文文件名和目录乱码，为什么win7就ok呢？
-(setq file-name-coding-system 'gbk)
-
-;; 不要 tool-bar 和 scroll-bar。
-(tool-bar-mode -1)
-
-;;; 关闭起动时的那个“开机画面”
-(setq inhibit-startup-message t)
-
-(auto-image-file-mode)
-
-;(setq frame-title-format "emacs@%b")
-(setq frame-title-format "emacs@%f")
-
-(global-font-lock-mode t)
-
-;(require 'ido)
-;(ido-mode t)
-
-;; 禁用启动信息
-(setq inhibit-startup-message t)
-
-;; 关闭烦人的出错时的提示声
-(setq visible-bell t)
-
-;; 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
-(mouse-avoidance-mode 'animate)
-
-;; 所有的备份文件转移到~/backup目录下
 (setq backup-directory-alist (quote (("." . "~/backup"))))
 (setq version-control t)
 (setq kept-old-versions 2)
@@ -75,18 +88,51 @@
 (setq delete-old-versions t)
 (setq backup-directory-alist '(("." . "~/backup")))
 (setq backup-by-copying t)
-;; Emacs 中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完
-;; 全去掉(并不可取)，也可以制定备份的方式。这里采用的是，把所有的文件备
-;; 份都放在一个固定的地方("~/var/tmp")。对于每个备份文件，保留最原始的
-;; 两个版本和最新的五个版本。并且备份的时候，备份文件是复本，而不是原件。
 
 ;; 不产生备份文件
 (setq make-backup-files nil)
+#+end_src
 
-;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字，不用原来的
-;; foobar<?> 形式。
-(setq uniquify-buffer-name-style 'forward)
+设置默认工作目录到HOME目录，不设置的话是到emacs的安装目录/bin。
 
+#+begin_src emacs-lisp
+(setq default-directory "~/")
+#+end_src
+
+**** 文件名和目录乱码
+[2014-04-25 星期五 13:00]
+
+emacs 24中文文件名和目录乱码在xp下是乱码，为什么win7就ok呢？
+
+#+begin_src emacs-lisp
+(setq file-name-coding-system 'gbk)
+#+end_src
+
+**** Performance tunning
+
+去掉对文件属性的操作在win7下有效改善坑爹的启动慢、随机出现的各种慢，卡顿，保存文件慢的情况。不能彻底解决，但是大有改善，不过org-mode打开按F12 t时还是慢的一塌糊涂。
+
+winxp下用不用都很快。
+
+#+begin_src emacs-lisp
+;; speed up file ops on windows system to avoid random slow down of emacs
+(setq w32-get-true-file-attributes nil)
+#+end_src
+
+**** color theme
+
+emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deeper-blue/ 效果不错，很漂亮，是默认自带的里面我最喜欢的。
+
+#+begin_src emacs-lisp
+(load-theme 'deeper-blue)
+#+end_src
+
+**** status bar
+[2014-04-25 星期五 13:06]
+
+居然还可以显示系统的load，但是windows的load和linux的意义一样吗？
+
+#+begin_src emacs-lisp
 ;; 显示日期
 (setq display-time-day-and-date t)
 (display-time)
@@ -96,17 +142,14 @@
 (setq display-time-day-and-date t)
 (setq display-time-use-mail-icon t)
 (setq display-time-interval 10)
+#+end_src
 
+**** coding
+[2014-04-25 星期五 13:05]
 
-;;设置默认工作目录
-(setq default-directory "~/")
+其实没什么用，基本用不上。
 
-;;'y' for 'yes', 'n' for 'no'
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;;高亮显示匹配的括号。
-(show-paren-mode 1)
-
+#+begin_src emacs-lisp
 ;;把c语言风格设置为k&r风格
 (add-hook 'c-mode-hook
 '(lambda ()
@@ -116,37 +159,199 @@
 (add-hook 'c++-mode-hook
 '(lambda()
 (c-set-style "stroustrup")))
-
-;;防止页面滚动时跳动
-(setq scroll-margin 3
-      scroll-conservatively 10000)
-
 #+end_src
-**** color theme
-     emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。
+**** calendar
+[2014-04-25 星期五 13:59]
+
+***** 设置日历的一些颜色
 #+begin_src emacs-lisp
-(load-theme 'deeper-blue)
+;; 设置日历的一些颜色
+(setq calendar-load-hook
+'(lambda ()
+(set-face-foreground 'diary-face "skyblue")
+(set-face-background 'holiday-face "slate blue")
+(set-face-foreground 'holiday-face "white")))
+#+end_src
+
+***** 农历
+#+begin_src emacs-lisp
+;; 设置阴历显示，在 calendar 上用 pC 显示阴历
+(setq chinese-calendar-celestial-stem
+  ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+(setq chinese-calendar-terrestrial-branch
+  ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+#+end_src
+
+***** 节日
+
+#+begin_src emacs-lisp
+;; 设置 calendar 的显示
+(setq calendar-remove-frame-by-deleting t)
+;(setq calendar-week-start-day 1)  ; 设置星期一为每周的第一天
+(setq mark-diary-entries-in-calendar t)  ; 标记calendar上有diary的日期
+(setq mark-holidays-in-calendar nil)  ; 为了突出有diary的日期，calendar上不标记节日
+(setq view-calendar-holidays-initially nil) ; 打开calendar的时候不显示一堆节日
+
+;; 去掉不关心的节日，设定自己在意的节日，在 calendar 上用 h 显示节日
+(setq christian-holidays nil)
+(setq hebrew-holidays nil)
+(setq islamic-holidays nil)
+(setq solar-holidays nil)
+(setq general-holidays '((holiday-fixed 1 1 "元旦")
+                         (holiday-fixed 2 14 "情人节")
+                         (holiday-fixed 3 14 "白色情人节")
+                         (holiday-fixed 4 1 "愚人节")
+                         (holiday-fixed 5 1 "劳动节")
+                         (holiday-float 5 0 2 "母亲节")
+                         (holiday-fixed 6 1 "儿童节")
+                         (holiday-float 6 0 3 "父亲节")
+                         (holiday-fixed 7 1 "建党节")
+                         (holiday-fixed 8 1 "建军节")
+                         (holiday-fixed 9 10 "教师节")
+                         (holiday-fixed 10 1 "国庆节")
+                         (holiday-fixed 12 25 "圣诞节")))
+
+;;Calendar模式支持移动多种移动到特珠日期的方式
+;; g d     移动到一个特别的日期
+;;  o      使某个特殊的月分作为中间的月分
+;;  .      移动到当天的日期
+;; p d     显示某一天在一年中的位置，也显示本年度还有多少天。
+;; C-c C-l 刷新Calendar窗口
+
+;; Calendar支持生成LATEX代码。
+;; t m     按月生成日历
+;; t M     按月生成一个美化的日历
+;; t d     按当天日期生成一个当天日历
+;; t w 1   在一页上生成这个周的日历
+;; t w 2   在两页上生成这个周的日历
+;; t w 3   生成一个ISO-SYTLE风格的当前周日历
+;; t w 4   生成一个从周一开始的当前周日历
+;; t y     生成当前年的日历
+
+;;EMACS Calendar支持配置节日：
+;; h       显示当前的节日
+;; x       定义当天为某个节日
+;; u       取消当天已被定义的节日
+;; e       显示所有这前后共三个月的节日。
+;; M-x holiday  在另外的窗口的显示这前后三个月的节日。
+
+;; 另外，还有一些特殊的，有意思的命令：
+;; S       显示当天的日出日落时间(是大写的S)
+;; p C     显示农历可以使用
+;; g C     使用农历移动日期可以使用
+#+end_src
+
+***** Calendar模式支持各种方式来更改当前日期
+
+（这里的“前”是指还没有到来的那一天，“后”是指已经过去的日子）
+
+| command | 说明                 |
+| q       | 退出calendar模式   |
+| C-f     | 让当前日期向前一天     |
+| C-b     | 让当前日期向后一天     |
+| C-n     | 让当前日期向前一周     |
+| C-p     | 让当前日期向后一周     |
+| M-}     | 让当前日期向前一个月   |
+| M-{     | 让当前日期向后一个月   |
+| C-x ]   | 让当前日期向前一年     |
+| C-x [   | 让当前日期向后一年     |
+| C-a     | 移动到当前周的第一天   |
+| C-e     | 移动到当前周的最后一天 |
+| M-a     | 移动到当前月的第一天   |
+| M-e     | 多动到当前月的最后一天 |
+| M-<     | 移动到当前年的第一天   |
+| M->     | 移动到当前年的最后一天 |
+
+***** 日出日落时间
+
+设置所在地的经纬度和地名，calendar 可以根据这些信息告知你每天的日出
+和日落的时间。让emacs能计算日出日落的时间，在 calendar 上用 *S* 即可看
+到设置我所在地方的经纬度，calendar里有个功能是日月食的预测，和你的经
+纬度相联系的。
+
+
+***** diary
+[2014-04-25 星期五 14:02]
+
+当你创建了一个 /~/diary/ 文件，你就可以使用calendar去查看里面的内容。你
+可以查看当天的事件，相关命令如下 ：
+
+| command | 说明                                   |
+| d       | 显示被选中的日期的所有事件             |
+| s       | 显示所有事件，包括过期的，未到期的等等 |
+
+创建一个事件的样例：
+
+#+begin_example
+02/11/1989
+    Bill B. visits Princeton today
+    2pm Cognitive Studies Committee meeting
+    2:30-5:30 Liz at Lawrenceville
+    4:00pm Dentist appt
+    7:30pm Dinner at George's
+    8:00-10:00pm concert
+#+end_example
+
+创建事件的命令：
+
+| command | 说明                       |
+| i d     | 为当天日期添加一个事件       |
+| i w     | 为当天周创建一个周事件       |
+| i m     | 为当前月创建一个月事件       |
+| i y     | 为当前年创建一个年事件       |
+| i a     | 为当前日期创建一个周年纪念日 |
+| i c     | 创建一个循环的事件           |
+
+#+begin_src emacs-lisp
+;; default diary file.
+(setq diary-file "~/diary/diary")
+(add-hook 'diary-hook 'appt-make-list)
 #+end_src
 *** git
+
 git-emacs用着不错，最流行的那个在win7上总是报错，而且配置比git-emacs复杂一些，有时间再试试。
+
 #+begin_src emacs-lisp
 ;; git-emacs
 (add-to-list 'load-path "~/.emacs.d/git-emacs")
 (require 'git-emacs)
 #+end_src
+
 *** evil
+
 evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
+
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
 (evil-mode 1)
 #+end_src
     
-*** org-mode
-参考http://doc.norang.ca/org-mode.html
+** Personal information
 
+#+begin_src emacs-lisp
+  (setq user-full-name "Albert Zhou"
+        user-mail-address "georgealbert@qq.com")
+#+end_src
+   
+** org-mode
+
+org-mode的配置完全参考http://doc.norang.ca/org-mode.html
+
+*** Org-Mode文件规划
+[2014-04-25 星期五 13:15]
+
+这个是比较重要的，把工作和生活、学习的分开来比较好。要好好考虑。
+
+| Filename     | Description                |
+| newgtd.org   | 新的task                   |
+| personal.org | 自己的，现在都用newgtd.org |
+
+现在都在e:/workspace/org下，其实应该都丢到~/org下比较好。
+
+*** Org-Mode Setup
+[2014-04-25 星期五 13:39]
 #+BEGIN_SRC emacs-lisp
-
 ;; The following setting is different from the document so that you
 ;; can override the document path by setting your path in the variable
 ;; org-mode-user-lisp-path
@@ -156,13 +361,8 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp")))
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-(require 'org)
+;;(require 'org)
 ;;
-;; Standard key bindings
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-
 ;; The following setting is different from the document so that you
 ;; can override the document org-agenda-files by setting your
 ;; org-agenda-files in the variable org-user-agenda-files
@@ -171,7 +371,27 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
     (setq org-agenda-files org-user-agenda-files)
   (setq org-agenda-files (quote ("e:/workspace/org"
                                "~/org"))))
+#+END_SRC
 
+*** 快捷键
+[2014-04-25 星期五 13:14]
+
+Standard key bindings，奇怪的是默认是没有 *C-ca* 的键绑定的，害得我看了好久才知道，基本不用了，都用Fx快捷键了。
+#+begin_src emacs-lisp
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+#+end_src
+
+用得最多的是
++ F12 t
++ F12 a
+  
+其他的真的很少用。
+
+像F9 I这样的习惯用默认绑定 C-c C-x C-i
+
+#+BEGIN_SRC emacs-lisp
 ;; Custom Key Bindings
 (global-set-key (kbd "<f12>") 'org-agenda)
 ;(global-set-key (kbd "<f5>") 'bh/org-todo)
@@ -209,7 +429,9 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 (defun bh/hide-other ()
   (interactive)
   (save-excursion
@@ -236,7 +458,14 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
 (defun bh/switch-to-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
+#+END_SRC
 
+*** Todo keywords
+[2014-04-25 星期五 13:22]
+
+meeting和phone对我来说没用，只是留着。
+
+#+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
@@ -255,6 +484,11 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
 
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
+#+END_SRC
+**** *TODO* State Triggers
+[2014-04-25 星期五 13:48]
+
+#+BEGIN_SRC emacs-lisp
 (setq org-todo-state-tags-triggers
       (quote (("CANCELLED" ("CANCELLED" . t))
               ("WAITING" ("WAITING" . t))
@@ -264,6 +498,12 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
+#+END_SRC
+
+*** Adding New Tasks Quickly With Org Capture 
+[2014-04-25 星期五 13:24]
+
+#+BEGIN_SRC emacs-lisp
 (setq org-directory "~/org")
 (setq org-default-notes-file "~/org/refile.org")
 
@@ -297,7 +537,12 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
     (org-remove-empty-drawer-at (point))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+#+END_SRC
 
+*** Refiling Tasks
+[2014-04-25 星期五 13:55]
+
+#+BEGIN_SRC emacs-lisp
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                  (org-agenda-files :maxlevel . 9))))
@@ -2015,5 +2260,4 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-odd-levels-only nil)
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
-    
-    #+END_SRC
+#+END_SRC
