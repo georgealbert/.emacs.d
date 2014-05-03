@@ -6,7 +6,8 @@
    
 用init.el的好处是可以方便的注释，v5 87啊。
 
-学习了http://sachachua.com ，才知道可以这样玩，以前一直用.emacs，最大的坏处就是不方便漂亮的写注释，现在改用org-babel来搞配置。这个加拿大的mm确实是厉害。
+学习了http://sachachua.com ，才知道可以这样玩，以前一直用 *.emacs* 配置文件，最大的坏处就是不方便漂亮的写注释，现在改用org-babel来搞配置。
+这个加拿大的mm确实是厉害。
 
 *** Common setting
 **** convenient setting
@@ -54,7 +55,8 @@
 #+end_src
 
 **** ibuffer
-把 *c-x c-b* 那个普通的buffer menu换成非常方便的ibuffer
+
+把 *C-x C-b* 那个普通的buffer menu换成非常方便的 /ibuffer/ 。
 #+begin_src emacs-lisp
 (require 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -62,8 +64,10 @@
 (setq enable-recursive-minibuffers t)
 #+end_src
 
-**** F5 insert current time
+**** Press F5 to insert current time
+
 用vim就习惯用 *F5* 插入时间，继续保留，这样就和org-mode里面的F5冲突了，反正在org-mode里面F5我用得也不多。
+
 #+begin_src emacs-lisp
 (global-set-key [(f5)] '(lambda () (interactive)
 (insert (format-time-string "%Y/%m/%d %T"))
@@ -75,9 +79,9 @@
 
 所有的备份文件转移到 *~/backup* 目录下。
 
-Emacs 中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完
+Emacs中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完
 全去掉(并不可取)，也可以制定备份的方式。这里采用的是，把所有的文件备
-份都放在一个固定的地方("~/var/tmp")。对于每个备份文件，保留最原始的
+份都放在一个固定的地方( /~/var/tmp/ )。对于每个备份文件，保留最原始的
 两个版本和最新的五个版本。并且备份的时候，备份文件是复本，而不是原件。
 
 #+begin_src emacs-lisp
@@ -102,17 +106,26 @@ Emacs 中，改变文件时，默认都会产生备份文件(以 ~ 结尾的文件)。可以完
 **** 文件名和目录乱码
 [2014-04-25 星期五 13:00]
 
-emacs 24中文文件名和目录乱码在xp下是乱码，为什么win7就ok呢？
+emacs 24中文文件名和目录乱码在XP下是乱码，为什么win7就ok呢？
 
 #+begin_src emacs-lisp
 (setq file-name-coding-system 'gbk)
+
+(prefer-coding-system 'gbk)
+
+;;(setq default-buffer-file-coding-system 'utf-8-unix)
+(setq default-buffer-file-coding-system 'gbk)
 #+end_src
+
+#+results:
+: gbk
 
 **** Performance tunning
 
-去掉对文件属性的操作在win7下有效改善坑爹的启动慢、随机出现的各种慢，卡顿，保存文件慢的情况。不能彻底解决，但是大有改善，不过org-mode打开按F12 t时还是慢的一塌糊涂。
+去掉对文件属性的操作在win7下有效改善坑爹的启动慢、随机出现的各种慢，卡顿，保存文件慢的情况。不能彻底解决，但是大有改善，
+不过org-mode打开按F12 t时还是慢的一塌糊涂。
 
-winxp下用不用都很快。
+XP下用不用都很快。
 
 #+begin_src emacs-lisp
 ;; speed up file ops on windows system to avoid random slow down of emacs
@@ -150,12 +163,12 @@ emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deepe
 其实没什么用，基本用不上。
 
 #+begin_src emacs-lisp
-;;把c语言风格设置为k&r风格
+;; c语言风格设置为k&r风格
 (add-hook 'c-mode-hook
 '(lambda ()
 (c-set-style "k&r")))
 
-;;set c++ style as stroustrup style
+;; set c++ style as stroustrup style
 (add-hook 'c++-mode-hook
 '(lambda()
 (c-set-style "stroustrup")))
@@ -163,7 +176,7 @@ emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deepe
 **** calendar
 [2014-04-25 星期五 13:59]
 
-***** 设置日历的一些颜色
+***** 设置日历的颜色
 #+begin_src emacs-lisp
 ;; 设置日历的一些颜色
 (setq calendar-load-hook
@@ -211,37 +224,10 @@ emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deepe
                          (holiday-fixed 10 1 "国庆节")
                          (holiday-fixed 12 25 "圣诞节")))
 
-;;Calendar模式支持移动多种移动到特珠日期的方式
-;; g d     移动到一个特别的日期
-;;  o      使某个特殊的月分作为中间的月分
-;;  .      移动到当天的日期
-;; p d     显示某一天在一年中的位置，也显示本年度还有多少天。
-;; C-c C-l 刷新Calendar窗口
-
-;; Calendar支持生成LATEX代码。
-;; t m     按月生成日历
-;; t M     按月生成一个美化的日历
-;; t d     按当天日期生成一个当天日历
-;; t w 1   在一页上生成这个周的日历
-;; t w 2   在两页上生成这个周的日历
-;; t w 3   生成一个ISO-SYTLE风格的当前周日历
-;; t w 4   生成一个从周一开始的当前周日历
-;; t y     生成当前年的日历
-
-;;EMACS Calendar支持配置节日：
-;; h       显示当前的节日
-;; x       定义当天为某个节日
-;; u       取消当天已被定义的节日
-;; e       显示所有这前后共三个月的节日。
-;; M-x holiday  在另外的窗口的显示这前后三个月的节日。
-
-;; 另外，还有一些特殊的，有意思的命令：
-;; S       显示当天的日出日落时间(是大写的S)
-;; p C     显示农历可以使用
-;; g C     使用农历移动日期可以使用
 #+end_src
 
-***** Calendar模式支持各种方式来更改当前日期
+***** 命令
+Calendar模式支持各种方式来更改当前日期
 
 （这里的“前”是指还没有到来的那一天，“后”是指已经过去的日子）
 
@@ -262,13 +248,44 @@ emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deepe
 | M-<     | 移动到当前年的第一天   |
 | M->     | 移动到当前年的最后一天 |
 
+Calendar模式支持移动多种移动到特珠日期的方式
+| command | 说明                                             |
+| g d     | 移动到一个特别的日期                     |
+| o       | 使某个特殊的月分作为中间的月分                     |
+| .       | 移动到当天的日期                                   |
+| p d     | 显示某一天在一年中的位置，也显示本年度还有多少天。 |
+| C-c C-l | 刷新Calendar窗口                                   |
+
+ Calendar支持生成LaTeX代码。
+ t m     按月生成日历
+ t M     按月生成一个美化的日历
+ t d     按当天日期生成一个当天日历
+ t w 1   在一页上生成这个周的日历
+ t w 2   在两页上生成这个周的日历
+ t w 3   生成一个ISO-SYTLE风格的当前周日历
+ t w 4   生成一个从周一开始的当前周日历
+ t y     生成当前年的日历
+
+emacs Calendar支持配置节日：
+ h       显示当前的节日
+ x       定义当天为某个节日
+ u       取消当天已被定义的节日
+ e       显示所有这前后共三个月的节日。
+ M-x holiday  在另外的窗口的显示这前后三个月的节日。
+
+ 另外，还有一些特殊的，有意思的命令：
+
+| command | 说明                              |
+| S       | 显示当天的日出日落时间(是大写的S) |
+| p C     | 显示农历可以使用                  |
+| g C     | 使用农历移动日期可以使用          |
+
 ***** 日出日落时间
 
 设置所在地的经纬度和地名，calendar 可以根据这些信息告知你每天的日出
 和日落的时间。让emacs能计算日出日落的时间，在 calendar 上用 *S* 即可看
 到设置我所在地方的经纬度，calendar里有个功能是日月食的预测，和你的经
 纬度相联系的。
-
 
 ***** diary
 [2014-04-25 星期五 14:02]
@@ -319,7 +336,7 @@ git-emacs用着不错，最流行的那个在win7上总是报错，而且配置比git-emacs复杂一些，有
 
 *** evil
 
-evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
+evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *C-z* 就ok了。
 
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/evil")
@@ -334,7 +351,7 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *c-z* 就ok了。
         user-mail-address "georgealbert@qq.com")
 #+end_src
    
-** org-mode
+** Org-Mode
 
 org-mode的配置完全参考http://doc.norang.ca/org-mode.html
 
@@ -351,6 +368,7 @@ org-mode的配置完全参考http://doc.norang.ca/org-mode.html
 
 *** Org-Mode Setup
 [2014-04-25 星期五 13:39]
+
 #+BEGIN_SRC emacs-lisp
 ;; The following setting is different from the document so that you
 ;; can override the document path by setting your path in the variable
@@ -2199,7 +2217,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
 (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
 (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
-(add-hook 'message-mode-hook 'orgtbl-mode 'append)
+;;(add-hook 'message-mode-hook 'orgtbl-mode 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 (add-hook 'message-mode-hook
           '(lambda () (setq fill-column 72))
