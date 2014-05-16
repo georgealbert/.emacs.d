@@ -9,7 +9,39 @@
 学习了http://sachachua.com ，才知道可以这样玩，以前一直用 *.emacs* 配置文件，最大的坏处就是不方便漂亮的写注释，现在改用org-babel来搞配置。
 这个加拿大的mm确实是厉害。
 
+2014/05/03 23:07:42 突然发现github居然可以显示org mode的文件，这下方便了。 ^_^
+
 *** Common setting
+**** epla
+[2014-05-16 星期五 13:35]
+
+#+begin_src emacs-lisp
+(package-initialize)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+#+end_src
+
+Use =M-x package-refresh-contents= to reload the list of packages
+after adding these for the first time.
+
+**** smex
+[2014-05-16 星期五 13:41]
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elpa/smex-20140425.1314/")
+(require 'smex) ; Not needed if you use package.el
+(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+                  ; when Smex is auto-initialized on its first run.
+#+end_src
+
+Bind some keys:
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x. 不用这个和org-mode冲突
+;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+#+end_src
+
 **** convenient setting
 [2014-04-25 星期五 12:51]
 
@@ -46,8 +78,8 @@
 
 (global-font-lock-mode t)
 
-;(require 'ido)
-;(ido-mode t)
+(require 'ido)
+(ido-mode t)
 
 ;; 当有两个文件名相同的缓冲时，使用前缀的目录名做 buffer 名字，不用原来的
 ;; foobar<?> 形式。
@@ -324,9 +356,11 @@ emacs Calendar支持配置节日：
 (setq diary-file "~/diary/diary")
 (add-hook 'diary-hook 'appt-make-list)
 #+end_src
-*** git
+*** TODO git
 
-git-emacs用着不错，最流行的那个在win7上总是报错，而且配置比git-emacs复杂一些，有时间再试试。
+git-emacs用着不错，最流行的egg在win7上总是报错，而且配置比git-emacs复杂一些，有时间再试试。
+
+2014/05/03 23:08:39 magit commit时和git-emacs的编码不太一样，要找个时间看看代码是怎么写的。
 
 #+begin_src emacs-lisp
 ;; git-emacs
@@ -344,7 +378,7 @@ evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *C-z* 就ok了。
 (evil-mode 1)
 #+end_src
     
-** Personal information
+*** Personal information
 
 #+begin_src emacs-lisp
   (setq user-full-name "Albert Zhou"
