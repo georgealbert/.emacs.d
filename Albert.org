@@ -356,6 +356,26 @@ emacs Calendar支持配置节日：
 (setq diary-file "~/diary/diary")
 (add-hook 'diary-hook 'appt-make-list)
 #+end_src
+**** undo-tree
+[2014-05-21 星期三 12:28]
+
++ C-x u :: 进入 undo-tree-visualizer-mode 
++ p n :: 上下移动，在分支之前 b f 左右切换，
++ t :: 显示时间戳
++ q :: 选定需要的状态后，退出
+
+#+begin_src emacs-lisp
+(require 'undo-tree)
+(global-undo-tree-mode)
+#+end_src
+
+**** Text size
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+#+end_src
+
 *** TODO git
 
 git-emacs用着不错，最流行的egg在win7上总是报错，而且配置比git-emacs复杂一些，有时间再试试。
@@ -2252,13 +2272,15 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
 (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 ;;(add-hook 'message-mode-hook 'orgtbl-mode 'append)
-(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
+
+;;;(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
+
 (add-hook 'message-mode-hook
           '(lambda () (setq fill-column 72))
           'append)
 
 ;; flyspell mode for spell checking everywhere
-(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
+;;;(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 ;; Disable keys in org-mode
 ;;    C-c [ 
