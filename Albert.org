@@ -384,8 +384,9 @@ git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ
 
 #+begin_src emacs-lisp
 ;; git-emacs
-(add-to-list 'load-path "~/.emacs.d/git-emacs")
-(require 'git-emacs)
+;(add-to-list 'load-path "~/.emacs.d/git-emacs")
+;(require 'git-emacs)
+(require 'magit)
 #+end_src
 
 *** evil
@@ -393,7 +394,7 @@ git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ
 evilÏÖÔÚÃ»ÓÃÊ²Ã´ÌØ±ğµÄÅäÖÃ£¬Ö»Òª¼Ç×¡ÍË³öevil»Øemacs modeÓÃ *C-z* ¾ÍokÁË¡£
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/evil")
+(add-to-list 'load-path "~/.emacs.d/elpa/evil-20140803.930")
 (require 'evil)
 (evil-mode 1)
 #+end_src
@@ -441,7 +442,7 @@ org-modeµÄÅäÖÃÍêÈ«²Î¿¼http://doc.norang.ca/org-mode.html
 ;;
 (if (boundp 'org-user-agenda-files)
     (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote ("e:/workspace/org"
+  (setq org-agenda-files (quote (
                                "~/org"))))
 #+END_SRC
 
