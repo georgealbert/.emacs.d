@@ -4,9 +4,9 @@
 
 ÓÃ *~/.emacs.d/init.el* µÄ»°£¬ĞèÒª°Ñ *~/.emacs* É¾µô¡£
    
-ÓÃinit.elµÄºÃ´¦ÊÇ¿ÉÒÔ·½±ãµÄ×¢ÊÍ£¬v5 87°¡¡£
+ÓÃinit.elµÄºÃ´¦ÊÇ¿ÉÒÔ·½±ãµÄ×¢ÊÍ£¬v5 87°¡£¬¶¼Ğ´µ½Ò»ÆğÈ¥ÁË¡£
 
-Ñ§Ï°ÁËhttp://sachachua.com £¬²ÅÖªµÀ¿ÉÒÔÕâÑùÍæ£¬ÒÔÇ°Ò»Ö±ÓÃ *.emacs* ÅäÖÃÎÄ¼ş£¬×î´óµÄ»µ´¦¾ÍÊÇ²»·½±ãÆ¯ÁÁµÄĞ´×¢ÊÍ£¬ÏÖÔÚ¸ÄÓÃorg-babelÀ´¸ãÅäÖÃ¡£
+Ñ§Ï°ÁËhttp://sachachua.com £¬²ÅÖªµÀ¿ÉÒÔÕâÑùÍæ£¬ÒÔÇ°Ò»Ö±ÓÃ *.emacs* ÅäÖÃÎÄ¼ş£¬×î´óµÄ»µ´¦¾ÍÊÇ²»·½±ãÆ¯ÁÁµÄĞ´×¢ÊÍ£¬ÏÖÔÚ¸ÄÓÃorg-babelÀ´ÅäÖÃ¡£
 Õâ¸ö¼ÓÄÃ´óµÄmmÈ·ÊµÊÇÀ÷º¦¡£
 
 2014/05/03 23:07:42 Í»È»·¢ÏÖgithub¾ÓÈ»¿ÉÒÔÏÔÊ¾org modeµÄÎÄ¼ş£¬ÕâÏÂ·½±ãÁË¡£ ^_^
@@ -21,14 +21,15 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 #+end_src
 
-Use =M-x package-refresh-contents= to reload the list of packages
+Use =M-x= package-refresh-contents= to reload the list of packages
 after adding these for the first time.
 
 **** smex
 [2014-05-16 ĞÇÆÚÎå 13:41]
 
+ÔÙÒ²²»ÓÃ¼Ç×¡commandÁË£¬¿ì½İ¼üÒ²Ê¡ÁË²»ÉÙ£¬±¾À´Ò²¼Ç²»×¡¡£^_^
+
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/elpa/smex-20140425.1314/")
 (require 'smex) ; Not needed if you use package.el
 (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
                   ; when Smex is auto-initialized on its first run.
@@ -370,13 +371,22 @@ emacs CalendarÖ§³ÖÅäÖÃ½ÚÈÕ£º
 #+end_src
 
 **** Text size
-
+Õâ¸ö±Èvim·½±ã£¬ºÍchromeµÄ¿ì½İ¼üÒ»ÑùÁË¡£
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 #+end_src
 
-*** TODO git
+**** window-numbering
+[2014-09-11 ĞÇÆÚËÄ 22:57]
+
+#+begin_src emacs-lisp
+(require 'window-numbering)
+(window-numbering-mode 1)
+#+end_src
+
+*** DONE git
+CLOSED: [2014-09-11 ĞÇÆÚËÄ 23:03]
 
 git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ±¼äÔÙÊÔÊÔ¡£
 
@@ -384,16 +394,19 @@ git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ
 
 #+begin_src emacs-lisp
 ;; git-emacs
-(add-to-list 'load-path "~/.emacs.d/git-emacs")
-(require 'git-emacs)
+;;(add-to-list 'load-path "~/.emacs.d/git-emacs")
+;;(require 'git-emacs)
+
+(require 'magit)
 #+end_src
 
+*** TODO plantuml
+[2014-08-19 ĞÇÆÚ¶ş 22:11]
 *** evil
 
 evilÏÖÔÚÃ»ÓÃÊ²Ã´ÌØ±ğµÄÅäÖÃ£¬Ö»Òª¼Ç×¡ÍË³öevil»Øemacs modeÓÃ *C-z* ¾ÍokÁË¡£
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
 (evil-mode 1)
 #+end_src
@@ -401,8 +414,8 @@ evilÏÖÔÚÃ»ÓÃÊ²Ã´ÌØ±ğµÄÅäÖÃ£¬Ö»Òª¼Ç×¡ÍË³öevil»Øemacs modeÓÃ *C-z* ¾ÍokÁË¡£
 *** Personal information
 
 #+begin_src emacs-lisp
-  (setq user-full-name "Albert Zhou"
-        user-mail-address "georgealbert@qq.com")
+(setq user-full-name "Albert Zhou"
+    user-mail-address "georgealbert@qq.com")
 #+end_src
    
 ** Org-Mode
@@ -412,9 +425,10 @@ org-modeµÄÅäÖÃÍêÈ«²Î¿¼http://doc.norang.ca/org-mode.html
 *** Org-ModeÎÄ¼ş¹æ»®
 [2014-04-25 ĞÇÆÚÎå 13:15]
 
-Õâ¸öÊÇ±È½ÏÖØÒªµÄ£¬°Ñ¹¤×÷ºÍÉú»î¡¢Ñ§Ï°µÄ·Ö¿ªÀ´±È½ÏºÃ¡£ÒªºÃºÃ¿¼ÂÇ¡£
+ÎÄ¼şÃüÃûÊÇÖØÒªµÄ£¬°Ñ¹¤×÷ºÍÉú»î¡¢Ñ§Ï°µÄ·Ö¿ªÀ´±È½ÏºÃ¡£ÒªºÃºÃ¿¼ÂÇ¡£
 
 | Filename     | Description                |
+|--------------+----------------------------|
 | newgtd.org   | ĞÂµÄtask                   |
 | personal.org | ×Ô¼ºµÄ£¬ÏÖÔÚ¶¼ÓÃnewgtd.org |
 
@@ -458,6 +472,7 @@ Standard key bindings£¬Ææ¹ÖµÄÊÇÄ¬ÈÏÊÇÃ»ÓĞ *C-ca* µÄ¼ü°ó¶¨µÄ£¬º¦µÃÎÒ¿´ÁËºÃ¾Ã²ÅÖªµ
 ÓÃµÃ×î¶àµÄÊÇ
 + F12 t
 + F12 a
++ F11
   
 ÆäËûµÄÕæµÄºÜÉÙÓÃ¡£
 
@@ -557,6 +572,7 @@ meetingºÍphone¶ÔÎÒÀ´ËµÃ»ÓÃ£¬Ö»ÊÇÁô×Å¡£
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
 #+END_SRC
+
 **** *TODO* State Triggers
 [2014-04-25 ĞÇÆÚÎå 13:48]
 
