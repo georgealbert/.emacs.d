@@ -399,10 +399,6 @@ git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ
 2014/05/03 23:08:39 magit commitÊ±ºÍgit-emacsµÄ±àÂë²»Ì«Ò»Ñù£¬ÒªÕÒ¸öÊ±¼ä¿´¿´´úÂëÊÇÔõÃ´Ğ´µÄ¡£
 
 #+begin_src emacs-lisp
-;; git-emacs
-;;(add-to-list 'load-path "~/.emacs.d/git-emacs")
-;;(require 'git-emacs)
-
 (require 'magit)
 #+end_src
 
@@ -461,7 +457,7 @@ org-modeµÄÅäÖÃÍêÈ«²Î¿¼http://doc.norang.ca/org-mode.html
 ;;
 (if (boundp 'org-user-agenda-files)
     (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote ("e:/workspace/org"
+  (setq org-agenda-files (quote (
                                "~/org"))))
 #+END_SRC
 
