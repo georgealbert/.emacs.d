@@ -103,7 +103,7 @@ Bind some keys:
 
 #+begin_src emacs-lisp
 (global-set-key [(f5)] '(lambda () (interactive)
-(insert (format-time-string "%Y/%m/%d %T"))
+(insert (format-time-string "[%Y-%m-%d %T]"))
 ))
 #+end_src
      
@@ -144,10 +144,10 @@ emacs 24中文文件名和目录乱码在XP下是乱码，为什么win7就ok呢？
 #+begin_src emacs-lisp
 (setq file-name-coding-system 'gbk)
 
-(prefer-coding-system 'gbk)
+;(prefer-coding-system 'gbk)
 
 ;;(setq default-buffer-file-coding-system 'utf-8-unix)
-(setq default-buffer-file-coding-system 'gbk)
+;(setq default-buffer-file-coding-system 'gbk)
 #+end_src
 
 #+results:
@@ -385,6 +385,12 @@ emacs Calendar支持配置节日：
 (window-numbering-mode 1)
 #+end_src
 
+**** dired+
+[2014-09-12 星期五 21:01]
+
+#+begin_src emacs-lisp
+(require 'dired+)
+#+end_src
 *** DONE git
 CLOSED: [2014-09-11 星期四 23:03]
 
