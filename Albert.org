@@ -30,15 +30,15 @@ after adding these for the first time.
 再也不用记住command了，快捷键也省了不少，本来也记不住。^_^
 
 #+begin_src emacs-lisp
-(require 'smex) ; Not needed if you use package.el
-(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+;(require 'smex) ; Not needed if you use package.el
+;(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
                   ; when Smex is auto-initialized on its first run.
 #+end_src
 
 Bind some keys:
 #+begin_src emacs-lisp
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;(global-set-key (kbd "M-x") 'smex)
+;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x. 不用这个和org-mode冲突
 ;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+end_src
@@ -206,6 +206,7 @@ emacs 23以后就自带color theme了，所以能不用多余的就不用多余的。现在选择的 /deepe
 '(lambda()
 (c-set-style "stroustrup")))
 #+end_src
+
 **** calendar
 [2014-04-25 星期五 13:59]
 
@@ -264,8 +265,9 @@ Calendar模式支持各种方式来更改当前日期
 
 （这里的“前”是指还没有到来的那一天，“后”是指已经过去的日子）
 
-| command | 说明                 |
-| q       | 退出calendar模式   |
+| command | 说明                   |
+|---------+------------------------|
+| q       | 退出calendar模式       |
 | C-f     | 让当前日期向前一天     |
 | C-b     | 让当前日期向后一天     |
 | C-n     | 让当前日期向前一周     |
@@ -282,7 +284,8 @@ Calendar模式支持各种方式来更改当前日期
 | M->     | 移动到当前年的最后一天 |
 
 Calendar模式支持移动多种移动到特珠日期的方式
-| command | 说明                                             |
+| command | 说明                                               |
+|---------+----------------------------------------------------|
 | g d     | 移动到一个特别的日期                     |
 | o       | 使某个特殊的月分作为中间的月分                     |
 | .       | 移动到当天的日期                                   |
@@ -309,6 +312,7 @@ emacs Calendar支持配置节日：
  另外，还有一些特殊的，有意思的命令：
 
 | command | 说明                              |
+|---------+-----------------------------------|
 | S       | 显示当天的日出日落时间(是大写的S) |
 | p C     | 显示农历可以使用                  |
 | g C     | 使用农历移动日期可以使用          |
@@ -327,6 +331,7 @@ emacs Calendar支持配置节日：
 可以查看当天的事件，相关命令如下 ：
 
 | command | 说明                                   |
+|---------+----------------------------------------|
 | d       | 显示被选中的日期的所有事件             |
 | s       | 显示所有事件，包括过期的，未到期的等等 |
 
@@ -344,7 +349,8 @@ emacs Calendar支持配置节日：
 
 创建事件的命令：
 
-| command | 说明                       |
+| command | 说明                         |
+|---------+------------------------------|
 | i d     | 为当天日期添加一个事件       |
 | i w     | 为当天周创建一个周事件       |
 | i m     | 为当前月创建一个月事件       |
@@ -357,6 +363,7 @@ emacs Calendar支持配置节日：
 (setq diary-file "~/diary/diary")
 (add-hook 'diary-hook 'appt-make-list)
 #+end_src
+
 **** undo-tree
 [2014-05-21 星期三 12:28]
 
@@ -371,6 +378,7 @@ emacs Calendar支持配置节日：
 #+end_src
 
 **** Text size
+
 这个比vim方便，和chrome的快捷键一样了。
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-=") 'text-scale-increase)
@@ -391,19 +399,34 @@ emacs Calendar支持配置节日：
 #+begin_src emacs-lisp
 (require 'dired+)
 #+end_src
+
 *** DONE git
 CLOSED: [2014-09-11 星期四 23:03]
 
 git-emacs用着不错，最流行的egg在win7上总是报错，而且配置比git-emacs复杂一些，有时间再试试。
 
 2014/05/03 23:08:39 magit commit时和git-emacs的编码不太一样，要找个时间看看代码是怎么写的。
+[2014-09-17 23:08:25] 要用utf-8的编码才行。
 
 #+begin_src emacs-lisp
 (require 'magit)
 #+end_src
 
+*** helm
+[2014-09-16 星期二 21:36]
+
++ multi buffer search :: C-c h 打开helm mini buffer，在所有org-mode文件中 *org @string ，按C-s查询。
+
+#+begin_src emacs-lisp
+(require 'helm-config)
+(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(helm-mode 1)
+#+end_src
+
 *** TODO plantuml
 [2014-08-19 星期二 22:11]
+
 *** evil
 
 evil现在没用什么特别的配置，只要记住退出evil回emacs mode用 *C-z* 就ok了。
@@ -458,7 +481,7 @@ org-mode的配置完全参考http://doc.norang.ca/org-mode.html
 (if (boundp 'org-user-agenda-files)
     (setq org-agenda-files org-user-agenda-files)
   (setq org-agenda-files (quote (
-                               "~/org"))))
+                               "e:/workspace/org"))))
 #+END_SRC
 
 *** 快捷键
