@@ -1,520 +1,529 @@
 
-* Configuration
-** Emacs initialization
+* basic setting
+** elpa
+http://melpa.milkbox.net/packages/ ç»å¸¸æ€§çš„ä¸Šä¸å»ï¼Œè€ƒè™‘æ¢æºã€‚
 
-ÓÃ *~/.emacs.d/init.el* µÄ»°£¬ĞèÒª°Ñ *~/.emacs* É¾µô¡£
-   
-ÓÃinit.elµÄºÃ´¦ÊÇ¿ÉÒÔ·½±ãµÄ×¢ÊÍ£¬v5 87°¡£¬¶¼Ğ´µ½Ò»ÆğÈ¥ÁË¡£
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-Ñ§Ï°ÁËhttp://sachachua.com £¬²ÅÖªµÀ¿ÉÒÔÕâÑùÍæ£¬ÒÔÇ°Ò»Ö±ÓÃ *.emacs* ÅäÖÃÎÄ¼ş£¬×î´óµÄ»µ´¦¾ÍÊÇ²»·½±ãÆ¯ÁÁµÄĞ´×¢ÊÍ£¬ÏÖÔÚ¸ÄÓÃorg-babelÀ´ÅäÖÃ¡£
-Õâ¸ö¼ÓÄÃ´óµÄmmÈ·ÊµÊÇÀ÷º¦¡£
+(setq url-proxy-services
+   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+     ("http" . "134.80.3.27:8080")
+     ("https" . "134.80.3.27:8080")))
 
-2014/05/03 23:07:42 Í»È»·¢ÏÖgithub¾ÓÈ»¿ÉÒÔÏÔÊ¾org modeµÄÎÄ¼ş£¬ÕâÏÂ·½±ãÁË¡£ ^_^
-
-*** Common setting
-**** epla
-[2014-05-16 ĞÇÆÚÎå 13:35]
-
-#+begin_src emacs-lisp
 (package-initialize)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;(setq package-user-dir (concat dotfiles-dir "/elpa"))
 #+end_src
 
-Use =M-x= package-refresh-contents= to reload the list of packages
-after adding these for the first time.
+** HOME
+è®¾ç½®é»˜è®¤å·¥ä½œç›®å½•åˆ°HOMEç›®å½•ï¼Œä¸è®¾ç½®çš„è¯æ˜¯ /emacså®‰è£…ç›®å½•/bin/ ã€‚
 
-**** smex
-[2014-05-16 ĞÇÆÚÎå 13:41]
+#+BEGIN_SRC emacs-lisp
+(setq default-directory "c:/vim")
+#+END_SRC
 
-ÔÙÒ²²»ÓÃ¼Ç×¡commandÁË£¬¿ì½İ¼üÒ²Ê¡ÁË²»ÉÙ£¬±¾À´Ò²¼Ç²»×¡¡£^_^
+** UTF-8
+[2014-09-17 14:59:51]
 
-#+begin_src emacs-lisp
-;(require 'smex) ; Not needed if you use package.el
-;(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
-                  ; when Smex is auto-initialized on its first run.
-#+end_src
-
-Bind some keys:
-#+begin_src emacs-lisp
-;(global-set-key (kbd "M-x") 'smex)
-;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x. ²»ÓÃÕâ¸öºÍorg-mode³åÍ»
-;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-#+end_src
-
-**** convenient setting
-[2014-04-25 ĞÇÆÚÎå 12:51]
-
-#+begin_src emacs-lisp
-;; ²»Òª tool-bar ºÍ scroll-bar¡£
-(tool-bar-mode -1)
-
-;;·ÀÖ¹Ò³Ãæ¹ö¶¯Ê±Ìø¶¯
-(setq scroll-margin 3
-      scroll-conservatively 10000)
-
-;(setq frame-title-format "emacs@%b")
-(setq frame-title-format "emacs@%f")
-
-;; ¹Ø±ÕÆğ¶¯Ê±µÄÄÇ¸ö¡°¿ª»ú»­Ãæ¡±
-(setq inhibit-startup-message t)
-
-;;'y' for 'yes', 'n' for 'no'
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; ½ûÓÃÆô¶¯ĞÅÏ¢
-(setq inhibit-startup-message t)
-
-;; ¹Ø±Õ·³ÈËµÄ³ö´íÊ±µÄÌáÊ¾Éù
-(setq visible-bell t)
-
-;; ¹â±ê¿¿½üÊó±êµÄÊ±ºò£¬ÈÃÊó±ê×Ô¶¯ÈÃ¿ª£¬±ğµ²×¡ÊÓÏß
-(mouse-avoidance-mode 'animate)
-
-;;¸ßÁÁÏÔÊ¾Æ¥ÅäµÄÀ¨ºÅ¡£
-(show-paren-mode 1)
-
-(auto-image-file-mode)
-
-(global-font-lock-mode t)
-
-(require 'ido)
-(ido-mode t)
-
-;; µ±ÓĞÁ½¸öÎÄ¼şÃûÏàÍ¬µÄ»º³åÊ±£¬Ê¹ÓÃÇ°×ºµÄÄ¿Â¼Ãû×ö buffer Ãû×Ö£¬²»ÓÃÔ­À´µÄ
-;; foobar<?> ĞÎÊ½¡£
-(setq uniquify-buffer-name-style 'forward)
-#+end_src
-
-**** ibuffer
-
-°Ñ *C-x C-b* ÄÇ¸öÆÕÍ¨µÄbuffer menu»»³É·Ç³£·½±ãµÄ /ibuffer/ ¡£
-#+begin_src emacs-lisp
-(require 'ibuffer)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-
-(setq enable-recursive-minibuffers t)
-#+end_src
-
-**** Press F5 to insert current time
-
-ÓÃvim¾ÍÏ°¹ßÓÃ *F5* ²åÈëÊ±¼ä£¬¼ÌĞø±£Áô£¬ÕâÑù¾ÍºÍorg-modeÀïÃæµÄF5³åÍ»ÁË£¬·´ÕıÔÚorg-modeÀïÃæF5ÎÒÓÃµÃÒ²²»¶à¡£
-
-#+begin_src emacs-lisp
-(global-set-key [(f5)] '(lambda () (interactive)
-(insert (format-time-string "[%Y-%m-%d %T]"))
-))
-#+end_src
-     
-**** File
-[2014-04-25 ĞÇÆÚÎå 12:58]
-
-ËùÓĞµÄ±¸·İÎÄ¼ş×ªÒÆµ½ *~/backup* Ä¿Â¼ÏÂ¡£
-
-EmacsÖĞ£¬¸Ä±äÎÄ¼şÊ±£¬Ä¬ÈÏ¶¼»á²úÉú±¸·İÎÄ¼ş(ÒÔ ~ ½áÎ²µÄÎÄ¼ş)¡£¿ÉÒÔÍê
-È«È¥µô(²¢²»¿ÉÈ¡)£¬Ò²¿ÉÒÔÖÆ¶¨±¸·İµÄ·½Ê½¡£ÕâÀï²ÉÓÃµÄÊÇ£¬°ÑËùÓĞµÄÎÄ¼ş±¸
-·İ¶¼·ÅÔÚÒ»¸ö¹Ì¶¨µÄµØ·½( /~/var/tmp/ )¡£¶ÔÓÚÃ¿¸ö±¸·İÎÄ¼ş£¬±£Áô×îÔ­Ê¼µÄ
-Á½¸ö°æ±¾ºÍ×îĞÂµÄÎå¸ö°æ±¾¡£²¢ÇÒ±¸·İµÄÊ±ºò£¬±¸·İÎÄ¼şÊÇ¸´±¾£¬¶ø²»ÊÇÔ­¼ş¡£
-
-#+begin_src emacs-lisp
-(setq backup-directory-alist (quote (("." . "~/backup"))))
-(setq version-control t)
-(setq kept-old-versions 2)
-(setq kept-new-versions 5)
-(setq delete-old-versions t)
-(setq backup-directory-alist '(("." . "~/backup")))
-(setq backup-by-copying t)
-
-;; ²»²úÉú±¸·İÎÄ¼ş
-(setq make-backup-files nil)
-#+end_src
-
-ÉèÖÃÄ¬ÈÏ¹¤×÷Ä¿Â¼µ½HOMEÄ¿Â¼£¬²»ÉèÖÃµÄ»°ÊÇµ½emacsµÄ°²×°Ä¿Â¼/bin¡£
-
-#+begin_src emacs-lisp
-(setq default-directory "~/")
-#+end_src
-
-**** ÎÄ¼şÃûºÍÄ¿Â¼ÂÒÂë
-[2014-04-25 ĞÇÆÚÎå 13:00]
-
-emacs 24ÖĞÎÄÎÄ¼şÃûºÍÄ¿Â¼ÂÒÂëÔÚXPÏÂÊÇÂÒÂë£¬ÎªÊ²Ã´win7¾ÍokÄØ£¿
-
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
+(prefer-coding-system 'utf-8)
 (setq file-name-coding-system 'gbk)
+#+END_SRC
 
-;(prefer-coding-system 'gbk)
 
-;;(setq default-buffer-file-coding-system 'utf-8-unix)
-;(setq default-buffer-file-coding-system 'gbk)
-#+end_src
-
-#+results:
-: gbk
-
-**** Performance tunning
-
-È¥µô¶ÔÎÄ¼şÊôĞÔµÄ²Ù×÷ÔÚwin7ÏÂÓĞĞ§¸ÄÉÆ¿ÓµùµÄÆô¶¯Âı¡¢Ëæ»ú³öÏÖµÄ¸÷ÖÖÂı£¬¿¨¶Ù£¬±£´æÎÄ¼şÂıµÄÇé¿ö¡£²»ÄÜ³¹µ×½â¾ö£¬µ«ÊÇ´óÓĞ¸ÄÉÆ£¬
-²»¹ıorg-mode´ò¿ª°´F12 tÊ±»¹ÊÇÂıµÄÒ»ËúºıÍ¿¡£
-
-XPÏÂÓÃ²»ÓÃ¶¼ºÜ¿ì¡£
+** å»æ‰å¯åŠ¨æ¬¢è¿ç•Œé¢
 
 #+begin_src emacs-lisp
-;; speed up file ops on windows system to avoid random slow down of emacs
+(setq inhibit-startup-message t) 
+#+end_src
+
+** ä¸è¦æ€»æ˜¯æ²¡å®Œæ²¡äº†çš„é—®yes or no
+
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+** ä¸æ˜¾ç¤ºå·¥å…·æ 
+
+#+begin_src emacs-lisp
+(tool-bar-mode -1)
+#+end_src
+
+** å…‰æ ‡é è¿‘é¼ æ ‡çš„æ—¶å€™ï¼Œè®©é¼ æ ‡è‡ªåŠ¨è®©å¼€ï¼Œåˆ«æŒ¡ä½è§†çº¿
+
+#+begin_src emacs-lisp
+(mouse-avoidance-mode 'animate)
+#+end_src
+
+** åæ˜¾é€‰ä¸­åŒºåŸŸ
+
+è²Œä¼¼æ²¡ç”¨ã€‚
+#+begin_src emacs-lisp
+;(transient-mark-mode t) 
+#+end_src
+
+** Frame title
+
+#+begin_src emacs-lisp
+;;(setq frame-title-format "Albert@%b")
+(setq frame-title-format "Albert@%f")
+#+end_src
+
+** minibuffer
+[2014-09-12 09:24:17]
+
+It often displays so much information, even temporarily, that it is nice to give it some room to breath.
+
+#+BEGIN_SRC emacs-lisp
+(setq resize-mini-windows t)
+(setq max-mini-window-height 0.33)
+#+END_SRC
+
+** Backups
+[2014-09-12 09:32:53]
+
+This is one of the things people usually want to change right away. By default, 
+Emacs saves backup files in the current directory. These are the files ending in ~ that are cluttering up your directory lists. 
+The following code stashes them all in ~/.emacs.d/backups, where I can find them with C-x C-f (find-file) if I really need to.
+
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
+
+;; è‡ªåŠ¨å­˜ç›˜
+(setq auto-save-mode t) 
+#+END_SRC
+
+Disk space is cheap. Save lots.
+
+#+BEGIN_SRC emacs-lisp
+(setq delete-old-versions -1)
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+#+END_SRC
+
+** Font setting on win7
+
+#+BEGIN_SRC emacs-lisp
+(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+(setq face-font-rescale-alist '(("å¾®è½¯é›…é»‘" . 1.2) ("Microsoft Yahei" . 1.2)))
+#+END_SRC
+
+** ido
+
+#+BEGIN_SRC emacs-lisp
+;(require 'ido)
+#+END_SRC
+
+** Color theme
+
+emacs24è‡ªå¸¦çš„æœ€å–œæ¬¢çš„themeã€‚
+
+#+BEGIN_SRC emacs-lisp
+(load-theme 'deeper-blue t)
+#+END_SRC
+
+** Diredplus
+
+[2014-09-11 10:47:57] æ˜¨å¤©åˆšå¼€å§‹ç”¨çš„ï¼Œäº”é¢œå…­è‰²çš„æ¯”è¾ƒå¥½çœ‹ã€‚
+
+#+BEGIN_SRC emacs-lisp
+(require 'dired+)
+#+END_SRC
+
+** å¤šè¡Œä»£ç çš„æ³¨é‡Š/åæ³¨é‡Š
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+
+(defun my-comment-or-uncomment-region (beg end &optional arg)  
+  (interactive (if (use-region-p)  
+                   (list (region-beginning) (region-end) nil)  
+                 (list (line-beginning-position)  
+                       (line-beginning-position 2))))  
+  (comment-or-uncomment-region beg end arg)  
+)  
+(global-set-key [remap comment-or-uncomment-region] 'my-comment-or-uncomment-region)  
+#+END_SRC
+
+** ibuffer
+
+ä½¿ç”¨emacsæ—¶ç»å¸¸éœ€è¦ç®¡ç†å¤šä¸ªbufferï¼Œ /C-x C-b/ çš„é»˜è®¤ç•Œé¢å¤ªè¿‡ç®€é™‹ã€‚emacsäº‹å®ä¸Šå·²ç»æä¾›äº†æ›´å¥½çš„bufferç®¡ç†ç•Œé¢ibufferï¼Œåœ¨é…ç½®æ–‡ä»¶ä¸­é€‰ç”¨å³å¯ã€‚
+å¯ç”¨ibufferæ”¯æŒï¼Œå¢å¼º *buffer*  
+#+BEGIN_SRC emacs-lisp
+(require 'ibuffer)  
+(global-set-key (kbd "C-x C-b") 'ibuffer)  
+#+END_SRC
+
+** Performace problem
+
+[2014-09-12 09:34:00] å°±ç®—è¿™æ ·æœ‰æ—¶å€™ä¼šå¾ˆå¡ï¼Œxpä¸‹å°±å¥½å¤šäº†ï¼Œæ€€ç–‘å’Œwin7/åŸŸç”¨æˆ·æœ‰å…³ã€‚å¦‚æœæ‰“å¼€ä¼šçœ‹è§å¾ˆå¤šQueryBasicInformationè¿™æ ·çš„è°ƒç”¨.
+
+#+BEGIN_SRC emacs-lisp
 (setq w32-get-true-file-attributes nil)
-#+end_src
+#+END_SRC
 
-**** color theme
+** htmlize
 
-emacs 23ÒÔºó¾Í×Ô´øcolor themeÁË£¬ËùÒÔÄÜ²»ÓÃ¶àÓàµÄ¾Í²»ÓÃ¶àÓàµÄ¡£ÏÖÔÚÑ¡ÔñµÄ /deeper-blue/ Ğ§¹û²»´í£¬ºÜÆ¯ÁÁ£¬ÊÇÄ¬ÈÏ×Ô´øµÄÀïÃæÎÒ×îÏ²»¶µÄ¡£
+ä¸ºäº†è®©org modeä¸­çš„ä»£ç å¯ä»¥è¯­æ³•é«˜äº®ï¼Œä¸çŸ¥é“æ–°çš„org 8.2.7cæ˜¯ä¸æ˜¯è‡ªå¸¦äº†ï¼Œé‚£å°±å¯ä»¥ä¸ç”¨è¿™ä¸ªäº†ã€‚
 
-#+begin_src emacs-lisp
-(load-theme 'deeper-blue)
-#+end_src
+#+BEGIN_SRC emacs-lisp
+(require 'htmlize)
+#+END_SRC
 
-**** status bar
-[2014-04-25 ĞÇÆÚÎå 13:06]
+** å­—ä½“æ”¾å¤§ç¼©å°
 
-¾ÓÈ»»¹¿ÉÒÔÏÔÊ¾ÏµÍ³µÄload£¬µ«ÊÇwindowsµÄloadºÍlinuxµÄÒâÒåÒ»ÑùÂğ£¿
-
-#+begin_src emacs-lisp
-;; ÏÔÊ¾ÈÕÆÚ
-(setq display-time-day-and-date t)
-(display-time)
-
-;; ÏÔÊ¾Ê±¼ä
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
-#+end_src
-
-**** coding
-[2014-04-25 ĞÇÆÚÎå 13:05]
-
-ÆäÊµÃ»Ê²Ã´ÓÃ£¬»ù±¾ÓÃ²»ÉÏ¡£
-
-#+begin_src emacs-lisp
-;; cÓïÑÔ·ç¸ñÉèÖÃÎªk&r·ç¸ñ
-(add-hook 'c-mode-hook
-'(lambda ()
-(c-set-style "k&r")))
-
-;; set c++ style as stroustrup style
-(add-hook 'c++-mode-hook
-'(lambda()
-(c-set-style "stroustrup")))
-#+end_src
-
-**** calendar
-[2014-04-25 ĞÇÆÚÎå 13:59]
-
-***** ÉèÖÃÈÕÀúµÄÑÕÉ«
-#+begin_src emacs-lisp
-;; ÉèÖÃÈÕÀúµÄÒ»Ğ©ÑÕÉ«
-(setq calendar-load-hook
-'(lambda ()
-(set-face-foreground 'diary-face "skyblue")
-(set-face-background 'holiday-face "slate blue")
-(set-face-foreground 'holiday-face "white")))
-#+end_src
-
-***** Å©Àú
-#+begin_src emacs-lisp
-;; ÉèÖÃÒõÀúÏÔÊ¾£¬ÔÚ calendar ÉÏÓÃ pC ÏÔÊ¾ÒõÀú
-(setq chinese-calendar-celestial-stem
-  ["¼×" "ÒÒ" "±û" "¶¡" "Îì" "¼º" "¸ı" "ĞÁ" "ÈÉ" "¹ï"])
-(setq chinese-calendar-terrestrial-branch
-  ["×Ó" "³ó" "Òú" "Ã®" "³½" "ËÈ" "Îç" "Î´" "Éê" "ÓÏ" "Ğç" "º¥"])
-#+end_src
-
-***** ½ÚÈÕ
-
-#+begin_src emacs-lisp
-;; ÉèÖÃ calendar µÄÏÔÊ¾
-(setq calendar-remove-frame-by-deleting t)
-;(setq calendar-week-start-day 1)  ; ÉèÖÃĞÇÆÚÒ»ÎªÃ¿ÖÜµÄµÚÒ»Ìì
-(setq mark-diary-entries-in-calendar t)  ; ±ê¼ÇcalendarÉÏÓĞdiaryµÄÈÕÆÚ
-(setq mark-holidays-in-calendar nil)  ; ÎªÁËÍ»³öÓĞdiaryµÄÈÕÆÚ£¬calendarÉÏ²»±ê¼Ç½ÚÈÕ
-(setq view-calendar-holidays-initially nil) ; ´ò¿ªcalendarµÄÊ±ºò²»ÏÔÊ¾Ò»¶Ñ½ÚÈÕ
-
-;; È¥µô²»¹ØĞÄµÄ½ÚÈÕ£¬Éè¶¨×Ô¼ºÔÚÒâµÄ½ÚÈÕ£¬ÔÚ calendar ÉÏÓÃ h ÏÔÊ¾½ÚÈÕ
-(setq christian-holidays nil)
-(setq hebrew-holidays nil)
-(setq islamic-holidays nil)
-(setq solar-holidays nil)
-(setq general-holidays '((holiday-fixed 1 1 "Ôªµ©")
-                         (holiday-fixed 2 14 "ÇéÈË½Ú")
-                         (holiday-fixed 3 14 "°×É«ÇéÈË½Ú")
-                         (holiday-fixed 4 1 "ÓŞÈË½Ú")
-                         (holiday-fixed 5 1 "ÀÍ¶¯½Ú")
-                         (holiday-float 5 0 2 "Ä¸Ç×½Ú")
-                         (holiday-fixed 6 1 "¶ùÍ¯½Ú")
-                         (holiday-float 6 0 3 "¸¸Ç×½Ú")
-                         (holiday-fixed 7 1 "½¨µ³½Ú")
-                         (holiday-fixed 8 1 "½¨¾ü½Ú")
-                         (holiday-fixed 9 10 "½ÌÊ¦½Ú")
-                         (holiday-fixed 10 1 "¹úÇì½Ú")
-                         (holiday-fixed 12 25 "Ê¥µ®½Ú")))
-
-#+end_src
-
-***** ÃüÁî
-CalendarÄ£Ê½Ö§³Ö¸÷ÖÖ·½Ê½À´¸ü¸Äµ±Ç°ÈÕÆÚ
-
-£¨ÕâÀïµÄ¡°Ç°¡±ÊÇÖ¸»¹Ã»ÓĞµ½À´µÄÄÇÒ»Ìì£¬¡°ºó¡±ÊÇÖ¸ÒÑ¾­¹ıÈ¥µÄÈÕ×Ó£©
-
-| command | ËµÃ÷                   |
-|---------+------------------------|
-| q       | ÍË³öcalendarÄ£Ê½       |
-| C-f     | ÈÃµ±Ç°ÈÕÆÚÏòÇ°Ò»Ìì     |
-| C-b     | ÈÃµ±Ç°ÈÕÆÚÏòºóÒ»Ìì     |
-| C-n     | ÈÃµ±Ç°ÈÕÆÚÏòÇ°Ò»ÖÜ     |
-| C-p     | ÈÃµ±Ç°ÈÕÆÚÏòºóÒ»ÖÜ     |
-| M-}     | ÈÃµ±Ç°ÈÕÆÚÏòÇ°Ò»¸öÔÂ   |
-| M-{     | ÈÃµ±Ç°ÈÕÆÚÏòºóÒ»¸öÔÂ   |
-| C-x ]   | ÈÃµ±Ç°ÈÕÆÚÏòÇ°Ò»Äê     |
-| C-x [   | ÈÃµ±Ç°ÈÕÆÚÏòºóÒ»Äê     |
-| C-a     | ÒÆ¶¯µ½µ±Ç°ÖÜµÄµÚÒ»Ìì   |
-| C-e     | ÒÆ¶¯µ½µ±Ç°ÖÜµÄ×îºóÒ»Ìì |
-| M-a     | ÒÆ¶¯µ½µ±Ç°ÔÂµÄµÚÒ»Ìì   |
-| M-e     | ¶à¶¯µ½µ±Ç°ÔÂµÄ×îºóÒ»Ìì |
-| M-<     | ÒÆ¶¯µ½µ±Ç°ÄêµÄµÚÒ»Ìì   |
-| M->     | ÒÆ¶¯µ½µ±Ç°ÄêµÄ×îºóÒ»Ìì |
-
-CalendarÄ£Ê½Ö§³ÖÒÆ¶¯¶àÖÖÒÆ¶¯µ½ÌØÖéÈÕÆÚµÄ·½Ê½
-| command | ËµÃ÷                                               |
-|---------+----------------------------------------------------|
-| g d     | ÒÆ¶¯µ½Ò»¸öÌØ±ğµÄÈÕÆÚ                     |
-| o       | Ê¹Ä³¸öÌØÊâµÄÔÂ·Ö×÷ÎªÖĞ¼äµÄÔÂ·Ö                     |
-| .       | ÒÆ¶¯µ½µ±ÌìµÄÈÕÆÚ                                   |
-| p d     | ÏÔÊ¾Ä³Ò»ÌìÔÚÒ»ÄêÖĞµÄÎ»ÖÃ£¬Ò²ÏÔÊ¾±¾Äê¶È»¹ÓĞ¶àÉÙÌì¡£ |
-| C-c C-l | Ë¢ĞÂCalendar´°¿Ú                                   |
-
- CalendarÖ§³ÖÉú³ÉLaTeX´úÂë¡£
- t m     °´ÔÂÉú³ÉÈÕÀú
- t M     °´ÔÂÉú³ÉÒ»¸öÃÀ»¯µÄÈÕÀú
- t d     °´µ±ÌìÈÕÆÚÉú³ÉÒ»¸öµ±ÌìÈÕÀú
- t w 1   ÔÚÒ»Ò³ÉÏÉú³ÉÕâ¸öÖÜµÄÈÕÀú
- t w 2   ÔÚÁ½Ò³ÉÏÉú³ÉÕâ¸öÖÜµÄÈÕÀú
- t w 3   Éú³ÉÒ»¸öISO-SYTLE·ç¸ñµÄµ±Ç°ÖÜÈÕÀú
- t w 4   Éú³ÉÒ»¸ö´ÓÖÜÒ»¿ªÊ¼µÄµ±Ç°ÖÜÈÕÀú
- t y     Éú³Éµ±Ç°ÄêµÄÈÕÀú
-
-emacs CalendarÖ§³ÖÅäÖÃ½ÚÈÕ£º
- h       ÏÔÊ¾µ±Ç°µÄ½ÚÈÕ
- x       ¶¨Òåµ±ÌìÎªÄ³¸ö½ÚÈÕ
- u       È¡Ïûµ±ÌìÒÑ±»¶¨ÒåµÄ½ÚÈÕ
- e       ÏÔÊ¾ËùÓĞÕâÇ°ºó¹²Èı¸öÔÂµÄ½ÚÈÕ¡£
- M-x holiday  ÔÚÁíÍâµÄ´°¿ÚµÄÏÔÊ¾ÕâÇ°ºóÈı¸öÔÂµÄ½ÚÈÕ¡£
-
- ÁíÍâ£¬»¹ÓĞÒ»Ğ©ÌØÊâµÄ£¬ÓĞÒâË¼µÄÃüÁî£º
-
-| command | ËµÃ÷                              |
-|---------+-----------------------------------|
-| S       | ÏÔÊ¾µ±ÌìµÄÈÕ³öÈÕÂäÊ±¼ä(ÊÇ´óĞ´µÄS) |
-| p C     | ÏÔÊ¾Å©Àú¿ÉÒÔÊ¹ÓÃ                  |
-| g C     | Ê¹ÓÃÅ©ÀúÒÆ¶¯ÈÕÆÚ¿ÉÒÔÊ¹ÓÃ          |
-
-***** ÈÕ³öÈÕÂäÊ±¼ä
-
-ÉèÖÃËùÔÚµØµÄ¾­Î³¶ÈºÍµØÃû£¬calendar ¿ÉÒÔ¸ù¾İÕâĞ©ĞÅÏ¢¸æÖªÄãÃ¿ÌìµÄÈÕ³ö
-ºÍÈÕÂäµÄÊ±¼ä¡£ÈÃemacsÄÜ¼ÆËãÈÕ³öÈÕÂäµÄÊ±¼ä£¬ÔÚ calendar ÉÏÓÃ *S* ¼´¿É¿´
-µ½ÉèÖÃÎÒËùÔÚµØ·½µÄ¾­Î³¶È£¬calendarÀïÓĞ¸ö¹¦ÄÜÊÇÈÕÔÂÊ³µÄÔ¤²â£¬ºÍÄãµÄ¾­
-Î³¶ÈÏàÁªÏµµÄ¡£
-
-***** diary
-[2014-04-25 ĞÇÆÚÎå 14:02]
-
-µ±Äã´´½¨ÁËÒ»¸ö /~/diary/ ÎÄ¼ş£¬Äã¾Í¿ÉÒÔÊ¹ÓÃcalendarÈ¥²é¿´ÀïÃæµÄÄÚÈİ¡£Äã
-¿ÉÒÔ²é¿´µ±ÌìµÄÊÂ¼ş£¬Ïà¹ØÃüÁîÈçÏÂ £º
-
-| command | ËµÃ÷                                   |
-|---------+----------------------------------------|
-| d       | ÏÔÊ¾±»Ñ¡ÖĞµÄÈÕÆÚµÄËùÓĞÊÂ¼ş             |
-| s       | ÏÔÊ¾ËùÓĞÊÂ¼ş£¬°üÀ¨¹ıÆÚµÄ£¬Î´µ½ÆÚµÄµÈµÈ |
-
-´´½¨Ò»¸öÊÂ¼şµÄÑùÀı£º
-
-#+begin_example
-02/11/1989
-    Bill B. visits Princeton today
-    2pm Cognitive Studies Committee meeting
-    2:30-5:30 Liz at Lawrenceville
-    4:00pm Dentist appt
-    7:30pm Dinner at George's
-    8:00-10:00pm concert
-#+end_example
-
-´´½¨ÊÂ¼şµÄÃüÁî£º
-
-| command | ËµÃ÷                         |
-|---------+------------------------------|
-| i d     | Îªµ±ÌìÈÕÆÚÌí¼ÓÒ»¸öÊÂ¼ş       |
-| i w     | Îªµ±ÌìÖÜ´´½¨Ò»¸öÖÜÊÂ¼ş       |
-| i m     | Îªµ±Ç°ÔÂ´´½¨Ò»¸öÔÂÊÂ¼ş       |
-| i y     | Îªµ±Ç°Äê´´½¨Ò»¸öÄêÊÂ¼ş       |
-| i a     | Îªµ±Ç°ÈÕÆÚ´´½¨Ò»¸öÖÜÄê¼ÍÄîÈÕ |
-| i c     | ´´½¨Ò»¸öÑ­»·µÄÊÂ¼ş           |
-
-#+begin_src emacs-lisp
-;; default diary file.
-(setq diary-file "~/diary/diary")
-(add-hook 'diary-hook 'appt-make-list)
-#+end_src
-
-**** undo-tree
-[2014-05-21 ĞÇÆÚÈı 12:28]
-
-+ C-x u :: ½øÈë undo-tree-visualizer-mode 
-+ p n :: ÉÏÏÂÒÆ¶¯£¬ÔÚ·ÖÖ§Ö®Ç° b f ×óÓÒÇĞ»»£¬
-+ t :: ÏÔÊ¾Ê±¼ä´Á
-+ q :: Ñ¡¶¨ĞèÒªµÄ×´Ì¬ºó£¬ÍË³ö
-
-#+begin_src emacs-lisp
-(require 'undo-tree)
-(global-undo-tree-mode)
-#+end_src
-
-**** Text size
-
-Õâ¸ö±Èvim·½±ã£¬ºÍchromeµÄ¿ì½İ¼üÒ»ÑùÁË¡£
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
+;; from sacha chua
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
+#+END_SRC
+
+** æ˜¾ç¤ºåŒ¹é…çš„æ‹¬å·
+
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode t)
+#+END_SRC
+
+** Window size
+
+T430çš„å±å¹•é•¿äº†ä¸€ç‚¹ï¼Œè¦æ˜¯å…¨å±çš„è¯ï¼Œorg modeçš„bufferä¼šåœ¨å³è¾¹æ‰“å¼€ï¼Œçœ‹è§çš„å†…å®¹å¤ªå°‘äº†ï¼Œæ§åˆ¶çª—å£å¤§å°ï¼Œè®©bufferæ˜¾ç¤ºåœ¨ä¸‹é¢ã€‚
+#+BEGIN_SRC emacs-lisp
+;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
+(setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+#+END_SRC
+
+** æ˜¾ç¤ºè¡Œã€åˆ—å·
+
+åœ¨status baræ˜¾ç¤ºï¼Œä¸åœ¨bufferçš„å·¦ä¾§æ˜¾ç¤ºæ¯è¡Œçš„è¡Œå·ï¼Œå¦åˆ™çœŸçš„ä¼šå¾ˆæ…¢ã€‚
+
+åˆ—å·æ˜¯ä»0å¼€å§‹çš„ã€‚
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+#+END_SRC
+
+[2014-03-17 17:54:25] ä¸æ˜¾ç¤ºè¡Œå·ï¼Œå¦åˆ™é€Ÿåº¦ä¼šéå¸¸æ…¢
+
+#+BEGIN_SRC emacs-lisp
+;;å¦å¤–ä¸€ä¸ªæ˜¾ç¤ºè¡Œå·çš„æ’ä»¶ï¼Œä¸ªäººæ›´å–œæ¬¢çš„é£æ ¼
+;(require 'linum)
+;(global-linum-mode t)
+#+END_SRC
+
+** F5æ’å…¥å½“å‰æ—¶é—´
+insert current timeï¼Œè¦åŠ ä¸Š(interactive)å•Šï¼Œä¸ºä»€ä¹ˆå‘¢ï¼Ÿ
+
+#+BEGIN_EXAMPLE
+M-: (insert (format-time-string "%Y-%m-%d %T"))
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(f5)] '(lambda () (interactive) 
+(insert (format-time-string "[%Y-%m-%d %T]"))
+))
+#+END_SRC
+
+** Reading
+
+https://github.com/xahlee/xah_emacs_init/blob/master/xah_emacs_font.el From Xah Lee:
+
+#+BEGIN_SRC emacs-lisp
+(defun xah-toggle-margin-right ()
+  "Toggle the right margin between `fill-column' or window width.
+This command is convenient when reading novel, documentation."
+  (interactive)
+  (if (eq (cdr (window-margins)) nil)
+      (set-window-margins nil 0 (- (window-body-width) fill-column))
+    (set-window-margins nil 0 0)))
+#+END_SRC
+
+** Make window splitting more useful
+
+I added these snippets to my .emacs so that when I split the screen with C-x 2 or C-x 3, 
+it opens the previous buffer instead of giving me two panes with the same buffer:
+
+Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+#+BEGIN_SRC emacs-lisp
+(defun vsplit-last-buffer ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil)
+  (switch-to-next-buffer)
+  )
+(defun hsplit-last-buffer ()
+  (interactive)
+   (split-window-horizontally)
+  (other-window 1 nil)
+  (switch-to-next-buffer)
+  )
+
+(global-set-key (kbd "C-x 2") 'vsplit-last-buffer)
+(global-set-key (kbd "C-x 3") 'hsplit-last-buffer)
+#+END_SRC
+
+** Mode line format
+[2014-09-16 18:18:58]
+
+Display a more compact mode line.
+
+#+BEGIN_SRC emacs-lisp
+;(use-package smart-mode-line
+;(defun my-line()
+;  :init
+;  (progn
+;  (setq-default
+;   mode-line-format 
+;   '("%e"
+;     mode-line-front-space
+;     mode-line-mule-info
+;     mode-line-client
+;     mode-line-modified
+;     mode-line-remote
+;     mode-line-frame-identification
+;     mode-line-buffer-identification
+;     "   "
+;     mode-line-position
+;     (vc-mode vc-mode)
+;     "  "
+;     mode-line-modes
+;     mode-line-misc-info
+;     mode-line-end-spaces))))
+;(my-line)
+#+END_SRC
+
+** å›¾ç‰‡æ”¯æŒ
+[2014-09-18 08:49:12]
+
+å¯ä»¥å…ˆåœ¨è¿è¡Œä¸‹é¢å‡ ä¸ªè¯­å¥æ£€æŸ¥ä¸€ä¸‹æ˜¯å¦å·²ç»æ”¯æŒäº†å›¾ç‰‡
+#+BEGIN_SRC lisp
+(image-type-available-p 'gif)
+
+(image-type-available-p 'jpeg)
+
+(image-type-available-p 'tiff)
+
+(image-type-available-p 'xbm)
+
+(image-type-available-p 'xpm)
+#+END_SRC
+
+è¿™å‡ ä¸ªå‡½æ•°å¤åˆ¶åˆ°Lispæ¨¡å¼çš„bufferï¼Œ
+
+ç„¶ååœ¨æ¯ä¸€è¡Œè¡Œå°¾æŒ‰ *C-j* ï¼Œå°±å¯ä»¥çœ‹åˆ°æ¯ä¸ªå‡½æ•°è¿è¡Œçš„ç»“æœï¼Œè¿”å›tè¯æ˜å·²ç»å¯ä»¥æ”¯æŒå›¾ç‰‡äº†ã€‚
+
+Winçš„emacsä¸èƒ½æ˜¾ç¤ºå›¾ç‰‡æ˜¯å› ä¸ºç¼–è¯‘åé»˜è®¤æ²¡æœ‰å¸¦å‡ ä¸ªDLLæ–‡ä»¶ã€‚
+
+æŠŠä»¥ä¸‹DLLæ–‡ä»¶æ‹·è´åˆ°emacså®‰è£…ç›®å½•çš„binç›®å½•ä¸‹ï¼Œå°±å¯ä»¥æ˜¾ç¤ºå›¾ç‰‡äº†ã€‚
+
+#+BEGIN_EXAMPLE
+jpeg62.dll
+libgcrypt-11.dll
+libgnutls-26.dll
+libpng14-14.dll
+libtasn1-3.dll
+libtiff3.dll
+libungif4.dll
+libXpm.dll
+xpm4.dll
+zlib1.dll
+#+END_EXAMPLE
+
+http://ftp.gnu.org/pub/gnu/windows/emacs/
+
+è¿™ä¸ªå¯ä»¥æ‰¾åˆ°è¿™äº›dll https://github.com/winterTTr/emacs-of-winterTTr/tree/master/.emacs.d/extra-bin/dlls
+
+* evil
+
+#+BEGIN_SRC emacs-lisp
+(require 'evil)
+(evil-mode 1)
+
+(setq evil-want-visual-char-semi-exclusive t)
 #+end_src
 
-**** window-numbering
-[2014-09-11 ĞÇÆÚËÄ 22:57]
+* magit
+[2014-09-11 10:22:26] disable emacsè‡ªå¸¦çš„vcï¼Œç”¨ *process monitor* çœ‹ï¼Œvcæ¯æ¬¡æ‰“å¼€éƒ½ä¼šæŠŠæ”¯æŒçš„ç‰ˆæœ¬ç®¡ç†éƒ½æŸ¥ä¸€éï¼Œä¼šæ¯”è¾ƒæ…¢ã€‚
+ä½†æ˜¯å»æ‰äº†ä»¥åï¼Œmagitæ²¡æ³•åœ¨status barä¸Šæ˜¾ç¤ºæ–‡ä»¶åœ¨å“ªä¸ªbranchä¸Šäº†ã€‚å“ã€‚
 
-#+begin_src emacs-lisp
-(require 'window-numbering)
-(window-numbering-mode 1)
+process monitor åœ¨vpnåä¼šå¯¼è‡´æœºå™¨hangã€‚
+
+æŠŠvc disableåä¼šå¿«ä¸å°‘ã€‚
+
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+'(vc-handled-backends (quote (Git))))
+
+;; disable default vc
+;(setq vc-handled-backends nil)
 #+end_src
 
-**** dired+
-[2014-09-12 ĞÇÆÚÎå 21:01]
+[2014-09-11 14:25:06] å³ä½¿æ›´æ–°åˆ°äº†0908çš„magitï¼Œä»ç„¶å‘ç°æœ‰å¤šæ¬¡è°ƒç”¨git.exeçš„æƒ…å†µï¼Œ *magit-status* è¿˜æ˜¯æ…¢
+æŠŠgitçš„pathè®¾ç½®åˆ°æœ€å‰é¢ï¼Œè²Œä¼¼é€Ÿåº¦ä¹Ÿæ²¡å¿«å¤šå°‘ï¼Œæœ€å¤š0.001så§ã€‚
 
-#+begin_src emacs-lisp
-(require 'dired+)
-#+end_src
-
-*** DONE git
-CLOSED: [2014-09-11 ĞÇÆÚËÄ 23:03]
-
-git-emacsÓÃ×Å²»´í£¬×îÁ÷ĞĞµÄeggÔÚwin7ÉÏ×ÜÊÇ±¨´í£¬¶øÇÒÅäÖÃ±Ègit-emacs¸´ÔÓÒ»Ğ©£¬ÓĞÊ±¼äÔÙÊÔÊÔ¡£
-
-2014/05/03 23:08:39 magit commitÊ±ºÍgit-emacsµÄ±àÂë²»Ì«Ò»Ñù£¬ÒªÕÒ¸öÊ±¼ä¿´¿´´úÂëÊÇÔõÃ´Ğ´µÄ¡£
-[2014-09-17 23:08:25] ÒªÓÃutf-8µÄ±àÂë²ÅĞĞ¡£
-
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
+;;(if (eq system-type 'windows-nt)
+;;    (progn
+;;      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
+;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 (require 'magit)
 #+end_src
 
-*** helm
-[2014-09-16 ĞÇÆÚ¶ş 21:36]
+* smex
+[2014-09-19 14:44:30] æœ‰helmï¼Œä¸ç”¨smexäº†ã€‚
 
-+ multi buffer search :: C-c h ´ò¿ªhelm mini buffer£¬ÔÚËùÓĞorg-modeÎÄ¼şÖĞ *org @string £¬°´C-s²éÑ¯¡£
+Smex is a M-x enhancement for Emacs. Built on top of IDO, it provides a convenient interface 
+to your recently and most frequently used commands. And to all the other commands, too.
 
-#+begin_src emacs-lisp
-(require 'helm-config)
-(global-set-key (kbd "C-c h") 'helm-mini)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(helm-mode 1)
-#+end_src
+Extras: Limit commands to those relevant to the active major mode. Show frequently used commands that have no key bindings.
 
-*** TODO plantuml
-[2014-08-19 ĞÇÆÚ¶ş 22:11]
-
-*** evil
-
-evilÏÖÔÚÃ»ÓÃÊ²Ã´ÌØ±ğµÄÅäÖÃ£¬Ö»Òª¼Ç×¡ÍË³öevil»Øemacs modeÓÃ *C-z* ¾ÍokÁË¡£
-
-#+begin_src emacs-lisp
-(require 'evil)
-(evil-mode 1)
-#+end_src
-    
-*** Personal information
-
-#+begin_src emacs-lisp
-(setq user-full-name "Albert Zhou"
-    user-mail-address "georgealbert@qq.com")
-#+end_src
-   
-** Org-Mode
-
-org-modeµÄÅäÖÃÍêÈ«²Î¿¼http://doc.norang.ca/org-mode.html
-
-*** Org-ModeÎÄ¼ş¹æ»®
-[2014-04-25 ĞÇÆÚÎå 13:15]
-
-ÎÄ¼şÃüÃûÊÇÖØÒªµÄ£¬°Ñ¹¤×÷ºÍÉú»î¡¢Ñ§Ï°µÄ·Ö¿ªÀ´±È½ÏºÃ¡£ÒªºÃºÃ¿¼ÂÇ¡£
-
-| Filename     | Description                |
-|--------------+----------------------------|
-| newgtd.org   | ĞÂµÄtask                   |
-| personal.org | ×Ô¼ºµÄ£¬ÏÖÔÚ¶¼ÓÃnewgtd.org |
-
-ÏÖÔÚ¶¼ÔÚe:/workspace/orgÏÂ£¬ÆäÊµÓ¦¸Ã¶¼¶ªµ½~/orgÏÂ±È½ÏºÃ¡£
-
-*** Org-Mode Setup
-[2014-04-25 ĞÇÆÚÎå 13:39]
+ç”¨äº†smexåï¼Œç°åœ¨å·²ç»æŠŠcommandå¿˜è®°å¾—å·®ä¸å¤šäº†ï¼Œç°åœ¨magitçš„è¯ï¼Œå°±ä¼š *M-x magit* ç›´æ¥è”æƒ³äº†ã€‚å‘µå‘µã€‚
 
 #+BEGIN_SRC emacs-lisp
-;; The following setting is different from the document so that you
-;; can override the document path by setting your path in the variable
-;; org-mode-user-lisp-path
-;;
-(if (boundp 'org-mode-user-lisp-path)
-    (add-to-list 'load-path org-mode-user-lisp-path)
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp")))
-
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-;;(require 'org)
-;;
-;; The following setting is different from the document so that you
-;; can override the document org-agenda-files by setting your
-;; org-agenda-files in the variable org-user-agenda-files
-;;
-(if (boundp 'org-user-agenda-files)
-    (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote (
-                               "e:/workspace/org"))))
+;(require 'smex)
+;
+;(global-set-key (kbd "M-x") 'smex)
+;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+END_SRC
 
-*** ¿ì½İ¼ü
-[2014-04-25 ĞÇÆÚÎå 13:14]
+* helm
+[2014-09-16 09:27:15]
 
-Standard key bindings£¬Ææ¹ÖµÄÊÇÄ¬ÈÏÊÇÃ»ÓĞ *C-ca* µÄ¼ü°ó¶¨µÄ£¬º¦µÃÎÒ¿´ÁËºÃ¾Ã²ÅÖªµÀ£¬»ù±¾²»ÓÃÁË£¬¶¼ÓÃFx¿ì½İ¼üÁË¡£
-#+begin_src emacs-lisp
++ multi buffer search
+  1. *C-c h* è°ƒå‡ºhelm-mini buffer
+  1. åœ¨pattern: ä¸­ è¾“å…¥ *org é€‰æ‹©bufferä¸­çš„fileï¼Œå¯ä»¥åŒ¹é…å¤šä¸ªæ–‡ä»¶
+  1. *Esc m* æˆ–è€… *M-SPC* markåˆšæ‰åŒ¹é…çš„filesï¼Œä¼šé«˜äº®
+  1. æŒ‰ *C-s* search file content
+  1. *C-j* æ‰“å¼€bufferå¹¶è·³åˆ°é€‰æ‹©çš„è¡Œ
+  1. *enter* æ‰“å¼€æ–‡ä»¶
+
++ M-SPC/Esc-SPC/C-@ :: ç”¨ *M-SPC* æœ€æ–¹ä¾¿äº†ï¼Œmarkå½“å‰çš„bufferï¼Œå¦‚æœå·²ç»markäº†ä¼šå–æ¶ˆï¼Œå…ˆC-n/C-pç§»åŠ¨åˆ°è¦å–æ¶ˆçš„file
+
++ M-u :: å–æ¶ˆå…¨éƒ¨markçš„buffer
++ M-a :: markå…¨éƒ¨çš„buffer
+     
+[2014-09-16 18:24:22] multi searchä¹Ÿå¯ä»¥è¿™æ ·ï¼Œå¦‚åœ¨æ‰€æœ‰bufferä¸­org-modeçš„bufferï¼Œç„¶åæ‰¾ *org @string_to_find æŒ‰ *C-s* å°±okäº†ã€‚
+
++ C-n/C-p/up/down :: åœ¨helmçš„é€‰é¡¹ä¸­ä¸Šä¸‹ç§»åŠ¨
++ left/right :: åœ¨sourceé—´ç§»åŠ¨ï¼Œ *C-o* ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªsourceï¼Œsourceå°±æ˜¯groupåˆ†ç±»ï¼Œå¦‚bufferï¼Œæœ€è¿‘è®¿é—®çš„bufferï¼Œåˆ›å»ºbufferã€‚
++ M-p/M-n :: å‘½ä»¤å†å²
+             
++ mini buffer
+  + M-S-d :: kill buffer and quitï¼Œå°±æ˜¯ *M-D* ã€‚
+  + C-c d :: kill buffer without quitting
+             
+[2014-09-17 15:06:59] ä¸ºä»€ä¹ˆç”¨äº†hemlä»¥åè¿dired+çš„ *R* rename fileéƒ½å˜æˆhelmçš„äº†ï¼Ÿ
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/lisp/helm")
+(require 'helm-config)
+(helm-mode 1)
+(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+(setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                      ; reeeelatively quickly.
+          helm-quick-update t
+          helm-M-x-requires-pattern nil ; åœ¨M-xæ—¶é»˜è®¤å°±ä¸æ˜¾ç¤ºå¤šä½™çš„patternäº†ï¼Œçœ‹ç€çƒ¦
+          helm-ff-skip-boring-files t)
+#+END_SRC
+
+* window-number
+
+different from window-numbering.el
+ç›´æ¥æŒ‰ *M-num* å°±okï¼Œå®Œäº†ï¼Œç”¨äº†è¿™ä¸ªéƒ½å¿˜è®°æ€ä¹ˆåˆ‡çª—å£äº†ï¼Œ ^_^ *C-x o*, *C-x 1*
+
+#+BEGIN_SRC emacs-lisp
+(require 'window-numbering)
+
+(window-numbering-mode 1)
+
+;; for window-numbering.el from http://www.emacswiki.org/emacs/window-number.el
+;; è·³è½¬ä¸æ–¹ä¾¿C-x C-j numï¼ŒæŒ‰èµ·æ¥ä¸çˆ½ï¼Œæ˜¾ç¤ºwindowçš„ç¼–å·ä¸å¦‚ä¸Šé¢çš„å¥½çœ‹ï¼Œå¤ªä¸‘äº†ã€‚
+;;(add-to-list 'load-path "~/.emacs.d/lisp/")
+;;(require 'window-number)
+;;(window-number-mode 1)
+#+END_SRC
+
+* undotree
+
+#+BEGIN_SRC emacs-lisp
+(require 'undo-tree)
+(global-undo-tree-mode)
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
+
+(defalias 'redo 'undo-tree-redo)
+;;(global-set-key (kbd "C-z") 'undo) ; ã€Ctrl+zã€‘
+;;(global-set-key (kbd "C-S-z") 'redo) ; ã€Ctrl+Shift+zã€‘;  Mac style
+;;(global-set-key (kbd "C-y") 'redo) ; ã€Ctrl+yã€‘; Microsoft Windows style
+(global-set-key (kbd "C-r") 'redo) ; ã€Ctrl+rã€‘; VIM style
+#+END_SRC
+
+* python
+
+pdb setup, note the python version
+#+BEGIN_SRC emacs-lisp
+(setq pdb-path 'c:/Python27/Lib/pdb.py
+       gud-pdb-command-name (symbol-name pdb-path))
+ (defadvice pdb (before gud-query-cmdline activate)
+   "Provide a better default command line when called interactively."
+   (interactive
+    (list (gud-query-cmdline pdb-path
+                 (file-name-nondirectory buffer-file-name)))))
+#+end_src
+
+* org mode
+** html export
+[2014-09-12 12:55:36] ä¸ºä»€ä¹ˆä¸ç®¡ç”¨å‘¢ï¼Ÿ
+
+#+BEGIN_SRC emacs-lisp
+;(setq org-export-html-style-include-scripts nil
+;   org-export-html-style-include-default nil
+;   org-export-html-style-default nil
+;   org-html-style-default nil)
+ 
+;(setq org-export-html-style
+;(setq org-html-head-include-default-style
+(setq org-html-style-default
+   "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/org-manual.css\" />")
+#+END_SRC
+
+** 4.2 Org-Mode Setup
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
+;; Standard key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
-#+end_src
+(setq org-log-done t)
+#+END_SRC
 
-ÓÃµÃ×î¶àµÄÊÇ
-+ F12 t
-+ F12 a
-+ F11
-  
-ÆäËûµÄÕæµÄºÜÉÙÓÃ¡£
+** 4.6 Key bindings
 
-ÏñF9 IÕâÑùµÄÏ°¹ßÓÃÄ¬ÈÏ°ó¶¨ C-c C-x C-i
+Custom Key Bindings
 
+å¸¸ç”¨çš„åˆ—åœ¨å‰é¢ã€‚
 #+BEGIN_SRC emacs-lisp
-;; Custom Key Bindings
 (global-set-key (kbd "<f12>") 'org-agenda)
-;(global-set-key (kbd "<f5>") 'bh/org-todo)
-(global-set-key (kbd "<S-f5>") 'bh/widen)
+(global-set-key (kbd "<f3>") 'bh/org-todo)
+(global-set-key (kbd "<S-f3>") 'bh/widen)
 (global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
 (global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
 (global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
 (global-set-key (kbd "<f9> b") 'bbdb)
 (global-set-key (kbd "<f9> c") 'calendar)
 (global-set-key (kbd "<f9> f") 'boxquote-insert-file)
-(global-set-key (kbd "<f9> g") 'gnus)
+;;(global-set-key (kbd "<f9> g") 'gnus)
 (global-set-key (kbd "<f9> h") 'bh/hide-other)
 (global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
 (global-set-key (kbd "<f9> w") 'widen)
@@ -541,9 +550,20 @@ Standard key bindings£¬Ææ¹ÖµÄÊÇÄ¬ÈÏÊÇÃ»ÓĞ *C-ca* µÄ¼ü°ó¶¨µÄ£¬º¦µÃÎÒ¿´ÁËºÃ¾Ã²ÅÖªµ
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
+
+(setq org-agenda-files (list "~/org")
+	  )
+
+'(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
+                              ("albert.org" :level . 2))))
 #+END_SRC
 
+** 6.1 Capture Templates
+
 #+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+(setq org-default-notes-file "~/org/refile.org")
+
 (defun bh/hide-other ()
   (interactive)
   (save-excursion
@@ -570,95 +590,36 @@ Standard key bindings£¬Ææ¹ÖµÄÊÇÄ¬ÈÏÊÇÃ»ÓĞ *C-ca* µÄ¼ü°ó¶¨µÄ£¬º¦µÃÎÒ¿´ÁËºÃ¾Ã²ÅÖªµ
 (defun bh/switch-to-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
-#+END_SRC
-
-*** Todo keywords
-[2014-04-25 ĞÇÆÚÎå 13:22]
-
-meetingºÍphone¶ÔÎÒÀ´ËµÃ»ÓÃ£¬Ö»ÊÇÁô×Å¡£
-
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("MEETING" :foreground "forest green" :weight bold)
-              ("PHONE" :foreground "forest green" :weight bold))))
-
-(setq org-use-fast-todo-selection t)
-
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
-
-#+END_SRC
-
-**** *TODO* State Triggers
-[2014-04-25 ĞÇÆÚÎå 13:48]
-
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-state-tags-triggers
-      (quote (("CANCELLED" ("CANCELLED" . t))
-              ("WAITING" ("WAITING" . t))
-              ("HOLD" ("WAITING") ("HOLD" . t))
-              (done ("WAITING") ("HOLD"))
-              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
-#+END_SRC
-
-*** Adding New Tasks Quickly With Org Capture 
-[2014-04-25 ĞÇÆÚÎå 13:24]
-
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/org")
-(setq org-default-notes-file "~/org/refile.org")
 
 ;; I use C-c c to start capture mode
 (global-set-key (kbd "C-c c") 'org-capture)
 
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/git/org/refile.org")
+      (quote (("t" "todo" entry (file "~/org/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("r" "respond" entry (file "~/git/org/refile.org")
+              ("r" "respond" entry (file "~/org/refile.org")
                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-              ("n" "note" entry (file "~/git/org/refile.org")
+              ("n" "note" entry (file "~/org/refile.org")
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+              ("j" "Journal" entry (file+datetree "~/org/diary.org")
                "* %?\n%U\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file "~/git/org/refile.org")
+              ("w" "org-protocol" entry (file "~/org/refile.org")
                "* TODO Review %c\n%U\n" :immediate-finish t)
-              ("m" "Meeting" entry (file "~/git/org/refile.org")
+              ("m" "Meeting" entry (file "~/org/refile.org")
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-              ("p" "Phone call" entry (file "~/git/org/refile.org")
+              ("p" "Phone call" entry (file "~/org/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-              ("h" "Habit" entry (file "~/git/org/refile.org")
+              ("h" "Habit" entry (file "~/org/refile.org")
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
-
-;; Remove empty LOGBOOK drawers on clock out
-(defun bh/remove-empty-drawer-on-clock-out ()
-  (interactive)
-  (save-excursion
-    (beginning-of-line 0)
-    (org-remove-empty-drawer-at (point))))
-
-(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 #+END_SRC
 
-*** Refiling Tasks
-[2014-04-25 ĞÇÆÚÎå 13:55]
+** 7.1 Refile Setup
 
 #+BEGIN_SRC emacs-lisp
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
+(setq org-refile-targets (quote ((nil :maxlevel . 2)
+                                 (org-agenda-files :maxlevel . 2))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t)
@@ -687,7 +648,11 @@ meetingºÍphone¶ÔÎÒÀ´ËµÃ»ÓÃ£¬Ö»ÊÇÁô×Å¡£
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
+#+END_SRC
 
+** 8.1
+
+#+BEGIN_SRC emacs-lisp
 ;; Do not dim blocked tasks
 (setq org-agenda-dim-blocked-tasks nil)
 
@@ -719,18 +684,18 @@ meetingºÍphone¶ÔÎÒÀ´ËµÃ»ÓÃ£¬Ö»ÊÇÁô×Å¡£
                             (org-tags-match-list-sublevels 'indented)
                             (org-agenda-sorting-strategy
                              '(category-keep))))
-                ;;(tags-todo "-CANCELLED/!NEXT"
-                ;;           ((org-agenda-overriding-header (concat "Project Next Tasks"
-                ;;                                                  (if bh/hide-scheduled-and-waiting-next-tasks
-                ;;                                                      ""
-                ;;                                                    " (including WAITING and SCHEDULED tasks)")))
-                ;;            (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
-                ;;            (org-tags-match-list-sublevels t)
-                ;;            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
-                ;;            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
-                ;;            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
-                ;;            (org-agenda-sorting-strategy
-                ;;             '(todo-state-down effort-up category-keep))))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
                 (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
                            ((org-agenda-overriding-header (concat "Project Subtasks"
                                                                   (if bh/hide-scheduled-and-waiting-next-tasks
@@ -765,21 +730,22 @@ meetingºÍphone¶ÔÎÒÀ´ËµÃ»ÓÃ£¬Ö»ÊÇÁô×Å¡£
                        (org-tags-match-list-sublevels nil))))
                nil))))
 
-(defun bh/org-auto-exclude-function (tag)
-  "Automatic task exclusion in the agenda with / RET"
-  (and (cond
-        ((string= tag "hold")
-         t)
-        ((string= tag "farm")
-         t))
-       (concat "-" tag)))
+;; Remove empty LOGBOOK drawers on clock out
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at (point))))
 
-(setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+#+END_SRC
 
-;;
+** 9.1 Clock Setup
+
+#+BEGIN_SRC emacs-lisp
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
-;;
+
 ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
 (setq org-clock-history-length 23)
 ;; Resume clocking task on clock-in if the clock is open
@@ -896,46 +862,12 @@ as the default task."
     (bh/clock-in-parent-task)))
 
 (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+#+END_SRC
 
-(require 'org-id)
-(defun bh/clock-in-task-by-id (id)
-  "Clock in a task by id"
-  (org-with-point-at (org-id-find id 'marker)
-    (org-clock-in nil)))
+** 10.2
+*** 10.2.1 Creating a task estimate with column mode
 
-(defun bh/clock-in-last-task (arg)
-  "Clock in the interrupted task if there is one
-Skip the default task and get the next one.
-A prefix arg forces clock in of the default task."
-  (interactive "p")
-  (let ((clock-in-to-task
-         (cond
-          ((eq arg 4) org-clock-default-task)
-          ((and (org-clock-is-active)
-                (equal org-clock-default-task (cadr org-clock-history)))
-           (caddr org-clock-history))
-          ((org-clock-is-active) (cadr org-clock-history))
-          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
-          (t (car org-clock-history)))))
-    (widen)
-    (org-with-point-at clock-in-to-task
-      (org-clock-in nil))))
-
-(setq org-time-stamp-rounding-minutes (quote (1 1)))
-
-(setq org-agenda-clock-consistency-checks
-      (quote (:max-duration "4:00"
-              :min-duration 0
-              :max-gap 0
-              :gap-ok-around ("4:00"))))
-
-;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-(setq org-clock-out-remove-zero-time-clocks t)
-
-;; Agenda clock report parameters
-(setq org-agenda-clockreport-parameter-plist
-      (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
-
+#+BEGIN_SRC emacs-lisp
 ; Set default column view headings: Task Effort Clock_Summary
 (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
@@ -943,25 +875,30 @@ A prefix arg forces clock in of the default task."
 ; global STYLE property values for completion
 (setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
                                     ("STYLE_ALL" . "habit"))))
+#+END_SRC
 
+** 10.3 Providing progress reports to others
+
+#+BEGIN_SRC emacs-lisp
 ;; Agenda log mode items to display (closed and state changes by default)
 (setq org-agenda-log-mode-items (quote (closed state)))
+#+END_SRC
 
-; Tags with fast selection keys
+** 11.1 Tags
+
+Tags with fast selection keys
+#+BEGIN_SRC emacs-lisp
 (setq org-tag-alist (quote ((:startgroup)
                             ("@errand" . ?e)
                             ("@office" . ?o)
                             ("@home" . ?H)
-                            ("@farm" . ?f)
                             (:endgroup)
                             ("WAITING" . ?w)
                             ("HOLD" . ?h)
                             ("PERSONAL" . ?P)
                             ("WORK" . ?W)
-                            ("FARM" . ?F)
                             ("ORG" . ?O)
-                            ("NORANG" . ?N)
-                            ("crypt" . ?E)
+                            ("ALBERT" . ?A)
                             ("NOTE" . ?n)
                             ("CANCELLED" . ?c)
                             ("FLAGGED" . ??))))
@@ -971,46 +908,11 @@ A prefix arg forces clock in of the default task."
 
 ; For tag searches ignore tasks with scheduled and deadline dates
 (setq org-agenda-tags-todo-honor-ignore-options t)
+#+END_SRC
 
-;;(require 'bbdb)
-;;(require 'bbdb-com)
+** 14.2 Project definition and finding stuck projects
 
-(global-set-key (kbd "<f9> p") 'bh/phone-call)
-
-;;
-;; Phone capture template handling with BBDB lookup
-;; Adapted from code by Gregory J. Grubbs
-(defun bh/phone-call ()
-  "Return name and company info for caller from bbdb lookup"
-  (interactive)
-  (let* (name rec caller)
-    (setq name (completing-read "Who is calling? "
-                                (bbdb-hashtable)
-                                'bbdb-completion-predicate
-                                'confirm))
-    (when (> (length name) 0)
-      ; Something was supplied - look it up in bbdb
-      (setq rec
-            (or (first
-                 (or (bbdb-search (bbdb-records) name nil nil)
-                     (bbdb-search (bbdb-records) nil name nil)))
-                name)))
-
-    ; Build the bbdb link if we have a bbdb record, otherwise just return the name
-    (setq caller (cond ((and rec (vectorp rec))
-                        (let ((name (bbdb-record-name rec))
-                              (company (bbdb-record-company rec)))
-                          (concat "[[bbdb:"
-                                  name "]["
-                                  name "]]"
-                                  (when company
-                                    (concat " - " company)))))
-                       (rec)
-                       (t "NameOfCaller")))
-    (insert caller)))
-
-(setq org-agenda-span 'day)
-
+#+BEGIN_SRC emacs-lisp
 (setq org-stuck-projects (quote ("" nil nil "")))
 
 (defun bh/is-project-p ()
@@ -1254,41 +1156,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (if (bh/is-subproject-p)
         nil
       next-headline)))
+#+END_SRC
 
-(setq org-archive-mark-done nil)
-(setq org-archive-location "%s_archive::* Archived Tasks")
+** 16.2 plantuml
 
-(defun bh/skip-non-archivable-tasks ()
-  "Skip trees that are not available for archiving"
-  (save-restriction
-    (widen)
-    ;; Consider only tasks with done todo headings as archivable candidates
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
-          (subtree-end (save-excursion (org-end-of-subtree t))))
-      (if (member (org-get-todo-state) org-todo-keywords-1)
-          (if (member (org-get-todo-state) org-done-keywords)
-              (let* ((daynr (string-to-int (format-time-string "%d" (current-time))))
-                     (a-month-ago (* 60 60 24 (+ daynr 1)))
-                     (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
-                     (this-month (format-time-string "%Y-%m-" (current-time)))
-                     (subtree-is-current (save-excursion
-                                           (forward-line 1)
-                                           (and (< (point) subtree-end)
-                                                (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
-                (if subtree-is-current
-                    subtree-end ; Has a date in this month or last month, skip it
-                  nil))  ; available to archive
-            (or subtree-end (point-max)))
-        next-headline))))
-
-(setq org-alphabetical-lists t)
-
-;; Explicitly load required exporters
-;;(require 'ox-html)
-;;(require 'ox-latex)
-;;(require 'ox-ascii)
-
-(setq org-ditaa-jar-path "~/java/ditaa0_6b.jar")
+#+BEGIN_SRC emacs-lisp
 (setq org-plantuml-jar-path "~/java/plantuml.jar")
 
 (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
@@ -1324,365 +1196,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 ; Use fundamental mode when editing plantuml blocks with C-c '
 (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
+#+END_SRC
 
-;; Don't enable this because it breaks access to emacs from my Android phone
-(setq org-startup-with-inline-images nil)
+** 18
+*** 18.2.1 Narrowing to a subtree with bh/org-todo
 
-; experimenting with docbook exports - not finished
-(setq org-export-docbook-xsl-fo-proc-command "fop %s %s")
-(setq org-export-docbook-xslt-proc-command "xsltproc --output %s /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl %s")
-;
-; Inline images in HTML instead of producting links to the image
-(setq org-html-inline-images t)
-; Do not use sub or superscripts - I currently don't need this functionality in my documents
-(setq org-export-with-sub-superscripts nil)
-; Use org.css from the norang website for export document stylesheets
-(setq org-html-head-extra "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
-(setq org-html-head-include-default-style nil)
-; Do not generate internal css formatting for HTML exports
-(setq org-export-htmlize-output-type (quote css))
-; Export with LaTeX fragments
-(setq org-export-with-LaTeX-fragments t)
-; Increase default number of headings to export
-(setq org-export-headline-levels 6)
-
-; List of projects
-; norang       - http://www.norang.ca/
-; doc          - http://doc.norang.ca/
-; org-mode-doc - http://doc.norang.ca/org-mode.html and associated files
-; org          - miscellaneous todo lists for publishing
-(setq org-publish-project-alist
-      ;
-      ; http://www.norang.ca/  (norang website)
-      ; norang-org are the org-files that generate the content
-      ; norang-extra are images and css files that need to be included
-      ; norang is the top-level project that gets published
-      (quote (("norang-org"
-               :base-directory "~/git/www.norang.ca"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs"
-               :recursive t
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function org-html-publish-to-html
-               :style-include-default nil
-               :section-numbers nil
-               :table-of-contents nil
-               :html-head "<link rel=\"stylesheet\" href=\"norang.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("norang-extra"
-               :base-directory "~/git/www.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("norang"
-               :components ("norang-org" "norang-extra"))
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; doc-org are the org-files that generate the content
-              ; doc-extra are images and css files that need to be included
-              ; doc is the top-level project that gets published
-              ("doc-org"
-               :base-directory "~/git/doc.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :recursive nil
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-html-publish-to-html org-org-publish-to-org)
-               :style-include-default nil
-               :html-head "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("doc-extra"
-               :base-directory "~/git/doc.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive nil
-               :author nil)
-              ("doc"
-               :components ("doc-org" "doc-extra"))
-              ("doc-private-org"
-               :base-directory "~/git/doc.norang.ca/private"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs/private"
-               :recursive nil
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-html-publish-to-html org-org-publish-to-org)
-               :style-include-default nil
-               :html-head "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Norang Private Documents"
-               :sitemap-style "tree"
-               :author-info nil
-               :creator-info nil)
-              ("doc-private-extra"
-               :base-directory "~/git/doc.norang.ca/private"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs/private"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive nil
-               :author nil)
-              ("doc-private"
-               :components ("doc-private-org" "doc-private-extra"))
-              ;
-              ; Miscellaneous pages for other websites
-              ; org are the org-files that generate the content
-              ("org-org"
-               :base-directory "~/git/org/"
-               :publishing-directory "/ssh:www-data@www:~/org"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function org-html-publish-to-html
-               :style-include-default nil
-               :html-head "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; org-mode-doc-org this document
-              ; org-mode-doc-extra are images and css files that need to be included
-              ; org-mode-doc is the top-level project that gets published
-              ; This uses the same target directory as the 'doc' project
-              ("org-mode-doc-org"
-               :base-directory "~/git/org-mode-doc/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-html-publish-to-html)
-               :plain-source t
-               :htmlized-source t
-               :style-include-default nil
-               :html-head "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("org-mode-doc-extra"
-               :base-directory "~/git/org-mode-doc/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|org"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("org-mode-doc"
-               :components ("org-mode-doc-org" "org-mode-doc-extra"))
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; org-mode-doc-org this document
-              ; org-mode-doc-extra are images and css files that need to be included
-              ; org-mode-doc is the top-level project that gets published
-              ; This uses the same target directory as the 'doc' project
-              ("tmp-org"
-               :base-directory "/tmp/publish/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs/tmp"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-html-publish-to-html org-org-publish-to-org)
-               :html-head "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />"
-               :plain-source t
-               :htmlized-source t
-               :style-include-default nil
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Test Publishing Area"
-               :sitemap-style "tree"
-               :author-info t
-               :creator-info t)
-              ("tmp-extra"
-               :base-directory "/tmp/publish/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs/tmp"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("tmp"
-               :components ("tmp-org" "tmp-extra")))))
-
-; I'm lazy and don't want to remember the name of the project to publish when I modify
-; a file that is part of a project.  So this function saves the file, and publishes
-; the project that includes this file
-;
-; It's bound to C-S-F12 so I just edit and hit C-S-F12 when I'm done and move on to the next thing
-(defun bh/save-then-publish (&optional force)
-  (interactive "P")
-  (save-buffer)
-  (org-save-all-org-buffers)
-  (let ((org-html-head-extra)
-        (org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Validate XHTML 1.0</a>"))
-    (org-publish-current-project force)))
-
-(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
-
-(setq org-latex-listings t)
-
-(setq org-html-xml-declaration (quote (("html" . "")
-                                       ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-                                       ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
-
-(setq org-export-allow-BIND t)
-
-; Erase all reminders and rebuilt reminders for today from the agenda
-(defun bh/org-agenda-to-appt ()
-  (interactive)
-  (setq appt-time-msg-list nil)
-  (org-agenda-to-appt))
-
-; Rebuild the reminders everytime the agenda is displayed
-(add-hook 'org-finalize-agenda-hook 'bh/org-agenda-to-appt 'append)
-
-; This is at the end of my .emacs - so appointments are set up when Emacs starts
-(bh/org-agenda-to-appt)
-
-; Activate appointments so we get notifications
-(appt-activate t)
-
-; If we leave Emacs running overnight - reset the appointments one minute after midnight
-(run-at-time "24:01" nil 'bh/org-agenda-to-appt)
-
-;; Enable abbrev-mode
-(add-hook 'org-mode-hook (lambda () (abbrev-mode 1)))
-
-;; Skeletons
-;;
-;; sblk - Generic block #+begin_FOO .. #+end_FOO
-(define-skeleton skel-org-block
-  "Insert an org block, querying for type."
-  "Type: "
-  "#+begin_" str "\n"
-  _ - \n
-  "#+end_" str "\n")
-
-(define-abbrev org-mode-abbrev-table "sblk" "" 'skel-org-block)
-
-;; splantuml - PlantUML Source block
-(define-skeleton skel-org-block-plantuml
-  "Insert a org plantuml block, querying for filename."
-  "File (no extension): "
-  "#+begin_src plantuml :file " str ".png :cache yes\n"
-  _ - \n
-  "#+end_src\n")
-
-(define-abbrev org-mode-abbrev-table "splantuml" "" 'skel-org-block-plantuml)
-
-(define-skeleton skel-org-block-plantuml-activity
-  "Insert a org plantuml block, querying for filename."
-  "File (no extension): "
-  "#+begin_src plantuml :file " str "-act.png :cache yes :tangle " str "-act.txt\n"
-  (bh/plantuml-reset-counters)
-  "@startuml\n"
-  "skinparam activity {\n"
-  "BackgroundColor<<New>> Cyan\n"
-  "}\n\n"
-  "title " str " - \n"
-  "note left: " str "\n"
-  "(*) --> \"" str "\"\n"
-  "--> (*)\n"
-  _ - \n
-  "@enduml\n"
-  "#+end_src\n")
-
-(defvar bh/plantuml-if-count 0)
-
-(defun bh/plantuml-if () 
-  (incf bh/plantuml-if-count)
-  (number-to-string bh/plantuml-if-count))
-
-(defvar bh/plantuml-loop-count 0)
-
-(defun bh/plantuml-loop () 
-  (incf bh/plantuml-loop-count)
-  (number-to-string bh/plantuml-loop-count))
-
-(defun bh/plantuml-reset-counters ()
-  (setq bh/plantuml-if-count 0
-        bh/plantuml-loop-count 0)
-  "")
-
-(define-abbrev org-mode-abbrev-table "sact" "" 'skel-org-block-plantuml-activity)
-
-(define-skeleton skel-org-block-plantuml-activity-if
-  "Insert a org plantuml block activity if statement"
-  "" 
-  "if \"\" then\n"
-  "  -> [condition] ==IF" (setq ifn (bh/plantuml-if)) "==\n"
-  "  --> ==IF" ifn "M1==\n"
-  "  -left-> ==IF" ifn "M2==\n"
-  "else\n"
-  "end if\n"
-  "--> ==IF" ifn "M2==")
-
-(define-abbrev org-mode-abbrev-table "sif" "" 'skel-org-block-plantuml-activity-if)
-
-(define-skeleton skel-org-block-plantuml-activity-for
-  "Insert a org plantuml block activity for statement"
-  "Loop for each: " 
-  "--> ==LOOP" (setq loopn (bh/plantuml-loop)) "==\n"
-  "note left: Loop" loopn ": For each " str "\n"
-  "--> ==ENDLOOP" loopn "==\n"
-  "note left: Loop" loopn ": End for each " str "\n" )
-
-(define-abbrev org-mode-abbrev-table "sfor" "" 'skel-org-block-plantuml-activity-for)
-
-(define-skeleton skel-org-block-plantuml-sequence
-  "Insert a org plantuml activity diagram block, querying for filename."
-  "File appends (no extension): "
-  "#+begin_src plantuml :file " str "-seq.png :cache yes :tangle " str "-seq.txt\n"
-  "@startuml\n"
-  "title " str " - \n"
-  "actor CSR as \"Customer Service Representative\"\n"
-  "participant CSMO as \"CSM Online\"\n"
-  "participant CSMU as \"CSM Unix\"\n"
-  "participant NRIS\n"
-  "actor Customer"
-  _ - \n
-  "@enduml\n"
-  "#+end_src\n")
-
-(define-abbrev org-mode-abbrev-table "sseq" "" 'skel-org-block-plantuml-sequence)
-
-;; sdot - Graphviz DOT block
-(define-skeleton skel-org-block-dot
-  "Insert a org graphviz dot block, querying for filename."
-  "File (no extension): "
-  "#+begin_src dot :file " str ".png :cache yes :cmdline -Kdot -Tpng\n"
-  "graph G {\n"
-  _ - \n
-  "}\n"
-  "#+end_src\n")
-
-(define-abbrev org-mode-abbrev-table "sdot" "" 'skel-org-block-dot)
-
-;; sditaa - Ditaa source block
-(define-skeleton skel-org-block-ditaa
-  "Insert a org ditaa block, querying for filename."
-  "File (no extension): "
-  "#+begin_src ditaa :file " str ".png :cache yes\n"
-  _ - \n
-  "#+end_src\n")
-
-(define-abbrev org-mode-abbrev-table "sditaa" "" 'skel-org-block-ditaa)
-
-;; selisp - Emacs Lisp source block
-(define-skeleton skel-org-block-elisp
-  "Insert a org emacs-lisp block"
-  ""
-  "#+begin_src emacs-lisp\n"
-  _ - \n
-  "#+end_src\n")
-
-(define-abbrev org-mode-abbrev-table "selisp" "" 'skel-org-block-elisp)
-
-;(global-set-key (kbd "<f5>") 'bh/org-todo)
+#+BEGIN_SRC emacs-lisp
+;;(global-set-key (kbd "<f3>") 'bh/org-todo)
 
 (defun bh/org-todo (arg)
   (interactive "p")
@@ -1693,7 +1213,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (bh/narrow-to-org-subtree)
     (org-show-todo-tree nil)))
 
-;(global-set-key (kbd "<S-f5>") 'bh/widen)
+;;(global-set-key (kbd "<S-f5>") 'bh/widen)
 
 (defun bh/widen ()
   (interactive)
@@ -1840,37 +1360,30 @@ so change the default 'F' binding in the agenda to allow both"
           'append)
 
 (setq org-show-entry-below (quote ((default))))
+#+END_SRC
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
-          'append)
+*** 18.3 Tuning the Agenda Views
 
-(defun bh/set-agenda-restriction-lock (arg)
-  "Set restriction lock to current task subtree or file if prefix is specified"
-  (interactive "p")
-  (let* ((pom (bh/get-pom-from-agenda-restriction-or-point))
-         (tags (org-with-point-at pom (org-get-tags-at))))
-    (let ((restriction-type (if (equal arg 4) 'file 'subtree)))
-      (save-restriction
-        (cond
-         ((and (equal major-mode 'org-agenda-mode) pom)
-          (org-with-point-at pom
-            (org-agenda-set-restriction-lock restriction-type))
-          (org-agenda-redo))
-         ((and (equal major-mode 'org-mode) (org-before-first-heading-p))
-          (org-agenda-set-restriction-lock 'file))
-         (pom
-          (org-with-point-at pom
-            (org-agenda-set-restriction-lock restriction-type))))))))
-
-;; Limit restriction lock highlighting to the headline only
-(setq org-agenda-restriction-lock-highlight-subtree nil)
-
-;; Always hilight the current agenda line
+Always hilight the current agenda line
+#+BEGIN_SRC emacs-lisp
 (add-hook 'org-agenda-mode-hook
           '(lambda () (hl-line-mode 1))
           'append)
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+;; The following custom-set-faces create the highlights
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button)))) t))
+#+END_SRC
+
+**** 18.3.2 Keep tasks with timestamps visible on the global todo lists
+
+#+BEGIN_SRC emacs-lisp
 ;; Keep tasks with dates on the global todo lists
 (setq org-agenda-todo-ignore-with-date nil)
 
@@ -1891,15 +1404,18 @@ so change the default 'F' binding in the agenda to allow both"
 
 ;; Remove completed items from search results
 (setq org-agenda-skip-timestamp-if-done t)
+#+END_SRC
 
-(setq org-agenda-include-diary nil)
-(setq org-agenda-diary-file "~/git/org/diary.org")
+**** 18.3.4 Searches include archive files
 
-(setq org-agenda-insert-diary-extract-time t)
-
+#+BEGIN_SRC emacs-lisp
 ;; Include agenda archive files when searching for things
 (setq org-agenda-text-search-extra-files (quote (agenda-archives)))
+#+END_SRC
 
+**** 18.3.5 Agenda view tweaks
+
+#+BEGIN_SRC emacs-lisp
 ;; Show all future entries for repeating tasks
 (setq org-agenda-repeating-timestamp-show-all t)
 
@@ -2016,363 +1532,78 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (defun bh/is-scheduled-late (date-str)
   (string-match "Sched\.\\(.*\\)x:" date-str))
+#+END_SRC
+
+**** 18.3.6 Sticky Agendas
+
+#+BEGIN_SRC emacs-lisp
+;; I normally have two views displayed (F12 a for the daily/weekly agenda and F12 SPC for my project management view) 
 
 ;; Use sticky agenda's so they persist
 (setq org-agenda-sticky t)
+#+END_SRC
 
-;; The following setting is different from the document so that you
-;; can override the document path by setting your path in the variable
-;; org-mode-user-contrib-lisp-path
-;;
-(if (boundp 'org-mode-user-contrib-lisp-path)
-    (add-to-list 'load-path org-mode-user-contrib-lisp-path)
-  (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp")))
+**** 18.7.2 org-indent mode
 
-;;(require 'org-checklist)
-
-(setq org-enforce-todo-dependencies t)
-
-(setq org-hide-leading-stars nil)
-
+#+BEGIN_SRC emacs-lisp
 (setq org-startup-indented t)
+#+END_SRC
 
-(setq org-cycle-separator-lines 0)
+**** 18.12 Logging Stuff
 
-(setq org-blank-before-new-entry (quote ((heading)
-                                         (plain-list-item . auto))))
-
-(setq org-insert-heading-respect-content nil)
-
-(setq org-reverse-note-order nil)
-
-(setq org-show-following-heading t)
-(setq org-show-hierarchy-above t)
-(setq org-show-siblings (quote ((default))))
-
-(setq org-special-ctrl-a/e t)
-(setq org-special-ctrl-k t)
-(setq org-yank-adjusted-subtrees t)
-
-(setq org-id-method (quote uuidgen))
-
-(setq org-deadline-warning-days 30)
-
-(setq org-table-export-default-format "orgtbl-to-csv")
-
-(setq org-link-frame-setup (quote ((vm . vm-visit-folder)
-                                   (gnus . org-gnus-no-new-news)
-                                   (file . find-file))))
-
-; Use the current window for C-c ' source editing
-(setq org-src-window-setup 'current-window)
-
+#+BEGIN_SRC emacs-lisp
 (setq org-log-done (quote time))
 (setq org-log-into-drawer t)
 (setq org-log-state-notes-insert-after-drawers nil)
 
-(setq org-clock-sound "/usr/local/lib/tngchime.wav")
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+#+END_SRC
 
-; Enable habit tracking (and a bunch of other modules)
-(setq org-modules (quote (org-bbdb
-                          org-bibtex
-                          org-crypt
-                          org-gnus
-                          org-id
-                          org-info
-                          org-jsinfo
-                          org-habit
-                          org-inlinetask
-                          org-irc
-                          org-mew
-                          org-mhe
-                          org-protocol
-                          org-rmail
-                          org-vm
-                          org-wl
-                          org-w3m)))
+*** 18.44 Showing source block syntax highlighting
 
-; position the habit graph on the agenda to the right of the default
-(setq org-habit-graph-column 50)
-
-(run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
-
-(global-auto-revert-mode t)
-
-(require 'org-crypt)
-; Encrypt all entries before saving
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-; GPG key to use for encryption
-(setq org-crypt-key "F0B66B40")
-
-(setq org-crypt-disable-auto-save nil)
-
-(setq org-use-speed-commands t)
-(setq org-speed-commands-user (quote (("0" . ignore)
-                                      ("1" . ignore)
-                                      ("2" . ignore)
-                                      ("3" . ignore)
-                                      ("4" . ignore)
-                                      ("5" . ignore)
-                                      ("6" . ignore)
-                                      ("7" . ignore)
-                                      ("8" . ignore)
-                                      ("9" . ignore)
-
-                                      ("a" . ignore)
-                                      ("d" . ignore)
-                                      ("h" . bh/hide-other)
-                                      ("i" progn
-                                       (forward-char 1)
-                                       (call-interactively 'org-insert-heading-respect-content))
-                                      ("k" . org-kill-note-or-show-branches)
-                                      ("l" . ignore)
-                                      ("m" . ignore)
-                                      ("q" . bh/show-org-agenda)
-                                      ("r" . ignore)
-                                      ("s" . org-save-all-org-buffers)
-                                      ("w" . org-refile)
-                                      ("x" . ignore)
-                                      ("y" . ignore)
-                                      ("z" . org-add-note)
-
-                                      ("A" . ignore)
-                                      ("B" . ignore)
-                                      ("E" . ignore)
-                                      ("F" . bh/restrict-to-file-or-follow)
-                                      ("G" . ignore)
-                                      ("H" . ignore)
-                                      ("J" . org-clock-goto)
-                                      ("K" . ignore)
-                                      ("L" . ignore)
-                                      ("M" . ignore)
-                                      ("N" . bh/narrow-to-org-subtree)
-                                      ("P" . bh/narrow-to-org-project)
-                                      ("Q" . ignore)
-                                      ("R" . ignore)
-                                      ("S" . ignore)
-                                      ("T" . bh/org-todo)
-                                      ("U" . bh/narrow-up-one-org-level)
-                                      ("V" . ignore)
-                                      ("W" . bh/widen)
-                                      ("X" . ignore)
-                                      ("Y" . ignore)
-                                      ("Z" . ignore))))
-
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (switch-to-buffer "*Org Agenda( )*")
-    (switch-to-buffer "*Org Agenda*"))
-  (delete-other-windows))
-
-(require 'org-protocol)
-
-(setq require-final-newline t)
-
-(defvar bh/insert-inactive-timestamp t)
-
-(defun bh/toggle-insert-inactive-timestamp ()
-  (interactive)
-  (setq bh/insert-inactive-timestamp (not bh/insert-inactive-timestamp))
-  (message "Heading timestamps are %s" (if bh/insert-inactive-timestamp "ON" "OFF")))
-
-(defun bh/insert-inactive-timestamp ()
-  (interactive)
-  (org-insert-time-stamp nil t t nil nil nil))
-
-(defun bh/insert-inactive-timestamp ()
-  (interactive)
-  (org-insert-time-stamp nil t t nil nil nil))
-
-(defun bh/insert-heading-inactive-timestamp ()
-  (save-excursion
-    (when bh/insert-inactive-timestamp
-      (org-return)
-      (org-cycle)
-      (bh/insert-inactive-timestamp))))
-
-(add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
-
-(setq org-export-with-timestamps nil)
-
-(setq org-return-follows-link t)
-
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
-
-(defun bh/prepare-meeting-notes ()
-  "Prepare meeting notes for email
-   Take selected region and convert tabs to spaces, mark TODOs with leading >>>, and copy to kill ring for pasting"
-  (interactive)
-  (let (prefix)
-    (save-excursion
-      (save-restriction
-        (narrow-to-region (region-beginning) (region-end))
-        (untabify (point-min) (point-max))
-        (goto-char (point-min))
-        (while (re-search-forward "^\\( *-\\\) \\(TODO\\|DONE\\): " (point-max) t)
-          (replace-match (concat (make-string (length (match-string 1)) ?>) " " (match-string 2) ": ")))
-        (goto-char (point-min))
-        (kill-ring-save (point-min) (point-max))))))
-
-(setq org-remove-highlights-with-change t)
-
-(add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
-
-(setq org-read-date-prefer-future 'time)
-
-(setq org-list-demote-modify-bullet (quote (("+" . "-")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "-")
-                                            ("A)" . "-")
-                                            ("B)" . "-")
-                                            ("a)" . "-")
-                                            ("b)" . "-")
-                                            ("A." . "-")
-                                            ("B." . "-")
-                                            ("a." . "-")
-                                            ("b." . "-"))))
-
-(setq org-tags-match-list-sublevels t)
-
-(setq org-agenda-persistent-filter t)
-
-(setq org-link-mailto-program (quote (compose-mail "%a" "%s")))
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
-;;(require 'smex)
-;;(smex-initialize)
-
-;;(global-set-key (kbd "M-x") 'smex)
-;;(global-set-key (kbd "C-x x") 'smex)
-;;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-;; Bookmark handling
-;;
-(global-set-key (kbd "<C-f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
-(global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
-
-;;(require 'org-mime)
-
-(setq org-agenda-skip-additional-timestamps-same-entry t)
-
-(setq org-table-use-standard-references (quote from))
-
-(setq org-file-apps (quote ((auto-mode . emacs)
-                            ("\\.mm\\'" . system)
-                            ("\\.x?html?\\'" . system)
-                            ("\\.pdf\\'" . system))))
-
-; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
-
-(setq org-clone-delete-id t)
-
-(setq org-cycle-include-plain-lists t)
-
+#+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t)
+#+END_SRC
 
-(setq org-structure-template-alist
-      (quote (("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-              ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-              ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-              ("v" "#+begin_verse\n?\n#+end_verse" "<verse>\n?\n</verse>")
-              ("c" "#+begin_center\n?\n#+end_center" "<center>\n?\n</center>")
-              ("l" "#+begin_latex\n?\n#+end_latex" "<literal style=\"latex\">\n?\n</literal>")
-              ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-              ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-              ("H" "#+html: " "<literal style=\"html\">?</literal>")
-              ("a" "#+begin_ascii\n?\n#+end_ascii")
-              ("A" "#+ascii: ")
-              ("i" "#+index: ?" "#+index: ?")
-              ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
+ediff org modeæ—¶çš„foldingæœ‰ç‚¹è®¨åŒã€‚
 
-(defun bh/mark-next-parent-tasks-todo ()
-  "Visit each parent task and change NEXT states to TODO"
-  (let ((mystate (or (and (fboundp 'org-state)
-                          state)
-                     (nth 2 (org-heading-components)))))
-    (when mystate
-      (save-excursion
-        (while (org-up-heading-safe)
-          (when (member (nth 2 (org-heading-components)) (list "NEXT"))
-            (org-todo "TODO")))))))
+#+BEGIN_SRC emacs-lisp
+;;2014/05/02 16:43:50 ediff folded org file
+;;(add-hook 'ediff-prepare-buffer-hook 'f-ediff-prepare-buffer-hook-setup)
+;;(defun f-ediff-prepare-buffer-hook-setup ()
+;;  ;; specific modes
+;;  (cond ((eq major-mode 'org-mode)
+;;         (f-org-vis-mod-maximum))
+;;        ;; room for more modes
+;;        )
+;;  ;; all modes
+;;  (setq truncate-lines nil))
+;;(defun f-org-vis-mod-maximum ()
+;;  "Visibility: Show the most possible."
+;;  (cond
+;;   ((eq major-mode 'org-mode)
+;;    (visible-mode 1)  ; default 0
+;;    (setq truncate-lines nil)  ; no `org-startup-truncated' in hook
+;;    (setq org-hide-leading-stars t))  ; default nil
+;;   (t
+;;    (message "ERR: not in Org mode")
+;;    (ding))))
+#+END_SRC
 
-(add-hook 'org-after-todo-state-change-hook 'bh/mark-next-parent-tasks-todo 'append)
-(add-hook 'org-clock-in-hook 'bh/mark-next-parent-tasks-todo 'append)
+** org2blog
 
-(setq org-startup-folded t)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/lisp/org2blog")
+(require 'org2blog-autoloads)
 
-(add-hook 'message-mode-hook 'orgstruct++-mode 'append)
-(add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
-(add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
-;;(add-hook 'message-mode-hook 'orgtbl-mode 'append)
-
-;;;(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-
-(add-hook 'message-mode-hook
-          '(lambda () (setq fill-column 72))
-          'append)
-
-;; flyspell mode for spell checking everywhere
-;;;(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
-
-;; Disable keys in org-mode
-;;    C-c [ 
-;;    C-c ]
-;;    C-c ;
-;;    C-c C-x C-q  cancelling the clock (we never want this)
-(add-hook 'org-mode-hook
-          '(lambda ()
-             ;; Undefine C-c [ and C-c ] since this breaks my
-             ;; org-agenda files when directories are include It
-             ;; expands the files in the directories individually
-             (org-defkey org-mode-map "\C-c[" 'undefined)
-             (org-defkey org-mode-map "\C-c]" 'undefined)
-             (org-defkey org-mode-map "\C-c;" 'undefined)
-             (org-defkey org-mode-map "\C-c\C-x\C-q" 'undefined))
-          'append)
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c M-o") 'bh/mail-subtree))
-          'append)
-
-(defun bh/mail-subtree ()
-  (interactive)
-  (org-mark-subtree)
-  (org-mime-subtree))
-
-(setq org-src-preserve-indentation nil)
-(setq org-edit-src-content-indentation 0)
-
-(setq org-catch-invisible-edits 'error)
-
-(setq org-export-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(set-charset-priority 'unicode)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-
-(setq org-time-clocksum-format
-      '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-
-(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
-(setq org-emphasis-alist (quote (("*" bold "<b>" "</b>")
-                                 ("/" italic "<i>" "</i>")
-                                 ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
-                                 ("=" org-code "<code>" "</code>" verbatim)
-                                 ("~" org-verbatim "<code>" "</code>" verbatim))))
-
-(setq org-use-sub-superscripts nil)
-
-(setq org-odd-levels-only nil)
-
-(run-at-time "00:59" 3600 'org-save-all-org-buffers)
+(setq org2blog/wp-blog-alist
+      '(("wordpress"
+         :url "http://www.albert.com/xmlrpc.php"
+         :username "admin"
+         :default-title "Hello World"
+         :default-categories ("org2blog" "emacs")
+         :tags-as-categories nil)
+                              ))
 #+END_SRC
