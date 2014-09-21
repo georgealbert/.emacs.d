@@ -561,7 +561,7 @@ Custom Key Bindings
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
 
-(setq org-agenda-files (list "~/org")
+(setq org-agenda-files (list "e:/workspace/org")
 	  )
 
 '(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
