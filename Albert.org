@@ -21,7 +21,7 @@ http://melpa.milkbox.net/packages/ 经常性的上不去，考虑换源。
 设置默认工作目录到HOME目录，不设置的话是 /emacs安装目录/bin/ 。
 
 #+BEGIN_SRC emacs-lisp
-(setq default-directory "c:/vim")
+(setq default-directory "e:/home/albert")
 #+END_SRC
 
 ** UTF-8
@@ -104,8 +104,8 @@ Disk space is cheap. Save lots.
 ** Font setting on win7
 
 #+BEGIN_SRC emacs-lisp
-(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
 #+END_SRC
 
 ** ido
@@ -189,7 +189,7 @@ emacs24自带的最喜欢的theme。
 T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，控制窗口大小，让buffer显示在下面。
 #+BEGIN_SRC emacs-lisp
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+;(setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
 #+END_SRC
 
 ** 显示行、列号
@@ -218,7 +218,7 @@ M-: (insert (format-time-string "%Y-%m-%d %T"))
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [(f5)] '(lambda () (interactive) 
-(insert (format-time-string "[%Y-%m-%d %T]"))
+(insert (format-time-string "[%Y-%m-%d %a %T]"))
 ))
 #+END_SRC
 
@@ -343,6 +343,33 @@ http://ftp.gnu.org/pub/gnu/windows/emacs/
 
 这个可以找到这些dll https://github.com/winterTTr/emacs-of-winterTTr/tree/master/.emacs.d/extra-bin/dlls
 
+* emacs-lisp
+[2014-09-27 01:58:44]
+
+lisp语言入门，写得很不错，找不到原出处了 http://www.cnblogs.com/suiqirui19872005/archive/2007/12/05/984517.html
+
+emacs自带的帮助也不错，可以了解emacs lisp的特点，和common lisp的区别慢慢体会。
+
+** 括号高亮
+http://www.emacswiki.org/emacs/HighlightParentheses
+
+http://ergoemacs.org/emacs/emacs_editing_lisp.html
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+             (highlight-parentheses-mode)))
+#+END_SRC
+
+** eldoc-mode
+http://sachachua.com/blog/2014/06/read-lisp-tweak-emacs-beginner-24-understand-emacs-lisp-code/
+
+turns on eldoc-mode, which displays the argument list for the current function. 
+You can move your cursor around to see argument lists for other functions.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+#+END_SRC
+
 * evil
 
 #+BEGIN_SRC emacs-lisp
@@ -431,7 +458,7 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 [2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/helm")
+;(add-to-list 'load-path "~/.emacs.d/lisp/helm")
 (require 'helm-config)
 (helm-mode 1)
 (global-set-key (kbd "C-c h") 'helm-mini)
