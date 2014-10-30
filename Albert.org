@@ -73,7 +73,8 @@ http://melpa.milkbox.net/packages/ 经常性的上不去，考虑换源。
 ** minibuffer
 [2014-09-12 09:24:17]
 
-It often displays so much information, even temporarily, that it is nice to give it some room to breath.
+It often displays so much information, even temporarily, that it is nice to give
+it some room to breath.
 
 #+BEGIN_SRC emacs-lisp
 (setq resize-mini-windows t)
@@ -147,7 +148,9 @@ emacs24自带的最喜欢的theme。
 
 ** ibuffer
 
-使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
+使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已经
+提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
+
 启用ibuffer支持，增强 *buffer*  
 #+BEGIN_SRC emacs-lisp
 (require 'ibuffer)  
@@ -156,7 +159,8 @@ emacs24自带的最喜欢的theme。
 
 ** Performace problem
 
-[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。如果打开会看见很多QueryBasicInformation这样的调用.
+[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
+如果打开会看见很多QueryBasicInformation这样的调用.
 
 #+BEGIN_SRC emacs-lisp
 (setq w32-get-true-file-attributes nil)
@@ -186,7 +190,9 @@ emacs24自带的最喜欢的theme。
 
 ** Window size
 
-T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，控制窗口大小，让buffer显示在下面。
+T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，
+控制窗口大小，让buffer显示在下面。
+
 #+BEGIN_SRC emacs-lisp
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
 ;(setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
