@@ -1,12 +1,11 @@
 
 * basic setting
 ** elpa
-http://melpa.milkbox.net/packages/ 经常性的上不去，考虑换源。
 
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  '("melpa" . "http://melpa.org/packages/") t)
 
 ;(setq url-proxy-services
 ;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
@@ -104,9 +103,22 @@ Disk space is cheap. Save lots.
 
 ** Font setting on win7
 
+可以用 C-u C-x = 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
+另一个有用的函数是 =describe-fontset=
+
 #+BEGIN_SRC emacs-lisp
 ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
 ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+
+;; Setting English Font
+;(set-face-attribute
+;  'default nil :font "Monaco 12")
+ 
+;; Chinese Font
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+                      charset
+                      (font-spec :family "Microsoft Yahei" :size 13)))
 #+END_SRC
 
 ** ido
