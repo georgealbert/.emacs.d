@@ -7,10 +7,10 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.org/packages/") t)
 
-;(setq url-proxy-services
-;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-;     ("http" . "134.80.3.27:8080")
-;     ("https" . "134.80.3.27:8080")))
+(setq url-proxy-services
+   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+     ("http" . "134.80.3.27:8080")
+     ("https" . "134.80.3.27:8080")))
 
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
@@ -20,15 +20,19 @@
 设置默认工作目录到HOME目录，不设置的话是 /emacs安装目录/bin/ 。
 
 #+BEGIN_SRC emacs-lisp
-(setq default-directory "e:/home/albert")
+(setq default-directory "~/")
 #+END_SRC
 
 ** UTF-8
 [2014-09-17 14:59:51]
 
+文件名在emacs使用utf-8的默认编码的时候是乱码，win下指定编码为gbk。
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
-(setq file-name-coding-system 'gbk)
+
+(if (eq system-type 'windows-nt)
+  (setq file-name-coding-system 'gbk)
+)
 #+END_SRC
 
 ** 去掉启动欢迎界面
@@ -43,23 +47,18 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-** 不显示工具栏
+** 不显示工具栏和滚动条
+[2014-11-18 周二 17:39:59] 把scrollbar也去掉了
 
 #+begin_src emacs-lisp
 (tool-bar-mode -1)
+(scroll-bar-mode -1)
 #+end_src
 
 ** 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
 
 #+begin_src emacs-lisp
 (mouse-avoidance-mode 'animate)
-#+end_src
-
-** 反显选中区域
-
-貌似没用。
-#+begin_src emacs-lisp
-;(transient-mark-mode t) 
 #+end_src
 
 ** Frame title
@@ -107,24 +106,20 @@ Disk space is cheap. Save lots.
 另一个有用的函数是 =describe-fontset=
 
 #+BEGIN_SRC emacs-lisp
-;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+(if (eq system-type 'windows-nt)
+  ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+  ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
 
 ;; Setting English Font
 ;(set-face-attribute
 ;  'default nil :font "Monaco 12")
- 
-;; Chinese Font
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-    (set-fontset-font (frame-parameter nil 'font)
+
+  ;; Chinese Font
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+            (set-fontset-font (frame-parameter nil 'font)
                       charset
                       (font-spec :family "Microsoft Yahei" :size 13)))
-#+END_SRC
-
-** ido
-
-#+BEGIN_SRC emacs-lisp
-;(require 'ido)
+)
 #+END_SRC
 
 ** Color theme
@@ -139,7 +134,15 @@ emacs24自带的最喜欢的theme。
 
 [2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
 
+[2014-11-18 周二 10:54:56] 为什么在24.4上就不显示时间戳和权限了呢？
+
+set =diredp-hide-details-initially-flag= to nil in 24.4 to display details, set
+before dired+ loaded
+
+也可以按 =(= 打开或关闭detail显示。
+
 #+BEGIN_SRC emacs-lisp
+(setq diredp-hide-details-initially-flag nil)
 (require 'dired+)
 #+END_SRC
 
@@ -151,7 +154,7 @@ emacs24自带的最喜欢的theme。
 (defun my-comment-or-uncomment-region (beg end &optional arg)  
   (interactive (if (use-region-p)  
                    (list (region-beginning) (region-end) nil)  
-                 (list (line-beginning-position)  
+                   (list (line-beginning-position)  
                        (line-beginning-position 2))))  
   (comment-or-uncomment-region beg end arg)  
 )  
@@ -160,8 +163,8 @@ emacs24自带的最喜欢的theme。
 
 ** ibuffer
 
-使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已经
-提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
+使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
+经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
 
 启用ibuffer支持，增强 *buffer*  
 #+BEGIN_SRC emacs-lisp
@@ -175,7 +178,9 @@ emacs24自带的最喜欢的theme。
 如果打开会看见很多QueryBasicInformation这样的调用.
 
 #+BEGIN_SRC emacs-lisp
-(setq w32-get-true-file-attributes nil)
+(if (eq system-type 'windows-nt)
+    (setq w32-get-true-file-attributes nil)
+)
 #+END_SRC
 
 ** htmlize
@@ -207,7 +212,9 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 #+BEGIN_SRC emacs-lisp
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-;(setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+(if (eq system-type 'windows-nt)
+  (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+)
 #+END_SRC
 
 ** 显示行、列号
@@ -231,7 +238,7 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 insert current time，要加上(interactive)啊，为什么呢？
 
 #+BEGIN_EXAMPLE
-M-: (insert (format-time-string "%Y-%m-%d %T"))
+M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
@@ -279,51 +286,13 @@ Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tri
 (global-set-key (kbd "C-x 3") 'hsplit-last-buffer)
 #+END_SRC
 
-** Mode line format
-[2014-09-16 18:18:58]
-
-Display a more compact mode line.
-
-居然还可以显示系统的load，但是windows的load和linux的意义一样吗？
-#+BEGIN_SRC emacs-lisp
-;(use-package smart-mode-line
-;(defun my-line()
-;  :init
-;  (progn
-;  (setq-default
-;   mode-line-format 
-;   '("%e"
-;     mode-line-front-space
-;     mode-line-mule-info
-;     mode-line-client
-;     mode-line-modified
-;     mode-line-remote
-;     mode-line-frame-identification
-;     mode-line-buffer-identification
-;     "   "
-;     mode-line-position
-;     (vc-mode vc-mode)
-;     "  "
-;     mode-line-modes
-;     mode-line-misc-info
-;     mode-line-end-spaces))))
-;(my-line)
-
-;; 显示日期
-(setq display-time-day-and-date t)
-(display-time)
-
-;; 显示时间
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
-#+END_SRC
-
 ** 图片支持
 [2014-09-18 08:49:12]
 
-可以先在运行下面几个语句检查一下是否已经支持了图片
+=M-x list-dynamics-libraries= 找到对应的dll的name。
+
+可以运行下面几行代码检查一下是否已经支持了图片。
+
 #+BEGIN_SRC lisp
 (image-type-available-p 'gif)
 
@@ -334,15 +303,21 @@ Display a more compact mode line.
 (image-type-available-p 'xbm)
 
 (image-type-available-p 'xpm)
+
+(image-type-available-p 'png)
 #+END_SRC
 
-这几个函数复制到Lisp模式的buffer，
+这几个函数复制到Lisp模式的buffer，然后在每一行行尾按 *C-j* ，就可以看到每个函数运行的结果，返回 *t* 证明已经可以支持图片了。
 
-然后在每一行行尾按 *C-j* ，就可以看到每个函数运行的结果，返回t证明已经可以支持图片了。
+win的emacs不能显示图片是因为编译后默认没有带几个dll文件。把dll copy到emacs安装目录的bin目录下，就可以显示图片了。
 
-Win的emacs不能显示图片是因为编译后默认没有带几个DLL文件。
+*** emacs 24.4
++ png
+  [2014-11-18 周二 15:48:21] emacs 24.4需要libpng16-16.dll or libpng16.dll 和 zlib1.dll，都在libpng的压缩包里面
+  可以从 http://sourceforge.net/projects/ezwinports/files/ 下载
 
-把以下DLL文件拷贝到emacs安装目录的bin目录下，就可以显示图片了。
+*** emacs 24.3
++ png :: libpng14.dll
 
 #+BEGIN_EXAMPLE
 jpeg62.dll
@@ -357,9 +332,30 @@ xpm4.dll
 zlib1.dll
 #+END_EXAMPLE
 
-http://ftp.gnu.org/pub/gnu/windows/emacs/
+可以从 https://github.com/winterTTr/emacs-of-winterTTr/tree/master/.emacs.d/extra-bin/dlls 下载
 
-这个可以找到这些dll https://github.com/winterTTr/emacs-of-winterTTr/tree/master/.emacs.d/extra-bin/dlls
+** 输入特殊字符
+[2014-09-29 周一 17:20:40]
+
++  :: C-q C-a
+
+C-q X 是一个通用的输入特殊字符的解决办法，X 表示一个特殊 字符， 在几乎所有的模式下，输入 C-q 然后是一个就可以输入这个 特殊字符。
+一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 C-j ， ASCII 10 。
+除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
+(setq read-quoted-char-radix 10)
+or
+(setq read-quoted-char-radix 16)
+可以改为把八进制改为十进制或者十六进制。或者用命令
+M-x set-variable <RET> read-quoted-char-radix <RET>10 
+
+** save the cursor position for every file you opened
+
+Turn on save place so that when opening a file, the cursor will be at the last position.
+#+BEGIN_SRC emacs-lisp
+(require 'saveplace)
+(setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
+(setq-default save-place t)
+#+END_SRC
 
 * emacs-lisp
 [2014-09-27 01:58:44]
@@ -377,6 +373,12 @@ http://ergoemacs.org/emacs/emacs_editing_lisp.html
 (add-hook 'emacs-lisp-mode-hook
           '(lambda ()
              (highlight-parentheses-mode)))
+
+(define-globalized-minor-mode global-highlight-parentheses-mode
+  highlight-parentheses-mode
+  (lambda ()
+    (highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)
 #+END_SRC
 
 ** eldoc-mode
@@ -401,9 +403,9 @@ You can move your cursor around to see argument lists for other functions.
 [2014-09-11 10:22:26] disable emacs自带的vc，用 *process monitor* 看，vc每次打开都会把支持的版本管理都查一遍，会比较慢。
 但是去掉了以后，magit没法在status bar上显示文件在哪个branch上了。哎。
 
-process monitor 在vpn后会导致机器hang。
+process monitor在用了vpn后会导致机器hang。
 
-把vc disable后会快不少。
+把vc disable后会快不少，还是去了吧。
 
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
@@ -428,27 +430,24 @@ process monitor 在vpn后会导致机器hang。
 (require 'magit)
 #+end_src
 
-* smex
-[2014-09-19 14:44:30] 有helm，不用smex了。
-
-Smex is a M-x enhancement for Emacs. Built on top of IDO, it provides a convenient interface 
-to your recently and most frequently used commands. And to all the other commands, too.
-
-Extras: Limit commands to those relevant to the active major mode. Show frequently used commands that have no key bindings.
-
-用了smex后，现在已经把command忘记得差不多了，现在magit的话，就会 *M-x magit* 直接联想了。呵呵。
-
-#+BEGIN_SRC emacs-lisp
-;(require 'smex)
-;
-;(global-set-key (kbd "M-x") 'smex)
-;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-#+END_SRC
-
 * helm
 [2014-09-16 09:27:15]
+
+#+BEGIN_SRC emacs-lisp
+(require 'helm-config)
+(helm-mode 1)
+(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+;          helm-input-idle-delay 0.01  ; this actually updates things
+;                                      ; reeeelatively quickly.
+(setq helm-quick-update t
+      helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
+      helm-ff-skip-boring-files t)
+#+END_SRC
+
+** Search buffers by major-mode
 
 + multi buffer search
   1. *C-c h* 调出helm-mini buffer
@@ -475,20 +474,50 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
              
 [2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
 
-#+BEGIN_SRC emacs-lisp
-;(add-to-list 'load-path "~/.emacs.d/lisp/helm")
-(require 'helm-config)
-(helm-mode 1)
-(global-set-key (kbd "C-c h") 'helm-mini)
-(global-set-key (kbd "M-x") 'helm-M-x)
+[2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
 
-(setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                      ; reeeelatively quickly.
-          helm-quick-update t
-          helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
-          helm-ff-skip-boring-files t)
+** grep
+
+=helm-resume= 恢复上次的command
+
+*** Grep from helm-find-files
+
+From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
+menu with tab and choose grep. A prefix arg will launch recursive
+grep.
+
+NOTE:You can now launch grep with (C-u) M-g s without switching to the
+action pannel.
+
+*** Grep thing at point
+
+Before lauching helm, put your cursor on the start of symbol or sexp
+you will want to grep. Then launch helm-do-grep or helm-find-files,
+and when in the grep prompt hit C-w as many time as needed.
+
+光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
+可以跟着grep这个word后面的word。
+
+*** Grep persistent action
+
+As always, C-z will bring you in the buffer corresponding to the file
+you are grepping. Well nothing new, but using C-u C-z will record this
+place in the mark-ring. So if you want to come back later to these
+places, there is no need to grep again, you will find all these places
+in the mark-ring. Accessing the mark-ring in Emacs is really
+inconvenient, fortunately, you will find in helm-config
+helm-all-mark-ring which is a mark-ring browser
+(helm-command-prefix-key C-c SPACE). helm-all-mark-ring is in helm
+menu also, in the tool section.
+
+TIP: Bind helm-all-mark-ring to C-c SPACE.
+
+在org mode下，无效。
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
 #+END_SRC
+
+NOTE: helm-all-mark-ring handle global-mark-ring also.
 
 * window-number
 
@@ -499,12 +528,6 @@ different from window-numbering.el
 (require 'window-numbering)
 
 (window-numbering-mode 1)
-
-;; for window-numbering.el from http://www.emacswiki.org/emacs/window-number.el
-;; 跳转不方便C-x C-j num，按起来不爽，显示window的编号不如上面的好看，太丑了。
-;;(add-to-list 'load-path "~/.emacs.d/lisp/")
-;;(require 'window-number)
-;;(window-number-mode 1)
 #+END_SRC
 
 * undotree
@@ -606,7 +629,7 @@ Custom Key Bindings
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
 
-(setq org-agenda-files (list "e:/workspace/org")
+(setq org-agenda-files (list "~/org")
 	  )
 
 '(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
@@ -1650,15 +1673,75 @@ ediff org mode时的folding有点讨厌。
 ** org2blog
 
 #+BEGIN_SRC emacs-lisp
-;(add-to-list 'load-path "~/.emacs.d/lisp/org1blog")
-;(require 'org2blog-autoloads)
+(add-to-list 'load-path "~/.emacs.d/lisp/org2blog")
+(require 'org2blog-autoloads)
+
+(setq org2blog/wp-blog-alist
+      '(("wordpress"
+         :url "http://www.albert.com/xmlrpc.php"
+         :username "admin"
+         :default-title "Hello World"
+         :default-categories ("org2blog" "emacs")
+         :tags-as-categories nil)
+                              ))
+#+END_SRC
+* 现在没用的配置
+** 反显选中区域
+
+emacs 23以后默认。
+#+begin_src emacs-lisp
+;(transient-mark-mode t) 
+#+end_src
+** Mode line format
+[2014-09-16 18:18:58]
+
+Display a more compact mode line.
+
+#+BEGIN_SRC emacs-lisp
+;(use-package smart-mode-line
+;(defun my-line()
+;  :init
+;  (progn
+;  (setq-default
+;   mode-line-format 
+;   '("%e"
+;     mode-line-front-space
+;     mode-line-mule-info
+;     mode-line-client
+;     mode-line-modified
+;     mode-line-remote
+;     mode-line-frame-identification
+;     mode-line-buffer-identification
+;     "   "
+;     mode-line-position
+;     (vc-mode vc-mode)
+;     "  "
+;     mode-line-modes
+;     mode-line-misc-info
+;     mode-line-end-spaces))))
+;(my-line)
+#+END_SRC
+** ido
+
+#+BEGIN_SRC emacs-lisp
+;(require 'ido)
+#+END_SRC
+
+** smex
+[2014-09-19 14:44:30] 有helm，不用smex了。
+
+Smex is a M-x enhancement for Emacs. Built on top of IDO, it provides a convenient interface 
+to your recently and most frequently used commands. And to all the other commands, too.
+
+Extras: Limit commands to those relevant to the active major mode. Show frequently used commands that have no key bindings.
+
+用了smex后，现在已经把command忘记得差不多了，现在magit的话，就会 *M-x magit* 直接联想了。呵呵。
+
+#+BEGIN_SRC emacs-lisp
+;(require 'smex)
 ;
-;(setq org2blog/wp-blog-alist
-;      '(("wordpress"
-;         :url "http://www.albert.com/xmlrpc.php"
-;         :username "admin"
-;         :default-title "Hello World"
-;         :default-categories ("org2blog" "emacs")
-;         :tags-as-categories nil)
-;                              ))
+;(global-set-key (kbd "M-x") 'smex)
+;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+END_SRC
