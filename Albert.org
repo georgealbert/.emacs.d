@@ -14,6 +14,8 @@
 
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
+
+(require 'use-package)
 #+end_src
 
 ** HOME
@@ -339,14 +341,19 @@ zlib1.dll
 
 +  :: C-q C-a
 
-C-q X 是一个通用的输入特殊字符的解决办法，X 表示一个特殊 字符， 在几乎所有的模式下，输入 C-q 然后是一个就可以输入这个 特殊字符。
-一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 C-j ， ASCII 10 。
++ C-q X :: 是一个通用的输入特殊字符的解决办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后是一个就可以输入这个特殊字符。
+一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 C-j ， ASCII 10。
 除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
+#+BEGIN_SRC lisp
 (setq read-quoted-char-radix 10)
-or
+;or
 (setq read-quoted-char-radix 16)
+#+END_SRC
+
 可以改为把八进制改为十进制或者十六进制。或者用命令
+#+BEGIN_EXAMPLE
 M-x set-variable <RET> read-quoted-char-radix <RET>10 
+#+END_EXAMPLE
 
 ** save the cursor position for every file you opened
 
@@ -355,6 +362,53 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 (require 'saveplace)
 (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
 (setq-default save-place t)
+#+END_SRC
+
+** mode-line
+[2014-11-21 周五 10:35:59]
+
+#+BEGIN_SRC emacs-lisp
+(use-package smart-mode-line
+  :init
+  (progn
+  (setq-default
+   mode-line-format 
+   '("%e"
+     mode-line-front-space
+     mode-line-mule-info
+     mode-line-client
+     mode-line-modified
+     mode-line-remote
+     mode-line-frame-identification
+     mode-line-buffer-identification
+     "   "
+     mode-line-position
+     (vc-mode vc-mode)
+     "  "
+     mode-line-modes
+     mode-line-misc-info
+     mode-line-end-spaces))))
+
+;; 显示日期时间
+(setq display-time-day-and-date t)
+
+;(setq display-time-24hr-format t)
+;(setq display-time-use-mail-icon t)
+(setq display-time-interval 10)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
+
+(require 'diminish)
+(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+;(eval-after-load "hl-p" '(diminish 'highlight-parentheses-mode))
+
+(diminish 'visual-line-mode)
 #+END_SRC
 
 * emacs-lisp
@@ -439,6 +493,10 @@ process monitor在用了vpn后会导致机器hang。
 (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "M-x") 'helm-M-x)
 
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
 ;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
 ;          helm-input-idle-delay 0.01  ; this actually updates things
 ;                                      ; reeeelatively quickly.
@@ -519,6 +577,17 @@ TIP: Bind helm-all-mark-ring to C-c SPACE.
 
 NOTE: helm-all-mark-ring handle global-mark-ring also.
 
+* helm-swoop
+[2014-11-21 周五 09:26:34]
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-swoop
+ :bind (("M-i" . helm-swoop)
+        ("M-I" . helm-swoop-back-to-last-point)
+        ( "C-c M-i" . helm-multi-swoop)
+        ( "C-x M-i" . helm-multi-swoop-all)))
+#+END_SRC
+
 * window-number
 
 different from window-numbering.el
@@ -557,6 +626,37 @@ pdb setup, note the python version
     (list (gud-query-cmdline pdb-path
                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
+
+* ace-dump
+[2014-11-20 周四 18:09:04]
+
+#+BEGIN_SRC emacs-lisp
+;;;
+;;; ace jump mode major function
+;;; 
+;(autoload
+;  'ace-jump-mode
+;  "ace-jump-mode"
+;  "Emacs quick move minor mode"
+;  t)
+;;; you can select the key you prefer to
+;(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;
+;;; 
+;;; enable a more powerful jump back function from ace jump mode
+;;;
+;(autoload
+;  'ace-jump-mode-pop-mark
+;  "ace-jump-mode"
+;  "Ace jump back:-)"
+;  t)
+;(eval-after-load "ace-jump-mode"
+;  '(ace-jump-mode-enable-mark-sync))
+;(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+;
+;;;If you use evil
+;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+#+END_SRC 
 
 * org mode
 ** html export
@@ -1673,17 +1773,17 @@ ediff org mode时的folding有点讨厌。
 ** org2blog
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp/org2blog")
-(require 'org2blog-autoloads)
-
-(setq org2blog/wp-blog-alist
-      '(("wordpress"
-         :url "http://www.albert.com/xmlrpc.php"
-         :username "admin"
-         :default-title "Hello World"
-         :default-categories ("org2blog" "emacs")
-         :tags-as-categories nil)
-                              ))
+;(add-to-list 'load-path "~/.emacs.d/lisp/org2blog")
+;(require 'org2blog-autoloads)
+;
+;(setq org2blog/wp-blog-alist
+;      '(("wordpress"
+;         :url "http://www.albert.com/xmlrpc.php"
+;         :username "admin"
+;         :default-title "Hello World"
+;         :default-categories ("org2blog" "emacs")
+;         :tags-as-categories nil)
+;                              ))
 #+END_SRC
 * 现在没用的配置
 ** 反显选中区域
