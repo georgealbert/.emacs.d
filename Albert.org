@@ -1,4 +1,4 @@
-
+﻿
 * basic setting
 ** elpa
 
@@ -7,10 +7,10 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.org/packages/") t)
 
-(setq url-proxy-services
-   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-     ("http" . "134.80.3.27:8080")
-     ("https" . "134.80.3.27:8080")))
+;(setq url-proxy-services
+;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+;     ("http" . "134.80.3.27:8080")
+;     ("https" . "134.80.3.27:8080")))
 
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
@@ -368,26 +368,26 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 [2014-11-21 周五 10:35:59]
 
 #+BEGIN_SRC emacs-lisp
-(use-package smart-mode-line
-  :init
-  (progn
-  (setq-default
-   mode-line-format 
-   '("%e"
-     mode-line-front-space
-     mode-line-mule-info
-     mode-line-client
-     mode-line-modified
-     mode-line-remote
-     mode-line-frame-identification
-     mode-line-buffer-identification
-     "   "
-     mode-line-position
-     (vc-mode vc-mode)
-     "  "
-     mode-line-modes
-     mode-line-misc-info
-     mode-line-end-spaces))))
+;(use-package smart-mode-line
+;  :init
+;  (progn
+;  (setq-default
+;   mode-line-format 
+;   '("%e"
+;     mode-line-front-space
+;     mode-line-mule-info
+;     mode-line-client
+;     mode-line-modified
+;     mode-line-remote
+;     mode-line-frame-identification
+;     mode-line-buffer-identification
+;     "   "
+;     mode-line-position
+;     (vc-mode vc-mode)
+;     "  "
+;     mode-line-modes
+;     mode-line-misc-info
+;     mode-line-end-spaces))))
 
 ;; 显示日期时间
 (setq display-time-day-and-date t)
@@ -400,13 +400,13 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 (display-time)
 
 (require 'diminish)
-(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
-;(eval-after-load "hl-p" '(diminish 'highlight-parentheses-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
 
 (diminish 'visual-line-mode)
 #+END_SRC
