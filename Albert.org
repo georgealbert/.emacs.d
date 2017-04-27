@@ -15,6 +15,7 @@
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
 
+(setq use-package-verbose t)
 (require 'use-package)
 #+end_src
 
@@ -104,24 +105,28 @@ Disk space is cheap. Save lots.
 
 ** Font setting on win7
 
-可以用 C-u C-x = 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
+可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
 另一个有用的函数是 =describe-fontset=
 
 #+BEGIN_SRC emacs-lisp
 (if (eq system-type 'windows-nt)
   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+  (progn
+    ;; Setting English Font
+    (set-face-attribute
+      'default nil :font "Consolas 11")
+    
+      ;; Chinese Font
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+                (set-fontset-font (frame-parameter nil 'font)
+                          charset
+                          (font-spec :family "微软雅黑" :size 15)))))
 
-;; Setting English Font
-;(set-face-attribute
-;  'default nil :font "Monaco 12")
+;;(if (eq system-type 'windows-nt)
+;;     (set-face-attribute
+;;       'default nil :font "YaHei Consolas Hybrid 11"))
 
-  ;; Chinese Font
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-            (set-fontset-font (frame-parameter nil 'font)
-                      charset
-                      (font-spec :family "Microsoft Yahei" :size 13)))
-)
 #+END_SRC
 
 ** Color theme
@@ -130,6 +135,8 @@ emacs24自带的最喜欢的theme。
 
 #+BEGIN_SRC emacs-lisp
 (load-theme 'deeper-blue t)
+;;(load-theme 'tango-dark t)
+;; (load-theme 'manoj-dark t)
 #+END_SRC
 
 ** Diredplus
@@ -145,7 +152,8 @@ before dired+ loaded
 
 #+BEGIN_SRC emacs-lisp
 (setq diredp-hide-details-initially-flag nil)
-(require 'dired+)
+(use-package dired+
+  :defer t)
 #+END_SRC
 
 ** 多行代码的注释/反注释
@@ -170,8 +178,11 @@ before dired+ loaded
 
 启用ibuffer支持，增强 *buffer*  
 #+BEGIN_SRC emacs-lisp
-(require 'ibuffer)  
-(global-set-key (kbd "C-x C-b") 'ibuffer)  
+(use-package ibuffer
+  :defer t
+  :config
+    (progn
+      (global-set-key (kbd "C-x C-b") 'ibuffer)))  
 #+END_SRC
 
 ** Performace problem
@@ -368,26 +379,27 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 [2014-11-21 周五 10:35:59]
 
 #+BEGIN_SRC emacs-lisp
-;(use-package smart-mode-line
-;  :init
-;  (progn
-;  (setq-default
-;   mode-line-format 
-;   '("%e"
-;     mode-line-front-space
-;     mode-line-mule-info
-;     mode-line-client
-;     mode-line-modified
-;     mode-line-remote
-;     mode-line-frame-identification
-;     mode-line-buffer-identification
-;     "   "
-;     mode-line-position
-;     (vc-mode vc-mode)
-;     "  "
-;     mode-line-modes
-;     mode-line-misc-info
-;     mode-line-end-spaces))))
+(use-package smart-mode-line
+  :disabled t
+  :init
+  (progn
+  (setq-default
+   mode-line-format 
+   '("%e"
+     mode-line-front-space
+     mode-line-mule-info
+     mode-line-client
+     mode-line-modified
+     mode-line-remote
+     mode-line-frame-identification
+     mode-line-buffer-identification
+     "   "
+     mode-line-position
+     (vc-mode vc-mode)
+     "  "
+     mode-line-modes
+     mode-line-misc-info
+     mode-line-end-spaces))))
 
 ;; 显示日期时间
 (setq display-time-day-and-date t)
@@ -406,9 +418,24 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
 ;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
 
 (diminish 'visual-line-mode)
+
+(use-package powerline
+  :disabled t
+  :ensure t
+  :config 
+    (progn
+       (powerline-center-evil-theme)
+       (setq powerline-arrow-shape 'arrow)
+       (custom-set-faces  
+         '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
+         ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
+         )))
+      ;; (powerline-default-theme)))
+      ;; (powerline-center-evil-theme)))
 #+END_SRC
 
 * emacs-lisp
@@ -481,7 +508,11 @@ process monitor在用了vpn后会导致机器hang。
 ;;    (progn
 ;;      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
 ;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
-(require 'magit)
+(use-package magit
+  :defer t
+  :config
+    (progn
+      (setq magit-last-seen-setup-instructions "1.4.0")))
 #+end_src
 
 * helm
@@ -492,6 +523,7 @@ process monitor在用了vpn后会导致机器hang。
 (helm-mode 1)
 (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-c a") 'helm-apropos)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
@@ -582,6 +614,8 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-swoop
+  :ensure t
+  :defer t
  :bind (("M-i" . helm-swoop)
         ("M-I" . helm-swoop-back-to-last-point)
         ( "C-c M-i" . helm-multi-swoop)
@@ -602,10 +636,13 @@ different from window-numbering.el
 * undotree
 
 #+BEGIN_SRC emacs-lisp
-(require 'undo-tree)
-(global-undo-tree-mode)
-(setq undo-tree-visualizer-timestamps t)
-(setq undo-tree-visualizer-diff t)
+(use-package undo-tree
+  :defer t
+  :config
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)))
 
 (defalias 'redo 'undo-tree-redo)
 ;;(global-set-key (kbd "C-z") 'undo) ; 【Ctrl+z】
@@ -1784,6 +1821,72 @@ ediff org mode时的folding有点讨厌。
 ;         :default-categories ("org2blog" "emacs")
 ;         :tags-as-categories nil)
 ;                              ))
+#+END_SRC
+* scheme
+[2017-03-02 周四 21:27:47]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'cmuscheme)
+  (setq scheme-program-name "racket")         ;; 如果用 Petite 就改成 "petite"
+  ;; (setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
+
+
+  ;; bypass the interactive question and start the default interpreter
+  (defun scheme-proc ()
+    "Return the current Scheme process, starting one if necessary."
+    (unless (and scheme-buffer
+		 (get-buffer scheme-buffer)
+		 (comint-check-proc scheme-buffer))
+      (save-window-excursion
+	(run-scheme scheme-program-name)))
+    (or (scheme-get-process)
+	(error "No current process. See variable `scheme-buffer'")))
+
+
+  (defun scheme-split-window ()
+    (cond
+     ((= 1 (count-windows))
+      (delete-other-windows)
+      ;; (split-window-vertically (floor (* 0.68 (window-height))))
+      (split-window-horizontally (floor (* 0.60 (window-width))))
+      (other-window 1)
+      (switch-to-buffer "*scheme*")
+      (other-window 1))
+     ((not (cl-find "*scheme*"
+		 (mapcar (lambda (w) (buffer-name (window-buffer w)))
+			 (window-list))
+		 :test 'equal))
+      (other-window 1)
+      (switch-to-buffer "*scheme*")
+      (other-window -1))))
+
+
+  (defun scheme-send-last-sexp-split-window ()
+    (interactive)
+    (scheme-split-window)
+    (scheme-send-last-sexp))
+
+
+  (defun scheme-send-definition-split-window ()
+    (interactive)
+    (scheme-split-window)
+    (scheme-send-definition))
+
+  (add-hook 'scheme-mode-hook
+    (lambda ()
+      (paredit-mode 1)
+      (evil-paredit-mode 1)
+      (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-last-sexp-split-window)
+      (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; [2017-04-09 周日 00:20:25]
+(use-package paren-face
+  :defer t
+  :ensure t
+  :init (global-paren-face-mode 1)
+)
 #+END_SRC
 * 现在没用的配置
 ** 反显选中区域
