@@ -15,10 +15,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
+ '(custom-safe-themes
+   (quote
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
  '(display-time-mode t)
  '(package-selected-packages
    (quote
-    (paren-face evil-paredit paredit window-numbering web-mode use-package powerline org2blog magit htmlize highlight-parentheses helm-swoop evil dired+ cider)))
+    (xah-find color-theme-solarized paren-face evil-paredit paredit window-numbering web-mode use-package powerline org2blog magit htmlize highlight-parentheses helm-swoop evil dired+ cider)))
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(vc-handled-backends (quote (Git))))
