@@ -1381,6 +1381,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 ** 16.2 plantuml
 
+[2018-09-29 周六 22:59:28] 中文乱码的解决方法 begin_src plantuml :file img/chinese.png :cmdline -charset utf-8
+
 #+BEGIN_SRC emacs-lisp
 (setq org-plantuml-jar-path "~/java/plantuml.jar")
 
@@ -1901,6 +1903,7 @@ ediff org mode时的folding有点讨厌。
 )
 #+END_SRC
 * xah-find [2018-09-29 周六 22:09:48]
+http://ergoemacs.org/emacs/elisp-xah-find-text.html
 
 1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
 2. 不知道是怎么找的扩展吗，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
