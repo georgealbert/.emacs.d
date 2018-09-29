@@ -108,6 +108,7 @@ Disk space is cheap. Save lots.
 可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
 另一个有用的函数是 =describe-fontset=
 
+中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
 #+BEGIN_SRC emacs-lisp
 (if (eq system-type 'windows-nt)
   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
@@ -133,9 +134,11 @@ Disk space is cheap. Save lots.
 
 emacs24自带的最喜欢的theme。
 
+[2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
 (load-theme 'deeper-blue t)
-;;(load-theme 'tango-dark t)
+;; (load-theme 'solarized t)
+;; (load-theme 'tango-dark t)
 ;; (load-theme 'manoj-dark t)
 #+END_SRC
 
@@ -158,6 +161,7 @@ before dired+ loaded
 
 ** 多行代码的注释/反注释
 
+其实可以考虑vim的 =<leader> + \= 进行注释的。
 #+BEGIN_SRC emacs-lisp
 (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
 
@@ -176,7 +180,7 @@ before dired+ loaded
 使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
 经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
 
-启用ibuffer支持，增强 *buffer*  
+启用ibuffer支持，增强 *buffer*, 用了helm，ibuffer可以退休了。  
 #+BEGIN_SRC emacs-lisp
 (use-package ibuffer
   :defer t
@@ -226,7 +230,8 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 #+BEGIN_SRC emacs-lisp
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
 (if (eq system-type 'windows-nt)
-  (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+  ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+  (toggle-frame-maximized)
 )
 #+END_SRC
 
@@ -370,14 +375,16 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
-(require 'saveplace)
-(setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
-(setq-default save-place t)
+;; (require 'saveplace)
+;; (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
+;; (setq-default save-place t)
+(save-place-mode t)
 #+END_SRC
 
 ** mode-line
 [2014-11-21 周五 10:35:59]
 
+smart-mode-line和powerline都不好用，速度太慢。
 #+BEGIN_SRC emacs-lisp
 (use-package smart-mode-line
   :disabled t
@@ -616,7 +623,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 (use-package helm-swoop
   :ensure t
   :defer t
- :bind (("M-i" . helm-swoop)
+  :bind (("M-i" . helm-swoop)
         ("M-I" . helm-swoop-back-to-last-point)
         ( "C-c M-i" . helm-multi-swoop)
         ( "C-x M-i" . helm-multi-swoop-all)))
@@ -664,8 +671,7 @@ pdb setup, note the python version
                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
 
-* ace-dump
-[2014-11-20 周四 18:09:04]
+* ace-jump [2014-11-20 周四 18:09:04]
 
 #+BEGIN_SRC emacs-lisp
 ;;;
@@ -1822,8 +1828,7 @@ ediff org mode时的folding有点讨厌。
 ;         :tags-as-categories nil)
 ;                              ))
 #+END_SRC
-* scheme
-[2017-03-02 周四 21:27:47]
+* scheme [2017-03-02 周四 21:27:47]
 
 #+BEGIN_SRC emacs-lisp
   (require 'cmuscheme)
@@ -1888,6 +1893,24 @@ ediff org mode时的folding有点讨厌。
   :init (global-paren-face-mode 1)
 )
 #+END_SRC
+* web-mode [2018-02-08 周四 17:03:42]
+
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :defer t
+)
+#+END_SRC
+* xah-find [2018-09-29 周六 22:09:48]
+
+1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
+2. 不知道是怎么找的扩展吗，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
+
+#+BEGIN_SRC emacs-lisp
+(use-package xah-find
+  :ensure t
+  :defer t)
+#+END_SRC
+
 * 现在没用的配置
 ** 反显选中区域
 
