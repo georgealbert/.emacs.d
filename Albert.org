@@ -200,14 +200,6 @@ before dired+ loaded
 )
 #+END_SRC
 
-** htmlize
-
-为了让org mode中的代码可以语法高亮，不知道新的org 8.2.7c是不是自带了，那就可以不用这个了。
-
-#+BEGIN_SRC emacs-lisp
-;(require 'htmlize)
-#+END_SRC
-
 ** 字体放大缩小
 
 #+BEGIN_SRC emacs-lisp
@@ -492,10 +484,10 @@ You can move your cursor around to see argument lists for other functions.
 * evil
 
 #+BEGIN_SRC emacs-lisp
-(require 'evil)
-(evil-mode 1)
-
-(setq evil-want-visual-char-semi-exclusive t)
+(use-package evil
+  :ensure t
+  :init (evil-mode 1)
+  :config (setq evil-want-visual-char-semi-exclusive t))
 #+end_src
 
 * magit
@@ -646,9 +638,9 @@ different from window-numbering.el
 直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
 
 #+BEGIN_SRC emacs-lisp
-(require 'window-numbering)
-
-(window-numbering-mode 1)
+(use-package window-numbering
+  :ensure t
+  :init (window-numbering-mode 1))
 #+END_SRC
 
 * undotree
@@ -681,36 +673,6 @@ pdb setup, note the python version
     (list (gud-query-cmdline pdb-path
                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
-
-* ace-jump [2014-11-20 周四 18:09:04]
-
-#+BEGIN_SRC emacs-lisp
-;;;
-;;; ace jump mode major function
-;;; 
-;(autoload
-;  'ace-jump-mode
-;  "ace-jump-mode"
-;  "Emacs quick move minor mode"
-;  t)
-;;; you can select the key you prefer to
-;(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-;
-;;; 
-;;; enable a more powerful jump back function from ace jump mode
-;;;
-;(autoload
-;  'ace-jump-mode-pop-mark
-;  "ace-jump-mode"
-;  "Ace jump back:-)"
-;  t)
-;(eval-after-load "ace-jump-mode"
-;  '(ace-jump-mode-enable-mark-sync))
-;(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-;
-;;;If you use evil
-;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
-#+END_SRC 
 
 * org mode
 ** html export
@@ -1910,8 +1872,7 @@ ediff org mode时的folding有点讨厌。
 
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
-  :defer t
-)
+  :defer t)
 #+END_SRC
 * markdown-mode
 
@@ -1996,3 +1957,41 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ;; This is your old M-x.
 ;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+END_SRC
+** htmlize
+
+为了让org mode中的代码可以语法高亮，不知道新的org 8.2.7c是不是自带了，那就可以不用这个了。
+
+#+BEGIN_SRC emacs-lisp
+;(require 'htmlize)
+#+END_SRC
+
+** ace-jump [2014-11-20 周四 18:09:04]
+
+#+BEGIN_SRC emacs-lisp
+;;;
+;;; ace jump mode major function
+;;; 
+;(autoload
+;  'ace-jump-mode
+;  "ace-jump-mode"
+;  "Emacs quick move minor mode"
+;  t)
+;;; you can select the key you prefer to
+;(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;
+;;; 
+;;; enable a more powerful jump back function from ace jump mode
+;;;
+;(autoload
+;  'ace-jump-mode-pop-mark
+;  "ace-jump-mode"
+;  "Ace jump back:-)"
+;  t)
+;(eval-after-load "ace-jump-mode"
+;  '(ace-jump-mode-enable-mark-sync))
+;(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+;
+;;;If you use evil
+;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+#+END_SRC 
+
