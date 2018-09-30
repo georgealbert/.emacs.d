@@ -122,7 +122,7 @@ Disk space is cheap. Save lots.
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
                 (set-fontset-font (frame-parameter nil 'font)
                           charset
-                          (font-spec :family "微软雅黑" :size 15)))))
+                          (font-spec :family "微软雅黑" :size 20)))))
 
 ;;(if (eq system-type 'windows-nt)
 ;;     (set-face-attribute
@@ -232,6 +232,11 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 (if (eq system-type 'windows-nt)
   ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
   (toggle-frame-maximized)
+
+  ;; "Maximize emacs window in windows os" WM_SYSCOMMAND #xf030 maximize  
+  ;; [2018-09-07 周五 09:53:36] 不知道为什么没有效果
+  ;; (interactive)
+  ;; (w32-send-sys-command 61488)
 )
 #+END_SRC
 
@@ -375,10 +380,16 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
+;; For GNU Emacs 24.5 and older versions
 ;; (require 'saveplace)
 ;; (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
 ;; (setq-default save-place t)
-(save-place-mode t)
+
+;; For GNU Emacs 25.1 and newer versions
+(setq-default save-place t)
+(use-package saveplace
+  :ensure t
+  :init (save-place-mode 1))
 #+END_SRC
 
 ** mode-line
@@ -1902,6 +1913,17 @@ ediff org mode时的folding有点讨厌。
   :defer t
 )
 #+END_SRC
+* markdown-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+  
 * xah-find [2018-09-29 周六 22:09:48]
 http://ergoemacs.org/emacs/elisp-xah-find-text.html
 
