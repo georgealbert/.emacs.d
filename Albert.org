@@ -54,6 +54,7 @@
 [2014-11-18 周二 17:39:59] 把scrollbar也去掉了
 
 #+begin_src emacs-lisp
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 #+end_src
@@ -127,7 +128,6 @@ Disk space is cheap. Save lots.
 ;;(if (eq system-type 'windows-nt)
 ;;     (set-face-attribute
 ;;       'default nil :font "YaHei Consolas Hybrid 11"))
-
 #+END_SRC
 
 ** Color theme
@@ -202,8 +202,8 @@ before dired+ loaded
 
 ** 字体放大缩小
 
+from sacha chua
 #+BEGIN_SRC emacs-lisp
-;; from sacha chua
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
@@ -313,7 +313,7 @@ Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tri
 
 (image-type-available-p 'jpeg)
 
-(image-type-available-p 'tiff)
+;; (image-type-available-p 'tiff)
 
 (image-type-available-p 'xbm)
 
@@ -389,27 +389,27 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 smart-mode-line和powerline都不好用，速度太慢。
 #+BEGIN_SRC emacs-lisp
-(use-package smart-mode-line
-  :disabled t
-  :init
-  (progn
-  (setq-default
-   mode-line-format 
-   '("%e"
-     mode-line-front-space
-     mode-line-mule-info
-     mode-line-client
-     mode-line-modified
-     mode-line-remote
-     mode-line-frame-identification
-     mode-line-buffer-identification
-     "   "
-     mode-line-position
-     (vc-mode vc-mode)
-     "  "
-     mode-line-modes
-     mode-line-misc-info
-     mode-line-end-spaces))))
+;; (use-package smart-mode-line
+;;   :disabled t
+;;   :init
+;;   (progn
+;;   (setq-default
+;;    mode-line-format 
+;;    '("%e"
+;;      mode-line-front-space
+;;      mode-line-mule-info
+;;      mode-line-client
+;;      mode-line-modified
+;;      mode-line-remote
+;;      mode-line-frame-identification
+;;      mode-line-buffer-identification
+;;      "   "
+;;      mode-line-position
+;;      (vc-mode vc-mode)
+;;      "  "
+;;      mode-line-modes
+;;      mode-line-misc-info
+;;      mode-line-end-spaces))))
 
 ;; 显示日期时间
 (setq display-time-day-and-date t)
@@ -420,8 +420,12 @@ smart-mode-line和powerline都不好用，速度太慢。
 (setq display-time-format "%Y-%m-%d %a %H:%M")
 (setq display-time-default-load-average nil)
 (display-time)
+#+END_SRC
 
-(require 'diminish)
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :defer t)
+
 ;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
 (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
 ;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
@@ -432,20 +436,22 @@ smart-mode-line和powerline都不好用，速度太慢。
 (eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
 
 (diminish 'visual-line-mode)
+#+END_SRC
 
-(use-package powerline
-  :disabled t
-  :ensure t
-  :config 
-    (progn
-       (powerline-center-evil-theme)
-       (setq powerline-arrow-shape 'arrow)
-       (custom-set-faces  
-         '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
-         ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
-         )))
-      ;; (powerline-default-theme)))
-      ;; (powerline-center-evil-theme)))
+#+BEGIN_SRC emacs-lisp
+;; (use-package powerline
+;;   :disabled t
+;;   :ensure t
+;;   :config 
+;;     (progn
+;;        (powerline-center-evil-theme)
+;;        (setq powerline-arrow-shape 'arrow)
+;;        (custom-set-faces  
+;;          '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
+;;          ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
+;;          )))
+;;       ;; (powerline-default-theme)))
+;;       ;; (powerline-center-evil-theme)))
 #+END_SRC
 
 * emacs-lisp
@@ -486,6 +492,7 @@ You can move your cursor around to see argument lists for other functions.
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t
+  :defer t
   :init (evil-mode 1)
   :config (setq evil-want-visual-char-semi-exclusive t))
 #+end_src
@@ -499,12 +506,8 @@ process monitor在用了vpn后会导致机器hang。
 把vc disable后会快不少，还是去了吧。
 
 #+BEGIN_SRC emacs-lisp
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-'(vc-handled-backends (quote (Git))))
+;; (custom-set-variables
+;; '(vc-handled-backends (quote (Git))))
 
 ;; disable default vc
 ;(setq vc-handled-backends nil)
@@ -529,11 +532,13 @@ process monitor在用了vpn后会导致机器hang。
 [2014-09-16 09:27:15]
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-config)
+;; (require 'helm-config)
+(use-package helm-config
+  :defer t)
 (helm-mode 1)
 (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-c a") 'helm-apropos)
+;; (global-set-key (kbd "C-c a") 'helm-apropos)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
@@ -640,6 +645,7 @@ different from window-numbering.el
 #+BEGIN_SRC emacs-lisp
 (use-package window-numbering
   :ensure t
+  :defer t
   :init (window-numbering-mode 1))
 #+END_SRC
 
@@ -647,6 +653,7 @@ different from window-numbering.el
 
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
+  ;;:idle (global-undo-tree-mode 1)
   :defer t
   :config
     (progn
@@ -665,14 +672,44 @@ different from window-numbering.el
 
 pdb setup, note the python version
 #+BEGIN_SRC emacs-lisp
-(setq pdb-path 'c:/Python27/Lib/pdb.py
-       gud-pdb-command-name (symbol-name pdb-path))
- (defadvice pdb (before gud-query-cmdline activate)
-   "Provide a better default command line when called interactively."
-   (interactive
-    (list (gud-query-cmdline pdb-path
-                 (file-name-nondirectory buffer-file-name)))))
+;; (setq pdb-path 'c:/Python/Python36/Lib/pdb.py
+;;        gud-pdb-command-name (symbol-name pdb-path))
+;;  (defadvice pdb (before gud-query-cmdline activate)
+;;    "Provide a better default command line when called interactively."
+;;    (interactive
+;;     (list (gud-query-cmdline pdb-path
+;;                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
+
+[2018-11-29 周四 16:15:30]
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+#+END_SRC
+
+[2018-11-29 周四 16:15:34]
+#+BEGIN_SRC emacs-lisp
+;; (elpy-enable)
+
+(use-package python-mode
+  :mode (("SConstruct\\'" . python-mode)
+         ("SConscript\\'" . python-mode)
+         ("\\.py\\'"      . python-mode))
+  :defer t
+  :config
+  (use-package elpy
+    :ensure t
+    :defer t
+    :init
+    (progn
+      ;; (elpy-enable)
+      ;; (setq elpy-rpc-python-command "python3")
+      (elpy-use-ipython)
+      ;; use flycheck not flymake with elpy
+      (when (require 'flycheck nil t)
+        (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+        (add-hook 'elpy-mode-hook 'flycheck-mode)))))
+#+END_SRC
 
 * org mode
 ** html export
@@ -725,7 +762,7 @@ Custom Key Bindings
 (global-set-key (kbd "<f9> I") 'bh/punch-in)
 (global-set-key (kbd "<f9> O") 'bh/punch-out)
 
-(global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
+;; (global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
 
 (global-set-key (kbd "<f9> r") 'boxquote-region)
 (global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
@@ -776,10 +813,10 @@ Custom Key Bindings
     (set-window-start (selected-window)
                       (window-start (selected-window)))))
 
-(defun bh/make-org-scratch ()
-  (interactive)
-  (find-file "/tmp/publish/scratch.org")
-  (gnus-make-directory "/tmp/publish"))
+;; (defun bh/make-org-scratch ()
+;;   (interactive)
+;;   (find-file "/tmp/publish/scratch.org")
+;;   (gnus-make-directory "/tmp/publish"))
 
 (defun bh/switch-to-scratch ()
   (interactive)
@@ -825,13 +862,13 @@ Custom Key Bindings
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
 ; Use IDO for both buffer and file completion and ido-everywhere to t
-(setq org-completion-use-ido t)
-(setq ido-everywhere t)
-(setq ido-max-directory-size 100000)
-(ido-mode (quote both))
+;;(setq org-completion-use-ido t)
+;; (setq ido-everywhere t)
+;; (setq ido-max-directory-size 100000)
+;; (ido-mode (quote both))
 ; Use the current window when visiting files and buffers with ido
-(setq ido-default-file-method 'selected-window)
-(setq ido-default-buffer-method 'selected-window)
+;; (setq ido-default-file-method 'selected-window)
+;; (setq ido-default-buffer-method 'selected-window)
 ; Use the current window for indirect buffer display
 (setq org-indirect-buffer-display 'current-window)
 
@@ -1372,18 +1409,19 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (org-babel-do-load-languages
  (quote org-babel-load-languages)
  (quote ((emacs-lisp . t)
-         (dot . t)
-         (ditaa . t)
-         (R . t)
-         (python . t)
-         (ruby . t)
-         (gnuplot . t)
-         (clojure . t)
-         (sh . t)
-         (ledger . t)
-         (org . t)
-         (plantuml . t)
-         (latex . t))))
+         ;; (dot . t)
+         ;; (ditaa . t)
+         ;; (R . t)
+         ;; (python . t)
+         ;; (ruby . t)
+         ;; (gnuplot . t)
+         ;; (clojure . t)
+         ;; (sh . t)
+         ;; (ledger . t)
+         ;; (org . t)
+         ;; (latex . t)
+         ;; (plantuml . t)
+)))
 
 ; Do not prompt to confirm evaluation
 ; This may be dangerous - make sure you understand the consequences
@@ -1803,10 +1841,103 @@ ediff org mode时的folding有点讨厌。
 ;         :tags-as-categories nil)
 ;                              ))
 #+END_SRC
+
+[2018-11-23 周五 16:09:13] for github
+#+BEGIN_SRC emacs-lisp
+;; (require 'ox-publish)
+(use-package ox-publish
+  :defer t)
+(setq org-publish-project-alist
+  '(
+    ;; 把各部分的配置文件写到这里面来
+    ("blog-notes"
+      :base-directory "~/org/notes"
+      :base-extension "org"
+      ;:publishing-directory "~/org/public_html/"
+      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :recursive t
+      :publishing-function org-html-publish-to-html
+      :headline-levels 4             ; Just the default for this project.
+      :auto-preamble t
+      :section-numbers nil
+      ;:with-date nil
+      ;:author "Albert"
+      ;:email "georgealbert@qq.com"
+      ;:auto-sitemap t                ; Generate sitemap.org automagically...
+      :sitemap-filename "index.org"  ; ... call it sitemap.org (it's the default)...
+      ;:sitemap-title "Albert's blog"         ; ... with title 'Sitemap'.
+      :with-toc nil                            ; 不要toc，否则太难看
+      :sitemap-sort-files anti-chronologically
+      :sitemap-file-entry-format "%d %t"
+      :html-head-include-scripts nil           ; 不输出<head>中的javascript脚本
+      :html-postamble nil                      ; 不输出creator、date和validation
+      :html-validation-link nil
+      :html-link-use-abs-url t                ; 用绝对路径，看看解决静态资源文件定位问题 [2018-11-24 周六 23:22:08]
+      :html-doctype "html5"                    ; 用html5可以让html的代码输出少点
+      ;:html-link-home "https://www.albertzhou.net"
+      )
+    ("blog-static"
+      :base-directory "~/org/notes"
+      :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+      ;:publishing-directory "~/org/public_html/"
+      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :recursive t
+      :publishing-function org-publish-attachment
+      )
+    ("blog" :components ("blog-notes" "blog-static"))
+    ))
+;(setq org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"home.css\" />
+;<link rel=\"stylesheet\" type=\"text/css\" href=\"org.css\" />")
+#+END_SRC
+
+[2018-11-23 周五 23:19:16] HTML doctypes默认是"xhtml-strict"，改为"html4-strict"是不行的。
+#+BEGIN_SRC emacs-lisp
+;(setq org-html-doctype-alist '(("html5" . "<!DOCTYPE html>")))
+#+END_SRC
+
+[2018-11-24 周六 10:16:58] 不输出creator/data/validation，也不输出head中的javascript脚本
+#+BEGIN_SRC emacs-lisp
+;(setq org-html-postamble nil)
+;(setq org-html-head-include-scripts nil)
+(setq org-export-default-language "zh_CN")
+
+;(setq org-html-validation-link nil)
+;(setq org-export-with-date nil)
+#+END_SRC
+
+** 禁用下划线转义
+org-mode的文档在导出到html时，有一个挺烦人的问题就是 abc_def 会变成 abcdef，这其实是一种类似TeX的 写法，主要也就是在少数场景下有意义（其实与之相伴的还有一个 10^24 会变成 1024，不过这个对我影响不大，因为我很少会用到这种写法）。
+
+关闭这个功能的方法是在org文件头部的 OPTIONS 里面添加 ^:nil:
+
+这样以来如果要输入下标，就要加{}
+例如：
+输入 X_{Y}, Y成为下标;
+而输入 X_Y, 则依然输出 X_Y,
+即下划线原样输出
+
+;#+OPTIONS: ^:nil
+
+#+BEGIN_SRC emacs-lisp
+;(setq-default org-use-sub-superscripts nil)
+
+(setq org-export-with-sub-superscripts nil) 
+#+END_SRC
+
+** 不输出css [2018-11-23 周五 22:34:57] 
+turn off the default style, customize org-html-head-include-default-style variable, or use this option line in the Org file.
+
+;#+OPTIONS: html-style:nil
+
+#+BEGIN_SRC emacs-lisp
+(setq org-html-head-include-default-style nil)
+#+END_SRC
 * scheme [2017-03-02 周四 21:27:47]
 
 #+BEGIN_SRC emacs-lisp
-  (require 'cmuscheme)
+  ;; (require 'cmuscheme)
+  (use-package cmuscheme
+    :defer t)
   (setq scheme-program-name "racket")         ;; 如果用 Petite 就改成 "petite"
   ;; (setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
 
@@ -1840,12 +1971,10 @@ ediff org mode时的folding有点讨厌。
       (switch-to-buffer "*scheme*")
       (other-window -1))))
 
-
   (defun scheme-send-last-sexp-split-window ()
     (interactive)
     (scheme-split-window)
     (scheme-send-last-sexp))
-
 
   (defun scheme-send-definition-split-window ()
     (interactive)
@@ -1879,11 +2008,13 @@ ediff org mode时的folding有点讨厌。
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t
+  :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
+#+END_SRC
   
 * xah-find [2018-09-29 周六 22:09:48]
 http://ergoemacs.org/emacs/elisp-xah-find-text.html
