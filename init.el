@@ -3,6 +3,7 @@
 ;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
 ;; (toggle-debug-on-error)
 
+;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
 (package-initialize nil)
 
 ;; Override the packages with the git version of Org and other packages
@@ -16,6 +17,7 @@
 (require 'org)
 (require 'ob-tangle)
 (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
+(org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
 ;; (custom-set-variables
 ;;  ;; custom-set-variables was added by Custom.
 ;;  ;; If you edit it by hand, you could mess it up, so be careful.
