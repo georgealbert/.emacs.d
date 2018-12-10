@@ -63,6 +63,19 @@ Custom Key Bindings
 #+END_SRC
 
 ** 6.1 Capture Templates
+When a new task needs to be added I categorize it into one of a few things:
+
+- A phone call (p)
+- A meeting (m)
+- An email I need to respond to (r)
+- A new task (t)
+- A new note (n)
+- An interruption (j)
+- A new habit (h)
+
+and pick the appropriate capture task.
+
+Here is my setup for org-capture
 
 #+BEGIN_SRC emacs-lisp
 (setq org-directory "~/org")
@@ -122,8 +135,8 @@ Custom Key Bindings
 
 #+BEGIN_SRC emacs-lisp
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 2)
-                                 (org-agenda-files :maxlevel . 2))))
+(setq org-refile-targets (quote ((nil :maxlevel . 6)
+                                 (org-agenda-files :maxlevel . 6))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t)
@@ -134,6 +147,8 @@ Custom Key Bindings
 ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
+;; [2018-12-01 周六 16:35:26] 和helm有冲突，直接用helm
+
 ; Use IDO for both buffer and file completion and ido-everywhere to t
 ;;(setq org-completion-use-ido t)
 ;; (setq ido-everywhere t)
@@ -142,6 +157,7 @@ Custom Key Bindings
 ; Use the current window when visiting files and buffers with ido
 ;; (setq ido-default-file-method 'selected-window)
 ;; (setq ido-default-buffer-method 'selected-window)
+
 ; Use the current window for indirect buffer display
 (setq org-indirect-buffer-display 'current-window)
 
@@ -154,7 +170,7 @@ Custom Key Bindings
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 
-** 8.1
+** 8.1 Setup
 
 #+BEGIN_SRC emacs-lisp
 ;; Do not dim blocked tasks
@@ -244,7 +260,227 @@ Custom Key Bindings
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 #+END_SRC
 
-** 9.1 Clock Setup
+My block agenda view looks like this when not narrowed to a project. This shows top-level projects and =NEXT= tasks but hides the project details since we are not focused on any particular project.
+
+因为不关注特定的project，只显示隐藏了项目细节的顶级项目和 =NEXT= 的task。
+
+After selecting a project (with =P= on any task in the agenda) the block agenda changes to show the project and any subprojects in the Projects section.  
+
+Tasks show project-related tasks that are hidden when not narrowed to a project.
+
+在选择了一个项目后(在agenda中的任何task上按 =P= )，会改变阻塞的agenda，在project选择中显示project和subproject。
+
+This makes it easy to focus on the task at hand.
+
+这样会容易聚焦到手上的task。
+
+I generally work top-down on the agenda.  Things with deadlines and
+scheduled dates (planned to work on today or earlier) show up in the
+agenda at the top.
+
+通常从上到下处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）会在agenda的顶部显示出来。
+
+My day goes generally like this:
+
+一天的工作流程通常如下：
+
+- Punch in (this starts the clock on the default task)
+  打卡（在默认task上开始计时）
+
+- Look at the agenda and make a mental note of anything important to deal with today
+  查看agenda，然后思考一下今天有什么重要的事情
+
+- Read email and news
+  看邮件和新闻
+
+  - create notes, and tasks for things that need responses with org-capture
+    通过 =org-capture= 创建建需要反馈的note和task
+
+- Check refile tasks and respond to emails
+  检查refile的task和回邮件
+
+- Look at my agenda and work on important tasks for today
+  查看agenda并处理今天的重要task
+
+  - Clock it in
+    打卡计时
+
+  - Work on it until it is =DONE= or it gets interrupted
+    处理task，直到完成 =DONE= 或被中断
+
+- Work on tasks
+  处理task
+
+- Make journal entries (=C-c c j=) for interruptions
+  给中断建一个journal entry（ =C-c c j= ）
+
+- Punch out for lunch and punch back in after lunch
+  午餐时打卡签退，吃完后在打卡签到
+
+- work on more tasks
+  继续做其他的task
+
+- Refile tasks to empty the list
+  把task refile到一个空list
+
+  - Tag tasks to be refiled with =m= collecting all tasks for the same target
+    按 =m= 给相同target的所有task打个tag
+
+  - Bulk refile the tasks to the target location with =B r=
+    按 =B r= 批量refile task到目标文件
+
+  - Repeat (or refile individually with =C-c C-w=) until all refile tasks are gone
+    重复上述动作(或者按 =C-c C-w= 一个一个的refile)，直到所有的task都refile了
+
+- Mark habits done today as DONE
+  给所有今天完成的habit标记为 DONE
+
+- Punch out at the end of the work day
+  一个工作结束后打卡签退
+** What do I work on next? 接下来干什么呢？
+:PROPERTIES:
+:CUSTOM_ID: WhatDoIWorkOnNext
+:END:
+
+Start with deadlines and tasks scheduled today or earlier from the
+daily agenda view.  Then move on to tasks in the =Next Tasks= list in
+the block agenda view.  I tend to schedule current projects to 'today'
+when I start work on them and they sit on my daily agenda reminding me
+that they need to be completed.  I normally only schedule one or two
+projects to the daily agenda and unschedule things that are no longer
+important and don't deserve my attention today.
+
+开始完成一个今天计划的或者deadline是今天的task，或者早先的daily agenda view中的task。然后转到在block agenda view中的 =Next Tasks= 列表中的task。
+
+When I look for a new task to work on I generally hit =F12 SPC= to get
+the block agenda and follow this order:
+当寻找一个新的task做的时间，通常按 =F12 SPC= 来看block agenda，用下面的顺序：
+
+- Pick something off today's agenda
+  从今天的agenda中选择一项
+
+  - deadline for today (do this first - it's not late yet)
+    deadline是今天的（首先做这个 - 现在做不晚）
+
+  - deadline in the past (it's already late)
+    deadline是今天以前的（反正已经晚了）
+
+  - a scheduled task for today (it's supposed to be done today)
+    今天计划做的task（应该要在今天完成）
+    
+  - a scheduled task that is still on the agenda
+    agenda中还有的计划的task
+
+  - deadline that is coming up soon
+    deadline快要到的task
+
+- pick a NEXT task
+  选择一个tag标记为 =NEXT= 的task
+
+- If you run out of items to work on look for a NEXT task in the current context
+  如果当前的NEXT的task都做完了
+
+  pick a task from the Tasks list of the current project.
+  从当前project的task列表选一个task
+*** Why keep it all on the =NEXT= list? 为什么把task都放到 =NEXT= list中
+:PROPERTIES:
+:CUSTOM_ID: CustomAgendaViewsNextList
+:END:
+
+I've moved to a more GTD way of doing things.  Now I just use a =NEXT=
+list.  Only projects get tasks with =NEXT= keywords since stuck projects
+initiate the need for marking or creating =NEXT= tasks.  A =NEXT= task
+is something that is available to work on /now/, it is the next
+logical step in some project.
+
+I used to have a special keyword =ONGOING= for things that I do a lot
+and want to clock but never really start/end.  I had a special agenda
+view for =ONGOING= tasks that I would pull up to easily find the thing
+I want to clock.
+
+Since then I've moved away from using the =ONGOING= todo keyword.
+Having an agenda view that shows =NEXT= tasks makes it easy to pick
+the thing to clock - and I don't have to remember if I need to look in
+the =ONGOING= list or the =NEXT= list when looking for the task to
+clock-in.  The =NEXT= list is basically 'what is current' - any task
+that moves a project forward.  I want to find the thing to work on as
+fast as I can and actually do work on it - not spend time hunting
+through my org files for the task that needs to be clocked-in.
+
+现在不再用 =ONGOING= todo关键字了。由于可显示 =NEXT= task的agent view会容易选择一项工作来计时，在查找 =ONGOING= 或者 =NEXT= task进行打卡计时的时候也不用记住他。=NEXT= list就是当前的task列表，任何让project继续进行的task都在里面。尽快找到实际要做的工作去做，不要在一大堆org文件中浪费时间去找下一个需要打卡计时的task。
+
+To drop a task off the =NEXT= list simply move it back to the =TODO=
+state.
+把task的状态从 =NEXT= 改为 =TODO= 就可以从 =NEXT= 给去掉。
+
+** Reading email, newsgroups, and conversations on IRC 看邮件、新闻组和聊天
+:PROPERTIES:
+:CUSTOM_ID: ReadingMailNewsIRC
+:END:
+
+When reading email, newsgroups, and conversations on IRC I just let
+the default task (normally =** Organization=) clock the time I spend on
+these tasks.  To read email I go to Gnus and read everything in my
+inboxes.  If there are emails that require a response I use
+org-capture to create a new task with a heading of 'Respond to <user>'
+for each one.  This automatically links to the email in the task and
+makes it easy to find later.  Some emails are quick to respond to and
+some take research and a significant amount of time to complete.  I
+clock each one in it's own task just in case I need that clocked time
+later.  The capture template for Repond To tasks is now scheduled for
+today so I can refile the task to the appropriate org file without
+losing the task for a week.
+
+看邮件、新闻组和聊天的时候，我会让默认task在计时状态。如果有需要反馈的邮件，我会用 org-capture 创建一个新的任务，标题是 '给某人的反馈'。
+
+Next, I go to my newly created tasks to be refiled from the block
+agenda with =F12 a= and clock in an email task and deal with it.
+Repeat this until all of the 'Respond to <user>' tasks are marked
+=DONE=.
+接下来，我会按 =F12 a= 把新建的task refile到block agenda中，做一个邮件的task打卡计时
+
+I read email and newgroups in Gnus so I don't separate clocked time
+for quickly looking at things.  If an article has a useful piece of
+information I want to remember I create a note for it with =C-c c n=
+and enter the topic and file it.  This takes practically no time at
+all and I know the note is safely filed for later retrieval.  The time
+I spend in the capture buffer is clocked with that capture note.
+
+** 9 Time Clocking 计时
+I now use the concept of =punching in= and =punching out= at the start and end of my work day. I punch in when I arrive at work, punch out for lunch, punch in after lunch, and punch out at the end of the day. Every minute is clocked between punch-in and punch-out times. 
+
+I'll work on this file in the following sequence:
+
+计时的流程：
+
+1. I punch in with =F9-I= at the start of my day
+
+   按 =F9-I= 打卡
+
+   That clocks in the =Organization= task by id in my =todo.org= file.
+
+2. =F12-SPC= to review my block agenda
+
+   按 =F12-SPC= 检查阻塞的日程表
+
+   Pick 'TODO Some miscellaneous task' to work on next and clock that in with =I= The clock is now on 'TODO Some miscellaneous task'
+
+   选一个要开始的task执行并计时，按 =I= 键
+
+3. I complete that task and mark it done with =C-c C-t d=
+
+   按 =C-c C-t d= 完成一个task，tag会变成 DONE 。
+
+   This stops the clock and moves it back to the =Organization= task.
+
+4. Now I want to work on =Project A= so I clock in =Task 1=
+
+   I work on Task 1 and mark it =DONE=.  This clocks out =Task 1= and moves
+   the clock to =Project A=.  Now I work on =Task 2= and clock that in.
+
+The entire time I'm working on and clocking some subtask of =Project A= all of the clock time in the interval is applied somewhere to the =Project A= tree.  When I eventually mark =Project A= done then the clock will move back to the default organization task.
+
+*** 9.1 Clock Setup 设置计时
 
 #+BEGIN_SRC emacs-lisp
 ;; Resume clocking task when emacs is restarted
@@ -368,18 +604,104 @@ as the default task."
 (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
 #+END_SRC
 
-** 10.2
+下面的已经不用了。
+
+I used to clock in tasks by ID using the following function but with the new punch-in and punch-out I don't need these as much anymore. =f9-SPC= calls =bh/clock-in-last-task= which switches the clock back to the previously clocked task.
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-id
+;;   :defer t)
+;; 
+;; (defun bh/clock-in-task-by-id (id)
+;;   "Clock in a task by id"
+;;   (org-with-point-at (org-id-find id 'marker)
+;;     (org-clock-in nil)))
+;; 
+;; (defun bh/clock-in-last-task (arg)
+;;   "Clock in the interrupted task if there is one
+;; Skip the default task and get the next one.
+;; A prefix arg forces clock in of the default task."
+;;   (interactive "p")
+;;   (let ((clock-in-to-task
+;;          (cond
+;;           ((eq arg 4) org-clock-default-task)
+;;           ((and (org-clock-is-active)
+;;                 (equal org-clock-default-task (cadr org-clock-history)))
+;;            (caddr org-clock-history))
+;;           ((org-clock-is-active) (cadr org-clock-history))
+;;           ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+;;           (t (car org-clock-history)))))
+;;     (widen)
+;;     (org-with-point-at clock-in-to-task
+;;       (org-clock-in nil))))
+#+END_SRC
+
+*** 9.2 Clocking in 打卡计时
+:PROPERTIES:
+:CUSTOM_ID: ClockingIn
+:END:
+
+When I start or continue working on a task I clock it in with any of the following:
+
+用下面的快捷键进行打卡计时
+
+  - =C-c C-x C-i= 
+  - =I= in the agenda
+  - =I= speed key on the first character of the heading line
+  - =f9 I= while on the task in the agenda
+  - =f9 I= while in the task in an org file
+
+** 10.2 Task Estimates and column view 任务评估
+
+Estimating how long tasks take to complete is a difficult skill to master. Org-mode makes it easy to practice creating estimates for tasks and then clock the actual time it takes to complete.
+
+By repeatedly estimating tasks and reviewing how your estimate relates to the actual time clocked you can tune your estimating skills.
+
 *** 10.2.1 Creating a task estimate with column mode
+I use =properties= and =column view= to do project estimates.
+
+I set up *column view* globally with the following headlines 
 
 #+BEGIN_SRC emacs-lisp
 ; Set default column view headings: Task Effort Clock_Summary
 (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+#+END_SRC
 
+This makes column view show estimated task effort and clocked times side-by-side which is great for reviewing your project estimates.
+
+A property called Effort records the estimated amount of time a given task will take to complete. The estimate times I use are one of:
+
+  + 10 minutes
+  + 30 minutes
+  + 1 hour
+  + 2 hours
+  + 3 hours
+  + 4 hours
+  + 5 hours
+  + 6 hours
+  + 7 hours
+  + 8 hours
+
+These are stored for easy use in =column mode= in the global property =Effort_ALL.= 
+
+#+BEGIN_SRC emacs-lisp
 ; global Effort estimate values
 ; global STYLE property values for completion
 (setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
                                     ("STYLE_ALL" . "habit"))))
 #+END_SRC
+
+To create an estimate for a task or subtree start column mode with =C-c C-x C-c= and collapse the tree with =c=.  This shows a table overlayed on top of the headlines with the task name, effort estimate, and clocked time in columns.
+
+评估一项任务或者子任务数用 =C-c C-x C-c= 或者 M-x org-columns，在task名这行显示时间表。
+
+With the cursor in the =Effort= column for a task you can easily set the estimated effort value with the quick keys =1= through =9=.
+
+把光标放到 =Effort= 栏后可以按键盘上的数字0~9快速输入时间。
+
+After setting the effort values exit =column mode= with =q=.
+
+输入完task评估时间后，按 =q= 键 退出 =column mode=
 
 ** 10.3 Providing progress reports to others
 
@@ -693,7 +1015,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
          ;; (ledger . t)
          ;; (org . t)
          ;; (latex . t)
-         ;; (plantuml . t)
+         (plantuml . t)
 )))
 
 ; Do not prompt to confirm evaluation
@@ -704,6 +1026,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 ; Use fundamental mode when editing plantuml blocks with C-c '
 (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
 #+END_SRC
+
+#+results:
+: ((plantuml . fundamental) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
 
 ** 18
 *** 18.2.1 Narrowing to a subtree with bh/org-todo

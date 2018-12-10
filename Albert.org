@@ -27,7 +27,61 @@
 (setq default-directory "~/")
 #+END_SRC
 
-** UTF-8
+** Window size
+
+T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，
+控制窗口大小，让buffer显示在下面。
+
+#+BEGIN_SRC emacs-lisp
+;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
+(if (eq system-type 'windows-nt)
+  ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+  (toggle-frame-maximized)
+
+  ;; "Maximize emacs window in windows os" WM_SYSCOMMAND #xf030 maximize  
+  ;; [2018-09-07 周五 09:53:36] 不知道为什么没有效果
+  ;; (interactive)
+  ;; (w32-send-sys-command 61488)
+)
+#+END_SRC
+
+** Font setting on win7
+
+可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
+另一个有用的函数是 =describe-fontset=
+
+中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+  ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+  ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+  (progn
+    ;; Setting English Font
+    (set-face-attribute
+      'default nil :font "Consolas 11")
+    
+      ;; Chinese Font
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+                (set-fontset-font (frame-parameter nil 'font)
+                          charset
+                          (font-spec :family "微软雅黑" :size 20)))))
+#+END_SRC
+
+;;(if (eq system-type 'windows-nt)
+;;     (set-face-attribute
+;;       'default nil :font "YaHei Consolas Hybrid 11"))
+
+** Performace problem
+
+[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
+如果打开会看见很多QueryBasicInformation这样的调用.
+
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+    (setq w32-get-true-file-attributes nil))
+#+END_SRC
+
+** UTF-8编码
 [2014-09-17 14:59:51]
 
 文件名在emacs使用utf-8的默认编码的时候是乱码，win下指定编码为gbk。
@@ -39,6 +93,201 @@
 )
 #+END_SRC
 
+* evil
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :init (evil-mode 1)
+  :config 
+    (progn
+      (setq evil-want-visual-char-semi-exclusive t)))
+#+end_src
+
+* helm
+[2014-09-16 09:27:15]
+
+;; (require 'helm-config)
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-config)
+(helm-mode 1)
+(global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "M-x") 'helm-M-x)
+;; (global-set-key (kbd "C-c a") 'helm-apropos)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+;          helm-input-idle-delay 0.01  ; this actually updates things
+;                                      ; reeeelatively quickly.
+(setq helm-quick-update t
+      helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
+      helm-ff-skip-boring-files t)
+#+END_SRC
+
+** Search buffers by major-mode
+
++ multi buffer search
+  1. *C-c h* 调出helm-mini buffer
+  1. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
+  1. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
+  1. 按 *C-s* search file content
+  1. *C-j* 打开buffer并跳到选择的行
+  1. *enter* 打开文件
+
++ M-SPC/Esc-SPC/C-@ :: 用 *M-SPC* 最方便了，mark当前的buffer，如果已经mark了会取消，先C-n/C-p移动到要取消的file
+
++ M-u :: 取消全部mark的buffer
++ M-a :: mark全部的buffer
+     
+[2014-09-16 18:24:22] multi search也可以这样，如在所有buffer中org-mode的buffer，然后找 *org @string_to_find 按 *C-s* 就ok了。
+
++ C-n/C-p/up/down :: 在helm的选项中上下移动
++ left/right :: 在source间移动， *C-o* 移动到下一个source，source就是group分类，如buffer，最近访问的buffer，创建buffer。
++ M-p/M-n :: 命令历史
+             
++ mini buffer
+  + M-S-d :: kill buffer and quit，就是 *M-D* 。
+  + C-c d :: kill buffer without quitting
+             
+[2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
+
+[2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
+
+** grep
+
+=helm-resume= 恢复上次的command
+
+*** Grep from helm-find-files
+
+From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
+menu with tab and choose grep. A prefix arg will launch recursive
+grep.
+
+NOTE:You can now launch grep with (C-u) M-g s without switching to the
+action pannel.
+
+*** Grep thing at point
+
+Before lauching helm, put your cursor on the start of symbol or sexp
+you will want to grep. Then launch helm-do-grep or helm-find-files,
+and when in the grep prompt hit C-w as many time as needed.
+
+光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
+可以跟着grep这个word后面的word。
+
+*** Grep persistent action
+
+As always, C-z will bring you in the buffer corresponding to the file
+you are grepping. Well nothing new, but using C-u C-z will record this
+place in the mark-ring. So if you want to come back later to these
+places, there is no need to grep again, you will find all these places
+in the mark-ring. Accessing the mark-ring in Emacs is really
+inconvenient, fortunately, you will find in helm-config
+helm-all-mark-ring which is a mark-ring browser
+(helm-command-prefix-key C-c SPACE). helm-all-mark-ring is in helm
+menu also, in the tool section.
+
+TIP: Bind helm-all-mark-ring to C-c SPACE.
+
+在org mode下，无效。
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
+#+END_SRC
+
+NOTE: helm-all-mark-ring handle global-mark-ring also.
+
+* helm-swoop
+[2014-11-21 周五 09:26:34]
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-swoop
+  :ensure t
+  :defer t
+  :bind (("M-i" . helm-swoop)
+        ("M-I" . helm-swoop-back-to-last-point)
+        ( "C-c M-i" . helm-multi-swoop)
+        ( "C-x M-i" . helm-multi-swoop-all)))
+#+END_SRC
+
+* window-number
+
+different from window-numbering.el
+直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
+
+#+BEGIN_SRC emacs-lisp
+(use-package window-numbering
+  :ensure t
+  :defer t
+  :init (window-numbering-mode 1))
+#+END_SRC
+
+* undotree
+
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :defer t
+  :config
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)))
+
+(defalias 'redo 'undo-tree-redo)
+;;(global-set-key (kbd "C-z") 'undo) ; 【Ctrl+z】
+;;(global-set-key (kbd "C-S-z") 'redo) ; 【Ctrl+Shift+z】;  Mac style
+;;(global-set-key (kbd "C-y") 'redo) ; 【Ctrl+y】; Microsoft Windows style
+(global-set-key (kbd "C-r") 'redo) ; 【Ctrl+r】; VIM style
+#+END_SRC
+
+* python
+
+pdb setup, note the python version
+#+BEGIN_SRC lisp
+;; (setq pdb-path 'c:/Python/Python36/Lib/pdb.py
+;;        gud-pdb-command-name (symbol-name pdb-path))
+;;  (defadvice pdb (before gud-query-cmdline activate)
+;;    "Provide a better default command line when called interactively."
+;;    (interactive
+;;     (list (gud-query-cmdline pdb-path
+;;                  (file-name-nondirectory buffer-file-name)))))
+#+end_src
+
+[2018-11-29 周四 16:15:34]
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+;; (setq python-shell-interpreter "python"
+      python-shell-interpreter-args "-i --simple-prompt")
+
+(use-package python-mode
+  :mode (("SConstruct\\'" . python-mode)
+         ("SConscript\\'" . python-mode)
+         ("\\.py\\'"      . python-mode))
+  :defer t
+  ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
+  :init (elpy-enable)
+  :config
+  (use-package elpy
+    :ensure t
+    :defer t
+    :init
+    (progn
+      ;;(setq elpy-rpc-python-command "python3")
+      (elpy-use-ipython)
+      ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+      ;; use flycheck not flymake with elpy
+      (when (require 'flycheck nil t)
+        (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+        (add-hook 'elpy-mode-hook 'flycheck-mode)))))
+
+;; (elpy-enable)
+#+END_SRC
+
+* basic setting - 可以推迟启动的
 ** 去掉启动欢迎界面
 
 #+begin_src emacs-lisp
@@ -104,32 +353,6 @@ Disk space is cheap. Save lots.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
 
-** Font setting on win7
-
-可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
-另一个有用的函数是 =describe-fontset=
-
-中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
-#+BEGIN_SRC emacs-lisp
-(if (eq system-type 'windows-nt)
-  ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-  ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-  (progn
-    ;; Setting English Font
-    (set-face-attribute
-      'default nil :font "Consolas 11")
-    
-      ;; Chinese Font
-        (dolist (charset '(kana han symbol cjk-misc bopomofo))
-                (set-fontset-font (frame-parameter nil 'font)
-                          charset
-                          (font-spec :family "微软雅黑" :size 20)))))
-#+END_SRC
-
-;;(if (eq system-type 'windows-nt)
-;;     (set-face-attribute
-;;       'default nil :font "YaHei Consolas Hybrid 11"))
-
 ** Color theme
 
 emacs24自带的最喜欢的theme。
@@ -188,17 +411,6 @@ before dired+ loaded
   :config (global-set-key (kbd "C-x C-b") 'ibuffer))
 #+END_SRC
 
-** Performace problem
-
-[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
-如果打开会看见很多QueryBasicInformation这样的调用.
-
-#+BEGIN_SRC emacs-lisp
-(if (eq system-type 'windows-nt)
-    (setq w32-get-true-file-attributes nil)
-)
-#+END_SRC
-
 ** 字体放大缩小
 
 from sacha chua
@@ -213,24 +425,6 @@ from sacha chua
 (show-paren-mode t)
 #+END_SRC
 
-** Window size
-
-T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，
-控制窗口大小，让buffer显示在下面。
-
-#+BEGIN_SRC emacs-lisp
-;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(if (eq system-type 'windows-nt)
-  ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
-  (toggle-frame-maximized)
-
-  ;; "Maximize emacs window in windows os" WM_SYSCOMMAND #xf030 maximize  
-  ;; [2018-09-07 周五 09:53:36] 不知道为什么没有效果
-  ;; (interactive)
-  ;; (w32-send-sys-command 61488)
-)
-#+END_SRC
-
 ** 显示行、列号
 
 在status bar显示，不在buffer的左侧显示每行的行号，否则真的会很慢。
@@ -242,7 +436,7 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 [2014-03-17 17:54:25] 不显示行号，否则速度会非常慢
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;;另外一个显示行号的插件，个人更喜欢的风格
 ;(require 'linum)
 ;(global-linum-mode t)
@@ -455,197 +649,6 @@ smart-mode-line和powerline都不好用，速度太慢。
 ;;       ;; (powerline-center-evil-theme)))
 #+END_SRC
 
-* evil
-
-#+BEGIN_SRC emacs-lisp
-(use-package evil
-  :ensure t
-  :init (evil-mode 1)
-  :config 
-    (progn
-      (setq evil-want-visual-char-semi-exclusive t)))
-#+end_src
-
-* helm
-[2014-09-16 09:27:15]
-
-;; (require 'helm-config)
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-config)
-(helm-mode 1)
-(global-set-key (kbd "C-c h") 'helm-mini)
-(global-set-key (kbd "M-x") 'helm-M-x)
-;; (global-set-key (kbd "C-c a") 'helm-apropos)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-;          helm-input-idle-delay 0.01  ; this actually updates things
-;                                      ; reeeelatively quickly.
-(setq helm-quick-update t
-      helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
-      helm-ff-skip-boring-files t)
-#+END_SRC
-
-** Search buffers by major-mode
-
-+ multi buffer search
-  1. *C-c h* 调出helm-mini buffer
-  1. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
-  1. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
-  1. 按 *C-s* search file content
-  1. *C-j* 打开buffer并跳到选择的行
-  1. *enter* 打开文件
-
-+ M-SPC/Esc-SPC/C-@ :: 用 *M-SPC* 最方便了，mark当前的buffer，如果已经mark了会取消，先C-n/C-p移动到要取消的file
-
-+ M-u :: 取消全部mark的buffer
-+ M-a :: mark全部的buffer
-     
-[2014-09-16 18:24:22] multi search也可以这样，如在所有buffer中org-mode的buffer，然后找 *org @string_to_find 按 *C-s* 就ok了。
-
-+ C-n/C-p/up/down :: 在helm的选项中上下移动
-+ left/right :: 在source间移动， *C-o* 移动到下一个source，source就是group分类，如buffer，最近访问的buffer，创建buffer。
-+ M-p/M-n :: 命令历史
-             
-+ mini buffer
-  + M-S-d :: kill buffer and quit，就是 *M-D* 。
-  + C-c d :: kill buffer without quitting
-             
-[2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
-
-[2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
-
-** grep
-
-=helm-resume= 恢复上次的command
-
-*** Grep from helm-find-files
-
-From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
-menu with tab and choose grep. A prefix arg will launch recursive
-grep.
-
-NOTE:You can now launch grep with (C-u) M-g s without switching to the
-action pannel.
-
-*** Grep thing at point
-
-Before lauching helm, put your cursor on the start of symbol or sexp
-you will want to grep. Then launch helm-do-grep or helm-find-files,
-and when in the grep prompt hit C-w as many time as needed.
-
-光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
-可以跟着grep这个word后面的word。
-
-*** Grep persistent action
-
-As always, C-z will bring you in the buffer corresponding to the file
-you are grepping. Well nothing new, but using C-u C-z will record this
-place in the mark-ring. So if you want to come back later to these
-places, there is no need to grep again, you will find all these places
-in the mark-ring. Accessing the mark-ring in Emacs is really
-inconvenient, fortunately, you will find in helm-config
-helm-all-mark-ring which is a mark-ring browser
-(helm-command-prefix-key C-c SPACE). helm-all-mark-ring is in helm
-menu also, in the tool section.
-
-TIP: Bind helm-all-mark-ring to C-c SPACE.
-
-在org mode下，无效。
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
-#+END_SRC
-
-NOTE: helm-all-mark-ring handle global-mark-ring also.
-
-* helm-swoop
-[2014-11-21 周五 09:26:34]
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-swoop
-  :ensure t
-  :defer t
-  :bind (("M-i" . helm-swoop)
-        ("M-I" . helm-swoop-back-to-last-point)
-        ( "C-c M-i" . helm-multi-swoop)
-        ( "C-x M-i" . helm-multi-swoop-all)))
-#+END_SRC
-
-* window-number
-
-different from window-numbering.el
-直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
-
-#+BEGIN_SRC emacs-lisp
-(use-package window-numbering
-  :ensure t
-  :defer t
-  :init (window-numbering-mode 1))
-#+END_SRC
-
-* undotree
-
-#+BEGIN_SRC emacs-lisp
-(use-package undo-tree
-  :defer t
-  :config
-    (progn
-      (global-undo-tree-mode)
-      (setq undo-tree-visualizer-timestamps t)
-      (setq undo-tree-visualizer-diff t)))
-
-(defalias 'redo 'undo-tree-redo)
-;;(global-set-key (kbd "C-z") 'undo) ; 【Ctrl+z】
-;;(global-set-key (kbd "C-S-z") 'redo) ; 【Ctrl+Shift+z】;  Mac style
-;;(global-set-key (kbd "C-y") 'redo) ; 【Ctrl+y】; Microsoft Windows style
-(global-set-key (kbd "C-r") 'redo) ; 【Ctrl+r】; VIM style
-#+END_SRC
-
-* python
-
-pdb setup, note the python version
-#+BEGIN_SRC emacs-lisp
-;; (setq pdb-path 'c:/Python/Python36/Lib/pdb.py
-;;        gud-pdb-command-name (symbol-name pdb-path))
-;;  (defadvice pdb (before gud-query-cmdline activate)
-;;    "Provide a better default command line when called interactively."
-;;    (interactive
-;;     (list (gud-query-cmdline pdb-path
-;;                  (file-name-nondirectory buffer-file-name)))))
-#+end_src
-
-[2018-11-29 周四 16:15:34]
-#+BEGIN_SRC emacs-lisp
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt")
-
-(use-package python-mode
-  :mode (("SConstruct\\'" . python-mode)
-         ("SConscript\\'" . python-mode)
-         ("\\.py\\'"      . python-mode))
-  :defer t
-  :init (elpy-enable)
-  :config
-  (use-package elpy
-    :ensure t
-    :defer t
-    :init
-    (progn
-      ;; (setq elpy-rpc-python-command "python3")
-      (elpy-use-ipython)
-      ;; use flycheck not flymake with elpy
-      (when (require 'flycheck nil t)
-        (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-        (add-hook 'elpy-mode-hook 'flycheck-mode)))))
-
-;; (elpy-enable)
-#+END_SRC
-
 * scheme [2017-03-02 周四 21:27:47]
 
 ;; (require 'cmuscheme)
@@ -792,12 +795,12 @@ process monitor在用了vpn后会导致机器hang。
 [2014-09-11 14:25:06] 即使更新到了0908的magit，仍然发现有多次调用git.exe的情况， *magit-status* 还是慢
 把git的path设置到最前面，貌似速度也没快多少，最多0.001s吧。
 
-#+BEGIN_SRC emacs-lisp
 ;;(if (eq system-type 'windows-nt)
 ;;    (progn
 ;;      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
 ;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 
+#+BEGIN_SRC emacs-lisp
 (use-package magit
   :defer t
   :config
