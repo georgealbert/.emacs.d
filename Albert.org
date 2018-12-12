@@ -57,19 +57,45 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
   (progn
     ;; Setting English Font
-    (set-face-attribute
-      'default nil :font "Consolas 11")
-    
-      ;; Chinese Font
-        (dolist (charset '(kana han symbol cjk-misc bopomofo))
-                (set-fontset-font (frame-parameter nil 'font)
+    ;; (set-face-attribute 'default nil :font "Consolas 8")
+    ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
+    ;; (set-face-attribute 'default nil :font "Monaco 10")
+    ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
+    (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+    ;; (set-face-attribute 'default nil :font "Fira Code 8")
+    ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+    ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 8")
+
+    ;; Chinese Font
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+            (set-fontset-font (frame-parameter nil 'font)
                           charset
-                          (font-spec :family "微软雅黑" :size 20)))))
+                          (font-spec :family "Microsoft Yahei" :size 22)))))
+
+;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
+;; 效果不好。
+;; (set-default-font "Consolas-with-Yahei 9")
+
+;; (if (eq system-type 'windows-nt)
+;;      (set-face-attribute
+;;        'default nil :font "Consolas-with-Yahei 11"))
 #+END_SRC
 
-;;(if (eq system-type 'windows-nt)
-;;     (set-face-attribute
-;;       'default nil :font "YaHei Consolas Hybrid 11"))
+[2018-12-10 周一 11:39:52] Consolas 10 + Microsoft Yahei 24 org mode table是可以对齐的，但是中文太大了。
+Consolas 8 + Microsoft Yahei 20 org mode table是可以对齐的，但是英文太小了。
+默认用Consolas 11 + Microsoft Yahei 20的时候不能对齐。
+
+Source Code Variable 无法和Yahei配合对齐。
+
+[2018-12-10 周一 12:17:01] https://github.com/cstrap/monaco-font 
+字体下载 https://raw.githubusercontent.com/todylu/monaco.ttf/master/monaco.ttf
+"Monaco 8 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
+"Monaco 10 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
+
+[2018-12-10 周一 13:30:29] https://design.ubuntu.com/font/
+"Ubuntu Mono 10 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
+"Ubuntu Mono 12 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
+"Ubuntu Mono 11 + Microsoft Yahei 22" org mode table是可以对齐的，字体大小正好。
 
 ** Performace problem
 
@@ -112,7 +138,8 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 #+BEGIN_SRC emacs-lisp
 (use-package helm-config)
 (helm-mode 1)
-(global-set-key (kbd "C-c h") 'helm-mini)
+;; (global-set-key (kbd "C-c h") 'helm-mini)
+(global-set-key (kbd "C-c m") 'helm-mini)
 (global-set-key (kbd "M-x") 'helm-M-x)
 ;; (global-set-key (kbd "C-c a") 'helm-apropos)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
