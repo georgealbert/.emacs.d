@@ -52,25 +52,66 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
 #+BEGIN_SRC emacs-lisp
-(if (eq system-type 'windows-nt)
-  ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-  ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-  (progn
-    ;; Setting English Font
-    ;; (set-face-attribute 'default nil :font "Consolas 8")
-    ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
-    ;; (set-face-attribute 'default nil :font "Monaco 10")
-    ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-    (set-face-attribute 'default nil :font "Ubuntu Mono 11")
-    ;; (set-face-attribute 'default nil :font "Fira Code 8")
-    ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
-    ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 8")
+;; (if (eq system-type 'windows-nt)
+;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+;;   (progn
+;;     ;; Setting English Font
+;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
+;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
+;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
+;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
+;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
+;; 
+;;     ;; Chinese Font
+;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;             (set-fontset-font (frame-parameter nil 'font)
+;;                           charset
+;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
 
-    ;; Chinese Font
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-            (set-fontset-font (frame-parameter nil 'font)
-                          charset
-                          (font-spec :family "Microsoft Yahei" :size 22)))))
+(defun albert-notebook-font()
+  "Config font on HP zhan66."
+  (interactive)
+  (if (eq system-type 'windows-nt)
+    (progn
+      ;; Setting English Font
+      (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+      ;; Chinese Font
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+              (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Microsoft Yahei" :size 22))))))
+
+(defun albert-s2319-font()
+  "Config font on dell s2319. 
+   Ubuntu Mono 10 + Yahei 14 太小了
+   Ubuntu Mono 12 + Yahei 16 比较合适
+   "
+  (interactive)
+  (if (eq system-type 'windows-nt)
+    (progn
+      ;; Setting English Font
+      (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; Chinese Font
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+              (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Microsoft Yahei" :size 16))))))
+
+;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+;; s2319的宽度是509mm X 286mm
+(if (>= (display-mm-width) 509)
+  (albert-s2319-font))
+
+;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
+;; HP ZHAN66 309mm X 175mm
+;; Thinkpad T430 4xxmm X 20xmm?
+(if (<= (display-mm-width) 500)
+  (albert-notebook-font))
 
 ;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
 ;; 效果不好。
