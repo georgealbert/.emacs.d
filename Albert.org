@@ -877,6 +877,27 @@ process monitor在用了vpn后会导致机器hang。
       (setq magit-last-seen-setup-instructions "1.4.0")))
 #+end_src
 
+* tramp on windows [2018-12-28 周五 11:14:58]
+
++ new session
+  /plink:user@host:/path/to/your/file/on/server
+
++ saved session
+  /plinkx:sessname:/path/to/your/file/on/server
+  
++ 不需要设置 tramp-shell-prompt-pattern 和 tramp-password-end-of-line 。
++ plink要在PATH里有。
+
+#+BEGIN_SRC emacs-lisp
+(use-package tramp
+  :defer t
+  :config
+    (progn
+      (setq exec-path (cons "E:/tools/putty" exec-path))
+      ;; (setq tramp-password-end-of-line "\r\n")
+      ;; (setq tramp-shell-prompt-pattern "^[ $]# +")
+      (setq tramp-default-method "plink")))
+#+END_SRC
 * 现在没用的配置
 ** 反显选中区域
 
