@@ -45,7 +45,7 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 )
 #+END_SRC
 
-** Font setting on win7
+** Font setting on win7/win10
 
 可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
 另一个有用的函数是 =describe-fontset=
@@ -101,17 +101,19 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
                             charset
                             (font-spec :family "Microsoft Yahei" :size 16))))))
 
-;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-;; s2319的宽度是509mm X 286mm
-(if (>= (display-mm-width) 509)
-  (albert-s2319-font))
-
-;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
-;; HP ZHAN66 309mm X 175mm
-;; Thinkpad T430 4xxmm X 20xmm?
-(if (<= (display-mm-width) 500)
-  (albert-notebook-font))
+                           
+(if (eq window-system 'w32)
+  (progn
+    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+    ;; DELL S2319HS 分辨率1920x1080, 屏幕尺寸是509mm X 286mm
+    (if (>= (display-mm-width) 509)
+      (albert-s2319-font))
+    
+    ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
+    ;; HP ZHAN66 309mm X 175mm
+    ;; Thinkpad T430 4xxmm X 20xmm?
+    (if (<= (display-mm-width) 500)
+      (albert-notebook-font))))
 
 ;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
 ;; 效果不好。
@@ -156,8 +158,15 @@ Source Code Variable 无法和Yahei配合对齐。
 (prefer-coding-system 'utf-8)
 
 (if (eq system-type 'windows-nt)
-  (setq file-name-coding-system 'gbk)
-)
+  (setq file-name-coding-system 'gbk))
+
+;; for linux terminal
+(if (eq system-type 'gnu/linux)
+  (progn
+    (setq locale-coding-system 'utf-8)
+    (set-terminal-coding-system 'utf-8)
+    (set-keyboard-coding-system 'utf-8)
+    (set-selection-coding-system 'utf-8)))
 #+END_SRC
 
 * evil
@@ -177,6 +186,9 @@ Source Code Variable 无法和Yahei配合对齐。
 ;; (require 'helm-config)
 
 #+BEGIN_SRC emacs-lisp
+(use-package helm
+  :defer t
+  :ensure t)
 (use-package helm-config)
 (helm-mode 1)
 ;; (global-set-key (kbd "C-c h") 'helm-mini)
@@ -375,7 +387,9 @@ pdb setup, note the python version
 #+begin_src emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
+
+(if (eq window-system 'w32)
+  (scroll-bar-mode -1))
 #+end_src
 
 ** 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
