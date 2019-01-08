@@ -177,8 +177,21 @@ Source Code Variable 无法和Yahei配合对齐。
   :init (evil-mode 1)
   :config 
     (progn
+      ;; (eval-after-load 'helm-gtags
+      ;;    '(progn
+      ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
+      (eval-after-load 'ggtags
+        '(progn
+           (evil-make-overriding-map ggtags-mode-map 'normal)
+           ;; force update evil keymaps after ggtags-mode loaded
+           (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
       (setq evil-want-visual-char-semi-exclusive t)))
 #+end_src
+
+为ggtags修改默认的键绑定，可以用 M-.
+https://blog.csdn.net/Levi_Huang/article/details/84288493
+
+[2019-01-01 周二 00:08:18] helm-gtags不能在statusbar上显示tag的值，这点不如ggtags好用。先用ggtags吧。
 
 * helm
 [2014-09-16 09:27:15]
@@ -189,6 +202,7 @@ Source Code Variable 无法和Yahei配合对齐。
 (use-package helm
   :defer t
   :ensure t)
+
 (use-package helm-config)
 (helm-mode 1)
 ;; (global-set-key (kbd "C-c h") 'helm-mini)
@@ -293,6 +307,55 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
         ("M-I" . helm-swoop-back-to-last-point)
         ( "C-c M-i" . helm-multi-swoop)
         ( "C-x M-i" . helm-multi-swoop-all)))
+#+END_SRC
+
+* helm-gtags [2018-12-31 周一 23:31:48]
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-gtags
+  :ensure t
+  :defer t
+  :init
+    (setq helm-gtags-ignore-case t
+          helm-gtags-auto-update t
+          helm-gtags-use-input-at-cursor t
+          helm-gtags-pulse-at-cursor t
+          helm-gtags-prefix-key "\C-cg"
+          helm-gtags-suggested-key-mapping t))
+
+(defun set-helm-gtags-keybindings ()
+  (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+  (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+  (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
+  (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
+  (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
+  (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
+
+(add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
+
+#+END_SRC
+
+* helm-ag [2019-01-01 周二 00:15:53]
+https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
+* ggtags [2019-01-01 周二 00:32:00]
+
+| key     | function              | 说明                       |
+|---------+-----------------------+----------------------------|
+| M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
+| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
+| M-]     | ggtags-find-reference | 查询调用了tag的reference   |
+
+#+BEGIN_SRC emacs-lisp
+(use-package ggtags
+  :defer t
+  :ensure t)
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+      (progn
+        (linum-mode 1)
+        (ggtags-mode 1)))))
 #+END_SRC
 
 * window-number
@@ -911,6 +974,38 @@ process monitor在用了vpn后会导致机器hang。
       ;; (setq tramp-password-end-of-line "\r\n")
       ;; (setq tramp-shell-prompt-pattern "^[ $]# +")
       (setq tramp-default-method "plink")))
+#+END_SRC
+* c-mode coding style [2019-01-05 周六 11:20:13]
+
+emacs使用google-c-style
+google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
+
+http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
+
+elpa中安装就可以了。
+
+下载下来，放在emacs.d目录下，然后在.emacs配置文件中添加几行：
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (setq c-default-style "k&r" c-basic-offset 4)
+            (c-set-offset 'substatement-open 0)))
+
+#+BEGIN_SRC emacs-lisp
+
+(setq c-default-style "linux")
+(setq c-basic-offset 4)
+
+(setq default-tab-width 4)
+(setq-default indent-tabs-mode nil)
+
+;; (setq tab-width 4)
+;; (setq tab-stop-list ())
 #+END_SRC
 * 现在没用的配置
 ** 反显选中区域
