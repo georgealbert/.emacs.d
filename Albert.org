@@ -1007,6 +1007,380 @@ elpa中安装就可以了。
 ;; (setq tab-width 4)
 ;; (setq tab-stop-list ())
 #+END_SRC
+* graphviz [2019-01-08 周二 18:13:47]
+
+主要思想是解析 =buffer= 中选中的文本，通过正则表达式来匹配，从中找到 struct name 以及其中的各个 fields， 最后根据 =dot= 语法将其组成一个 =subgraph= 。其实应该有更好的方法（比如通过 CEDET 的 Semantic 解析结果来做），但对 CEDET 的代码实在不熟，所以现在就只能这样了。
+#+BEGIN_SRC emacs-lisp
+;; Function used to add fields of struct into a dot file (for Graphviz).
+(defconst yyc/dot-head "subgraph cluster_%s {
+    node [shape=record fontsize=12 fontname=Courier style=filled];
+    color = lightgray;
+    style=filled;
+    label = \"Struct %s\";
+    edge[color=\"#2e3436\"];"
+  "Header part of dot file.")
+
+(defconst yyc/dot-tail "
+}"
+  "Tail part of dot")
+
+(defconst yyc/dot-node-head
+  "
+        node_%s[shape=record label=\"<f0>*** STRUCT %s ***|\\"
+  "Format of node.")
+
+(defconst yyc/dot-node-tail "
+\"];"
+  "Format of node.")
+ 
+(defconst r_attr_str "[ \t]+\\(.*+\\)[ \t]+\\(.*\\)?;"
+  "Regular expression for matching struct fields.")
+ 
+;; (defconst r_name (caar (semantic-parse-region start end))
+(defconst r_name "\\_<\\(typedef[ \t]+\\)?struct[ \t]+\\(.*\\)?[ \t]*{"
+  "Regular expression for mating struct name")
+ 
+(defconst attr_str "
+<f%d>%s %s\\l|\\" "nil")
+ 
+(defun yyc/datastruct-to-dot (start end)
+  "generate c++ function definition and insert it into `buffer'"
+  (interactive "rp")
+  (setq var-defination (buffer-substring-no-properties start end))
+  (let* ((tmp_str "")
+         (var-name "")
+         (var-type "")
+         (counter 0)
+         (struct-name "")
+         (header-str ""))
+    (defun iter (pos)
+      (setq counter (+ counter 1))
+      (message (format "Counter: %d, pos: %d"
+                       counter pos))
+      (if (string-match r_name var-defination pos)
+          (progn
+            (message "A")
+            (setq struct-name
+                  (match-string 2 var-defination))
+            ;; (setq struct-name (caar (semantic-parse-region start end)))
+            (setq header-str
+                  (format yyc/dot-head struct-name struct-name))
+            (setq tmp_str
+                  (format yyc/dot-node-head struct-name struct-name))
+            (iter (match-end 0)))
+        (if (string-match r_attr_str var-defination pos)
+            (progn
+              (message "B")
+              (setq var-type
+                    (match-string 1 var-defination))
+              (setq var-name
+                    (match-string 2 var-defination))
+              (setq tmp_str
+                    (concat tmp_str
+                            (format attr_str counter var-type var-name)))
+              (iter (match-end 0)))
+          nil)))
+    (save-excursion
+      (iter 0)
+      (set-buffer (get-buffer-create "tmp.dot"))
+      ;;(graphviz-dot-mode)
+      (setq pos (point-max))
+      (insert  header-str tmp_str )
+      (goto-char (point-max))
+      (delete-char -1)
+      (insert "<f999>\\"yyc/dot-node-tail yyc/dot-tail)
+      )
+    (if (one-window-p)
+        (split-window-vertically))
+    (switch-to-buffer-other-window "tmp.dot")
+    (goto-char (point-min))
+    )
+  (message "Finished, please see *tmp.dot* buffer.")
+  )
+#+END_SRC
+
+使用方法
+用起来很简单：找到一个 C 代码，标记整个 struct 定义，然后M-x 输入： yyc/datastruct-to-dot 即可。命令执行完毕后，会打开一个新的 tmp.dot buffer，其中包含了用于绘制该 struct 的代码。前面也提到了，这生成的仅仅是个 subgraph，需要将这个 subgraph 添加到真正的 graph 下，才能生成图像。我通过 autoinsert 来自动创建用于放置 subgraph 的 graph 。
+
+** autoinsert配置
+autoinsert 是 Emacs 自带的功能，稍加配置即可使用：
+
+#+BEGIN_SRC emacs-lisp
+;; ************** Autoinsert templates *****************
+(use-package autoinsert
+  :defer t)
+
+(setq auto-insert-mode t)  ;;; Adds hook to find-files-hook
+(setq auto-insert-directory "~/.emacs.d/templates/auto-insert/")
+(setq auto-insert 'other)
+(setq auto-insert-query nil)
+ 
+;; auto-insert stuff
+(add-hook 'find-file-hooks 'auto-insert)
+(setq auto-insert-alist
+      '(
+        ("\\.cpp$" . ["insert.cpp" auto-update-c-source-file])
+        ("\\.h$"   . ["header.h" auto-update-header-file])
+        ("\\.c$" . ["insert.c" auto-update-c-source-file])
+        ("\\.org$" . ["insert.org" auto-update-defaults])
+        ("\\.sh$" . ["insert.sh" auto-update-defaults])
+        ("\\.lisp$" . ["insert.lisp" auto-update-defaults])
+        ("\\.el$" . ["insert.el" auto-update-defaults])
+        ("\\.dot$" . ["insert.dot" auto-update-defaults])
+        ("\\.erl$" . ["insert.err" auto-update-defaults])
+        ("\\.py$" . ["insert.py" auto-update-defaults])
+        ("\\.tex$" . ["insert.tex" auto-update-defaults])
+        ("\\.html$" . ["insert.html" auto-update-defaults])
+        ("\\.devhelp2$" . ["insert.devhelp2" auto-update-defaults])
+        ("\\.ebuild$" . ["insert.ebuild" auto-update-defaults])
+        ("\\.sh$" . ["insert.sh" auto-update-defaults])
+        ("Doxyfile$" . ["insert.doxyfile" auto-update-defaults])
+        ))
+ 
+;; function replaces the string '@@@' by the current file
+;; name. You could use a similar approach to insert name and date into
+;; your file.
+(defun auto-update-header-file ()
+  (save-excursion
+    (while (search-forward "@@@" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match (upcase (file-name-nondirectory buffer-file-name)))
+        (subst-char-in-region (point-min) (point-max) ?. ?_)
+        ))))
+ 
+(defun insert-today ()
+  "Insert today's date into buffer"
+  (interactive)
+  (insert (format-time-string "%m-%e-%Y" (current-time))))
+ 
+(defun auto-update-c-source-file ()
+  (save-excursion
+    ;; Replace HHHH with file name sans suffix
+    (while (search-forward "HHHH" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") t)
+        )))
+
+  (save-excursion
+    ;; Replace @@@ with file name
+    (while (search-forward "@@@" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match (file-name-nondirectory buffer-file-name))
+        )))
+  (save-excursion
+    ;; replace DDDD with today's date
+    (while (search-forward "DDDD" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match "")
+        (insert-today)
+        ))))
+ 
+(defun auto-replace-file-name ()
+  (save-excursion
+    ;; Replace @@@ with file name
+    (while (search-forward "(>>FILE<<)" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match (file-name-nondirectory buffer-file-name) t)
+        ))
+    ))
+ 
+(defun auto-update-defaults ()
+  (auto-replace-file-name)
+  (auto-replace-file-name-no-ext)
+  (auto-replace-date-time))
+ 
+(defun auto-replace-file-name-no-ext ()
+  (save-excursion
+    ;; Replace @@@ with file name
+    (while (search-forward "(>>FILE_NO_EXT<<)" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match (file-name-sans-extension (file-name-nondirectory buffer-file-name)) t)
+        ))))
+ 
+(defun auto-replace-date-time ()
+  (save-excursion
+    (while (search-forward "(>>DATE<<)" nil t)
+      (save-restriction
+        (narrow-to-region (match-beginning 0) (match-end 0))
+        (replace-match "" t)
+        (insert-today)
+        ))))
+#+END_SRC
+
+模板文件存放于 “~/.emacs.d/templates/auto-insert/” 中，其中， insert.dot 的内容如下：
+
+// $Id: (>>FILE<<), (>>DATE<<)
+digraph Name {
+    node [shape=record fontsize=12 fontname=Courier style=filled];
+    edge[color=blue];
+    rankdir=LR;
+
+// XXX: place to put subgraph
+
+}
+
+** 用法示例
+一个简单的使用示例，有如下步骤：
+
+1: 打开一个 C 文件
+ 
+
+如内核代码中的 drivers/usb/storage/usb.h
+
+2: 打开一个 dot 文件(/tmp/usb.dot)
+ 
+
+auto-insert 会自动插入一些文件内容.
+
+3: 选中 struct us_data 的定义，并执行 yyc/datastruct-to-dot。
+
+执行完成后， us_data 的数据填写到了 tmp.dot 中，将该 buffer 中的所有内容 kill 掉，并 yank 到 usb.dot 中 XXX 这一行的下面。此时，保存 sub.dot ， 并按下快捷键 : C-cc ， 然后按下 Enter ， 就会自动编译。然后再按下 C-cp 就可以在另外一个 buffer 中预览它了。
+
+其实到这里，一个 C 语言的 struct 数据结构就已经被画出来了，后面的两个步骤，是为了介绍怎样将多个数据结构联系起来。
+
+4: 添加其他的 subgraph 
+
+我们可以继续添加其他的 subgraph ， 例如 struct usb_ctrlrequest *cr ，以及 struct usb_sg_request， 并全部做为 subgraph 添加到 usb.dot 中。
+
+5: 为 subgraph 建立关联
+
+很简单，通过 “->” 画两条线就可以了。
+
+** semantic [2019-01-08 周二 20:47:56]
+https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referral [译] Emacs Lisp 速成
+
+                ;; 这样写不太好看
+                 ;; (if (eq function-pointer t)
+                 ;;     (setq str (var-str str index type))
+                 ;;   (setq str (concat str (format "%s " (semantic-tag-name type)))))))
+
+#+BEGIN_SRC emacs-lisp
+(defun albert/datastruct-member (tag)
+  "parse tag generated by semantic-parse-region."
+
+  (defun fp-str (str ftag)
+    "function pointer args to str. 函数指针参数的处理.如ngx_tcp_module_t里的函数指针"
+    (cond
+      ((null ftag) "")
+      ((cond
+         ((semantic-tag-p ftag)
+           (let* ((name (semantic-tag-name ftag))
+                  (type (semantic-tag-get-attribute ftag :type))
+                  (pointer (semantic-tag-get-attribute ftag :pointer)))
+             (cond
+               ((atom type) (setq str (concat str (format "%s " type))))
+               ((semantic-tag-p type) 
+                 (setq str (concat str (format "%s " (semantic-tag-name type))))))
+ 
+             (if (numberp pointer)
+               (setq str (concat str (make-string pointer ?*))))
+
+             (setq str (concat str (format "%s, " name)))
+             ))
+         (t (setq str (concat (fp-str str (car ftag)) (fp-str str (cdr ftag)))))
+         ))
+    ))
+
+  (defun var-str (str index vtag)
+    (setq str (format "    <f%d>" index))
+    (cond
+      ((null vtag) "")
+      ((cond
+         ((semantic-tag-p vtag)
+           (let* ((name (semantic-tag-name vtag))
+                  (type (semantic-tag-get-attribute vtag :type))
+                  ;;(function-pointer (semantic-tag-get-attribute vtag :function-pointer))
+                  (pointer (semantic-tag-get-attribute vtag :pointer)))
+             (cond
+               ((atom type) (setq str (concat str (format "%s " type))))
+               ;; 函数指针要单独处理,如ngx_tcp_module_t里的函数指针
+               ((semantic-tag-p type) 
+                 (setq str (concat str (format "%s " (semantic-tag-name type))))))
+ 
+             (if (numberp pointer)
+               (setq str (concat str (make-string pointer ?*))))
+
+             (if (semantic-tag-get-attribute vtag :function-pointer)
+                 (let* ((tmp (fp-str "" (semantic-tag-components vtag)))
+                        (args (substring tmp 0 (- (length tmp) 2))))
+                       (setq str (format "%s(*%s)(%s) \\l|\\\n" str name args)))
+               (concat str (format "%s \\l|\\\n" name)))
+             ))
+       (t (concat (var-str str (+ index 1) (car vtag)) (var-str str (+ index 1) (cdr vtag))))
+         ))
+      ))
+  (var-str "" 0 tag))
+  
+(defun albert/datastruct-dot-head (tag)
+  "datastruct name to dot head."
+  (let ((name (semantic-tag-name tag)))
+    (format "subgraph cluster_%s {
+  node [shape=record fontsize=12 fontname=Courier style=filled];
+  color=lightgray;
+  style=filled;
+  label = \"Struct %s\";
+  edge[color=\"#2e3436\"];
+  node_%s [shape=record label=\"\n" name name name)))
+  
+(defun albert/datastruct-dot-end (str)
+  "datastruct to dot end string. 去掉最后一个字段的\l|\n"
+  (concat (substring str 0 (- (length str) 3)) "\"];
+}\n"))
+
+(defun albert/semantic-lex-buffer (start end)
+  "parse c datastruct definition using semantic and insert it into `buffer'"
+  (interactive "rp")
+  (message "start=%d, end=%d" start end)
+  (let* ((tag (car (semantic-parse-region start end)))
+         (members (plist-get (semantic-tag-class (semantic-tag-get-attribute tag :typedef)) :members)))
+    ;; (message "%s\n" tag)
+    ;;(message "%s" (albert/datastruct-dot-head tag))
+    ;; (message "%s" (albert/datastruct-member (semantic-tag-components tag)))
+    (let* ((body (albert/datastruct-member (semantic-tag-components tag)))
+           (dot_str (albert/datastruct-dot-end body)))
+      ;;(message "%s" (albert/datastruct-dot-end body))
+      (save-excursion
+        ;;(iter 0)
+        (set-buffer (get-buffer-create "tmp.dot"))
+        ;;(graphviz-dot-mode)
+        (setq pos (point-max))
+        (insert (albert/datastruct-dot-head tag) 
+                dot_str)
+        (goto-char (point-max))
+        (delete-char -1)
+      )
+
+      (if (one-window-p)
+        (split-window-vertically))
+
+      (switch-to-buffer-other-window "tmp.dot")
+      (goto-char (point-min))
+    )))
+
+     ;; (plist-get (nthcdr 2 (semantic-tag-get-attribute tag :typedef)) :members))
+
+  ;; (message (semantic-parse-region start end 1)))
+  ;; (message (semantic-c-lexer start end 1)))
+  ;; (message (semantic-lex-buffer)))
+  ;;(semantic-lex start end 1))
+
+
+#+END_SRC
+* winner-mode [2019-01-09 周三 18:04:05]
+这个是Emacs自带，打开(winner-mode t)之后，就可以用C-x <left>和C-x <right>来对窗口布局实现undo/redo了。
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package winner-mode
+;;   :init (winner-mode t))
+ 
+(winner-mode t)
+#+END_SRC
 * 现在没用的配置
 ** 反显选中区域
 
