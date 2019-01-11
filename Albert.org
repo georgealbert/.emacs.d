@@ -4,14 +4,31 @@
 
 #+BEGIN_SRC emacs-lisp
 (require 'package)
+
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.org/packages/") t)
+
+;; (unless (assoc-default "melpa" package-archives)
+;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+;; (unless (assoc-default "org" package-archives)
+;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
 
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
 
-(setq use-package-verbose t)
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
+
+;; [2019-01-11 周五 23:23:40] always-ensure一打开就起不来了，可能网络不好
+;; (setq use-package-always-ensure t)
+
+;; (setq use-package-verbose t)
+
 (require 'use-package)
+
+;; (use-package auto-compile
+;;   :config (auto-compile-on-load-mode))
+;; (setq load-prefer-newer t)
 #+end_src
 
 代理配置
@@ -200,7 +217,8 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  :defer t
+  :diminish helm-mode
+  ;; :defer t
   :ensure t)
 
 (use-package helm-config)
@@ -222,6 +240,8 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 (setq helm-quick-update t
       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
       helm-ff-skip-boring-files t)
+      
+(ido-mode -1)  ;; Turn off ido mode in case I enabled it accidentally
 #+END_SRC
 
 ** Search buffers by major-mode
@@ -304,34 +324,36 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
   :ensure t
   :defer t
   :bind (("M-i" . helm-swoop)
-        ("M-I" . helm-swoop-back-to-last-point)
-        ( "C-c M-i" . helm-multi-swoop)
-        ( "C-x M-i" . helm-multi-swoop-all)))
+         ("M-I" . helm-swoop-back-to-last-point)
+         ("C-c M-i" . helm-multi-swoop)
+         ("C-x M-i" . helm-multi-swoop-all)))
 #+END_SRC
 
 * helm-gtags [2018-12-31 周一 23:31:48]
 
+[2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
+
 #+BEGIN_SRC emacs-lisp
-(use-package helm-gtags
-  :ensure t
-  :defer t
-  :init
-    (setq helm-gtags-ignore-case t
-          helm-gtags-auto-update t
-          helm-gtags-use-input-at-cursor t
-          helm-gtags-pulse-at-cursor t
-          helm-gtags-prefix-key "\C-cg"
-          helm-gtags-suggested-key-mapping t))
-
-(defun set-helm-gtags-keybindings ()
-  (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-  (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
-  (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
-  (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
-  (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
-
-(add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
+;; (use-package helm-gtags
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;     (setq helm-gtags-ignore-case t
+;;           helm-gtags-auto-update t
+;;           helm-gtags-use-input-at-cursor t
+;;           helm-gtags-pulse-at-cursor t
+;;           helm-gtags-prefix-key "\C-cg"
+;;           helm-gtags-suggested-key-mapping t))
+;; 
+;; (defun set-helm-gtags-keybindings ()
+;;   (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+;;   (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
+;;   (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
+;; 
+;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
 
 #+END_SRC
 
@@ -512,6 +534,13 @@ emacs24自带的最喜欢的theme。
 ;; (load-theme 'tango-dark t)
 ;; (load-theme 'manoj-dark t)
 
+[2019-01-11 周五 21:55:40] 下面的theme不是用load-theme加载，不如什么theme都不用，纯白的。
+;; (load-theme 'Snowish t)
+;; (load-theme 'Bharadwaj-Slate t)
+;; (load-theme 'Infodoc t)
+
+JB Simple 白底黑字不错
+Jedit Grey 灰底黑字也可以
 ** Diredplus
 
 [2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
@@ -1376,11 +1405,69 @@ https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referr
 这个是Emacs自带，打开(winner-mode t)之后，就可以用C-x <left>和C-x <right>来对窗口布局实现undo/redo了。
 
 #+BEGIN_SRC emacs-lisp
-;; (use-package winner-mode
-;;   :init (winner-mode t))
+(use-package winner
+  :defer t)
  
-(winner-mode t)
+;; (winner-mode t)
 #+END_SRC
+* GDB [2019-01-11 周五 21:23:16]
+
+M-x gdb
+
++ file 打开执行文件
++ l (list): 从第一行开始列出源码，默认10行。
++ b (break):  b <行号> ， b <函数名>
++ r (run): 开始运行调试器，或重新开始运行调试器
++ c (continue): 继续运行到下一个断点，或运行到程序结束
++ clear : clear <行号> ，删除特定行的断点
++ d (delete): d <断点编号>，删除特定编号的断点
++ n (next): 单步执行下一行，如果本行有函数调用，不进入函数
++ s (step): 单步执行下一行，如果本行有函数调用，进入函数
++ until： 结束当前循环
++ p (print): p <变量名>， 显示变量内容
++ whatis： whatis<变量名>，显示变量类型
++ info： info b， 显示断点信息。 info r 显示寄存器信息。 info local 显示当前函数中的局部变量信息。info prog 显示被调试程序的执行状态。
++ p *array@len : 打印一维数组
++ p **array@len : 打印二维数组
++ quit： 退出调试器。
+
+emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如断点信息窗等，简化为4个
+
+#+BEGIN_SRC emacs-lisp
+;; set gdb multi-windows when open
+
+;;(setq gdb-many-windows t)
+
+;; customize the gdb multi-windows
+(defadvice gdb-setup-windows (after my-setup-gdb-windows activate)
+  "My GDB UI"
+  (gdb-get-buffer-create 'gdb-stack-buffer)
+  (set-window-dedicated-p (selected-window) nil)
+  (switch-to-buffer gud-comint-buffer)
+  (delete-other-windows)
+  (let ((win0 (selected-window))
+        (win1 (split-window nil nil 'left))  ;; code and output
+        (win2 (split-window-below (/ (* (window-height) 3) 4)))  ;; stack
+        )
+    (select-window win2)
+    (gdb-set-window-buffer (gdb-stack-buffer-name))
+    (select-window win1)
+    (set-window-buffer
+     win1
+     (if gud-last-last-frame
+         (gud-find-file (car gud-last-last-frame))
+       (if gdb-main-file
+           (gud-find-file gdb-main-file)
+         ;; Put buffer list in window if we
+         ;; can't find a source file.
+         (list-buffers-noselect))))
+    (setq gdb-source-window (selected-window))
+    (let ((win3 (split-window nil (/ (* (window-height) 3) 4))))  ;; io
+      (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
+    (select-window win0)
+    ))
+#+END_SRC
+
 * 现在没用的配置
 ** 反显选中区域
 
