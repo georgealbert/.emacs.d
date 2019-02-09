@@ -68,6 +68,8 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 另一个有用的函数是 =describe-fontset=
 
 中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
+CJK (Chinese, Japanese, Korean)
+
 #+BEGIN_SRC emacs-lisp
 ;; (if (eq system-type 'windows-nt)
 ;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
@@ -112,11 +114,13 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
       ;; Chinese Font
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
               (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Microsoft Yahei" :size 16))))))
+                            ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
 
                            
 (if (eq window-system 'w32)
@@ -156,6 +160,8 @@ Source Code Variable 无法和Yahei配合对齐。
 "Ubuntu Mono 10 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
 "Ubuntu Mono 12 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
 "Ubuntu Mono 11 + Microsoft Yahei 22" org mode table是可以对齐的，字体大小正好。
+
+[2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
 
 ** Performace problem
 
@@ -218,17 +224,43 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :diminish helm-mode
-  ;; :defer t
-  :ensure t)
+  :ensure t
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("C-c m" . helm-mini)
+         ("C-c n" . helm-mini)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ;; ("C-h a" . helm-apropos)
+         ;; ("C-x c o" . helm-occur)
+         ;; ("C-x c s" . helm-swoop)
+         ;; ("C-x c y" . helm-yas-complete)
+         ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ;; ("C-x c b" . my/helm-do-grep-book-notes)
+         ("C-x c SPC" . helm-all-mark-rings)))
 
-(use-package helm-config)
-(helm-mode 1)
-;; (global-set-key (kbd "C-c h") 'helm-mini)
-(global-set-key (kbd "C-c m") 'helm-mini)
-(global-set-key (kbd "C-c n") 'helm-mini)
-(global-set-key (kbd "M-x") 'helm-M-x)
-;; (global-set-key (kbd "C-c a") 'helm-apropos)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;; (use-package helm-config)
+;; (helm-mode 1)
+;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
+;; (global-set-key (kbd "C-c m") 'helm-mini)
+;; (global-set-key (kbd "C-c n") 'helm-mini)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
@@ -237,9 +269,11 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 ;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
 ;          helm-input-idle-delay 0.01  ; this actually updates things
 ;                                      ; reeeelatively quickly.
-(setq helm-quick-update t
-      helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
-      helm-ff-skip-boring-files t)
+
+;; [2019-01-11 周五 23:48:42]
+;; (setq helm-quick-update t
+;;       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
+;;       helm-ff-skip-boring-files t)
       
 (ido-mode -1)  ;; Turn off ido mode in case I enabled it accidentally
 #+END_SRC
@@ -359,6 +393,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 
 * helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
+
 * ggtags [2019-01-01 周二 00:32:00]
 
 | key     | function              | 说明                       |
@@ -397,6 +432,7 @@ different from window-numbering.el
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
   :defer t
+  :diminish undo-tree-mode
   :config
     (progn
       (global-undo-tree-mode)
@@ -797,7 +833,9 @@ smart-mode-line和powerline都不好用，速度太慢。
   :defer t)
 
 ;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+
+;; (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+
 ;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
 ;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
 ;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
@@ -1002,6 +1040,7 @@ process monitor在用了vpn后会导致机器hang。
       (setq exec-path (cons "E:/tools/putty" exec-path))
       ;; (setq tramp-password-end-of-line "\r\n")
       ;; (setq tramp-shell-prompt-pattern "^[ $]# +")
+      (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
       (setq tramp-default-method "plink")))
 #+END_SRC
 * c-mode coding style [2019-01-05 周六 11:20:13]
@@ -1402,7 +1441,7 @@ https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referr
 
 #+END_SRC
 * winner-mode [2019-01-09 周三 18:04:05]
-这个是Emacs自带，打开(winner-mode t)之后，就可以用C-x <left>和C-x <right>来对窗口布局实现undo/redo了。
+winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
 
 #+BEGIN_SRC emacs-lisp
 (use-package winner
@@ -1431,7 +1470,7 @@ M-x gdb
 + p **array@len : 打印二维数组
 + quit： 退出调试器。
 
-emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如断点信息窗等，简化为4个
+emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如断点信息窗等，简化为4个。其实都有用。不改了。
 
 #+BEGIN_SRC emacs-lisp
 ;; set gdb multi-windows when open
@@ -1439,33 +1478,33 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 ;;(setq gdb-many-windows t)
 
 ;; customize the gdb multi-windows
-(defadvice gdb-setup-windows (after my-setup-gdb-windows activate)
-  "My GDB UI"
-  (gdb-get-buffer-create 'gdb-stack-buffer)
-  (set-window-dedicated-p (selected-window) nil)
-  (switch-to-buffer gud-comint-buffer)
-  (delete-other-windows)
-  (let ((win0 (selected-window))
-        (win1 (split-window nil nil 'left))  ;; code and output
-        (win2 (split-window-below (/ (* (window-height) 3) 4)))  ;; stack
-        )
-    (select-window win2)
-    (gdb-set-window-buffer (gdb-stack-buffer-name))
-    (select-window win1)
-    (set-window-buffer
-     win1
-     (if gud-last-last-frame
-         (gud-find-file (car gud-last-last-frame))
-       (if gdb-main-file
-           (gud-find-file gdb-main-file)
-         ;; Put buffer list in window if we
-         ;; can't find a source file.
-         (list-buffers-noselect))))
-    (setq gdb-source-window (selected-window))
-    (let ((win3 (split-window nil (/ (* (window-height) 3) 4))))  ;; io
-      (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
-    (select-window win0)
-    ))
+;; (defadvice gdb-setup-windows (after my-setup-gdb-windows activate)
+;;   "My GDB UI"
+;;   (gdb-get-buffer-create 'gdb-stack-buffer)
+;;   (set-window-dedicated-p (selected-window) nil)
+;;   (switch-to-buffer gud-comint-buffer)
+;;   (delete-other-windows)
+;;   (let ((win0 (selected-window))
+;;         (win1 (split-window nil nil 'left))  ;; code and output
+;;         (win2 (split-window-below (/ (* (window-height) 3) 4)))  ;; stack
+;;         )
+;;     (select-window win2)
+;;     (gdb-set-window-buffer (gdb-stack-buffer-name))
+;;     (select-window win1)
+;;     (set-window-buffer
+;;      win1
+;;      (if gud-last-last-frame
+;;          (gud-find-file (car gud-last-last-frame))
+;;        (if gdb-main-file
+;;            (gud-find-file gdb-main-file)
+;;          ;; Put buffer list in window if we
+;;          ;; can't find a source file.
+;;          (list-buffers-noselect))))
+;;     (setq gdb-source-window (selected-window))
+;;     (let ((win3 (split-window nil (/ (* (window-height) 3) 4))))  ;; io
+;;       (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
+;;     (select-window win0)
+;;     ))
 #+END_SRC
 
 * 现在没用的配置
