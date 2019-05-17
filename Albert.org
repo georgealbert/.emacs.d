@@ -64,10 +64,10 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 ** Font setting on win7/win10
 
-可以用 C-u C-x = or C-u g a 来看当前汉字是用什么字体显示的，从而决定应该在这个变量里加什么。
+可以用 C-u C-x = or C-u g a 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
 另一个有用的函数是 =describe-fontset=
 
-中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
+中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
 CJK (Chinese, Japanese, Korean)
 
 #+BEGIN_SRC emacs-lisp
@@ -459,6 +459,15 @@ pdb setup, note the python version
 ;;                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
 
+[2019-05-17 周五 11:29:37]      
+
+M-x elpy-config的检查结果
+
+可以安装 autopep8
+#+BEGIN_SRC sh
+pip install autopep8
+#+END_SRC
+
 [2018-11-29 周四 16:15:34]
 #+BEGIN_SRC emacs-lisp
 (setq python-shell-interpreter "ipython"
@@ -482,11 +491,29 @@ pdb setup, note the python version
       (elpy-use-ipython)
       ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
       ;; use flycheck not flymake with elpy
-      (when (require 'flycheck nil t)
-        (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-        (add-hook 'elpy-mode-hook 'flycheck-mode)))))
+      ;; (when (require 'flycheck nil t)
+      ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
+      )))
 
 ;; (elpy-enable)
+#+END_SRC
+
+[2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
+
+flycheck需要python的flake8
+#+BEGIN_SRC sh
+pip install flake8
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :init
+    (when (require 'flycheck nil t)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode)))
 #+END_SRC
 
 * basic setting - 可以推迟启动的
@@ -651,6 +678,12 @@ from sacha chua
 ;;另外一个显示行号的插件，个人更喜欢的风格
 ;(require 'linum)
 ;(global-linum-mode t)
+#+END_SRC
+
+[2019-05-15 周三 15:33:55] emacs 26.2可以用，显示速度比linum快很多。
+#+BEGIN_SRC emacs-lisp
+(global-display-line-numbers-mode t)
+(setq display-line-numbers-width-start 5)
 #+END_SRC
 
 ** F5插入当前时间
