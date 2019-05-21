@@ -99,10 +99,10 @@ Here is my setup for org-capture
     (set-window-start (selected-window)
                       (window-start (selected-window)))))
 
-(defun bh/make-org-scratch ()
-  (interactive)
-  (find-file "/tmp/publish/scratch.org")
-  (gnus-make-directory "/tmp/publish"))
+;; (defun bh/make-org-scratch ()
+;;   (interactive)
+;;   (find-file "/tmp/publish/scratch.org")
+;;   (gnus-make-directory "/tmp/publish"))
 
 (defun bh/switch-to-scratch ()
   (interactive)
