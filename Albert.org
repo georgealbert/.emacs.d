@@ -1,5 +1,47 @@
 ﻿
 * basic setting
+** 启动优化 [2019-05-18 周六 22:43:45]
+
+doom-emacs介绍了它是如何做到启动速度这么快的 https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast
+
+Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of your elisp files. This can break code if you’ve written it to depend on dynamic variables, but I’ve written Doom not to.
+
+[2019-05-18 周六 23:35:01] 好像没什么效果。
+#+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t; -*-
+#+END_SRC
+
+[2019-05-18 周六 23:34:20] 学习anything的作者 https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init.el
+
+优化Emacs启动速度的方法论 https://manateelazycat.github.io/emacs/2019/05/12/emacs-optimize-startup-speed.html
+*** garbage collector优化 [2019-05-20 周一 10:53:13]
+[2019-05-18 周六 20:43:50] 从10s -> 5.5s左右，不知道效果能持续多久。
+设置垃圾回收，在Windows下，emacs 25版本会频繁出发垃圾回收，所以需要设置。
+
+[2019-05-18 周六 21:54:06] emacs 26.2启动时间15s，先注释掉吧。内存设置过大在长时间使用后gc会导致响应慢。
+#+BEGIN_SRC emacs-lisp
+;; (when (eq system-type 'windows-nt)
+;;   (setq gc-cons-threshold (* 512 1024 1024))
+;;   (setq gc-cons-percentage 0.5)
+;;   (run-with-idle-timer 5 t #'garbage-collect)
+;;   ;; 显示垃圾回收信息，这个可以作为debug用
+;;   (setq garbage-collection-messages t))
+#+END_SRC
+
+[2019-05-20 周一 10:48:24] https://github.com/jacmoe/emacs.d/blob/master/jacmoe.org
+
+#+BEGIN_SRC emacs-lisp
+(setq-default
+  gc-cons-threshold most-positive-fixnum          ; Increase garbage collector treshold
+)
+#+END_SRC
+
+Reset garbage collector treshold after initialization is finished and garbage-collect on focus-out. Emacs should feel snappier.
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
+(add-hook 'focus-out-hook 'garbage-collect)
+#+END_SRC
 ** elpa
 
 #+BEGIN_SRC emacs-lisp
@@ -197,6 +239,7 @@ Source Code Variable 无法和Yahei配合对齐。
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t
+  :defer t
   :init (evil-mode 1)
   :config 
     (progn
@@ -223,8 +266,9 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  :diminish helm-mode
   :ensure t
+  :defer t
+  :diminish helm-mode
   :init
   (progn
     (require 'helm-config)
@@ -404,14 +448,14 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 
 #+BEGIN_SRC emacs-lisp
 (use-package ggtags
-  :defer t
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (add-hook 'c-mode-common-hook
   (lambda ()
     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
       (progn
-        (linum-mode 1)
+        ;; (linum-mode 1)
         (ggtags-mode 1)))))
 #+END_SRC
 
@@ -431,6 +475,7 @@ different from window-numbering.el
 
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
+  :ensure t
   :defer t
   :diminish undo-tree-mode
   :config
@@ -459,19 +504,11 @@ pdb setup, note the python version
 ;;                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
 
-[2019-05-17 周五 11:29:37]      
-
-M-x elpy-config的检查结果
-
-可以安装 autopep8
-#+BEGIN_SRC sh
-pip install autopep8
-#+END_SRC
 
 [2018-11-29 周四 16:15:34]
 #+BEGIN_SRC emacs-lisp
-(setq python-shell-interpreter "ipython"
 ;; (setq python-shell-interpreter "python"
+(setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 
 (use-package python-mode
@@ -499,9 +536,27 @@ pip install autopep8
 ;; (elpy-enable)
 #+END_SRC
 
+** autopep8 [2019-05-17 周五 11:29:37]
+
+M-x elpy-config的检查结果
+
+用pip安装autopep8
+#+BEGIN_SRC sh
+pip install autopep8
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package py-autopep8
+  :ensure t
+  :defer t
+  :init
+    (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+#+END_SRC
+
+** Flycheck - http://www.flycheck.org
 [2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
 
-flycheck需要python的flake8
+flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake支持更多的语言，更多的第三方工具。检查python的语法，要先安装flake8。
 #+BEGIN_SRC sh
 pip install flake8
 #+END_SRC
@@ -590,7 +645,7 @@ emacs24自带的最喜欢的theme。
 
 [2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
-(load-theme 'deeper-blue t)
+;; (load-theme 'deeper-blue t)
 #+END_SRC
 
 ;; (load-theme 'solarized t)
@@ -604,6 +659,40 @@ emacs24自带的最喜欢的theme。
 
 JB Simple 白底黑字不错
 Jedit Grey 灰底黑字也可以
+
+[2019-05-21 周二 09:19:44]
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :ensure t
+  ;; :disabled t
+  :defer t
+  :init
+  (progn
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    ;; 在load-theme之前设置，让modeline更亮一点
+    (setq doom-deeper-blue-brighter-modeline t)
+
+    (setq doom-deeper-blue-comment-bg nil)
+
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+    ;; may have their own settings.
+    ;; (load-theme 'doom-one t)
+    (load-theme 'doom-deeper-blue t)
+    
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (doom-themes-treemacs-config)
+    
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
+#+END_SRC
 ** Diredplus
 
 [2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
@@ -824,7 +913,80 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ** mode-line
 [2014-11-21 周五 10:35:59]
 
-smart-mode-line和powerline都不好用，速度太慢。
+#+BEGIN_SRC emacs-lisp
+;; 显示日期时间
+(setq display-time-day-and-date t)
+
+;(setq display-time-24hr-format t)
+;(setq display-time-use-mail-icon t)
+(setq display-time-interval 10)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :defer t)
+
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+
+(diminish 'visual-line-mode)
+#+END_SRC
+
+*** doom-modeline
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :defer t)
+  
+(use-package doom-modeline
+  :ensure t
+  :defer t
+  :init
+  (progn
+    ;; How tall the mode-line should be (only respected in GUI Emacs).
+    (setq doom-modeline-height 25)
+    
+    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+    (setq doom-modeline-bar-width 3)
+
+    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+    (setq doom-modeline-icon t)
+    
+    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-major-mode-icon t)
+    
+    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+    (setq doom-modeline-major-mode-color-icon t)
+    
+    ;; Whether display minor modes or not. Non-nil to display in mode-line.
+    (setq doom-modeline-minor-modes t)
+    
+    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+    (setq inhibit-compacting-font-caches t)
+    
+    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+    (setq doom-modeline-lsp nil)
+    
+    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+    (setq doom-modeline-mu4e nil)
+    
+    ;; Whether display irc notifications or not. Requires `circe' package.
+    (setq doom-modeline-irc nil)
+    )
+  :hook (after-init . doom-modeline-mode))
+#+END_SRC
+
+*** smart-mode-line和powerline都不好用，速度太慢。
 #+BEGIN_SRC lisp
 ;; (use-package smart-mode-line
 ;;   :disabled t
@@ -849,36 +1011,6 @@ smart-mode-line和powerline都不好用，速度太慢。
 ;;      mode-line-end-spaces))))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; 显示日期时间
-(setq display-time-day-and-date t)
-
-;(setq display-time-24hr-format t)
-;(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
-(display-time)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :defer t)
-
-;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-
-;; (eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
-
-(diminish 'visual-line-mode)
-#+END_SRC
-
 #+BEGIN_SRC lisp
 ;; (use-package powerline
 ;;   :disabled t
@@ -894,7 +1026,6 @@ smart-mode-line和powerline都不好用，速度太慢。
 ;;       ;; (powerline-default-theme)))
 ;;       ;; (powerline-center-evil-theme)))
 #+END_SRC
-
 * scheme [2017-03-02 周四 21:27:47]
 
 ;; (require 'cmuscheme)
@@ -953,8 +1084,8 @@ smart-mode-line和powerline都不好用，速度太慢。
 #+BEGIN_SRC emacs-lisp
 ;; [2017-04-09 周日 00:20:25]
 (use-package paren-face
-  :defer t
   :ensure t
+  :defer t
   :init (global-paren-face-mode 1)
 )
 #+END_SRC
@@ -962,6 +1093,7 @@ smart-mode-line和powerline都不好用，速度太慢。
 
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
+  :ensure t
   :defer t)
 #+END_SRC
 * markdown-mode
@@ -1048,6 +1180,7 @@ process monitor在用了vpn后会导致机器hang。
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
+  :ensure t
   :defer t
   :config
     (progn
@@ -1323,35 +1456,32 @@ digraph Name {
     rankdir=LR;
 
 // XXX: place to put subgraph
-
 }
 
 ** 用法示例
 一个简单的使用示例，有如下步骤：
 
 1: 打开一个 C 文件
- 
 
-如内核代码中的 drivers/usb/storage/usb.h
+   如内核代码中的 drivers/usb/storage/usb.h
 
 2: 打开一个 dot 文件(/tmp/usb.dot)
- 
 
-auto-insert 会自动插入一些文件内容.
+   auto-insert 会自动插入一些文件内容.
 
 3: 选中 struct us_data 的定义，并执行 yyc/datastruct-to-dot。
 
-执行完成后， us_data 的数据填写到了 tmp.dot 中，将该 buffer 中的所有内容 kill 掉，并 yank 到 usb.dot 中 XXX 这一行的下面。此时，保存 sub.dot ， 并按下快捷键 : C-cc ， 然后按下 Enter ， 就会自动编译。然后再按下 C-cp 就可以在另外一个 buffer 中预览它了。
+   执行完成后， us_data 的数据填写到了 tmp.dot 中，将该 buffer 中的所有内容 kill 掉，并 yank 到 usb.dot 中 XXX 这一行的下面。此时，保存 sub.dot ， 并按下快捷键 : C-cc ， 然后按下 Enter ， 就会自动编译。然后再按下 C-cp 就可以在另外一个 buffer 中预览它了。
 
-其实到这里，一个 C 语言的 struct 数据结构就已经被画出来了，后面的两个步骤，是为了介绍怎样将多个数据结构联系起来。
+   其实到这里，一个 C 语言的 struct 数据结构就已经被画出来了，后面的两个步骤，是为了介绍怎样将多个数据结构联系起来。
 
-4: 添加其他的 subgraph 
+4: 添加其他的subgraph 
 
-我们可以继续添加其他的 subgraph ， 例如 struct usb_ctrlrequest *cr ，以及 struct usb_sg_request， 并全部做为 subgraph 添加到 usb.dot 中。
+   我们可以继续添加其他的subgraph， 例如 struct usb_ctrlrequest *cr ，以及 struct usb_sg_request， 并全部做为 subgraph 添加到 usb.dot 中。
 
 5: 为 subgraph 建立关联
 
-很简单，通过 “->” 画两条线就可以了。
+   很简单，通过 “->” 画两条线就可以了。
 
 ** semantic [2019-01-08 周二 20:47:56]
 https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referral [译] Emacs Lisp 速成
