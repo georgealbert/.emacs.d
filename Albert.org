@@ -660,7 +660,10 @@ emacs24自带的最喜欢的theme。
 JB Simple 白底黑字不错
 Jedit Grey 灰底黑字也可以
 
-[2019-05-21 周二 09:19:44]
+*** doom-themes [2019-05-21 周二 09:19:44]
+昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
+和现在使用的deeper-blue差异太大，就自己增加了一个theme。
+
 #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :ensure t
@@ -669,16 +672,15 @@ Jedit Grey 灰底黑字也可以
   :init
   (progn
     ;; Global settings (defaults)
-    (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+    (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
+                                       ; 禁用粗体，否则org-mode的outline字体太难看
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-    ;; 在load-theme之前设置，让modeline更亮一点
-    (setq doom-deeper-blue-brighter-modeline t)
+    ;; 在load-theme之前设置，让modeline更亮一点，
+    ;; [2019-05-21 周二 16:54:51] 不知道改了doom-deeper-blue-theme.el的哪个地方，貌似modeline中的文件名能看清楚了。
+    (setq doom-deeper-blue-brighter-modeline nil)
 
-    (setq doom-deeper-blue-comment-bg nil)
-
-    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-    ;; may have their own settings.
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
     ;; (load-theme 'doom-one t)
     (load-theme 'doom-deeper-blue t)
     
@@ -911,38 +913,19 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 #+END_SRC
 
 ** mode-line
-[2014-11-21 周五 10:35:59]
-
-#+BEGIN_SRC emacs-lisp
-;; 显示日期时间
-(setq display-time-day-and-date t)
-
-;(setq display-time-24hr-format t)
-;(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
-(display-time)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :ensure t
-  :defer t)
-
-;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
-
-(diminish 'visual-line-mode)
-#+END_SRC
-
 *** doom-modeline
+[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
+如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
+
+https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
+
++ 优点
+  1. 速度很快
+  2. 显示很漂亮
+     
++ Install
+  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
+
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
   :ensure t
@@ -984,6 +967,39 @@ Turn on save place so that when opening a file, the cursor will be at the last p
     (setq doom-modeline-irc nil)
     )
   :hook (after-init . doom-modeline-mode))
+#+END_SRC
+
+*** modeline中的时间格式设置
+[2014-11-21 周五 10:35:59]
+
+#+BEGIN_SRC emacs-lisp
+;; 显示日期时间
+(setq display-time-day-and-date t)
+
+;(setq display-time-24hr-format t)
+;(setq display-time-use-mail-icon t)
+(setq display-time-interval 10)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
+#+END_SRC
+
+*** 不显示一些无用的minor mode
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :defer t)
+
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+
+(diminish 'visual-line-mode)
 #+END_SRC
 
 *** smart-mode-line和powerline都不好用，速度太慢。
