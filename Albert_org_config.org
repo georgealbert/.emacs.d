@@ -25,7 +25,7 @@ Custom Key Bindings
 (global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
 (global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
 (global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
-(global-set-key (kbd "<f9> b") 'bbdb)
+;; (global-set-key (kbd "<f9> b") 'bbdb)
 ;; (global-set-key (kbd "<f9> c") 'calendar)
 (global-set-key (kbd "<f9> f") 'boxquote-insert-file)
 ;;(global-set-key (kbd "<f9> g") 'gnus)
@@ -1428,9 +1428,9 @@ ediff org mode时的folding有点讨厌。
 
 [2018-11-23 周五 16:09:13] for github
 #+BEGIN_SRC emacs-lisp
-;; (require 'ox-publish)
 (use-package ox-publish
   :defer t)
+
 (setq org-publish-project-alist
   '(
     ;; 把各部分的配置文件写到这里面来
@@ -1519,7 +1519,7 @@ turn off the default style, customize org-html-head-include-default-style variab
 ** html export
 [2014-09-12 12:55:36] 为什么不管用呢？
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;(setq org-export-html-style-include-scripts nil
 ;   org-export-html-style-include-default nil
 ;   org-export-html-style-default nil
