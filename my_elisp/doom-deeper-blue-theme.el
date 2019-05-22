@@ -2,16 +2,19 @@
 (require 'doom-themes)
 
 ;; [2019-05-21 周二 16:21:10]
+;;
+;; 参考doom-themes-common.el
+;;
 ;; TIP:
 ;;  1. 有问题的颜色可以先改成红色来查找
 ;;
 ;; TODO:
-;;  1. isearch增量查询时的高亮颜色没法设置多个颜色
+;;  1. isearch增量查询时的高亮颜色没法设置多个颜色 - ok
 ;;  2. org一级outline的背景色没法消除
 ;;  3. major/minor mode无法显示
-;;  4. cursor的颜色现在是紫色的，deeper-blue-theme中是绿色的
+;;  4. cursor的颜色现在是紫色的，deeper-blue-theme中是绿色的 - ok
 ;;  5. link的颜色变成紫色了，和原来的不一样
-;;  6. 括号匹配时，另外一边显示得不够清楚，只是黑色的背景色
+;;  6. 括号匹配时，另外一边显示得不够清楚，只是黑色的背景色 - ok
 ;;
 ;; 优点:
 ;;  1. org-mode中的列表和序号是有颜色的
@@ -145,7 +148,6 @@ determine the exact padding."
 
    ;; (warning        dark-blue)
    (warning        yellow)
-
    (success        green)
    (vc-modified    orange)
    (vc-added       green)
@@ -241,21 +243,50 @@ determine the exact padding."
    ;; 黑色的背景色显得有点突兀
    ;; (org-block :background "black")
    ;; (org-block :background base2)
-
    ;; 和theme的背景色一样比较合适
    (org-block :background bg)
 
-
    ;; block的begin-line的背景色设置为黑色后有点刺眼
    ;; (org-block-begin-line :background "black" :foreground comments)
-   ;; (org-block-begin-line :background base2 :foreground comments)
    (org-block-begin-line :background bg :foreground comments)
 
-   (solaire-org-hide-face :foreground hidden))
+   (solaire-org-hide-face :foreground hidden)
 
+   ;; porting from deeper-blue
+   ;; isearch and match
+   (isearch :background "coral2" :foreground "white")
+   (isearch-lazy-highlight-face :background "coral4" :foreground "white")
+   (lazy-highlight :background "cadetblue" :foreground "white")
+   (match :background "DeepPink4")
 
+   ;; paren match
+   (show-paren-match :background "dodgerblue1" :foreground "white")
+   (show-paren-mismatch :background "red1" :foreground "white")
+
+   ;; helm
+   ;; darkgreen好像和green4差不多
+   ;; (helm-selection :background "green4" :distant-foreground "gold")
+   (helm-selection :background "DarkGreen" :distant-foreground "gold")
+   (helm-match :foreground "gold" :distant-foreground base8)
+
+   (cursor :background "green")
+
+   ;; (minibuffer-prompt :foreground "CadetBlue1")
+   ;; (primary-selection :background "blue3")
+   ;; (ido-first-match :weight normal :foreground "orange")
+   ;; (ido-only-match :foreground "green")
+   ;; (ido-subdir :foreground nil :inherit font-lock-keyword-face)
+
+   ;; (fringe :background "black")
+   ;; (highlight :background "DodgerBlue4")
+
+   ;; mode-line-buffer-id 即 filename的显示
+   (mode-line-buffer-id :weight normal :foreground "CadetBlue1")
+   )
+   
   ;; --- extra variables ---------------------
   ;; ()
+
   )
 
 ;;; doom-deeper-blue-theme.el ends here
