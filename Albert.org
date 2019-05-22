@@ -998,6 +998,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
 
 (diminish 'visual-line-mode)
 #+END_SRC
