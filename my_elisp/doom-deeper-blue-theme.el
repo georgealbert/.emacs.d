@@ -226,6 +226,15 @@ determine the exact padding."
 
    ;; mode-line-buffer-id 即 filename的显示
    (mode-line-buffer-id :weight normal :foreground yellow) ;; CadetBlue1
+
+   ;; magit
+   (magit-diff-added :foreground "white" :background (doom-blend green bg 0.1))
+   (magit-diff-added-highlight :foreground "white" :background (doom-blend green bg 0.2) :weight 'bold)
+   (magit-diff-removed :foreground "white" :background (doom-blend red base3 0.1))
+   (magit-diff-removed-highlight :foreground "white" :background (doom-blend red base3 0.2) :weight 'bold)
+
+   ;; (magit-diff-context :foreground fg :background "gray50")
+   (magit-diff-context-highlight :foreground fg :background "gray30")
    )
    
   ;; --- extra variables ---------------------
