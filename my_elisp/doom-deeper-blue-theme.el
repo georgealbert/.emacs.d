@@ -70,7 +70,7 @@ determine the exact padding."
    (grey       base4)
    (red        '("#FF0000" "#ff6655" "red"               )) ;; red(#FF0000), #e45649 doom-one-light
    (orange     '("gold" "#dd8844" "brightred"            )) ;; gold(#ffd700)
-   (green      '("#50a14f" "#99bb66" "green"           )) ;; #98be65 from doom-one-theme.el, SeaGreen2(#4eee94)
+   (green      '("SeaGreen2" "#99bb66" "green"           )) ;; #98be65 from doom-one-theme.el, SeaGreen2(#4eee94)，#50a14f doom-one-light
    (teal       '("goldenrod" "#44b9b1" "brightgreen"     )) ;; goldenrod(#daa520), function-name 
    (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
    (blue       '("DeepSkyBlue1" "#51afef" "brightblue"   )) ;; selection DeepSkyBlue1(#00bfff) or blue3(#0000cd)
@@ -228,12 +228,15 @@ determine the exact padding."
    (mode-line-buffer-id :weight normal :foreground yellow) ;; CadetBlue1
 
    ;; magit
-   (magit-diff-added :foreground "white" :background (doom-blend green bg 0.1))
-   (magit-diff-added-highlight :foreground "white" :background (doom-blend green bg 0.2) :weight 'bold)
-   (magit-diff-removed :foreground "white" :background (doom-blend red base3 0.1))
-   (magit-diff-removed-highlight :foreground "white" :background (doom-blend red base3 0.2) :weight 'bold)
+   ;; (magit-diff-added :foreground "white" :background (doom-blend green bg 0.1))
+   (magit-diff-added :foreground "white" :background "DarkSlateGray4")
 
-   ;; (magit-diff-context :foreground fg :background "gray50")
+   ;; (magit-diff-added-highlight :foreground "white" :background (doom-blend green bg 0.2) :weight 'bold)
+   (magit-diff-added-highlight :foreground "white" :background "SeaGreen4")
+
+   (magit-diff-removed :foreground "white" :background (doom-blend red base3 0.1))
+   (magit-diff-removed-highlight :foreground "white" :background (doom-blend red base3 0.2))
+
    (magit-diff-context-highlight :foreground fg :background "gray30")
    )
    
