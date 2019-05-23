@@ -53,100 +53,51 @@ determine the exact padding."
   "A dark theme inspired by Emacs builtin deeper-blue"
 
   ;; name        default   256       16
-  ((bg         '("#181a26" "#1c1c1c" nil            )) ;; background from deeper-blue-theme.el
-   (bg-alt     '("#181a26" nil       nil            ))
-   (base0      '("#100e23" "black"   "black"        ))
-   (base1      '("#292F37" "#1e1e1e" "brightblack"  ))
-   (base2      '("#103050" "#2e2e2e" "brightblack"  )) ;; region #103050
-   (base3      '("#4C4B68" "#262626" "brightblack"  ))
-   (base4      '("#7f7f7f" "#3f3f3f" "brightblack"  )) ;; 用于行号的高亮显示，gray50 #7f7f7f
-   (base5      '("#ffe4b5" "#525252" "brightblack"  )) ;; doc comments(函数的说明等)和modeline的fg颜色, moccasin #ffe4b5
-   ;; (base6      '("#9BA7BF" "#6b6b6b" "brightblack"  )) ;; base6没发现其他地方使用，改为Burlywood #deb887
-   (base6      '("#deb887" "#6b6b6b" "brightblack"  )) ;; base6没发现其他地方使用的，改为Burlywood #deb887
-   (base7      '("#B0BED8" "#979797" "brightblack"  )) ;; 用于注释的颜色，这个颜色就很好，注释容易看清楚
-   (base8      '("#BAC9E4" "#dfdfdf" "white"        )) ;; 在加亮modeline时，不确定是什么时候用的?
-   (fg-alt     '("#cccccc" "#bfbfbf" "brightwhite"  )) ;; gray80 #cccccc
-   (fg         '("#cccccc" "#2d2d2d" "white"        )) ;; gray80 #cccccc foreground from deeper-blue-theme.el
+  ((bg         '("#181a26" "#1c1c1c" nil             )) ;; background from deeper-blue-theme.el
+   (bg-alt     '("#181a26" nil       nil             ))
+   (base0      '("#100e23" "black"   "black"         ))
+   (base1      '("#292F37" "#1e1e1e" "brightblack"   ))
+   (base2      '("#103050" "#2e2e2e" "brightblack"   )) ;; region(#103050)
+   (base3      '("#4C4B68" "#262626" "brightblack"   ))
+   (base4      '("gray50" "#3f3f3f" "brightblack"    )) ;; 用于行号的高亮显示，gray50(#7f7f7f)
+   (base5      '("moccasin" "#525252" "brightblack"  )) ;; doc comments(函数的说明等)和modeline的fg颜色, moccasin(#ffe4b5)
+   (base6      '("burlywood" "#6b6b6b" "brightblack" )) ;; base6没发现其他地方使用的，改为Burlywood(#deb887)
+   (base7      '("#B0BED8" "#979797" "brightblack"   )) ;; 用于注释的颜色，这个颜色就很好，注释容易看清楚
+   (base8      '("#BAC9E4" "#dfdfdf" "white"         )) ;; 在加亮modeline时，不确定是什么时候用的?
+   (fg-alt     '("gray80" "#bfbfbf" "brightwhite"    )) ;; gray80(#cccccc)
+   (fg         '("gray80" "#2d2d2d" "white"          )) ;; gray80 #cccccc foreground from deeper-blue-theme.el
 
    (grey       base4)
-   (red        '("#FF0000" "#ff6655" "red"          ))
-
-   ;; (orange     '("#FFA500" "#dd8844" "brightred"    ))
-   (orange     '("#ffd700" "#dd8844" "brightred"    )) ;; gold #ffd700
-
-   ;; (green      '("#00FF00" "#99bb66" "green"        )) ;; Green #00ff00
-   (green      '("#4eee94" "#99bb66" "green"        )) ;; SeaGreen2 #4eee94
-
-   (teal       '("#daa520" "#44b9b1" "brightgreen"  )) ;; function-name goldenrod #daa520
-
-   ;; (yellow     '("#FFFF00" "#ECBE7B" "yellow"       ))
-   ;; (yellow     '("#eeee00" "#ECBE7B" "yellow"       )) ;; warning Yellow2 #eeee00
-   (yellow     '("#98f5ff" "#ECBE7B" "yellow"       )) ;; warning 即flycheck的warning，还有日期框，CadetBlue1 #98f5ff
-
-   ;; (blue       '("#00bfff" "#51afef" "brightblue"   )) ;; selection blue3 #0000cd
-   ;; (blue       '("#0000cd" "#51afef" "brightblue"   )) ;; selection blue3 #0000cd
-   (blue       '("#00bfff" "#51afef" "brightblue"   )) ;; selection DeepSkyBlue1 #00bfff
-
-   ;; dark-blue 在vim的查找中高亮的颜色，把blue改为dark-blue，dark-blue使用 LightSteelBlue1 #cae1ff
-   ;; (dark-blue  '("#cae1ff" "#2257A0" "blue"         )) ;; LightSteelBlue1 #cae1ff
-
-   ;; TODO: 不知道如何实现
-   ;; `(isearch ((,class (:background "coral2" :foreground "white"))))
-   ;; `(isearch-lazy-highlight-face ((,class (:background "coral4" :foreground "white"))))
-   ;; `(lazy-highlight ((,class (:background "cadetblue" :foreground "white"))))
-   ;; `(match ((,class (:background "DeepPink4"))))
-   ;; 查询时的highlight, DodgerBlue4  #104e8b
-   (dark-blue  '("#104e8b" "#2257A0" "blue"         ))
-
-   ;; 其实isearch lazy-highlight使用的是 cadetblue #5f9ea0
-   ;; (dark-blue  '("#5f9ea0" "#2257A0" "blue"         )) 
-
-   ;; (magenta    '("#FF00FF" "#c678dd" "magenta"      ))
-   (magenta    '("#f08080" "#c678dd" "magenta"      )) ;; LightCoral #f08080
-
-   (violet     '("#EE82EE" "#a9a1e1" "brightmagenta"))
-
-   ;; (cyan       '("#00FFFF" "#46D9FF" "brightcyan"   )) ;; DarkOliveGreen3 #a2cd5a
-   (cyan       '("#a2cd5a" "#46D9FF" "brightcyan"   )) ;; DarkOliveGreen3 #a2cd5a
-
-   (dark-cyan  '("#008B8B" "#5699AF" "cyan"   )) ;; dark-cyan #008b8b
+   (red        '("#FF0000" "#ff6655" "red"               )) ;; red(#FF0000), #e45649 doom-one-light
+   (orange     '("gold" "#dd8844" "brightred"            )) ;; gold(#ffd700)
+   (green      '("#50a14f" "#99bb66" "green"           )) ;; #98be65 from doom-one-theme.el, SeaGreen2(#4eee94)
+   (teal       '("goldenrod" "#44b9b1" "brightgreen"     )) ;; goldenrod(#daa520), function-name 
+   (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
+   (blue       '("DeepSkyBlue1" "#51afef" "brightblue"   )) ;; selection DeepSkyBlue1(#00bfff) or blue3(#0000cd)
+   (dark-blue  '("DodgerBlue4" "#2257A0" "blue"          )) ;; 查询时的highlight, DodgerBlue4  #104e8b
+   (magenta    '("LightCoral" "#c678dd" "magenta"        )) ;; LightCoral(#f08080)
+   (violet     '("#EE82EE" "#a9a1e1" "brightmagenta"     ))
+   (cyan       '("DarkOliveGreen3" "#46D9FF" "brightcyan")) ;; DarkOliveGreen3(#a2cd5a)
+   (dark-cyan  '("#008B8B" "#5699AF" "cyan"              )) ;; dark-cyan(#008b8b)
 
    ;; face categories -- required for all themes
-   ;; (highlight      green) ;; cursor
-   (highlight      violet) ;; cursor也是highlight，原来的cursor是green
-   (vertical-bar base1) ;; window的分割线
-
-   ;; (selection      blue) ;; blue3 #0000cd
-   (selection      dark-cyan) ;; blue3 #0000cd 就是M-x后的光标所在的高亮的行
-
-   ;; (builtin        magenta) ;; LightCoral
-   (builtin        magenta) ;; LightCoral #f08080
-
-   ;; (comments       (if doom-deeper-blue-brighter-comments base3 red))
+   (highlight      violet)
+   (vertical-bar   base1) ;; window的分割线
+   (selection      dark-cyan) ;; blue3(#0000cd)
+   (builtin        magenta) ;; LightCoral(#f08080)
    (comments       (if doom-deeper-blue-brighter-comments base3 base7))
-
    (doc-comments   (if doom-deeper-blue-brighter-comments (doom-darken dark-cyan 0.3) base5))
-   (constants      cyan) ;; DarkOliveGreen3 #a2cd5a ok 即(require 'package的颜色)
-   (functions      teal) ;; function-name goldenrod
-   (keywords       blue)
-   (methods        magenta)
-
-   ;; (operators      dark-cyan)
-   (operators      orange) ;; c mode中的 #include 的颜色, preprocessor-face gold #ffd700
-
-   ;; (type           dark-blue) ;; CadetBlue1 #98f5ff
-   ;; (type           "#98f5ff") ;; CadetBlue1 #98f5ff - ok
-   (type           yellow) ;; CadetBlue1 #98f5ff
-
-   ;; (strings        teal) ;; Burlywood #deb887
-   (strings        base6) ;; Burlywood #deb887 - ok
-
-   (variables      green) ;; SeaGreen2 #4eee94
-   (numbers        orange)
-   (region         base2)
+   (constants      cyan) ;; DarkOliveGreen3(#a2cd5a) - ok, 即(require 'package的颜色)
+   (functions      teal) ;; goldenrod, function-name 
+   (keywords       blue) ;; DeepSkyBlue1
+   (methods        magenta) ;; LightCoral
+   (operators      orange) ;; gold(#ffd700, c mode中的 #include 的颜色, preprocessor-face
+   (type           "CadetBlue1") ;; CadetBlue1(#98f5ff)
+   (strings        base6) ;; Burlywood(#deb887)- ok
+   (variables      "SeaGreen2") ;; SeaGreen2(#4eee94)
+   (numbers        orange) ;; gold
+   (region         base2) ;; #103050
    (error          red)
-
-   ;; (warning        dark-blue)
    (warning        yellow)
    (success        green)
    (vc-modified    orange)
@@ -221,18 +172,13 @@ determine the exact padding."
 
    ;; outline (affects org-mode)
    ((outline-1 &override) :foreground blue) ;; SkyBlue1
-   ((outline-2 &override) :foreground yellow) ;; CadetBlue1
-   ((outline-3 &override) :foreground "#cae1ff") ;; LightSteelBlue1 #cae1ff
-
-   ;; ((outline-4 &override) :foreground (doom-darken blue 0.2)) ;; turquoise2 #00e5ee
-   ((outline-4 &override) :foreground "#00e5ee") ;; turquoise2 #00e5ee
-
-   ;; ((outline-5 &override) :foreground (doom-darken yellow 0.2)) ;; aquamarine1 #7fffd4
-   ((outline-5 &override) :foreground "#7fffd4") ;; aquamarine1 #7fffd4
-
-   ((outline-6 &override) :foreground (doom-darken green 0.2))
-   ((outline-7 &override) :foreground (doom-darken dark-blue 0.4))
-   ((outline-8 &override) :foreground (doom-darken yellow 0.4))
+   ((outline-2 &override) :foreground "CadetBlue1") ;; CadetBlue1
+   ((outline-3 &override) :foreground "LightSteelBlue1") ;; LightSteelBlue1(#cae1ff)
+   ((outline-4 &override) :foreground "turquoise2") ;; turquoise2(#00e5ee)
+   ((outline-5 &override) :foreground "aquamarine1") ;; aquamarine1(#7fffd4)
+   ((outline-6 &override) :foreground (doom-darken blue 0.2))
+   ((outline-7 &override) :foreground (doom-darken "CadetBlue1" 0.2))
+   ((outline-8 &override) :foreground (doom-darken "LightSteelBlue1" 0.2))
 
    ;; org-mode
    ;; 前景色设为和背景色一样，这样就不是显示黑色的背景色
@@ -256,17 +202,15 @@ determine the exact padding."
    ;; isearch and match
    (isearch :background "coral2" :foreground "white")
    (isearch-lazy-highlight-face :background "coral4" :foreground "white")
-   (lazy-highlight :background "cadetblue" :foreground "white")
+   (lazy-highlight :background "cadetblue" :foreground "white") ;; cadetblue #5f9ea0
    (match :background "DeepPink4")
 
    ;; paren match
-   (show-paren-match :background "dodgerblue1" :foreground "white")
+   (show-paren-match :background "DodgerBlue1" :foreground "white")
    (show-paren-mismatch :background "red1" :foreground "white")
 
    ;; helm
-   ;; darkgreen好像和green4差不多
-   ;; (helm-selection :background "green4" :distant-foreground "gold")
-   (helm-selection :background "DarkGreen" :distant-foreground "gold")
+   (helm-selection :background "DarkGreen" :distant-foreground "gold") ;; :background "darkgreen" 好像和 "green4" 差不多
    (helm-match :foreground "gold" :distant-foreground base8)
 
    (cursor :background "green")
@@ -281,7 +225,7 @@ determine the exact padding."
    ;; (highlight :background "DodgerBlue4")
 
    ;; mode-line-buffer-id 即 filename的显示
-   (mode-line-buffer-id :weight normal :foreground "CadetBlue1")
+   (mode-line-buffer-id :weight normal :foreground yellow) ;; CadetBlue1
    )
    
   ;; --- extra variables ---------------------
