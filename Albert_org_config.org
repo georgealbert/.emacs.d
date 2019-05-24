@@ -10,17 +10,17 @@ http://doc.norang.ca/org-mode.html
 
 ;; (setq org-modules '(org-w3m org-docview org-info))
 
-(defvar org-modules
-  '(;; org-w3m
-    ;; org-bbdb
-    ;; org-bibtex
-    org-docview
-    ;; org-gnus
-    org-info
-    ;; org-irc
-    ;; org-mhe
-    ;; org-rmail
-    ))
+;; (defvar org-modules
+;;   '(;; org-w3m
+;;     ;; org-bbdb
+;;     ;; org-bibtex
+;;     org-docview
+;;     ;; org-gnus
+;;     org-info
+;;     ;; org-irc
+;;     ;; org-mhe
+;;     ;; org-rmail
+;;     ))
 
 #+END_SRC
 
@@ -1450,8 +1450,8 @@ ediff org mode时的folding有点讨厌。
 
 [2018-11-23 周五 16:09:13] for github
 #+BEGIN_SRC emacs-lisp
-(use-package ox-publish
-  :defer t)
+;; (use-package ox-publish
+;;   :defer t)
 
 (setq org-publish-project-alist
   '(
