@@ -8,7 +8,7 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 
 [2019-05-18 周六 23:35:01] 好像没什么效果。
 #+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t; -*-
+;;; Albert.el -*- lexical-binding: t; -*-
 #+END_SRC
 
 [2019-05-18 周六 23:34:20] 学习anything的作者 https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init.el
@@ -19,7 +19,8 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 设置垃圾回收，在Windows下，emacs 25版本会频繁出发垃圾回收，所以需要设置。
 
 [2019-05-18 周六 21:54:06] emacs 26.2启动时间15s，先注释掉吧。内存设置过大在长时间使用后gc会导致响应慢。
-#+BEGIN_SRC emacs-lisp
+[2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
+#+BEGIN_SRC lisp
 ;; (when (eq system-type 'windows-nt)
 ;;   (setq gc-cons-threshold (* 512 1024 1024))
 ;;   (setq gc-cons-percentage 0.5)
@@ -30,17 +31,17 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 
 [2019-05-20 周一 10:48:24] https://github.com/jacmoe/emacs.d/blob/master/jacmoe.org
 
-#+BEGIN_SRC emacs-lisp
-(setq-default
-  gc-cons-threshold most-positive-fixnum          ; Increase garbage collector treshold
-)
+#+BEGIN_SRC lisp
+;; (setq-default
+;;   gc-cons-threshold most-positive-fixnum          ; Increase garbage collector treshold
+;; )
 #+END_SRC
 
 Reset garbage collector treshold after initialization is finished and garbage-collect on focus-out. Emacs should feel snappier.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
-(add-hook 'focus-out-hook 'garbage-collect)
+;; (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
+;; (add-hook 'focus-out-hook 'garbage-collect)
 #+END_SRC
 ** elpa
 
@@ -269,6 +270,7 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
   :ensure t
   :defer t
   :diminish helm-mode
+  ;; :config
   :init
   (progn
     (require 'helm-config)
@@ -295,6 +297,9 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
          ;; ("C-x c y" . helm-yas-complete)
          ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
          ;; ("C-x c b" . my/helm-do-grep-book-notes)
+         ;; ("<tab>" . 'helm-execute-persistent-action)
+         ;; ("C-i" . 'helm-execute-persistent-action)
+         ;; ("C-z" . 'helm-select-action)
          ("C-x c SPC" . helm-all-mark-rings)))
 
 ;; (use-package helm-config)
@@ -411,7 +416,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 
 [2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; (use-package helm-gtags
 ;;   :ensure t
 ;;   :defer t
@@ -432,7 +437,6 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 ;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
 ;; 
 ;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
-
 #+END_SRC
 
 * helm-ag [2019-01-01 周二 00:15:53]
@@ -461,7 +465,7 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 
 * window-number
 
-different from window-numbering.el
+和 window-numbering.el 不是一个package。
 直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
 
 #+BEGIN_SRC emacs-lisp
@@ -511,29 +515,46 @@ pdb setup, note the python version
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 
-(use-package python-mode
-  :mode (("SConstruct\\'" . python-mode)
-         ("SConscript\\'" . python-mode)
-         ("\\.py\\'"      . python-mode))
-  :defer t
-  ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
-  :init (elpy-enable)
-  :config
-  (use-package elpy
-    :ensure t
-    :defer t
-    :init
-    (progn
-      ;;(setq elpy-rpc-python-command "python3")
-      (elpy-use-ipython)
-      ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
-      ;; use flycheck not flymake with elpy
-      ;; (when (require 'flycheck nil t)
-      ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-      ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
-      )))
+;; (use-package python-mode
+;;   :mode (("SConstruct\\'" . python-mode)
+;;          ("SConscript\\'" . python-mode)
+;;          ("\\.py\\'"      . python-mode))
+;;   :defer t
+;;   ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
+;;   :init (elpy-enable)
+;;   :config
+;;   (use-package elpy
+;;     :ensure t
+;;     :defer t
+;;     :init
+;;     (progn
+;;       ;;(setq elpy-rpc-python-command "python3")
+;;       (elpy-use-ipython)
+;;       ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+;;       ;; use flycheck not flymake with elpy
+;;       ;; (when (require 'flycheck nil t)
+;;       ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;       ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
+;;       )))
 
 ;; (elpy-enable)
+
+(use-package elpy
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (advice-add 'python-mode :before 'elpy-enable))
+  :config
+  (progn
+    ;; (setq elpy-rpc-python-command "python3")
+    ;; (elpy-use-ipython)
+    ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+    ;; use flycheck not flymake with elpy
+    (when (require 'flycheck nil t)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode))
+    ))
 #+END_SRC
 
 ** autopep8 [2019-05-17 周五 11:29:37]
@@ -561,14 +582,15 @@ flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake�
 pip install flake8
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :ensure t
-  :defer t
-  :init
-    (when (require 'flycheck nil t)
-      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-      (add-hook 'elpy-mode-hook 'flycheck-mode)))
+#+BEGIN_SRC lisp
+;; (use-package flycheck
+;;   :ensure t
+;;   :defer t
+;;   ;; :init
+;;   ;;   (when (require 'flycheck nil t)
+;;   ;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   ;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+;;   )
 #+END_SRC
 
 * basic setting - 可以推迟启动的
@@ -952,7 +974,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
     (setq doom-modeline-major-mode-color-icon t)
     
     ;; Whether display minor modes or not. Non-nil to display in mode-line.
-    (setq doom-modeline-minor-modes t)
+    (setq doom-modeline-minor-modes nil)
     
     ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
     (setq inhibit-compacting-font-caches t)
@@ -972,13 +994,14 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 *** modeline中的时间格式设置
 [2014-11-21 周五 10:35:59]
 
-#+BEGIN_SRC emacs-lisp
-;; 显示日期时间
-(setq display-time-day-and-date t)
+在modeline上显示日期时间。
 
-;(setq display-time-24hr-format t)
-;(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
+;; (setq display-time-24hr-format t)
+;; (setq display-time-use-mail-icon t)
+;; (setq display-time-interval 60)
+
+#+BEGIN_SRC emacs-lisp
+(setq display-time-day-and-date t)
 (setq display-time-format "%Y-%m-%d %a %H:%M")
 (setq display-time-default-load-average nil)
 (display-time)
