@@ -458,6 +458,7 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
       (progn
         ;; (linum-mode 1)
+        ;; (flycheck-mode 1)
         (ggtags-mode 1)))))
 #+END_SRC
 
@@ -1279,6 +1280,17 @@ elpa中安装就可以了。
 ;; (setq tab-width 4)
 ;; (setq tab-stop-list ())
 #+END_SRC
+
+** flycheck在虚机中的配置 [2019-05-24 周五 14:39:51]
+在笔记本上就不配置c-mode的flycheck了，没有gcc。add-hook在ggtags的配置里面enable了flycheck-mode。
+#+BEGIN_SRC lisp
+;; 在目录中建 .dir-locals.el
+((c-mode . ((flycheck-gcc-include-path . (;; list
+                                          ;; (expand-file-name "~/tengine")
+                                          "/home/albert/tengine/src/"
+                                          "/home/albert/tengine/src/core/")))))
+#+END_SRC
+
 * graphviz [2019-01-08 周二 18:13:47]
 
 主要思想是解析 =buffer= 中选中的文本，通过正则表达式来匹配，从中找到 struct name 以及其中的各个 fields， 最后根据 =dot= 语法将其组成一个 =subgraph= 。其实应该有更好的方法（比如通过 CEDET 的 Semantic 解析结果来做），但对 CEDET 的代码实在不熟，所以现在就只能这样了。
