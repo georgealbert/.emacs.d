@@ -2,6 +2,28 @@
 * org mode
 http://doc.norang.ca/org-mode.html
 ** 4.2 Org-Mode Setup
+
+参考 doom-emacs的配置文件 =.emacs.d.doom/modules/lang/org/config.el= ，只加载部分org-mode的modules，不需要邮件、irc。
+
+#+BEGIN_SRC emacs-lisp
+;;; Albert_org_config.el -*- lexical-binding: t; -*-
+
+;; (setq org-modules '(org-w3m org-docview org-info))
+
+(defvar org-modules
+  '(;; org-w3m
+    ;; org-bbdb
+    ;; org-bibtex
+    org-docview
+    ;; org-gnus
+    org-info
+    ;; org-irc
+    ;; org-mhe
+    ;; org-rmail
+    ))
+
+#+END_SRC
+
 org-mode is the default mode for .org, .org_archive, and .txt files.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
