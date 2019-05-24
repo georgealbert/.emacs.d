@@ -72,7 +72,8 @@ determine the exact padding."
    (orange     '("gold" "#dd8844" "brightred"            )) ;; gold(#ffd700)
    (green      '("SeaGreen2" "#99bb66" "green"           )) ;; #98be65 from doom-one-theme.el, SeaGreen2(#4eee94)，#50a14f doom-one-light
    (teal       '("goldenrod" "#44b9b1" "brightgreen"     )) ;; goldenrod(#daa520), function-name 
-   (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
+   ;; (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
+   (yellow     '("#eeee00" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
    (blue       '("DeepSkyBlue1" "#51afef" "brightblue"   )) ;; selection DeepSkyBlue1(#00bfff) or blue3(#0000cd)
    (dark-blue  '("DodgerBlue4" "#2257A0" "blue"          )) ;; 查询时的highlight, DodgerBlue4  #104e8b
    (magenta    '("LightCoral" "#c678dd" "magenta"        )) ;; LightCoral(#f08080)
@@ -195,6 +196,8 @@ determine the exact padding."
    ;; block的begin-line的背景色设置为黑色后有点刺眼
    ;; (org-block-begin-line :background "black" :foreground comments)
    (org-block-begin-line :background bg :foreground comments)
+
+   (org-date :foreground "CadetBlue1")
 
    (solaire-org-hide-face :foreground hidden)
 
