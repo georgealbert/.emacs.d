@@ -59,19 +59,17 @@ Reset garbage collector treshold after initialization is finished and garbage-co
 (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
 
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
 ;; [2019-01-11 周五 23:23:40] always-ensure一打开就起不来了，可能网络不好
-;; (setq use-package-always-ensure t)
-
-;; (setq use-package-verbose t)
-
+(setq use-package-always-ensure t)
+(setq use-package-verbose t)
 (require 'use-package)
 
-;; (use-package auto-compile
-;;   :config (auto-compile-on-load-mode))
-;; (setq load-prefer-newer t)
+(use-package auto-compile
+  :config (auto-compile-on-load-mode))
+(setq load-prefer-newer t)
 #+end_src
 
 代理配置
