@@ -197,7 +197,10 @@ determine the exact padding."
    ;; (org-block-begin-line :background "black" :foreground comments)
    (org-block-begin-line :background bg :foreground comments)
 
-   (org-date :foreground "CadetBlue1")
+   ;; (org-date :foreground "CadetBlue1")
+   (org-date :foreground "turquoise2")
+
+   (link :foreground "turquoise2" :underline nil)
 
    (solaire-org-hide-face :foreground hidden)
 
