@@ -82,7 +82,8 @@ determine the exact padding."
    (dark-cyan  '("#008B8B" "#5699AF" "cyan"              )) ;; dark-cyan(#008b8b)
 
    ;; face categories -- required for all themes
-   (highlight      violet)
+   ;; (highlight      "Dodgerblue3") ;; 原来设置的是violet
+   (highlight      violet) ;; 原来设置的是violet
    (vertical-bar   base1) ;; window的分割线
    (selection      dark-cyan) ;; blue3(#0000cd)
    (builtin        magenta) ;; LightCoral(#f08080)
