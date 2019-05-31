@@ -155,6 +155,7 @@ CJK (Chinese, Japanese, Korean)
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; (set-face-attribute 'default nil :font "Monaco 10")
       ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
       ;; Chinese Font
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -666,7 +667,7 @@ emacs24自带的最喜欢的theme。
 
 [2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
-;; (load-theme 'deeper-blue t)
+(load-theme 'deeper-blue t)
 #+END_SRC
 
 ;; (load-theme 'solarized t)
@@ -685,12 +686,14 @@ Jedit Grey 灰底黑字也可以
 昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
 和现在使用的deeper-blue差异太大，就自己增加了一个theme。
 
-#+BEGIN_SRC emacs-lisp
+// #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package doom-themes
   :ensure t
   ;; :disabled t
   :defer t
   :init
+  ;; :config
   (progn
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
@@ -955,13 +958,14 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (use-package doom-modeline
   :ensure t
   :defer t
-  :init
+  ;; :init
+  :config
   (progn
     ;; How tall the mode-line should be (only respected in GUI Emacs).
-    (setq doom-modeline-height 25)
+    ;; (setq doom-modeline-height 20)
     
     ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    (setq doom-modeline-bar-width 3)
+    ;; (setq doom-modeline-bar-width 3)
 
     ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
     (setq doom-modeline-icon t)
@@ -1719,7 +1723,16 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 ;;     (select-window win0)
 ;;     ))
 #+END_SRC
+* neotree [2019-05-27 周一 16:05:25]
 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'neotree-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+#+END_SRC
 * 现在没用的配置
 ** 反显选中区域
 
