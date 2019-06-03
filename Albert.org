@@ -667,7 +667,7 @@ emacs24自带的最喜欢的theme。
 
 [2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
-(load-theme 'deeper-blue t)
+;; (load-theme 'deeper-blue t)
 #+END_SRC
 
 ;; (load-theme 'solarized t)
@@ -686,8 +686,8 @@ Jedit Grey 灰底黑字也可以
 昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
 和现在使用的deeper-blue差异太大，就自己增加了一个theme。
 
-// #+BEGIN_SRC emacs-lisp
-#+BEGIN_SRC lisp
+;#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :ensure t
   ;; :disabled t
@@ -797,8 +797,14 @@ from sacha chua
 
 [2019-05-15 周三 15:33:55] emacs 26.2可以用，显示速度比linum快很多。
 #+BEGIN_SRC emacs-lisp
-(global-display-line-numbers-mode t)
+;; (global-display-line-numbers-mode t)
 (setq display-line-numbers-width-start 5)
+
+(add-hook 'org-mode-hook 'display-line-numbers-mode)
+(add-hook 'python-mode-hook 'display-line-numbers-mode)
+(add-hook 'c-mode-common-hook 'display-line-numbers-mode)
+(add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
+(add-hook 'sh-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 
 ** F5插入当前时间
