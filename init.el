@@ -84,7 +84,7 @@ decrease this. If you experience stuttering, increase this.")
     ;; org-bibtex
     org-docview
     ;; org-gnus
-    org-info
+    ;; org-info
     ;; org-irc
     ;; org-mhe
     ;; org-rmail
@@ -112,7 +112,7 @@ decrease this. If you experience stuttering, increase this.")
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
    (quote
-    (all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
+    (neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
  '(safe-local-variable-values (quote ((encoding . UTF-8))))
  '(vc-annotate-background "#181a26")
  '(vc-annotate-color-map
