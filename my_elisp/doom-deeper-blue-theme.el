@@ -115,6 +115,8 @@ determine the exact padding."
 
    (modeline-fg     nil)
    (modeline-fg-alt base5)
+   ;; modeline inactive的时候用fg的gray80，不够醒目，继续用base5的颜色
+   ;; (modeline-fg-alt fg)
 
    (modeline-bg
     (if -modeline-bright
