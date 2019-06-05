@@ -1,13 +1,17 @@
 
 * org mode
 http://doc.norang.ca/org-mode.html
-** 4.2 Org-Mode Setup
+
+** 4 Getting Started
+*** 4.2 Org-Mode Setup
 
 参考 doom-emacs的配置文件 =.emacs.d.doom/modules/lang/org/config.el= ，只加载部分org-mode的modules，不需要邮件、irc。
 
 #+BEGIN_SRC emacs-lisp
 ;;; Albert_org_config.el -*- lexical-binding: t; -*-
+#+END_SRC
 
+#+BEGIN_SRC lisp
 ;; (setq org-modules '(org-w3m org-docview org-info))
 
 ;; (defvar org-modules
@@ -21,7 +25,6 @@ http://doc.norang.ca/org-mode.html
 ;;     ;; org-mhe
 ;;     ;; org-rmail
 ;;     ))
-
 #+END_SRC
 
 org-mode is the default mode for .org, .org_archive, and .txt files.
@@ -35,7 +38,7 @@ org-mode is the default mode for .org, .org_archive, and .txt files.
 (setq org-log-done t)
 #+END_SRC
 
-** 4.6 Key bindings
+*** 4.6 Key bindings
 
 Custom Key Bindings
 
@@ -84,7 +87,8 @@ Custom Key Bindings
 ;;                               ("albert.org" :level . 2))))
 #+END_SRC
 
-** 6.1 Capture Templates
+** 6 Adding New Tasks Quickly with Org Capture
+*** 6.1 Capture Templates
 When a new task needs to be added I categorize it into one of a few things:
 
 - A phone call (p)
@@ -153,7 +157,8 @@ Here is my setup for org-capture
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+END_SRC
 
-** 7.1 Refile Setup
+** 7 Refiling Tasks
+*** 7.1 Refile Setup
 
 #+BEGIN_SRC emacs-lisp
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
@@ -192,7 +197,8 @@ Here is my setup for org-capture
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 
-** 8.1 Setup
+** 8 Custom agenda views
+*** 8.1 Setup
 
 #+BEGIN_SRC emacs-lisp
 ;; Do not dim blocked tasks
@@ -359,7 +365,7 @@ My day goes generally like this:
 
 - Punch out at the end of the work day
   一个工作结束后打卡签退
-** What do I work on next? 接下来干什么呢？
+*** 8.2 What do I work on next? 接下来干什么呢？
 :PROPERTIES:
 :CUSTOM_ID: WhatDoIWorkOnNext
 :END:
@@ -404,7 +410,7 @@ the block agenda and follow this order:
 
   pick a task from the Tasks list of the current project.
   从当前project的task列表选一个task
-*** Why keep it all on the =NEXT= list? 为什么把task都放到 =NEXT= list中
+**** Why keep it all on the =NEXT= list? 为什么把task都放到 =NEXT= list中
 :PROPERTIES:
 :CUSTOM_ID: CustomAgendaViewsNextList
 :END:
@@ -435,7 +441,7 @@ To drop a task off the =NEXT= list simply move it back to the =TODO=
 state.
 把task的状态从 =NEXT= 改为 =TODO= 就可以从 =NEXT= 给去掉。
 
-** Reading email, newsgroups, and conversations on IRC 看邮件、新闻组和聊天
+*** 8.3 Reading email, newsgroups, and conversations on IRC 看邮件、新闻组和聊天
 :PROPERTIES:
 :CUSTOM_ID: ReadingMailNewsIRC
 :END:
@@ -673,13 +679,14 @@ When I start or continue working on a task I clock it in with any of the followi
   - =f9 I= while on the task in the agenda
   - =f9 I= while in the task in an org file
 
-** 10.2 Task Estimates and column view 任务评估
+** 10 Time reporting and tracking
+*** 10.2 Task Estimates and column view 任务评估
 
 Estimating how long tasks take to complete is a difficult skill to master. Org-mode makes it easy to practice creating estimates for tasks and then clock the actual time it takes to complete.
 
 By repeatedly estimating tasks and reviewing how your estimate relates to the actual time clocked you can tune your estimating skills.
 
-*** 10.2.1 Creating a task estimate with column mode
+**** 10.2.1 Creating a task estimate with column mode
 I use =properties= and =column view= to do project estimates.
 
 I set up *column view* globally with the following headlines 
@@ -725,14 +732,15 @@ After setting the effort values exit =column mode= with =q=.
 
 输入完task评估时间后，按 =q= 键 退出 =column mode=
 
-** 10.3 Providing progress reports to others
+*** 10.3 Providing progress reports to others
 
 #+BEGIN_SRC emacs-lisp
 ;; Agenda log mode items to display (closed and state changes by default)
 (setq org-agenda-log-mode-items (quote (closed state)))
 #+END_SRC
 
-** 11.1 Tags
+** 11 Tags
+*** 11.1 Tags
 
 Tags with fast selection keys
 #+BEGIN_SRC emacs-lisp
@@ -757,8 +765,8 @@ Tags with fast selection keys
 ; For tag searches ignore tasks with scheduled and deadline dates
 (setq org-agenda-tags-todo-honor-ignore-options t)
 #+END_SRC
-
-** 14.2 Project definition and finding stuck projects
+** 14 GTD stuff
+*** 14.2 Project definition and finding stuck projects
 
 #+BEGIN_SRC emacs-lisp
 (setq org-stuck-projects (quote ("" nil nil "")))
@@ -1005,8 +1013,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         nil
       next-headline)))
 #+END_SRC
-
-** 16.2 plantuml
+** 16 Publishing and Exporting
+*** 16.2 plantuml
 
 [2018-09-29 周六 22:59:28] 中文乱码的解决方法 begin_src plantuml :file img/chinese.png :cmdline -charset utf-8
 
@@ -1052,7 +1060,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 #+results:
 : ((plantuml . fundamental) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
 
-** 18
+** 18 Productivity Tools
 *** 18.2.1 Narrowing to a subtree with bh/org-todo
 
 #+BEGIN_SRC emacs-lisp
@@ -1415,6 +1423,61 @@ Late deadlines first, then scheduled, then non-late deadlines"
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 #+END_SRC
 
+*** 18.17 Handling Encryption
+
+I used to keep my encrypted data like account passwords in a separate GPG encrypted file. Now I keep them in my org-mode files with a special tag instead. Encrypted data is kept in the org-mode file that it is associated with.
+
+org-crypt allows you to tag headings with a special tag crypt and org-mode can keep data in these headings encrypted when saved to disk. You decrypt the heading temporarily when you need access to the data and org-mode re-encrypts the heading as soon as you save the file.
+
+I use the following setup for encryption:
+
+org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
+[2019-06-05 周三 10:03:54] 为什么用use-package会报错?
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-crypt
+;;   ;; :defer t
+;;   :ensure nil
+;;   :init
+;;     (progn
+;;       ; Encrypt all entries before saving
+;;       (org-crypt-use-before-save-magic)
+;;       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;;       ; GPG key to use for encryption
+;;       ;; (setq org-crypt-key "F0B66B40")
+;;       ;; 使用对称加密算法加密
+;;       (setq org-crypt-key nil)
+;;     ))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-crypt)
+; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+; GPG key to use for encryption
+;; (setq org-crypt-key "F0B66B40")
+;; 使用对称加密算法加密
+(setq org-crypt-key nil)
+#+END_SRC
+
+M-x org-decrypt-entry will prompt for the passphrase associated with your encryption key and replace the encrypted data where the point is with the plaintext details for your encrypted entry. As soon as you save the file the data is re-encrypted for your key. Encrypting does not require prompting for the passphrase - that's only for looking at the plain text version of the data.
+
+I tend to have a single level 1 encrypted entry per file (like * Passwords). I prevent the crypt tag from using inheritance so that I don't have encrypted data inside encrypted data. I found M-x org-decrypt-entries prompting for the passphrase to decrypt data over and over again (once per entry to decrypt) too inconvenient.
+
+I leave my entries encrypted unless I have to look up data - I decrypt on demand and then save the file again to re-encrypt the data. This keeps the data in plain text as short as possible.
+**** 18.17.1 Auto Save Files
+
+Emacs temporarily saves your buffer in an autosave file while you are editing your org buffer and a sufficient number of changes have accumulated. If you have decrypted subtrees in your buffer these will be written to disk in plain text which possibly leaks sensitive information. To combat this org-mode now asks if you want to disable the autosave functionality in this buffer.
+
+Personally I really like the autosave feature. 99% of the time my encrypted entries are perfectly safe to write to the autosave file since they are still encrypted. I tend to decrypt an entry, read the details for what I need to look up and then immediately save the file again with C-x C-s which re-encrypts the entry immediately. This pretty much guarantees that my autosave files never have decrypted data stored in them.
+
+I disable the default org crypt auto-save setting as follows:
+
+#+BEGIN_SRC emacs-lisp
+;; (setq org-crypt-disable-auto-save nil)
+(setq org-crypt-disable-auto-save 'encrypt)
+#+END_SRC
+
 *** 18.44 Showing source block syntax highlighting
 
 #+BEGIN_SRC emacs-lisp
@@ -1423,7 +1486,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 ediff org mode时的folding有点讨厌。
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;;2014/05/02 16:43:50 ediff folded org file
 ;;(add-hook 'ediff-prepare-buffer-hook 'f-ediff-prepare-buffer-hook-setup)
 ;;(defun f-ediff-prepare-buffer-hook-setup ()
