@@ -1447,6 +1447,11 @@ org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
 ;;       ;; 使用对称加密算法加密
 ;;       (setq org-crypt-key nil)
 ;;     ))
+
+;; (setq epg-debug t)
+;; (setq epg-gpg-home-directory "C:/Users/Albert/AppData/Roaming/gnupg")
+;; (setq epg-gpg-program "E:/Program Files (x86)/GnuPG/bin/gpg.exe")
+;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1454,11 +1459,15 @@ org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
 ; Encrypt all entries before saving
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-; GPG key to use for encryption
-;; (setq org-crypt-key "F0B66B40")
-;; 使用对称加密算法加密
-(setq org-crypt-key nil)
+;; nil 使用对称加密算法加密，非nil则使用公钥加密
+;; (setq org-crypt-key nil)
+;; keyid可以用key的username/email or pub的指纹的后8个字符
+(setq org-crypt-key "georgealbert@qq.com")
 #+END_SRC
+
+=M-x org-set-property= 设置heading的properties为 =CRYPTKEY= 为某个key的id，单独对一个heading使用不同的加密方式和key。
+
+用 =gpg --version= 确认gpg的HOME目录。
 
 M-x org-decrypt-entry will prompt for the passphrase associated with your encryption key and replace the encrypted data where the point is with the plaintext details for your encrypted entry. As soon as you save the file the data is re-encrypted for your key. Encrypting does not require prompting for the passphrase - that's only for looking at the plain text version of the data.
 
