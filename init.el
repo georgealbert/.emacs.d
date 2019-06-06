@@ -102,9 +102,7 @@ decrease this. If you experience stuttering, increase this.")
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#181a26" "#FF0000" "#4eee94" "#FFFF00" "#0000cd" "#f08080" "#00FFFF" "#cccccc"])
- '(custom-safe-themes
-   (quote
-    (default)))
+ '(custom-safe-themes (quote (default)))
  '(fci-rule-color "#ffe4b5")
  '(jdee-db-active-breakpoint-face-colors (cons "#100e23" "#EE82EE"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#100e23" "#4eee94"))
@@ -136,6 +134,12 @@ decrease this. If you experience stuttering, increase this.")
     (cons 340 "#ffe4b5")
     (cons 360 "#ffe4b5")))
  '(vc-annotate-very-old-color nil))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
