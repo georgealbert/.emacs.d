@@ -90,14 +90,15 @@ Custom Key Bindings
 ** 6 Adding New Tasks Quickly with Org Capture
 *** 6.1 Capture Templates
 When a new task needs to be added I categorize it into one of a few things:
+我把一个新增加的task分为下面几类:
 
-- A phone call (p)
-- A meeting (m)
-- An email I need to respond to (r)
-- A new task (t)
-- A new note (n)
-- An interruption (j)
-- A new habit (h)
+- A phone call (p) 电话
+- A meeting (m) 会议
+- An email I need to respond to (r) 需要回复的email
+- A new task (t) 新的task
+- A new note (n) 新的note
+- An interruption (j) 中断
+- A new habit (h) 新的habit
 
 and pick the appropriate capture task.
 
@@ -300,13 +301,13 @@ Tasks show project-related tasks that are hidden when not narrowed to a project.
 
 This makes it easy to focus on the task at hand.
 
-这样会容易聚焦到手上的task。
+这样会容易聚焦到正在做的task。
 
 I generally work top-down on the agenda.  Things with deadlines and
 scheduled dates (planned to work on today or earlier) show up in the
 agenda at the top.
 
-通常从上到下处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）会在agenda的顶部显示出来。
+通常从上到下处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）在agenda的顶部显示出来。
 
 My day goes generally like this:
 
@@ -378,23 +379,23 @@ that they need to be completed.  I normally only schedule one or two
 projects to the daily agenda and unschedule things that are no longer
 important and don't deserve my attention today.
 
-开始完成一个今天计划的或者deadline是今天的task，或者早先的daily agenda view中的task。然后转到在block agenda view中的 =Next Tasks= 列表中的task。
+开始完成一个今天计划要做的或者deadline是今天的task，或者先前的daily agenda view中的task。然后转到在block agenda view中的 =Next Tasks= 列表中的task。
 
 When I look for a new task to work on I generally hit =F12 SPC= to get
 the block agenda and follow this order:
-当寻找一个新的task做的时间，通常按 =F12 SPC= 来看block agenda，用下面的顺序：
+当我要找一个新的task去做时，一般按 =F12 SPC= 来看block agenda，用下面的顺序：
 
 - Pick something off today's agenda
-  从今天的agenda中选择一项
+  在今天的agenda中选择一个
 
   - deadline for today (do this first - it's not late yet)
-    deadline是今天的（首先做这个 - 现在做不晚）
+    deadline是今天的（首先做这个 - 现在做还不晚）
 
   - deadline in the past (it's already late)
-    deadline是今天以前的（反正已经晚了）
+    deadline是以前的（反正已经晚了）
 
   - a scheduled task for today (it's supposed to be done today)
-    今天计划做的task（应该要在今天完成）
+    今天计划做的task（需要在今天完成）
     
   - a scheduled task that is still on the agenda
     agenda中还有的计划的task
@@ -497,7 +498,7 @@ I'll work on this file in the following sequence:
 
 3. I complete that task and mark it done with =C-c C-t d=
 
-   按 =C-c C-t d= 完成一个task，tag会变成 DONE 。
+   按 =C-c C-t d= 把一个task标记为已完成，tag会变成 DONE 。
 
    This stops the clock and moves it back to the =Organization= task.
 
@@ -509,6 +510,14 @@ I'll work on this file in the following sequence:
 The entire time I'm working on and clocking some subtask of =Project A= all of the clock time in the interval is applied somewhere to the =Project A= tree.  When I eventually mark =Project A= done then the clock will move back to the default organization task.
 
 *** 9.1 Clock Setup 设置计时
+
+ To get started we need to punch in which clocks in the default task and keeps the clock running. This is now simply a matter of punching in the clock with F9 I. You can do this anywhere. Clocking out will now clock in the parent task (if there is one with a todo keyword) or clock in the default task if not parent exists.
+
+Keeping the clock running when moving a subtask to a DONE state means clocking continues to apply to the project task. I can pick the next task from the parent and clock that in without losing a minute or two while I'm deciding what to work on next.
+
+I keep clock times, state changes, and other notes in the :LOGBOOK: drawer.
+
+I have the following org-mode settings for clocking: 
 
 #+BEGIN_SRC emacs-lisp
 ;; Resume clocking task when emacs is restarted
@@ -632,8 +641,6 @@ as the default task."
 (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
 #+END_SRC
 
-下面的已经不用了。
-
 I used to clock in tasks by ID using the following function but with the new punch-in and punch-out I don't need these as much anymore. =f9-SPC= calls =bh/clock-in-last-task= which switches the clock back to the previously clocked task.
 
 #+BEGIN_SRC emacs-lisp
@@ -645,23 +652,23 @@ I used to clock in tasks by ID using the following function but with the new pun
 ;;   (org-with-point-at (org-id-find id 'marker)
 ;;     (org-clock-in nil)))
 ;; 
-;; (defun bh/clock-in-last-task (arg)
-;;   "Clock in the interrupted task if there is one
-;; Skip the default task and get the next one.
-;; A prefix arg forces clock in of the default task."
-;;   (interactive "p")
-;;   (let ((clock-in-to-task
-;;          (cond
-;;           ((eq arg 4) org-clock-default-task)
-;;           ((and (org-clock-is-active)
-;;                 (equal org-clock-default-task (cadr org-clock-history)))
-;;            (caddr org-clock-history))
-;;           ((org-clock-is-active) (cadr org-clock-history))
-;;           ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
-;;           (t (car org-clock-history)))))
-;;     (widen)
-;;     (org-with-point-at clock-in-to-task
-;;       (org-clock-in nil))))
+(defun bh/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
 #+END_SRC
 
 *** 9.2 Clocking in 打卡计时
@@ -671,7 +678,7 @@ I used to clock in tasks by ID using the following function but with the new pun
 
 When I start or continue working on a task I clock it in with any of the following:
 
-用下面的快捷键进行打卡计时
+当开始或者继续一个task的时候，用下面的快捷键进行打卡计时
 
   - =C-c C-x C-i= 
   - =I= in the agenda
@@ -689,8 +696,11 @@ By repeatedly estimating tasks and reviewing how your estimate relates to the ac
 **** 10.2.1 Creating a task estimate with column mode
 I use =properties= and =column view= to do project estimates.
 
+用 =properties= 和 =column view= 进行项目评估。
+
 I set up *column view* globally with the following headlines 
 
+=column view= 的headlines用下面配置的格式 
 #+BEGIN_SRC emacs-lisp
 ; Set default column view headings: Task Effort Clock_Summary
 (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
@@ -699,6 +709,8 @@ I set up *column view* globally with the following headlines
 This makes column view show estimated task effort and clocked times side-by-side which is great for reviewing your project estimates.
 
 A property called Effort records the estimated amount of time a given task will take to complete. The estimate times I use are one of:
+
+名为Effort的property记录了完成一个task所需要的时间。用下面几种时间:
 
   + 10 minutes
   + 30 minutes
@@ -726,7 +738,7 @@ To create an estimate for a task or subtree start column mode with =C-c C-x C-c=
 
 With the cursor in the =Effort= column for a task you can easily set the estimated effort value with the quick keys =1= through =9=.
 
-把光标放到 =Effort= 栏后可以按键盘上的数字0~9快速输入时间。
+当光标在一个task的 =Effort= 栏后，可以按0~9数字键快速输入完成task所需要的时间。
 
 After setting the effort values exit =column mode= with =q=.
 
@@ -1517,6 +1529,19 @@ ediff org mode时的folding有点讨厌。
 ;;    (message "ERR: not in Org mode")
 ;;    (ding))))
 #+END_SRC
+
+*** 18.48 Allow alphabetical list entries
+
+The following setting adds alphabetical lists like
+
+a. item one
+b. item two
+
+#+BEGIN_SRC lisp
+;; (setq org-alphabetical-lists t)
+#+END_SRC
+
+In order for filling to work correctly this needs to be set before the exporters are loaded.
 
 ** org2blog
 
