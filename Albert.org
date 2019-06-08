@@ -1,5 +1,5 @@
 ﻿
-* basic setting
+* common setting
 ** 启动优化 [2019-05-18 周六 22:43:45]
 
 doom-emacs介绍了它是如何做到启动速度这么快的 https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast
@@ -79,7 +79,7 @@ Reset garbage collector treshold after initialization is finished and garbage-co
 ;     ("https" . "134.80.3.27:8080")))
 
 ** HOME
-设置默认工作目录到HOME目录，不设置的话是 /emacs安装目录/bin/ 。
+默认目录设为 =HOME= 目录，不设的话默认是 /emacs安装目录/bin/ 。
 
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/")
@@ -411,7 +411,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
          ("C-x M-i" . helm-multi-swoop-all)))
 #+END_SRC
 
-* helm-gtags [2018-12-31 周一 23:31:48]
+* helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
 
 [2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
 
@@ -471,8 +471,9 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 #+BEGIN_SRC emacs-lisp
 (use-package window-numbering
   :ensure t
-  :defer t
-  :init (window-numbering-mode 1))
+  ;; :defer t
+  :config (window-numbering-mode 1))
+  ;; :init (window-numbering-mode 1))
 #+END_SRC
 
 * undotree
@@ -593,7 +594,7 @@ pip install flake8
 ;;   )
 #+END_SRC
 
-* basic setting - 可以推迟启动的
+* common setting - 可以推迟启动的
 ** 去掉启动欢迎界面
 
 #+begin_src emacs-lisp
@@ -617,7 +618,7 @@ pip install flake8
   (scroll-bar-mode -1))
 #+end_src
 
-** 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
+** 光标靠近鼠标的时候，让鼠标自动让开，不挡住视线
 
 #+begin_src emacs-lisp
 (mouse-avoidance-mode 'animate)
@@ -938,7 +939,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ;; For GNU Emacs 25.1 and newer versions
 (setq-default save-place t)
 (use-package saveplace
-  :ensure t
+  ;; :ensure t
   :init (save-place-mode 1))
 #+END_SRC
 
@@ -1149,7 +1150,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
-  :ensure t
+  ;; :ensure t
   :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -1162,7 +1163,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 http://ergoemacs.org/emacs/elisp-xah-find-text.html
 
 1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
-2. 不知道是怎么找的扩展吗，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
+2. 不知道是怎么找的扩展名，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
 
 #+BEGIN_SRC emacs-lisp
 (use-package xah-find
@@ -1247,7 +1248,8 @@ process monitor在用了vpn后会导致机器hang。
 + 不需要设置 tramp-shell-prompt-pattern 和 tramp-password-end-of-line 。
 + plink要在PATH里有。
 
-#+BEGIN_SRC emacs-lisp
+[2019-06-08 周六 01:44:30] tramp在windows上没法用，连虚机都能感觉到实在是太卡了。
+#+BEGIN_SRC lisp
 (use-package tramp
   :defer t
   :config
@@ -1695,7 +1697,7 @@ M-x gdb
 
 emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如断点信息窗等，简化为4个。其实都有用。不改了。
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; set gdb multi-windows when open
 
 ;;(setq gdb-many-windows t)
