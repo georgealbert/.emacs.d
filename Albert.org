@@ -490,10 +490,10 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
       (setq undo-tree-visualizer-diff t)))
 
 (defalias 'redo 'undo-tree-redo)
-;;(global-set-key (kbd "C-z") 'undo) ; 【Ctrl+z】
-;;(global-set-key (kbd "C-S-z") 'redo) ; 【Ctrl+Shift+z】;  Mac style
-;;(global-set-key (kbd "C-y") 'redo) ; 【Ctrl+y】; Microsoft Windows style
-(global-set-key (kbd "C-r") 'redo) ; 【Ctrl+r】; VIM style
+;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
+;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
+;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
+(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
 
 * python
@@ -1080,64 +1080,63 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
 ;; (require 'cmuscheme)
 #+BEGIN_SRC emacs-lisp
-  (use-package cmuscheme
-    :defer t)
-  (setq scheme-program-name "racket")         ;; 如果用 Petite 就改成 "petite"
-  ;; (setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
+(use-package cmuscheme
+  :defer t)
+(setq scheme-program-name "racket")         ;; 如果用 Petite 就改成 "petite"
+;; (setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
 
-  ;; bypass the interactive question and start the default interpreter
-  (defun scheme-proc ()
-    "Return the current Scheme process, starting one if necessary."
-    (unless (and scheme-buffer
-		 (get-buffer scheme-buffer)
-		 (comint-check-proc scheme-buffer))
-      (save-window-excursion
-	(run-scheme scheme-program-name)))
-    (or (scheme-get-process)
-	(error "No current process. See variable `scheme-buffer'")))
+;; bypass the interactive question and start the default interpreter
+(defun scheme-proc ()
+  "Return the current Scheme process, starting one if necessary."
+  (unless (and scheme-buffer
+	 (get-buffer scheme-buffer)
+	 (comint-check-proc scheme-buffer))
+    (save-window-excursion
+(run-scheme scheme-program-name)))
+  (or (scheme-get-process)
+(error "No current process. See variable `scheme-buffer'")))
 
-  (defun scheme-split-window ()
-    (cond
-     ((= 1 (count-windows))
-      (delete-other-windows)
-      ;; (split-window-vertically (floor (* 0.68 (window-height))))
-      (split-window-horizontally (floor (* 0.60 (window-width))))
-      (other-window 1)
-      (switch-to-buffer "*scheme*")
-      (other-window 1))
-     ((not (cl-find "*scheme*"
-		 (mapcar (lambda (w) (buffer-name (window-buffer w)))
-			 (window-list))
-		 :test 'equal))
-      (other-window 1)
-      (switch-to-buffer "*scheme*")
-      (other-window -1))))
+(defun scheme-split-window ()
+  (cond
+   ((= 1 (count-windows))
+    (delete-other-windows)
+    ;; (split-window-vertically (floor (* 0.68 (window-height))))
+    (split-window-horizontally (floor (* 0.60 (window-width))))
+    (other-window 1)
+    (switch-to-buffer "*scheme*")
+    (other-window 1))
+   ((not (cl-find "*scheme*"
+	 (mapcar (lambda (w) (buffer-name (window-buffer w)))
+		 (window-list))
+	 :test 'equal))
+    (other-window 1)
+    (switch-to-buffer "*scheme*")
+    (other-window -1))))
 
-  (defun scheme-send-last-sexp-split-window ()
-    (interactive)
-    (scheme-split-window)
-    (scheme-send-last-sexp))
+(defun scheme-send-last-sexp-split-window ()
+  (interactive)
+  (scheme-split-window)
+  (scheme-send-last-sexp))
 
-  (defun scheme-send-definition-split-window ()
-    (interactive)
-    (scheme-split-window)
-    (scheme-send-definition))
+(defun scheme-send-definition-split-window ()
+  (interactive)
+  (scheme-split-window)
+  (scheme-send-definition))
 
-  (add-hook 'scheme-mode-hook
-    (lambda ()
-      (paredit-mode 1)
-      (evil-paredit-mode 1)
-      (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-last-sexp-split-window)
-      (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
+(add-hook 'scheme-mode-hook
+  (lambda ()
+    (paredit-mode 1)
+    (evil-paredit-mode 1)
+    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-last-sexp-split-window)
+    (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
 #+END_SRC
 
+[2017-04-09 周日 00:20:25]
 #+BEGIN_SRC emacs-lisp
-;; [2017-04-09 周日 00:20:25]
 (use-package paren-face
   :ensure t
   :defer t
-  :init (global-paren-face-mode 1)
-)
+  :init (global-paren-face-mode 1))
 #+END_SRC
 * web-mode [2018-02-08 周四 17:03:42]
 
