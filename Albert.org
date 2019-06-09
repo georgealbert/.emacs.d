@@ -111,7 +111,7 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
 CJK (Chinese, Japanese, Korean)
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; (if (eq system-type 'windows-nt)
 ;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
 ;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
@@ -131,7 +131,9 @@ CJK (Chinese, Japanese, Korean)
 ;;             (set-fontset-font (frame-parameter nil 'font)
 ;;                           charset
 ;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 (defun albert-notebook-font()
   "Config font on HP zhan66."
   (interactive)
@@ -972,7 +974,6 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 #+BEGIN_SRC emacs-lisp
 (use-package window-numbering
   :ensure t
-  ;; :defer t
   :config (window-numbering-mode 1))
   ;; :init (window-numbering-mode 1))
 #+END_SRC
@@ -1061,7 +1062,7 @@ pdb setup, note the python version
 
 ** autopep8 [2019-05-17 周五 11:29:37]
 
-M-x elpy-config的检查结果
+=M-x elpy-config= 的检查结果
 
 用pip安装autopep8
 #+BEGIN_SRC sh
@@ -1300,7 +1301,6 @@ elpa中安装就可以了。
             (c-set-offset 'substatement-open 0)))
 
 #+BEGIN_SRC emacs-lisp
-
 (setq c-default-style "linux")
 (setq c-basic-offset 4)
 
@@ -1541,35 +1541,35 @@ digraph Name {
 ** 用法示例
 一个简单的使用示例，有如下步骤：
 
-1: 打开一个 C 文件
+1. 打开一个 C 文件
 
    如内核代码中的 drivers/usb/storage/usb.h
 
-2: 打开一个 dot 文件(/tmp/usb.dot)
+2. 打开一个 dot 文件(/tmp/usb.dot)
 
    auto-insert 会自动插入一些文件内容.
 
-3: 选中 struct us_data 的定义，并执行 yyc/datastruct-to-dot。
+3. 选中 struct us_data 的定义，并执行 yyc/datastruct-to-dot。
 
    执行完成后， us_data 的数据填写到了 tmp.dot 中，将该 buffer 中的所有内容 kill 掉，并 yank 到 usb.dot 中 XXX 这一行的下面。此时，保存 sub.dot ， 并按下快捷键 : C-cc ， 然后按下 Enter ， 就会自动编译。然后再按下 C-cp 就可以在另外一个 buffer 中预览它了。
 
    其实到这里，一个 C 语言的 struct 数据结构就已经被画出来了，后面的两个步骤，是为了介绍怎样将多个数据结构联系起来。
 
-4: 添加其他的subgraph 
+4. 添加其他的subgraph 
 
    我们可以继续添加其他的subgraph， 例如 struct usb_ctrlrequest *cr ，以及 struct usb_sg_request， 并全部做为 subgraph 添加到 usb.dot 中。
 
-5: 为 subgraph 建立关联
+5. 为 subgraph 建立关联
 
    很简单，通过 “->” 画两条线就可以了。
 
 ** semantic [2019-01-08 周二 20:47:56]
 https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referral [译] Emacs Lisp 速成
 
-                ;; 这样写不太好看
-                 ;; (if (eq function-pointer t)
-                 ;;     (setq str (var-str str index type))
-                 ;;   (setq str (concat str (format "%s " (semantic-tag-name type)))))))
+;; 这样写不太好看
+;; (if (eq function-pointer t)
+;;     (setq str (var-str str index type))
+;;   (setq str (concat str (format "%s " (semantic-tag-name type)))))))
 
 #+BEGIN_SRC emacs-lisp
 (defun albert/datastruct-member (tag)
@@ -1680,8 +1680,6 @@ https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referr
   ;; (message (semantic-c-lexer start end 1)))
   ;; (message (semantic-lex-buffer)))
   ;;(semantic-lex start end 1))
-
-
 #+END_SRC
 * winner-mode [2019-01-09 周三 18:04:05]
 winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
@@ -1694,8 +1692,8 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 #+END_SRC
 * GDB [2019-01-11 周五 21:23:16]
 
-在Linux上用，windows不需要配置。
-M-x gdb
+这是在Linux上用，windows不需要配置。
+=M-x gdb=
 
 + file 打开执行文件
 + l (list): 从第一行开始列出源码，默认10行。
