@@ -90,7 +90,7 @@ Custom Key Bindings
 ** 6 Adding New Tasks Quickly with Org Capture
 *** 6.1 Capture Templates
 When a new task needs to be added I categorize it into one of a few things:
-我把一个新增加的task分为下面几类:
+对于一个新增加的task，我把它分为下面几类:
 
 - A phone call (p) 电话
 - A meeting (m) 会议
@@ -198,7 +198,7 @@ Here is my setup for org-capture
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 
-** 8 Custom agenda views
+** 8 Custom agenda views - 定制agenda views
 *** 8.1 Setup
 
 #+BEGIN_SRC emacs-lisp
@@ -777,6 +777,28 @@ Tags with fast selection keys
 ; For tag searches ignore tasks with scheduled and deadline dates
 (setq org-agenda-tags-todo-honor-ignore-options t)
 #+END_SRC
+** 12 Handling Notes
+
+Notes are little gems of knowledge that you come across during your day. They are just like tasks except there is nothing to do (except learn and memorize the gem of knowledge). Unfortunately there are way too many gems to remember and my head explodes just thinking about it.
+
+org-mode to the rescue!
+
+Often I'll find some cool feature or thing I want to remember while reading the org-mode and git mailing lists in Gnus. To create a note I use my note capture template C-c c n, type a heading for the note and C-c C-c to save it. The only other thing to do is to refile it (later) to the appropriate project file.
+
+看见一下有意思的东西可以用note模板进行记录，按 =C-c c n= ，然后输入note的标题，再按 =C-c C-c= 保存。剩下要做的事是以后找个合适的file保存这个node。
+
+I have an agenda view just to find notes. Notes are refiled to an appropriate project file and task. If there is no specific task it belongs to it goes to the catchall * Notes task. I generally have a catchall notes task in every project file. Notes are created with a NOTE tag already applied by the capture template so I'm free to refile the note anywhere. As long as the note is in a project file that contributes to my agenda (ie. in org-agenda-files) then I can find the note back easily with my notes agenda view by hitting the key combination F12 N. I'm free to limit the agenda view of notes using standard agenda tag filtering.
+
+agenda view中能找到创建的notes。notes最终会被refiled到合适的project file和task。
+
+Short notes with a meaningful headline are a great way to remember technical details without the need to actually remember anything - other than how to find them back when you need them using F12 N.
+
+按 =F12 N=
+
+Notes that are project related and not generally useful can be archived with the project and removed from the agenda when the project is removed.
+
+So my org notes go in org.org and my git notes go in git.org both under the * Notes task. I'll forever be able to find those. A note about some work project detail I want to remember with the project is filed to the project task under the appropriate work org-mode file and eventually gets removed from the agenda when the project is complete and archived.
+
 ** 14 GTD stuff
 *** 14.2 Project definition and finding stuck projects
 
