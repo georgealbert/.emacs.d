@@ -79,10 +79,10 @@ decrease this. If you experience stuttering, increase this.")
 
 ;; (setq org-modules
 (defvar org-modules
-  '(org-w3m
+  '(;; org-w3m
     ;; org-bbdb
     ;; org-bibtex
-    org-docview
+    ;; org-docview
     ;; org-gnus
     ;; org-info
     ;; org-irc
