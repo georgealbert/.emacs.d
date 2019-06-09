@@ -93,7 +93,7 @@ decrease this. If you experience stuttering, increase this.")
 (require 'org)
 (require 'ob-tangle)
 (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
-(org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
+;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

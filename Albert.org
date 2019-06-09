@@ -1676,6 +1676,7 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 #+END_SRC
 * GDB [2019-01-11 周五 21:23:16]
 
+在Linux上用，windows不需要配置。
 M-x gdb
 
 + file 打开执行文件
@@ -1699,10 +1700,10 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 
 #+BEGIN_SRC lisp
 ;; set gdb multi-windows when open
-
-;;(setq gdb-many-windows t)
+(setq gdb-many-windows t)
 
 ;; customize the gdb multi-windows
+;; 默认的就好用
 ;; (defadvice gdb-setup-windows (after my-setup-gdb-windows activate)
 ;;   "My GDB UI"
 ;;   (gdb-get-buffer-create 'gdb-stack-buffer)
@@ -1740,6 +1741,1680 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
               (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
               (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
               (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+#+END_SRC
+* org mode
+http://doc.norang.ca/org-mode.html
+
+** 4 Getting Started
+*** 4.2 Org-Mode Setup
+
+参考 doom-emacs的配置文件 =.emacs.d.doom/modules/lang/org/config.el= ，只加载部分org-mode的modules，不需要邮件、irc。
+
+#+BEGIN_SRC lisp
+;;; Albert_org_config.el -*- lexical-binding: t; -*-
+#+END_SRC
+
+用了org-babel，org-modules要在init.el中(require 'org)之前设置。
+#+BEGIN_SRC lisp
+;; (setq org-modules '(org-w3m org-docview org-info))
+
+;; (defvar org-modules
+;;   '(;; org-w3m
+;;     ;; org-bbdb
+;;     ;; org-bibtex
+;;     org-docview
+;;     ;; org-gnus
+;;     org-info
+;;     ;; org-irc
+;;     ;; org-mhe
+;;     ;; org-rmail
+;;     ))
+#+END_SRC
+
+org-mode is the default mode for .org, .org_archive, and .txt files.
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
+;; Standard key bindings
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(setq org-log-done t)
+#+END_SRC
+
+*** 4.6 Key bindings
+
+Custom Key Bindings
+
+常用的列在前面。
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f12>") 'org-agenda)
+(global-set-key (kbd "<f3>") 'bh/org-todo)
+(global-set-key (kbd "<S-f3>") 'bh/widen)
+(global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
+(global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
+(global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
+;; (global-set-key (kbd "<f9> b") 'bbdb)
+;; (global-set-key (kbd "<f9> c") 'calendar)
+(global-set-key (kbd "<f9> f") 'boxquote-insert-file)
+;;(global-set-key (kbd "<f9> g") 'gnus)
+(global-set-key (kbd "<f9> h") 'bh/hide-other)
+(global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
+(global-set-key (kbd "<f9> w") 'widen)
+
+(global-set-key (kbd "<f9> I") 'bh/punch-in)
+(global-set-key (kbd "<f9> O") 'bh/punch-out)
+
+;; (global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
+
+(global-set-key (kbd "<f9> r") 'boxquote-region)
+(global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
+
+(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
+(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
+
+(global-set-key (kbd "<f9> v") 'visible-mode)
+(global-set-key (kbd "<f9> l") 'org-toggle-link-display)
+(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
+(global-set-key (kbd "C-<f9>") 'previous-buffer)
+(global-set-key (kbd "M-<f9>") 'org-toggle-inline-images)
+(global-set-key (kbd "C-x n r") 'narrow-to-region)
+(global-set-key (kbd "C-<f10>") 'next-buffer)
+(global-set-key (kbd "<f11>") 'org-clock-goto)
+(global-set-key (kbd "C-<f11>") 'org-clock-in)
+(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
+(global-set-key (kbd "C-c c") 'org-capture)
+
+(setq org-agenda-files (list "~/org"))
+
+;; '(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
+;;                               ("albert.org" :level . 2))))
+#+END_SRC
+
+** 6 Adding New Tasks Quickly with Org Capture
+*** 6.1 Capture Templates
+When a new task needs to be added I categorize it into one of a few things:
+对于一个新增加的task，我把它分为下面几类:
+
+- A phone call (p) 电话
+- A meeting (m) 会议
+- An email I need to respond to (r) 需要回复的email
+- A new task (t) 新的task
+- A new note (n) 新的note
+- An interruption (j) 中断
+- A new habit (h) 新的habit
+
+and pick the appropriate capture task.
+
+Here is my setup for org-capture
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+(setq org-default-notes-file "~/org/refile.org")
+
+(defun bh/hide-other ()
+  (interactive)
+  (save-excursion
+    (org-back-to-heading 'invisible-ok)
+    (hide-other)
+    (org-cycle)
+    (org-cycle)
+    (org-cycle)))
+
+(defun bh/set-truncate-lines ()
+  "Toggle value of truncate-lines and refresh window display."
+  (interactive)
+  (setq truncate-lines (not truncate-lines))
+  ;; now refresh window display (an idiom from simple.el):
+  (save-excursion
+    (set-window-start (selected-window)
+                      (window-start (selected-window)))))
+
+;; (defun bh/make-org-scratch ()
+;;   (interactive)
+;;   (find-file "/tmp/publish/scratch.org")
+;;   (gnus-make-directory "/tmp/publish"))
+
+(defun bh/switch-to-scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
+;; I use C-c c to start capture mode
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("r" "respond" entry (file "~/org/refile.org")
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+              ("n" "note" entry (file "~/org/refile.org")
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree "~/org/diary.org")
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file "~/org/refile.org")
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("m" "Meeting" entry (file "~/org/refile.org")
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ("p" "Phone call" entry (file "~/org/refile.org")
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+              ("h" "Habit" entry (file "~/org/refile.org")
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+#+END_SRC
+
+** 7 Refiling Tasks
+*** 7.1 Refile Setup
+
+#+BEGIN_SRC emacs-lisp
+; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+(setq org-refile-targets (quote ((nil :maxlevel . 6)
+                                 (org-agenda-files :maxlevel . 6))))
+
+; Use full outline paths for refile targets - we file directly with IDO
+(setq org-refile-use-outline-path t)
+
+; Targets complete directly with IDO
+(setq org-outline-path-complete-in-steps nil)
+
+; Allow refile to create parent tasks with confirmation
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+;; [2018-12-01 周六 16:35:26] 和helm有冲突，直接用helm
+
+; Use IDO for both buffer and file completion and ido-everywhere to t
+;;(setq org-completion-use-ido t)
+;; (setq ido-everywhere t)
+;; (setq ido-max-directory-size 100000)
+;; (ido-mode (quote both))
+; Use the current window when visiting files and buffers with ido
+;; (setq ido-default-file-method 'selected-window)
+;; (setq ido-default-buffer-method 'selected-window)
+
+; Use the current window for indirect buffer display
+(setq org-indirect-buffer-display 'current-window)
+
+;;;; Refile settings
+; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+#+END_SRC
+
+** 8 Custom agenda views - 定制agenda views
+*** 8.1 Setup
+
+#+BEGIN_SRC emacs-lisp
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
+
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
+
+;; Custom agenda command definitions
+(setq org-agenda-custom-commands
+      (quote (("N" "Notes" tags "NOTE"
+               ((org-agenda-overriding-header "Notes")
+                (org-tags-match-list-sublevels t)))
+              ("h" "Habits" tags-todo "STYLE=\"habit\""
+               ((org-agenda-overriding-header "Habits")
+                (org-agenda-sorting-strategy
+                 '(todo-state-down effort-up category-keep))))
+              (" " "Agenda"
+               ((agenda "" nil)
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "Tasks to Refile")
+                       (org-tags-match-list-sublevels nil)))
+                (tags-todo "-CANCELLED/!"
+                           ((org-agenda-overriding-header "Stuck Projects")
+                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-HOLD-CANCELLED/!"
+                           ((org-agenda-overriding-header "Projects")
+                            (org-agenda-skip-function 'bh/skip-non-projects)
+                            (org-tags-match-list-sublevels 'indented)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-non-project-tasks)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                                  (if bh/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'bh/skip-project-tasks)
+                            (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+                            (org-agenda-skip-function 'bh/skip-stuck-projects)
+                            (org-tags-match-list-sublevels nil)
+                            (org-agenda-todo-ignore-scheduled t)
+                            (org-agenda-todo-ignore-deadlines t)))
+                (tags "-REFILE/"
+                      ((org-agenda-overriding-header "Tasks to Archive")
+                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                       (org-tags-match-list-sublevels nil))))
+               nil))))
+
+;; Remove empty LOGBOOK drawers on clock out
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+#+END_SRC
+
+My block agenda view looks like this when not narrowed to a project. This shows top-level projects and =NEXT= tasks but hides the project details since we are not focused on any particular project.
+
+因为不关注特定的project，只显示隐藏了项目细节的顶级项目和 =NEXT= 的task。
+
+After selecting a project (with =P= on any task in the agenda) the block agenda changes to show the project and any subprojects in the Projects section.  
+
+Tasks show project-related tasks that are hidden when not narrowed to a project.
+
+在选择了一个项目后(在agenda中的任何task上按 =P= )，会改变阻塞的agenda，在project选择中显示project和subproject。
+
+This makes it easy to focus on the task at hand.
+
+这样会容易聚焦到正在做的task。
+
+I generally work top-down on the agenda.  Things with deadlines and
+scheduled dates (planned to work on today or earlier) show up in the
+agenda at the top.
+
+通常从上到下处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）在agenda的顶部显示出来。
+
+My day goes generally like this:
+
+一天的工作流程通常如下：
+
+- Punch in (this starts the clock on the default task)
+  打卡（在默认task上开始计时）
+
+- Look at the agenda and make a mental note of anything important to deal with today
+  查看agenda，然后思考一下今天有什么重要的事情
+
+- Read email and news
+  看邮件和新闻
+
+  - create notes, and tasks for things that need responses with org-capture
+    通过 =org-capture= 创建建需要反馈的note和task
+
+- Check refile tasks and respond to emails
+  检查refile的task和回邮件
+
+- Look at my agenda and work on important tasks for today
+  查看agenda并处理今天的重要task
+
+  - Clock it in
+    打卡计时
+
+  - Work on it until it is =DONE= or it gets interrupted
+    处理task，直到完成 =DONE= 或被中断
+
+- Work on tasks
+  处理task
+
+- Make journal entries (=C-c c j=) for interruptions
+  给中断建一个journal entry（ =C-c c j= ）
+
+- Punch out for lunch and punch back in after lunch
+  午餐时打卡签退，吃完后在打卡签到
+
+- work on more tasks
+  继续做其他的task
+
+- Refile tasks to empty the list
+  把task refile到一个空list
+
+  - Tag tasks to be refiled with =m= collecting all tasks for the same target
+    按 =m= 给相同target的所有task打个tag
+
+  - Bulk refile the tasks to the target location with =B r=
+    按 =B r= 批量refile task到目标文件
+
+  - Repeat (or refile individually with =C-c C-w=) until all refile tasks are gone
+    重复上述动作(或者按 =C-c C-w= 一个一个的refile)，直到所有的task都refile了
+
+- Mark habits done today as DONE
+  给所有今天完成的habit标记为 DONE
+
+- Punch out at the end of the work day
+  一个工作结束后打卡签退
+*** 8.2 What do I work on next? 接下来干什么呢？
+:PROPERTIES:
+:CUSTOM_ID: WhatDoIWorkOnNext
+:END:
+
+Start with deadlines and tasks scheduled today or earlier from the
+daily agenda view.  Then move on to tasks in the =Next Tasks= list in
+the block agenda view.  I tend to schedule current projects to 'today'
+when I start work on them and they sit on my daily agenda reminding me
+that they need to be completed.  I normally only schedule one or two
+projects to the daily agenda and unschedule things that are no longer
+important and don't deserve my attention today.
+
+开始完成一个今天计划要做的或者deadline是今天的task，或者先前的daily agenda view中的task。然后转到在block agenda view中的 =Next Tasks= 列表中的task。
+
+When I look for a new task to work on I generally hit =F12 SPC= to get
+the block agenda and follow this order:
+当我要找一个新的task去做时，一般按 =F12 SPC= 来看block agenda，用下面的顺序：
+
+- Pick something off today's agenda
+  在今天的agenda中选择一个
+
+  - deadline for today (do this first - it's not late yet)
+    deadline是今天的（首先做这个 - 现在做还不晚）
+
+  - deadline in the past (it's already late)
+    deadline是以前的（反正已经晚了）
+
+  - a scheduled task for today (it's supposed to be done today)
+    今天计划做的task（需要在今天完成）
+    
+  - a scheduled task that is still on the agenda
+    agenda中还有的计划的task
+
+  - deadline that is coming up soon
+    deadline快要到的task
+
+- pick a NEXT task
+  选择一个tag标记为 =NEXT= 的task
+
+- If you run out of items to work on look for a NEXT task in the current context
+  如果当前的NEXT的task都做完了
+
+  pick a task from the Tasks list of the current project.
+  从当前project的task列表选一个task
+**** Why keep it all on the =NEXT= list? 为什么把task都放到 =NEXT= list中
+:PROPERTIES:
+:CUSTOM_ID: CustomAgendaViewsNextList
+:END:
+
+I've moved to a more GTD way of doing things.  Now I just use a =NEXT=
+list.  Only projects get tasks with =NEXT= keywords since stuck projects
+initiate the need for marking or creating =NEXT= tasks.  A =NEXT= task
+is something that is available to work on /now/, it is the next
+logical step in some project.
+
+I used to have a special keyword =ONGOING= for things that I do a lot
+and want to clock but never really start/end.  I had a special agenda
+view for =ONGOING= tasks that I would pull up to easily find the thing
+I want to clock.
+
+Since then I've moved away from using the =ONGOING= todo keyword.
+Having an agenda view that shows =NEXT= tasks makes it easy to pick
+the thing to clock - and I don't have to remember if I need to look in
+the =ONGOING= list or the =NEXT= list when looking for the task to
+clock-in.  The =NEXT= list is basically 'what is current' - any task
+that moves a project forward.  I want to find the thing to work on as
+fast as I can and actually do work on it - not spend time hunting
+through my org files for the task that needs to be clocked-in.
+
+现在不再用 =ONGOING= todo关键字了。由于可显示 =NEXT= task的agent view会容易选择一项工作来计时，在查找 =ONGOING= 或者 =NEXT= task进行打卡计时的时候也不用记住他。=NEXT= list就是当前的task列表，任何让project继续进行的task都在里面。尽快找到实际要做的工作去做，不要在一大堆org文件中浪费时间去找下一个需要打卡计时的task。
+
+To drop a task off the =NEXT= list simply move it back to the =TODO=
+state.
+把task的状态从 =NEXT= 改为 =TODO= 就可以从 =NEXT= 给去掉。
+
+*** 8.3 Reading email, newsgroups, and conversations on IRC 看邮件、新闻组和聊天
+:PROPERTIES:
+:CUSTOM_ID: ReadingMailNewsIRC
+:END:
+
+When reading email, newsgroups, and conversations on IRC I just let
+the default task (normally =** Organization=) clock the time I spend on
+these tasks.  To read email I go to Gnus and read everything in my
+inboxes.  If there are emails that require a response I use
+org-capture to create a new task with a heading of 'Respond to <user>'
+for each one.  This automatically links to the email in the task and
+makes it easy to find later.  Some emails are quick to respond to and
+some take research and a significant amount of time to complete.  I
+clock each one in it's own task just in case I need that clocked time
+later.  The capture template for Repond To tasks is now scheduled for
+today so I can refile the task to the appropriate org file without
+losing the task for a week.
+
+看邮件、新闻组和聊天的时候，我会让默认task在计时状态。如果有需要反馈的邮件，我会用 org-capture 创建一个新的任务，标题是 '给某人的反馈'。
+
+Next, I go to my newly created tasks to be refiled from the block
+agenda with =F12 a= and clock in an email task and deal with it.
+Repeat this until all of the 'Respond to <user>' tasks are marked
+=DONE=.
+接下来，我会按 =F12 a= 把新建的task refile到block agenda中，做一个邮件的task打卡计时
+
+I read email and newgroups in Gnus so I don't separate clocked time
+for quickly looking at things.  If an article has a useful piece of
+information I want to remember I create a note for it with =C-c c n=
+and enter the topic and file it.  This takes practically no time at
+all and I know the note is safely filed for later retrieval.  The time
+I spend in the capture buffer is clocked with that capture note.
+
+** 9 Time Clocking 计时
+I now use the concept of =punching in= and =punching out= at the start and end of my work day. I punch in when I arrive at work, punch out for lunch, punch in after lunch, and punch out at the end of the day. Every minute is clocked between punch-in and punch-out times. 
+
+I'll work on this file in the following sequence:
+
+计时的流程：
+
+1. I punch in with =F9-I= at the start of my day
+
+   按 =F9-I= 打卡
+
+   That clocks in the =Organization= task by id in my =todo.org= file.
+
+2. =F12-SPC= to review my block agenda
+
+   按 =F12-SPC= 检查阻塞的日程表
+
+   Pick 'TODO Some miscellaneous task' to work on next and clock that in with =I= The clock is now on 'TODO Some miscellaneous task'
+
+   选一个要开始的task执行并计时，按 =I= 键
+
+3. I complete that task and mark it done with =C-c C-t d=
+
+   按 =C-c C-t d= 把一个task标记为已完成，tag会变成 DONE 。
+
+   This stops the clock and moves it back to the =Organization= task.
+
+4. Now I want to work on =Project A= so I clock in =Task 1=
+
+   I work on Task 1 and mark it =DONE=.  This clocks out =Task 1= and moves
+   the clock to =Project A=.  Now I work on =Task 2= and clock that in.
+
+The entire time I'm working on and clocking some subtask of =Project A= all of the clock time in the interval is applied somewhere to the =Project A= tree.  When I eventually mark =Project A= done then the clock will move back to the default organization task.
+
+*** 9.1 Clock Setup 设置计时
+
+ To get started we need to punch in which clocks in the default task and keeps the clock running. This is now simply a matter of punching in the clock with F9 I. You can do this anywhere. Clocking out will now clock in the parent task (if there is one with a todo keyword) or clock in the default task if not parent exists.
+
+Keeping the clock running when moving a subtask to a DONE state means clocking continues to apply to the project task. I can pick the next task from the parent and clock that in without losing a minute or two while I'm deciding what to work on next.
+
+I keep clock times, state changes, and other notes in the :LOGBOOK: drawer.
+
+I have the following org-mode settings for clocking: 
+
+#+BEGIN_SRC emacs-lisp
+;; Resume clocking task when emacs is restarted
+(org-clock-persistence-insinuate)
+
+;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+(setq org-clock-history-length 23)
+;; Resume clocking task on clock-in if the clock is open
+(setq org-clock-in-resume t)
+;; Change tasks to NEXT when clocking in
+(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+;; Separate drawers for clocking and logs
+(setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+;; Save clock data and state changes and notes in the LOGBOOK drawer
+(setq org-clock-into-drawer t)
+;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+(setq org-clock-out-remove-zero-time-clocks t)
+;; Clock out when moving task to a done state
+(setq org-clock-out-when-done t)
+;; Save the running clock and all clock history when exiting Emacs, load it on startup
+(setq org-clock-persist t)
+;; Do not prompt to resume an active clock
+(setq org-clock-persist-query-resume nil)
+;; Enable auto clock resolution for finding open clocks
+(setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+;; Include current clocking task in clock reports
+(setq org-clock-report-include-clocking-task t)
+
+(setq bh/keep-clock-running nil)
+
+(defun bh/clock-in-to-next (kw)
+  "Switch a task from TODO to NEXT when clocking in.
+Skips capture tasks, projects, and subprojects.
+Switch projects and subprojects from NEXT back to TODO"
+  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
+    (cond
+     ((and (member (org-get-todo-state) (list "TODO"))
+           (bh/is-task-p))
+      "NEXT")
+     ((and (member (org-get-todo-state) (list "NEXT"))
+           (bh/is-project-p))
+      "TODO"))))
+
+(defun bh/find-project-task ()
+  "Move point to the parent (project) task if any"
+  (save-restriction
+    (widen)
+    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+      (while (org-up-heading-safe)
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq parent-task (point))))
+      (goto-char parent-task)
+      parent-task)))
+
+(defun bh/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task.  If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq bh/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      ;;
+      ;; We're in the agenda
+      ;;
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags-at))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16))
+          (bh/clock-in-organization-task-as-default)))
+    ;;
+    ;; We are not in the agenda
+    ;;
+    (save-restriction
+      (widen)
+      ; Find the tags on the current task
+      (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+          (org-clock-in '(16))
+        (bh/clock-in-organization-task-as-default)))))
+
+(defun bh/punch-out ()
+  (interactive)
+  (setq bh/keep-clock-running nil)
+  (when (org-clock-is-active)
+    (org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun bh/clock-in-default-task ()
+  (save-excursion
+    (org-with-point-at org-clock-default-task
+      (org-clock-in))))
+
+(defun bh/clock-in-parent-task ()
+  "Move point to the parent (project) task if any and clock in"
+  (let ((parent-task))
+    (save-excursion
+      (save-restriction
+        (widen)
+        (while (and (not parent-task) (org-up-heading-safe))
+          (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+            (setq parent-task (point))))
+        (if parent-task
+            (org-with-point-at parent-task
+              (org-clock-in))
+          (when bh/keep-clock-running
+            (bh/clock-in-default-task)))))))
+
+(defvar bh/organization-task-id "eb155a82-92b2-4f25-a3c6-0304591af2f9")
+
+(defun bh/clock-in-organization-task-as-default ()
+  (interactive)
+  (org-with-point-at (org-id-find bh/organization-task-id 'marker)
+    (org-clock-in '(16))))
+
+(defun bh/clock-out-maybe ()
+  (when (and bh/keep-clock-running
+             (not org-clock-clocking-in)
+             (marker-buffer org-clock-default-task)
+             (not org-clock-resolving-clocks-due-to-idleness))
+    (bh/clock-in-parent-task)))
+
+(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+#+END_SRC
+
+I used to clock in tasks by ID using the following function but with the new punch-in and punch-out I don't need these as much anymore. =f9-SPC= calls =bh/clock-in-last-task= which switches the clock back to the previously clocked task.
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-id
+;;   :defer t)
+;; 
+;; (defun bh/clock-in-task-by-id (id)
+;;   "Clock in a task by id"
+;;   (org-with-point-at (org-id-find id 'marker)
+;;     (org-clock-in nil)))
+;; 
+(defun bh/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
+#+END_SRC
+
+*** 9.2 Clocking in 打卡计时
+:PROPERTIES:
+:CUSTOM_ID: ClockingIn
+:END:
+
+When I start or continue working on a task I clock it in with any of the following:
+
+当开始或者继续一个task的时候，用下面的快捷键进行打卡计时
+
+  - =C-c C-x C-i= 
+  - =I= in the agenda
+  - =I= speed key on the first character of the heading line
+  - =f9 I= while on the task in the agenda
+  - =f9 I= while in the task in an org file
+
+** 10 Time reporting and tracking
+*** 10.2 Task Estimates and column view 任务评估
+
+Estimating how long tasks take to complete is a difficult skill to master. Org-mode makes it easy to practice creating estimates for tasks and then clock the actual time it takes to complete.
+
+By repeatedly estimating tasks and reviewing how your estimate relates to the actual time clocked you can tune your estimating skills.
+
+**** 10.2.1 Creating a task estimate with column mode
+I use =properties= and =column view= to do project estimates.
+
+用 =properties= 和 =column view= 进行项目评估。
+
+I set up *column view* globally with the following headlines 
+
+=column view= 的headlines用下面配置的格式 
+#+BEGIN_SRC emacs-lisp
+; Set default column view headings: Task Effort Clock_Summary
+(setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+#+END_SRC
+
+This makes column view show estimated task effort and clocked times side-by-side which is great for reviewing your project estimates.
+
+A property called Effort records the estimated amount of time a given task will take to complete. The estimate times I use are one of:
+
+名为Effort的property记录了完成一个task所需要的时间。用下面几种时间:
+
+  + 10 minutes
+  + 30 minutes
+  + 1 hour
+  + 2 hours
+  + 3 hours
+  + 4 hours
+  + 5 hours
+  + 6 hours
+  + 7 hours
+  + 8 hours
+
+These are stored for easy use in =column mode= in the global property =Effort_ALL.= 
+
+#+BEGIN_SRC emacs-lisp
+; global Effort estimate values
+; global STYLE property values for completion
+(setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                    ("STYLE_ALL" . "habit"))))
+#+END_SRC
+
+To create an estimate for a task or subtree start column mode with =C-c C-x C-c= and collapse the tree with =c=.  This shows a table overlayed on top of the headlines with the task name, effort estimate, and clocked time in columns.
+
+评估一项任务或者子任务数用 =C-c C-x C-c= 或者 M-x org-columns，在task名这行显示时间表。
+
+With the cursor in the =Effort= column for a task you can easily set the estimated effort value with the quick keys =1= through =9=.
+
+当光标在一个task的 =Effort= 栏后，可以按0~9数字键快速输入完成task所需要的时间。
+
+After setting the effort values exit =column mode= with =q=.
+
+输入完task评估时间后，按 =q= 键 退出 =column mode=
+
+*** 10.3 Providing progress reports to others
+
+#+BEGIN_SRC emacs-lisp
+;; Agenda log mode items to display (closed and state changes by default)
+(setq org-agenda-log-mode-items (quote (closed state)))
+#+END_SRC
+
+** 11 Tags
+*** 11.1 Tags
+
+Tags with fast selection keys
+#+BEGIN_SRC emacs-lisp
+(setq org-tag-alist (quote ((:startgroup)
+                            ("@errand" . ?e)
+                            ("@office" . ?o)
+                            ("@home" . ?H)
+                            (:endgroup)
+                            ("WAITING" . ?w)
+                            ("HOLD" . ?h)
+                            ("PERSONAL" . ?P)
+                            ("WORK" . ?W)
+                            ("ORG" . ?O)
+                            ("ALBERT" . ?A)
+                            ("NOTE" . ?n)
+                            ("CANCELLED" . ?c)
+                            ("FLAGGED" . ??))))
+
+; Allow setting single tags without the menu
+(setq org-fast-tag-selection-single-key (quote expert))
+
+; For tag searches ignore tasks with scheduled and deadline dates
+(setq org-agenda-tags-todo-honor-ignore-options t)
+#+END_SRC
+** 12 Handling Notes
+
+Notes are little gems of knowledge that you come across during your day. They are just like tasks except there is nothing to do (except learn and memorize the gem of knowledge). Unfortunately there are way too many gems to remember and my head explodes just thinking about it.
+
+org-mode to the rescue!
+
+Often I'll find some cool feature or thing I want to remember while reading the org-mode and git mailing lists in Gnus. To create a note I use my note capture template C-c c n, type a heading for the note and C-c C-c to save it. The only other thing to do is to refile it (later) to the appropriate project file.
+
+看见一下有意思的东西可以用note模板进行记录，按 =C-c c n= ，然后输入note的标题，再按 =C-c C-c= 保存。剩下要做的事是以后找个合适的file保存这个node。
+
+I have an agenda view just to find notes. Notes are refiled to an appropriate project file and task. If there is no specific task it belongs to it goes to the catchall * Notes task. I generally have a catchall notes task in every project file. Notes are created with a NOTE tag already applied by the capture template so I'm free to refile the note anywhere. As long as the note is in a project file that contributes to my agenda (ie. in org-agenda-files) then I can find the note back easily with my notes agenda view by hitting the key combination F12 N. I'm free to limit the agenda view of notes using standard agenda tag filtering.
+
+agenda view中能找到创建的notes。notes最终会被refiled到合适的project file和task。
+
+Short notes with a meaningful headline are a great way to remember technical details without the need to actually remember anything - other than how to find them back when you need them using F12 N.
+
+按 =F12 N=
+
+Notes that are project related and not generally useful can be archived with the project and removed from the agenda when the project is removed.
+
+So my org notes go in org.org and my git notes go in git.org both under the * Notes task. I'll forever be able to find those. A note about some work project detail I want to remember with the project is filed to the project task under the appropriate work org-mode file and eventually gets removed from the agenda when the project is complete and archived.
+
+** 14 GTD stuff
+*** 14.2 Project definition and finding stuck projects
+
+#+BEGIN_SRC emacs-lisp
+(setq org-stuck-projects (quote ("" nil nil "")))
+
+(defun bh/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
+
+(defun bh/is-project-subtree-p ()
+  "Any task with a todo keyword that is in a project subtree.
+Callers of this function already widen the buffer view."
+  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                              (point))))
+    (save-excursion
+      (bh/find-project-task)
+      (if (equal (point) task)
+          nil
+        t))))
+
+(defun bh/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
+(defun bh/is-subproject-p ()
+  "Any task which is a subtask of another project"
+  (let ((is-subproject)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject) (org-up-heading-safe))
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq is-subproject t))))
+    (and is-a-task is-subproject)))
+
+(defun bh/list-sublevels-for-projects-indented ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels 'indented)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defun bh/list-sublevels-for-projects ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels t)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defvar bh/hide-scheduled-and-waiting-next-tasks t)
+
+(defun bh/toggle-next-task-display ()
+  (interactive)
+  (setq bh/hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+  (when  (equal major-mode 'org-agenda-mode)
+    (org-agenda-redo))
+  (message "%s WAITING and SCHEDULED NEXT Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
+(defun bh/skip-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                nil
+              next-headline)) ; a stuck project, has subtasks but no next task
+        nil))))
+
+(defun bh/skip-non-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                next-headline
+              nil)) ; a stuck project, has subtasks but no next task
+        next-headline))))
+
+(defun bh/skip-non-projects ()
+  "Skip trees that are not projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (if (save-excursion (bh/skip-non-stuck-projects))
+      (save-restriction
+        (widen)
+        (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+          (cond
+           ((bh/is-project-p)
+            nil)
+           ((and (bh/is-project-subtree-p) (not (bh/is-task-p)))
+            nil)
+           (t
+            subtree-end))))
+    (save-excursion (org-end-of-subtree t))))
+
+(defun bh/skip-project-trees-and-habits ()
+  "Skip trees that are projects"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits-and-single-tasks ()
+  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((org-is-habit-p)
+        next-headline)
+       ((and bh/hide-scheduled-and-waiting-next-tasks
+             (member "WAITING" (org-get-tags-at)))
+        next-headline)
+       ((bh/is-project-p)
+        next-headline)
+       ((and (bh/is-task-p) (not (bh/is-project-subtree-p)))
+        next-headline)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks-maybe ()
+  "Show tasks related to the current restriction.
+When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+           (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (not limit-to-project)
+             (bh/is-project-subtree-p))
+        subtree-end)
+       ((and limit-to-project
+             (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((bh/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (bh/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits ()
+  "Skip trees that are projects and tasks that are habits"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-subprojects ()
+  "Skip trees that are not projects"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (bh/is-subproject-p)
+        nil
+      next-headline)))
+#+END_SRC
+** 16 Publishing and Exporting
+*** 16.2 plantuml
+
+[2018-09-29 周六 22:59:28] 中文乱码的解决方法 begin_src plantuml :file img/chinese.png :cmdline -charset utf-8
+
+#+BEGIN_SRC emacs-lisp
+(setq org-plantuml-jar-path "~/java/plantuml.jar")
+
+(add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+; Make babel results blocks lowercase
+(setq org-babel-results-keyword "results")
+
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+
+(org-babel-do-load-languages
+ (quote org-babel-load-languages)
+ (quote ((emacs-lisp . t)
+         (dot . t)
+         ;; (ditaa . t)
+         ;; (R . t)
+         ;; (python . t)
+         ;; (ruby . t)
+         ;; (gnuplot . t)
+         ;; (clojure . t)
+         ;; (sh . t)
+         ;; (ledger . t)
+         ;; (org . t)
+         ;; (latex . t)
+         (plantuml . t)
+)))
+
+; Do not prompt to confirm evaluation
+; This may be dangerous - make sure you understand the consequences
+; of setting this -- see the docstring for details
+(setq org-confirm-babel-evaluate nil)
+
+; Use fundamental mode when editing plantuml blocks with C-c '
+(add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
+#+END_SRC
+
+#+results:
+: ((plantuml . fundamental) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
+
+** 18 Productivity Tools
+*** 18.2.1 Narrowing to a subtree with bh/org-todo
+
+#+BEGIN_SRC emacs-lisp
+;;(global-set-key (kbd "<f3>") 'bh/org-todo)
+
+(defun bh/org-todo (arg)
+  (interactive "p")
+  (if (equal arg 4)
+      (save-restriction
+        (bh/narrow-to-org-subtree)
+        (org-show-todo-tree nil))
+    (bh/narrow-to-org-subtree)
+    (org-show-todo-tree nil)))
+
+;;(global-set-key (kbd "<S-f5>") 'bh/widen)
+
+(defun bh/widen ()
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
+      (progn
+        (org-agenda-remove-restriction-lock)
+        (when org-agenda-sticky
+          (org-agenda-redo)))
+    (widen)))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
+          'append)
+
+(defun bh/restrict-to-file-or-follow (arg)
+  "Set agenda restriction to 'file or with argument invoke follow mode.
+I don't use follow mode very often but I restrict to file all the time
+so change the default 'F' binding in the agenda to allow both"
+  (interactive "p")
+  (if (equal arg 4)
+      (org-agenda-follow-mode)
+    (widen)
+    (bh/set-agenda-restriction-lock 4)
+    (org-agenda-redo)
+    (beginning-of-buffer)))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
+          'append)
+
+(defun bh/narrow-to-org-subtree ()
+  (widen)
+  (org-narrow-to-subtree)
+  (save-restriction
+    (org-agenda-set-restriction-lock)))
+
+(defun bh/narrow-to-subtree ()
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
+      (progn
+        (org-with-point-at (org-get-at-bol 'org-hd-marker)
+          (bh/narrow-to-org-subtree))
+        (when org-agenda-sticky
+          (org-agenda-redo)))
+    (bh/narrow-to-org-subtree)))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
+          'append)
+
+(defun bh/narrow-up-one-org-level ()
+  (widen)
+  (save-excursion
+    (outline-up-heading 1 'invisible-ok)
+    (bh/narrow-to-org-subtree)))
+
+(defun bh/get-pom-from-agenda-restriction-or-point ()
+  (or (org-get-at-bol 'org-hd-marker)
+      (and (marker-position org-agenda-restrict-begin) org-agenda-restrict-begin)
+      (and (equal major-mode 'org-mode) (point))
+      org-clock-marker))
+
+(defun bh/narrow-up-one-level ()
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
+      (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
+        (bh/narrow-up-one-org-level))
+    (bh/narrow-up-one-org-level)))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
+          'append)
+
+(defun bh/narrow-to-org-project ()
+  (widen)
+  (save-excursion
+    (bh/find-project-task)
+    (bh/narrow-to-org-subtree)))
+
+(defun bh/narrow-to-project ()
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
+      (progn
+        (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
+          (bh/narrow-to-org-project)
+          (save-excursion
+            (bh/find-project-task)
+            (org-agenda-set-restriction-lock)))
+        (org-agenda-redo)
+        (beginning-of-buffer))
+    (bh/narrow-to-org-project)
+    (save-restriction
+      (org-agenda-set-restriction-lock))))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
+          'append)
+
+(defvar bh/project-list nil)
+
+(defun bh/view-next-project ()
+  (interactive)
+  (let (num-project-left current-project)
+    (unless (marker-position org-agenda-restrict-begin)
+      (goto-char (point-min))
+      ; Clear all of the existing markers on the list
+      (while bh/project-list
+        (set-marker (pop bh/project-list) nil))
+      (re-search-forward "Tasks to Refile")
+      (forward-visible-line 1))
+
+    ; Build a new project marker list
+    (unless bh/project-list
+      (while (< (point) (point-max))
+        (while (and (< (point) (point-max))
+                    (or (not (org-get-at-bol 'org-hd-marker))
+                        (org-with-point-at (org-get-at-bol 'org-hd-marker)
+                          (or (not (bh/is-project-p))
+                              (bh/is-project-subtree-p)))))
+          (forward-visible-line 1))
+        (when (< (point) (point-max))
+          (add-to-list 'bh/project-list (copy-marker (org-get-at-bol 'org-hd-marker)) 'append))
+        (forward-visible-line 1)))
+
+    ; Pop off the first marker on the list and display
+    (setq current-project (pop bh/project-list))
+    (when current-project
+      (org-with-point-at current-project
+        (setq bh/hide-scheduled-and-waiting-next-tasks nil)
+        (bh/narrow-to-project))
+      ; Remove the marker
+      (setq current-project nil)
+      (org-agenda-redo)
+      (beginning-of-buffer)
+      (setq num-projects-left (length bh/project-list))
+      (if (> num-projects-left 0)
+          (message "%s projects left to view" num-projects-left)
+        (beginning-of-buffer)
+        (setq bh/hide-scheduled-and-waiting-next-tasks t)
+        (error "All projects viewed.")))))
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
+          'append)
+
+(setq org-show-entry-below (quote ((default))))
+#+END_SRC
+
+*** 18.3 Tuning the Agenda Views
+
+Always hilight the current agenda line
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (hl-line-mode 1))
+          'append)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; The following custom-set-faces create the highlights
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button)))) t))
+#+END_SRC
+
+**** 18.3.2 Keep tasks with timestamps visible on the global todo lists
+
+#+BEGIN_SRC emacs-lisp
+;; Keep tasks with dates on the global todo lists
+(setq org-agenda-todo-ignore-with-date nil)
+
+;; Keep tasks with deadlines on the global todo lists
+(setq org-agenda-todo-ignore-deadlines nil)
+
+;; Keep tasks with scheduled dates on the global todo lists
+(setq org-agenda-todo-ignore-scheduled nil)
+
+;; Keep tasks with timestamps on the global todo lists
+(setq org-agenda-todo-ignore-timestamp nil)
+
+;; Remove completed deadline tasks from the agenda view
+(setq org-agenda-skip-deadline-if-done t)
+
+;; Remove completed scheduled tasks from the agenda view
+(setq org-agenda-skip-scheduled-if-done t)
+
+;; Remove completed items from search results
+(setq org-agenda-skip-timestamp-if-done t)
+#+END_SRC
+
+**** 18.3.4 Searches include archive files
+
+#+BEGIN_SRC emacs-lisp
+;; Include agenda archive files when searching for things
+(setq org-agenda-text-search-extra-files (quote (agenda-archives)))
+#+END_SRC
+
+**** 18.3.5 Agenda view tweaks
+
+#+BEGIN_SRC emacs-lisp
+;; Show all future entries for repeating tasks
+(setq org-agenda-repeating-timestamp-show-all t)
+
+;; Show all agenda dates - even if they are empty
+(setq org-agenda-show-all-dates t)
+
+;; Sorting order for tasks on the agenda
+(setq org-agenda-sorting-strategy
+      (quote ((agenda habit-down time-up user-defined-up effort-up category-keep)
+              (todo category-up effort-up)
+              (tags category-up effort-up)
+              (search category-up))))
+
+;; Start the weekly agenda on Monday
+(setq org-agenda-start-on-weekday 1)
+
+;; Enable display of the time grid so we can see the marker for the current time
+(setq org-agenda-time-grid (quote ((daily today remove-match)
+                                   #("----------------" 0 16 (org-heading t))
+                                   (0900 1100 1300 1500 1700))))
+
+;; Display tags farther right
+(setq org-agenda-tags-column -102)
+
+;;
+;; Agenda sorting functions
+;;
+(setq org-agenda-cmp-user-defined 'bh/agenda-sort)
+
+(defun bh/agenda-sort (a b)
+  "Sorting strategy for agenda items.
+Late deadlines first, then scheduled, then non-late deadlines"
+  (let (result num-a num-b)
+    (cond
+     ; time specific items are already sorted first by org-agenda-sorting-strategy
+
+     ; non-deadline and non-scheduled items next
+     ((bh/agenda-sort-test 'bh/is-not-scheduled-or-deadline a b))
+
+     ; deadlines for today next
+     ((bh/agenda-sort-test 'bh/is-due-deadline a b))
+
+     ; late deadlines next
+     ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
+
+     ; scheduled items for today next
+     ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
+
+     ; late scheduled items next
+     ((bh/agenda-sort-test-num 'bh/is-scheduled-late '> a b))
+
+     ; pending deadlines last
+     ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
+
+     ; finally default to unsorted
+     (t (setq result nil)))
+    result))
+
+(defmacro bh/agenda-sort-test (fn a b)
+  "Test for agenda sort"
+  `(cond
+    ; if both match leave them unsorted
+    ((and (apply ,fn (list ,a))
+          (apply ,fn (list ,b)))
+     (setq result nil))
+    ; if a matches put a first
+    ((apply ,fn (list ,a))
+     (setq result -1))
+    ; otherwise if b matches put b first
+    ((apply ,fn (list ,b))
+     (setq result 1))
+    ; if none match leave them unsorted
+    (t nil)))
+
+(defmacro bh/agenda-sort-test-num (fn compfn a b)
+  `(cond
+    ((apply ,fn (list ,a))
+     (setq num-a (string-to-number (match-string 1 ,a)))
+     (if (apply ,fn (list ,b))
+         (progn
+           (setq num-b (string-to-number (match-string 1 ,b)))
+           (setq result (if (apply ,compfn (list num-a num-b))
+                            -1
+                          1)))
+       (setq result -1)))
+    ((apply ,fn (list ,b))
+     (setq result 1))
+    (t nil)))
+
+(defun bh/is-not-scheduled-or-deadline (date-str)
+  (and (not (bh/is-deadline date-str))
+       (not (bh/is-scheduled date-str))))
+
+(defun bh/is-due-deadline (date-str)
+  (string-match "Deadline:" date-str))
+
+(defun bh/is-late-deadline (date-str)
+  (string-match "\\([0-9]*\\) d\. ago:" date-str))
+
+(defun bh/is-pending-deadline (date-str)
+  (string-match "In \\([^-]*\\)d\.:" date-str))
+
+(defun bh/is-deadline (date-str)
+  (or (bh/is-due-deadline date-str)
+      (bh/is-late-deadline date-str)
+      (bh/is-pending-deadline date-str)))
+
+(defun bh/is-scheduled (date-str)
+  (or (bh/is-scheduled-today date-str)
+      (bh/is-scheduled-late date-str)))
+
+(defun bh/is-scheduled-today (date-str)
+  (string-match "Scheduled:" date-str))
+
+(defun bh/is-scheduled-late (date-str)
+  (string-match "Sched\.\\(.*\\)x:" date-str))
+#+END_SRC
+
+**** 18.3.6 Sticky Agendas
+
+#+BEGIN_SRC emacs-lisp
+;; I normally have two views displayed (F12 a for the daily/weekly agenda and F12 SPC for my project management view) 
+
+;; Use sticky agenda's so they persist
+(setq org-agenda-sticky t)
+#+END_SRC
+
+**** 18.7.2 org-indent mode
+默认的大纲显示没有缩进，显得有些乱。可以用M-x org-indent-mode切换。
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-indented t)
+#+END_SRC
+
+**** 18.12 Logging Stuff
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done (quote time))
+(setq org-log-into-drawer t)
+(setq org-log-state-notes-insert-after-drawers nil)
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+#+END_SRC
+
+*** 18.17 Handling Encryption
+
+I used to keep my encrypted data like account passwords in a separate GPG encrypted file. Now I keep them in my org-mode files with a special tag instead. Encrypted data is kept in the org-mode file that it is associated with.
+
+org-crypt allows you to tag headings with a special tag crypt and org-mode can keep data in these headings encrypted when saved to disk. You decrypt the heading temporarily when you need access to the data and org-mode re-encrypts the heading as soon as you save the file.
+
+I use the following setup for encryption:
+
+org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
+[2019-06-05 周三 10:03:54] 为什么用use-package会报错?
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-crypt
+;;   ;; :defer t
+;;   :ensure nil
+;;   :init
+;;     (progn
+;;       ; Encrypt all entries before saving
+;;       (org-crypt-use-before-save-magic)
+;;       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;;       ; GPG key to use for encryption
+;;       ;; (setq org-crypt-key "F0B66B40")
+;;       ;; 使用对称加密算法加密
+;;       (setq org-crypt-key nil)
+;;     ))
+
+;; (setq epg-debug t)
+;; (setq epg-gpg-home-directory "C:/Users/Albert/AppData/Roaming/gnupg")
+;; (setq epg-gpg-program "E:/Program Files (x86)/GnuPG/bin/gpg.exe")
+;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-crypt)
+; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; nil 使用对称加密算法加密，非nil则使用公钥加密
+;; (setq org-crypt-key nil)
+;; keyid可以用key的username/email or pub的指纹的后8个字符
+(setq org-crypt-key "georgealbert@qq.com")
+#+END_SRC
+
+=M-x org-set-property= 设置heading的properties为 =CRYPTKEY= 为某个key的id，单独对一个heading使用不同的加密方式和key。
+
+用 =gpg --version= 确认gpg的HOME目录。
+
+M-x org-decrypt-entry will prompt for the passphrase associated with your encryption key and replace the encrypted data where the point is with the plaintext details for your encrypted entry. As soon as you save the file the data is re-encrypted for your key. Encrypting does not require prompting for the passphrase - that's only for looking at the plain text version of the data.
+
+I tend to have a single level 1 encrypted entry per file (like * Passwords). I prevent the crypt tag from using inheritance so that I don't have encrypted data inside encrypted data. I found M-x org-decrypt-entries prompting for the passphrase to decrypt data over and over again (once per entry to decrypt) too inconvenient.
+
+I leave my entries encrypted unless I have to look up data - I decrypt on demand and then save the file again to re-encrypt the data. This keeps the data in plain text as short as possible.
+**** 18.17.1 Auto Save Files
+
+Emacs temporarily saves your buffer in an autosave file while you are editing your org buffer and a sufficient number of changes have accumulated. If you have decrypted subtrees in your buffer these will be written to disk in plain text which possibly leaks sensitive information. To combat this org-mode now asks if you want to disable the autosave functionality in this buffer.
+
+Personally I really like the autosave feature. 99% of the time my encrypted entries are perfectly safe to write to the autosave file since they are still encrypted. I tend to decrypt an entry, read the details for what I need to look up and then immediately save the file again with C-x C-s which re-encrypts the entry immediately. This pretty much guarantees that my autosave files never have decrypted data stored in them.
+
+I disable the default org crypt auto-save setting as follows:
+
+#+BEGIN_SRC emacs-lisp
+;; (setq org-crypt-disable-auto-save nil)
+(setq org-crypt-disable-auto-save 'encrypt)
+#+END_SRC
+
+*** 18.44 Showing source block syntax highlighting
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+ediff org mode时的folding有点讨厌。
+
+#+BEGIN_SRC lisp
+;;2014/05/02 16:43:50 ediff folded org file
+;;(add-hook 'ediff-prepare-buffer-hook 'f-ediff-prepare-buffer-hook-setup)
+;;(defun f-ediff-prepare-buffer-hook-setup ()
+;;  ;; specific modes
+;;  (cond ((eq major-mode 'org-mode)
+;;         (f-org-vis-mod-maximum))
+;;        ;; room for more modes
+;;        )
+;;  ;; all modes
+;;  (setq truncate-lines nil))
+;;(defun f-org-vis-mod-maximum ()
+;;  "Visibility: Show the most possible."
+;;  (cond
+;;   ((eq major-mode 'org-mode)
+;;    (visible-mode 1)  ; default 0
+;;    (setq truncate-lines nil)  ; no `org-startup-truncated' in hook
+;;    (setq org-hide-leading-stars t))  ; default nil
+;;   (t
+;;    (message "ERR: not in Org mode")
+;;    (ding))))
+#+END_SRC
+
+*** 18.48 Allow alphabetical list entries
+
+The following setting adds alphabetical lists like
+
+a. item one
+b. item two
+
+#+BEGIN_SRC lisp
+;; (setq org-alphabetical-lists t)
+#+END_SRC
+
+In order for filling to work correctly this needs to be set before the exporters are loaded.
+
+** org2blog
+
+[2018-11-23 周五 16:09:13] for github
+#+BEGIN_SRC emacs-lisp
+;; (use-package ox-publish
+;;   :defer t)
+
+(setq org-publish-project-alist
+  '(
+    ;; 把各部分的配置文件写到这里面来
+    ("blog-notes"
+      :base-directory "~/org/notes"
+      :base-extension "org"
+      ;:publishing-directory "~/org/public_html/"
+      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :recursive t
+      :publishing-function org-html-publish-to-html
+      :headline-levels 4             ; Just the default for this project.
+      :auto-preamble t
+      :section-numbers nil
+      ;:with-date nil
+      ;:author "Albert"
+      ;:email "georgealbert@qq.com"
+      ;:auto-sitemap t                ; Generate sitemap.org automagically...
+      :sitemap-filename "index.org"  ; ... call it sitemap.org (it's the default)...
+      ;:sitemap-title "Albert's blog"         ; ... with title 'Sitemap'.
+      :with-toc nil                            ; 不要toc，否则太难看
+      :sitemap-sort-files anti-chronologically
+      :sitemap-file-entry-format "%d %t"
+      :html-head-include-scripts nil           ; 不输出<head>中的javascript脚本
+      :html-postamble nil                      ; 不输出creator、date和validation
+      :html-validation-link nil
+      :html-link-use-abs-url t                ; 用绝对路径，看看解决静态资源文件定位问题 [2018-11-24 周六 23:22:08]
+      :html-doctype "html5"                    ; 用html5可以让html的代码输出少点
+      ;:html-link-home "https://www.albertzhou.net"
+      )
+    ("blog-static"
+      :base-directory "~/org/notes"
+      :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+      ;:publishing-directory "~/org/public_html/"
+      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :recursive t
+      :publishing-function org-publish-attachment
+      )
+    ("blog" :components ("blog-notes" "blog-static"))
+    ))
+;(setq org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"home.css\" />
+;<link rel=\"stylesheet\" type=\"text/css\" href=\"org.css\" />")
+#+END_SRC
+
+[2018-11-23 周五 23:19:16] HTML doctypes默认是"xhtml-strict"，改为"html4-strict"是不行的。
+#+BEGIN_SRC emacs-lisp
+;(setq org-html-doctype-alist '(("html5" . "<!DOCTYPE html>")))
+#+END_SRC
+
+[2018-11-24 周六 10:16:58] 不输出creator/data/validation，也不输出head中的javascript脚本
+#+BEGIN_SRC emacs-lisp
+;(setq org-html-postamble nil)
+;(setq org-html-head-include-scripts nil)
+(setq org-export-default-language "zh_CN")
+
+;(setq org-html-validation-link nil)
+;(setq org-export-with-date nil)
+#+END_SRC
+
+** 禁用下划线转义
+org-mode的文档在导出到html时，有一个挺烦人的问题就是 abc_def 会变成 abcdef，这其实是一种类似TeX的 写法，主要也就是在少数场景下有意义（其实与之相伴的还有一个 10^24 会变成 1024，不过这个对我影响不大，因为我很少会用到这种写法）。
+
+关闭这个功能的方法是在org文件头部的 OPTIONS 里面添加 ^:nil:
+
+这样以来如果要输入下标，就要加{}
+例如：
+输入 X_{Y}, Y成为下标;
+而输入 X_Y, 则依然输出 X_Y,
+即下划线原样输出
+
+;#+OPTIONS: ^:nil
+
+#+BEGIN_SRC emacs-lisp
+;(setq-default org-use-sub-superscripts nil)
+
+(setq org-export-with-sub-superscripts nil) 
+#+END_SRC
+
+** 不输出css [2018-11-23 周五 22:34:57] 
+turn off the default style, customize org-html-head-include-default-style variable, or use this option line in the Org file.
+
+;#+OPTIONS: html-style:nil
+
+#+BEGIN_SRC emacs-lisp
+(setq org-html-head-include-default-style nil)
+#+END_SRC
+** html export
+[2014-09-12 12:55:36] 为什么不管用呢？
+
+#+BEGIN_SRC lisp
+;(setq org-export-html-style-include-scripts nil
+;   org-export-html-style-include-default nil
+;   org-export-html-style-default nil
+;   org-html-style-default nil)
+ 
+;(setq org-export-html-style
+;(setq org-html-head-include-default-style
+
+;; (setq org-html-style-default
+;;   "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/org-manual.css\" />")
 #+END_SRC
 * 现在没用的配置
 ** 反显选中区域
