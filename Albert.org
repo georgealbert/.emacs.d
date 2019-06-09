@@ -234,367 +234,6 @@ Source Code Variable 无法和Yahei配合对齐。
     (set-selection-coding-system 'utf-8)))
 #+END_SRC
 
-* evil
-
-#+BEGIN_SRC emacs-lisp
-(use-package evil
-  :ensure t
-  :defer t
-  :init (evil-mode 1)
-  :config 
-    (progn
-      ;; (eval-after-load 'helm-gtags
-      ;;    '(progn
-      ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
-      (eval-after-load 'ggtags
-        '(progn
-           (evil-make-overriding-map ggtags-mode-map 'normal)
-           ;; force update evil keymaps after ggtags-mode loaded
-           (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
-      (setq evil-want-visual-char-semi-exclusive t)))
-#+end_src
-
-为ggtags修改默认的键绑定，可以用 M-.
-https://blog.csdn.net/Levi_Huang/article/details/84288493
-
-[2019-01-01 周二 00:08:18] helm-gtags不能在statusbar上显示tag的值，这点不如ggtags好用。先用ggtags吧。
-
-* helm
-[2014-09-16 09:27:15]
-
-;; (require 'helm-config)
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :ensure t
-  :defer t
-  :diminish helm-mode
-  ;; :config
-  :init
-  (progn
-    (require 'helm-config)
-    (setq helm-candidate-number-limit 100)
-    ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
-          helm-yas-display-key-on-candidate t
-          helm-quick-update t
-          helm-M-x-requires-pattern nil
-          helm-ff-skip-boring-files t)
-    (helm-mode))
-  :bind (("C-c m" . helm-mini)
-         ("C-c n" . helm-mini)
-         ("C-x C-b" . helm-buffers-list)
-         ("C-x b" . helm-buffers-list)
-         ("M-y" . helm-show-kill-ring)
-         ("M-x" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ;; ("C-h a" . helm-apropos)
-         ;; ("C-x c o" . helm-occur)
-         ;; ("C-x c s" . helm-swoop)
-         ;; ("C-x c y" . helm-yas-complete)
-         ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
-         ;; ("C-x c b" . my/helm-do-grep-book-notes)
-         ;; ("<tab>" . 'helm-execute-persistent-action)
-         ;; ("C-i" . 'helm-execute-persistent-action)
-         ;; ("C-z" . 'helm-select-action)
-         ("C-x c SPC" . helm-all-mark-rings)))
-
-;; (use-package helm-config)
-;; (helm-mode 1)
-;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
-;; (global-set-key (kbd "C-c m") 'helm-mini)
-;; (global-set-key (kbd "C-c n") 'helm-mini)
-;; (global-set-key (kbd "M-x") 'helm-M-x)
-;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
-;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-;          helm-input-idle-delay 0.01  ; this actually updates things
-;                                      ; reeeelatively quickly.
-
-;; [2019-01-11 周五 23:48:42]
-;; (setq helm-quick-update t
-;;       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
-;;       helm-ff-skip-boring-files t)
-      
-(ido-mode -1)  ;; Turn off ido mode in case I enabled it accidentally
-#+END_SRC
-
-** Search buffers by major-mode
-
-+ multi buffer search
-  1. *C-c h* 调出helm-mini buffer
-  1. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
-  1. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
-  1. 按 *C-s* search file content
-  1. *C-j* 打开buffer并跳到选择的行
-  1. *enter* 打开文件
-
-+ M-SPC/Esc-SPC/C-@ :: 用 *M-SPC* 最方便了，mark当前的buffer，如果已经mark了会取消，先C-n/C-p移动到要取消的file
-
-+ M-u :: 取消全部mark的buffer
-+ M-a :: mark全部的buffer
-     
-[2014-09-16 18:24:22] multi search也可以这样，如在所有buffer中org-mode的buffer，然后找 *org @string_to_find 按 *C-s* 就ok了。
-
-+ C-n/C-p/up/down :: 在helm的选项中上下移动
-+ left/right :: 在source间移动， *C-o* 移动到下一个source，source就是group分类，如buffer，最近访问的buffer，创建buffer。
-+ M-p/M-n :: 命令历史
-             
-+ mini buffer
-  + M-S-d :: kill buffer and quit，就是 *M-D* 。
-  + C-c d :: kill buffer without quitting
-             
-[2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
-
-[2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
-
-** grep
-
-=helm-resume= 恢复上次的command
-
-*** Grep from helm-find-files
-
-From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
-menu with tab and choose grep. A prefix arg will launch recursive
-grep.
-
-NOTE:You can now launch grep with (C-u) M-g s without switching to the
-action pannel.
-
-*** Grep thing at point
-
-Before lauching helm, put your cursor on the start of symbol or sexp
-you will want to grep. Then launch helm-do-grep or helm-find-files,
-and when in the grep prompt hit C-w as many time as needed.
-
-光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
-可以跟着grep这个word后面的word。
-
-*** Grep persistent action
-
-As always, C-z will bring you in the buffer corresponding to the file
-you are grepping. Well nothing new, but using C-u C-z will record this
-place in the mark-ring. So if you want to come back later to these
-places, there is no need to grep again, you will find all these places
-in the mark-ring. Accessing the mark-ring in Emacs is really
-inconvenient, fortunately, you will find in helm-config
-helm-all-mark-ring which is a mark-ring browser
-(helm-command-prefix-key C-c SPACE). helm-all-mark-ring is in helm
-menu also, in the tool section.
-
-TIP: Bind helm-all-mark-ring to C-c SPACE.
-
-在org mode下，无效。
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
-#+END_SRC
-
-NOTE: helm-all-mark-ring handle global-mark-ring also.
-
-* helm-swoop
-[2014-11-21 周五 09:26:34]
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-swoop
-  :ensure t
-  :defer t
-  :bind (("M-i" . helm-swoop)
-         ("M-I" . helm-swoop-back-to-last-point)
-         ("C-c M-i" . helm-multi-swoop)
-         ("C-x M-i" . helm-multi-swoop-all)))
-#+END_SRC
-
-* helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
-
-[2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
-
-#+BEGIN_SRC lisp
-;; (use-package helm-gtags
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;     (setq helm-gtags-ignore-case t
-;;           helm-gtags-auto-update t
-;;           helm-gtags-use-input-at-cursor t
-;;           helm-gtags-pulse-at-cursor t
-;;           helm-gtags-prefix-key "\C-cg"
-;;           helm-gtags-suggested-key-mapping t))
-;; 
-;; (defun set-helm-gtags-keybindings ()
-;;   (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
-;;   (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
-;;   (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
-;; 
-;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
-#+END_SRC
-
-* helm-ag [2019-01-01 周二 00:15:53]
-https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
-
-* ggtags [2019-01-01 周二 00:32:00]
-
-| key     | function              | 说明                       |
-|---------+-----------------------+----------------------------|
-| M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
-| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
-| M-]     | ggtags-find-reference | 查询调用了tag的reference   |
-
-#+BEGIN_SRC emacs-lisp
-(use-package ggtags
-  :ensure t
-  :defer t)
-
-(add-hook 'c-mode-common-hook
-  (lambda ()
-    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-      (progn
-        ;; (linum-mode 1)
-        ;; (flycheck-mode 1)
-        (ggtags-mode 1)))))
-#+END_SRC
-
-* window-number
-
-和 window-numbering.el 不是一个package。
-直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
-
-#+BEGIN_SRC emacs-lisp
-(use-package window-numbering
-  :ensure t
-  ;; :defer t
-  :config (window-numbering-mode 1))
-  ;; :init (window-numbering-mode 1))
-#+END_SRC
-
-* undotree
-
-#+BEGIN_SRC emacs-lisp
-(use-package undo-tree
-  :ensure t
-  :defer t
-  :diminish undo-tree-mode
-  :config
-    (progn
-      (global-undo-tree-mode)
-      (setq undo-tree-visualizer-timestamps t)
-      (setq undo-tree-visualizer-diff t)))
-
-(defalias 'redo 'undo-tree-redo)
-;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
-;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
-;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
-(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
-#+END_SRC
-
-* python
-
-pdb setup, note the python version
-#+BEGIN_SRC lisp
-;; (setq pdb-path 'c:/Python/Python36/Lib/pdb.py
-;;        gud-pdb-command-name (symbol-name pdb-path))
-;;  (defadvice pdb (before gud-query-cmdline activate)
-;;    "Provide a better default command line when called interactively."
-;;    (interactive
-;;     (list (gud-query-cmdline pdb-path
-;;                  (file-name-nondirectory buffer-file-name)))))
-#+end_src
-
-
-[2018-11-29 周四 16:15:34]
-#+BEGIN_SRC emacs-lisp
-;; (setq python-shell-interpreter "python"
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt")
-
-;; (use-package python-mode
-;;   :mode (("SConstruct\\'" . python-mode)
-;;          ("SConscript\\'" . python-mode)
-;;          ("\\.py\\'"      . python-mode))
-;;   :defer t
-;;   ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
-;;   :init (elpy-enable)
-;;   :config
-;;   (use-package elpy
-;;     :ensure t
-;;     :defer t
-;;     :init
-;;     (progn
-;;       ;;(setq elpy-rpc-python-command "python3")
-;;       (elpy-use-ipython)
-;;       ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
-;;       ;; use flycheck not flymake with elpy
-;;       ;; (when (require 'flycheck nil t)
-;;       ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;       ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
-;;       )))
-
-;; (elpy-enable)
-
-(use-package elpy
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (advice-add 'python-mode :before 'elpy-enable))
-  :config
-  (progn
-    ;; (setq elpy-rpc-python-command "python3")
-    ;; (elpy-use-ipython)
-    ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
-    ;; use flycheck not flymake with elpy
-    (when (require 'flycheck nil t)
-      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-      (add-hook 'elpy-mode-hook 'flycheck-mode))
-    ))
-#+END_SRC
-
-** autopep8 [2019-05-17 周五 11:29:37]
-
-M-x elpy-config的检查结果
-
-用pip安装autopep8
-#+BEGIN_SRC sh
-pip install autopep8
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package py-autopep8
-  :ensure t
-  :defer t
-  :init
-    (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
-#+END_SRC
-
-** Flycheck - http://www.flycheck.org
-[2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
-
-flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake支持更多的语言，更多的第三方工具。检查python的语法，要先安装flake8。
-#+BEGIN_SRC sh
-pip install flake8
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (use-package flycheck
-;;   :ensure t
-;;   :defer t
-;;   ;; :init
-;;   ;;   (when (require 'flycheck nil t)
-;;   ;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;   ;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
-;;   )
-#+END_SRC
-
-* common setting - 可以推迟启动的
 ** 去掉启动欢迎界面
 
 #+begin_src emacs-lisp
@@ -1076,6 +715,368 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 ;;       ;; (powerline-default-theme)))
 ;;       ;; (powerline-center-evil-theme)))
 #+END_SRC
+* evil
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :defer t
+  :init (evil-mode 1)
+  :config 
+    (progn
+      ;; (eval-after-load 'helm-gtags
+      ;;    '(progn
+      ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
+      (eval-after-load 'ggtags
+        '(progn
+           (evil-make-overriding-map ggtags-mode-map 'normal)
+           ;; force update evil keymaps after ggtags-mode loaded
+           (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
+      (setq evil-want-visual-char-semi-exclusive t)))
+#+end_src
+
+为ggtags修改默认的键绑定，可以用 M-.
+https://blog.csdn.net/Levi_Huang/article/details/84288493
+
+[2019-01-01 周二 00:08:18] helm-gtags不能在statusbar上显示tag的值，这点不如ggtags好用。先用ggtags吧。
+
+* helm
+[2014-09-16 09:27:15]
+
+;; (require 'helm-config)
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  ;; :ensure t
+  :defer t
+  :diminish helm-mode
+  ;; :config
+  ;; (helm-mode +1)
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode)
+  )
+  :bind (("C-c m" . helm-mini)
+         ("C-c n" . helm-mini)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ;; ("C-h a" . helm-apropos)
+         ;; ("C-x c o" . helm-occur)
+         ;; ("C-x c s" . helm-swoop)
+         ;; ("C-x c y" . helm-yas-complete)
+         ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ;; ("C-x c b" . my/helm-do-grep-book-notes)
+         ;; ("<tab>" . 'helm-execute-persistent-action)
+         ;; ("C-i" . 'helm-execute-persistent-action)
+         ;; ("C-z" . 'helm-select-action)
+         ("C-x c SPC" . helm-all-mark-rings)))
+
+;; (use-package helm-config)
+;; (helm-mode 1)
+;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
+;; (global-set-key (kbd "C-c m") 'helm-mini)
+;; (global-set-key (kbd "C-c n") 'helm-mini)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+;          helm-input-idle-delay 0.01  ; this actually updates things
+;                                      ; reeeelatively quickly.
+
+;; [2019-01-11 周五 23:48:42]
+;; (setq helm-quick-update t
+;;       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
+;;       helm-ff-skip-boring-files t)
+      
+(ido-mode -1)  ;; Turn off ido mode in case I enabled it accidentally
+#+END_SRC
+
+** Search buffers by major-mode
+
++ multi buffer search
+  1. *C-c h* 调出helm-mini buffer
+  1. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
+  1. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
+  1. 按 *C-s* search file content
+  1. *C-j* 打开buffer并跳到选择的行
+  1. *enter* 打开文件
+
++ M-SPC/Esc-SPC/C-@ :: 用 *M-SPC* 最方便了，mark当前的buffer，如果已经mark了会取消，先C-n/C-p移动到要取消的file
+
++ M-u :: 取消全部mark的buffer
++ M-a :: mark全部的buffer
+     
+[2014-09-16 18:24:22] multi search也可以这样，如在所有buffer中org-mode的buffer，然后找 *org @string_to_find 按 *C-s* 就ok了。
+
++ C-n/C-p/up/down :: 在helm的选项中上下移动
++ left/right :: 在source间移动， *C-o* 移动到下一个source，source就是group分类，如buffer，最近访问的buffer，创建buffer。
++ M-p/M-n :: 命令历史
+             
++ mini buffer
+  + M-S-d :: kill buffer and quit，就是 *M-D* 。
+  + C-c d :: kill buffer without quitting
+             
+[2014-09-17 15:06:59] 为什么用了heml以后连dired+的 *R* rename file都变成helm的了？
+
+[2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
+
+** grep
+
+=helm-resume= 恢复上次的command
+
+*** Grep from helm-find-files
+
+From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
+menu with tab and choose grep. A prefix arg will launch recursive
+grep.
+
+NOTE:You can now launch grep with (C-u) M-g s without switching to the
+action pannel.
+
+*** Grep thing at point
+
+Before lauching helm, put your cursor on the start of symbol or sexp
+you will want to grep. Then launch helm-do-grep or helm-find-files,
+and when in the grep prompt hit C-w as many time as needed.
+
+光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
+可以跟着grep这个word后面的word。
+
+*** Grep persistent action
+
+As always, C-z will bring you in the buffer corresponding to the file
+you are grepping. Well nothing new, but using C-u C-z will record this
+place in the mark-ring. So if you want to come back later to these
+places, there is no need to grep again, you will find all these places
+in the mark-ring. Accessing the mark-ring in Emacs is really
+inconvenient, fortunately, you will find in helm-config
+helm-all-mark-ring which is a mark-ring browser
+(helm-command-prefix-key C-c SPACE). helm-all-mark-ring is in helm
+menu also, in the tool section.
+
+TIP: Bind helm-all-mark-ring to C-c SPACE.
+
+在org mode下，无效。
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
+#+END_SRC
+
+NOTE: helm-all-mark-ring handle global-mark-ring also.
+
+* helm-swoop
+[2014-11-21 周五 09:26:34]
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-swoop
+  :ensure t
+  :defer t
+  :bind (("M-i" . helm-swoop)
+         ("M-I" . helm-swoop-back-to-last-point)
+         ("C-c M-i" . helm-multi-swoop)
+         ("C-x M-i" . helm-multi-swoop-all)))
+#+END_SRC
+
+* helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
+
+[2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
+
+#+BEGIN_SRC lisp
+;; (use-package helm-gtags
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;     (setq helm-gtags-ignore-case t
+;;           helm-gtags-auto-update t
+;;           helm-gtags-use-input-at-cursor t
+;;           helm-gtags-pulse-at-cursor t
+;;           helm-gtags-prefix-key "\C-cg"
+;;           helm-gtags-suggested-key-mapping t))
+;; 
+;; (defun set-helm-gtags-keybindings ()
+;;   (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+;;   (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
+;;   (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
+;; 
+;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
+#+END_SRC
+
+* helm-ag [2019-01-01 周二 00:15:53]
+https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
+
+* ggtags [2019-01-01 周二 00:32:00]
+
+| key     | function              | 说明                       |
+|---------+-----------------------+----------------------------|
+| M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
+| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
+| M-]     | ggtags-find-reference | 查询调用了tag的reference   |
+
+#+BEGIN_SRC emacs-lisp
+(use-package ggtags
+  :ensure t
+  :defer t)
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+      (progn
+        ;; (linum-mode 1)
+        ;; (flycheck-mode 1)
+        (ggtags-mode 1)))))
+#+END_SRC
+
+* window-number
+
+和 window-numbering.el 不是一个package。
+直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
+
+#+BEGIN_SRC emacs-lisp
+(use-package window-numbering
+  :ensure t
+  ;; :defer t
+  :config (window-numbering-mode 1))
+  ;; :init (window-numbering-mode 1))
+#+END_SRC
+
+* undotree
+
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :defer t
+  :diminish undo-tree-mode
+  :config
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)))
+
+(defalias 'redo 'undo-tree-redo)
+;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
+;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
+;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
+(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
+#+END_SRC
+
+* python
+
+pdb setup, note the python version
+#+BEGIN_SRC lisp
+;; (setq pdb-path 'c:/Python/Python36/Lib/pdb.py
+;;        gud-pdb-command-name (symbol-name pdb-path))
+;;  (defadvice pdb (before gud-query-cmdline activate)
+;;    "Provide a better default command line when called interactively."
+;;    (interactive
+;;     (list (gud-query-cmdline pdb-path
+;;                  (file-name-nondirectory buffer-file-name)))))
+#+end_src
+
+
+[2018-11-29 周四 16:15:34]
+#+BEGIN_SRC emacs-lisp
+;; (setq python-shell-interpreter "python"
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+
+;; (use-package python-mode
+;;   :mode (("SConstruct\\'" . python-mode)
+;;          ("SConscript\\'" . python-mode)
+;;          ("\\.py\\'"      . python-mode))
+;;   :defer t
+;;   ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
+;;   :init (elpy-enable)
+;;   :config
+;;   (use-package elpy
+;;     :ensure t
+;;     :defer t
+;;     :init
+;;     (progn
+;;       ;;(setq elpy-rpc-python-command "python3")
+;;       (elpy-use-ipython)
+;;       ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+;;       ;; use flycheck not flymake with elpy
+;;       ;; (when (require 'flycheck nil t)
+;;       ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;       ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
+;;       )))
+
+;; (elpy-enable)
+
+(use-package elpy
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (advice-add 'python-mode :before 'elpy-enable))
+  :config
+  (progn
+    ;; (setq elpy-rpc-python-command "python3")
+    ;; (elpy-use-ipython)
+    ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+    ;; use flycheck not flymake with elpy
+    (when (require 'flycheck nil t)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode))
+    ))
+#+END_SRC
+
+** autopep8 [2019-05-17 周五 11:29:37]
+
+M-x elpy-config的检查结果
+
+用pip安装autopep8
+#+BEGIN_SRC sh
+pip install autopep8
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package py-autopep8
+  :ensure t
+  :defer t
+  :init
+    (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+#+END_SRC
+
+** Flycheck - http://www.flycheck.org
+[2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
+
+flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake支持更多的语言，更多的第三方工具。检查python的语法，要先安装flake8。
+#+BEGIN_SRC sh
+pip install flake8
+#+END_SRC
+
+#+BEGIN_SRC lisp
+;; (use-package flycheck
+;;   :ensure t
+;;   :defer t
+;;   ;; :init
+;;   ;;   (when (require 'flycheck nil t)
+;;   ;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   ;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+;;   )
+#+END_SRC
+
 * scheme [2017-03-02 周四 21:27:47]
 
 ;; (require 'cmuscheme)
