@@ -750,19 +750,36 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
   ;; :ensure t
   :defer t
   :diminish helm-mode
-  ;; :config
-  ;; (helm-mode +1)
+  :config
+  (progn
+    ;; rebind tab to run persistent action
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    ;; make TAB works in terminal
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+    ;; list actions using C-z
+    (define-key helm-map (kbd "C-z")  'helm-select-action)
+  )
   :init
   (progn
     (require 'helm-config)
-    (setq helm-candidate-number-limit 100)
     ;; From https://gist.github.com/antifuchs/9238468
     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
+          ;;
+          helm-candidate-number-limit 100
+          ;; this actually updates things reeeelatively quickly.
+          helm-input-idle-delay 0.01
+          ;; Remove extraineous helm UI elements
+          helm-display-header-line nil
+          ;; Default helm window sizes, 太小了，看着不舒服，不设为nil了。
+          ;; helm-display-buffer-default-width nil
+          ;; helm-display-buffer-default-height 0.25
+          ;;
           helm-yas-display-key-on-candidate t
+          ;;
           helm-quick-update t
+          ;;
           helm-M-x-requires-pattern nil
+          ;;
           helm-ff-skip-boring-files t)
     (helm-mode)
   )
@@ -793,9 +810,9 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 ;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
 ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 ;setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
 ;          helm-input-idle-delay 0.01  ; this actually updates things
@@ -805,8 +822,9 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 ;; (setq helm-quick-update t
 ;;       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
 ;;       helm-ff-skip-boring-files t)
-      
-(ido-mode -1)  ;; Turn off ido mode in case I enabled it accidentally
+
+;; Turn off ido mode in case I enabled it accidentally
+(ido-mode -1)
 #+END_SRC
 
 ** Search buffers by major-mode
