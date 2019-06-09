@@ -899,7 +899,7 @@ TIP: Bind helm-all-mark-ring to C-c SPACE.
 
 NOTE: helm-all-mark-ring handle global-mark-ring also.
 
-* helm-swoop
+** helm-swoop
 [2014-11-21 周五 09:26:34]
 
 #+BEGIN_SRC emacs-lisp
@@ -912,7 +912,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
          ("C-x M-i" . helm-multi-swoop-all)))
 #+END_SRC
 
-* helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
+** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
 
 [2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
 
@@ -939,7 +939,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 ;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
 #+END_SRC
 
-* helm-ag [2019-01-01 周二 00:15:53]
+** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
 
 * ggtags [2019-01-01 周二 00:32:00]
