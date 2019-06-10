@@ -105,7 +105,7 @@ decrease this. If you experience stuttering, increase this.")
  '(custom-safe-themes (quote (default)))
  '(package-selected-packages
    (quote
-    (flycheck-posframe dired-k helm-ag doom-modeline doom-themes py-autopep8 flycheck pyim ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish color-theme-solarized benchmark-init))))
+    (flycheck-posframe dired-k helm-ag doom-modeline doom-themes py-autopep8 flycheck pyim ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy diminish benchmark-init))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
