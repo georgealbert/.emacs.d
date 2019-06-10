@@ -1,6 +1,9 @@
 ﻿
 * basic setting
 ** elpa
+#+BEGIN_SRC emacs-lisp
+;;; Albert.el -*- lexical-binding: t; -*-
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -34,7 +37,8 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 #+BEGIN_SRC emacs-lisp
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(if (eq system-type 'windows-nt)
+(if (or (eq system-type 'x)
+        (eq system-type 'windows-nt))
   ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
   (toggle-frame-maximized)
 
@@ -52,25 +56,156 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体针对一个特定的字体大小。
 #+BEGIN_SRC emacs-lisp
-;; (if (eq system-type 'windows-nt)
-;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-;;   (progn
-;;     ;; Setting English Font
-;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
-;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
-;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
-;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
-;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
-;; 
-;;     ;; Chinese Font
-;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;             (set-fontset-font (frame-parameter nil 'font)
-;;                           charset
-;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
+;; (create-fontset-from-fontset-spec
+;;        "-misc-all_the_icons-medium-r-normal--*-*-*-*-*-*-fontset-alltheicons,
+;;     iso10646-0:-misc-all-the-icons-medium-r-normal--*-*-*-*-*-iso10646-0")
+
+ (if (eq window-system 'x)
+   ;; (setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+   (progn
+     ;; "alltheicon"  U+e900 - U+e94f
+     ;; (set-fontset-font "fontset-standard"
+     ;; (set-fontset-font t
+
+     ;; (set-fontset-font "fontset-default"
+     ;;                  (cons (decode-char 'ucs #xe908)
+     ;;                        (decode-char 'ucs #xe94f))
+     ;;               "all-the-icons")
+                   ;; "-outline-alltheicons-medium-r-normal--*-*-*-*-*-*-iso10646-0")
+                   ;; "all-the-icons")
+
+     ;; Setting English Font
+     ;; (set-face-attribute 'default nil :font "Ubuntu Mono 16")
+     ;; (set-face-attribute 'default nil :font "monaco")
+     ;; (set-face-attribute 'default nil :font "Consolas 16")
+
+     ;; (set-set-font "fontset-standard" "wqy-unibit-mono")
+     (set-face-attribute 'default nil :font "wqy-unibit-mono")
+     ;; (set-face-attribute 'default nil :font "unibit 16")
+     ;; (set-face-attribute 'default nil :font "luxi mono 14")
+
+     ;; for all-the-icons.el, emacs will coredump
+     ;; (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
+     ;; (set-fontset-font t 'unicode (font-spec :family "Micosoft Yahei") nil 'append)
+     ;; (set-fontset-font t 'gb2312 (font-spec :family "Micosoft Yahei") nil 'append)
+     ;; (set-fontset-font t 'han (font-spec :family "Micosoft Yahei") nil 'append)
+ 
+    ;; (set-fontset-font "fontset-default"
+    ;;                   (cons (decode-char 'ucs #xf000)
+    ;;                         (decode-char 'ucs #xf0ff))
+    ;;                   "github-octicons")
+
+     ;; Chinese Font
+     (dolist (charset '(kana han symbol cjk-misc bopomofo))
+             (set-fontset-font (frame-parameter nil 'font)
+                           charset
+                             (font-spec :family "wqy-unibit-mono" :size 16)))))
+                           ;;  (font-spec :family "Microsoft Yahei" :size 16)))))
+                           ;; (font-spec :family "consolas_with_yahei" :size 10)))))
+                           ;; (font-spec :family "fangsong ti")))))
+                           ;;  (font-spec :family "fangsong ti" :size 10)))))
+                           ;; (font-spec :family "unibit" :size 16)))))
+                           ;; (font-spec :family "Microsoft Yahei" :size 10)))))
+
+(defun albert/set-font (english chinese english-size chinese-size)
+  (set-face-attribute 'default nil :font
+                      (format   "%s:pixelsize=%d"  english english-size))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family chinese :size chinese-size))))
+                      
+(defun qiang-make-font-string (font-name font-size)
+  (if (and (stringp font-size)
+           (equal ":" (string (elt font-size 0))))
+      (format "%s%s" font-name font-size)
+    (format "%s %s" font-name font-size)))
+
+(defun qiang-set-font (english-fonts
+                       english-font-size
+                       chinese-fonts
+                       &optional chinese-font-size)
+  "english-font-size could be set to \":pixelsize=18\" or a integer.
+If set/leave chinese-font-size to nil, it will follow english-font-size"
+  (require 'cl) ; for find if
+  (let ((en-font (qiang-make-font-string
+                  (find-if #'qiang-font-existsp english-fonts)
+                  english-font-size))
+        (zh-font (font-spec :family (find-if #'qiang-font-existsp chinese-fonts)
+                            :size chinese-font-size)))
+
+    ;; Set the default English font
+    ;;
+    ;; The following 2 method cannot make the font settig work in new frames.
+    ;; (set-default-font "Consolas:pixelsize=18")
+    ;; (add-to-list 'default-frame-alist '(font . "Consolas:pixelsize=18"))
+    ;; We have to use set-face-attribute
+    (message "Set English Font to %s" en-font)
+    (set-face-attribute 'default nil :font en-font)
+
+    ;; Set Chinese font
+    ;; Do not use 'unicode charset, it will cause the English font setting invalid
+    (message "Set Chinese Font to %s" zh-font)
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset zh-font))))
+                        
+(defun qiang-font-existsp (font)
+  (if (null (x-list-fonts font))
+      nil
+    t))
+
+(defun albert/set-font (english chinese english-size chinese-size)
+  (set-face-attribute 'default nil :font
+                      (format   "%s:pixelsize=%d"  english english-size))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family chinese :size chinese-size))))
+                      
+(defun qiang-make-font-string (font-name font-size)
+  (if (and (stringp font-size)
+           (equal ":" (string (elt font-size 0))))
+      (format "%s%s" font-name font-size)
+    (format "%s %s" font-name font-size)))
+
+(defun qiang-set-font (english-fonts
+                       english-font-size
+                       chinese-fonts
+                       &optional chinese-font-size)
+  "english-font-size could be set to \":pixelsize=18\" or a integer.
+If set/leave chinese-font-size to nil, it will follow english-font-size"
+  (require 'cl) ; for find if
+  (let ((en-font (qiang-make-font-string
+                  (find-if #'qiang-font-existsp english-fonts)
+                  english-font-size))
+        (zh-font (font-spec :family (find-if #'qiang-font-existsp chinese-fonts)
+                            :size chinese-font-size)))
+
+    ;; Set the default English font
+    ;;
+    ;; The following 2 method cannot make the font settig work in new frames.
+    ;; (set-default-font "Consolas:pixelsize=18")
+    ;; (add-to-list 'default-frame-alist '(font . "Consolas:pixelsize=18"))
+    ;; We have to use set-face-attribute
+    (message "Set English Font to %s" en-font)
+    (set-face-attribute 'default nil :font en-font)
+
+    ;; Set Chinese font
+    ;; Do not use 'unicode charset, it will cause the English font setting invalid
+    (message "Set Chinese Font to %s" zh-font)
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset zh-font))))
+                        
+(defun qiang-font-existsp (font)
+  (if (null (x-list-fonts font))
+      nil
+    t))
+
+;; (qiang-set-font
+;;  '("Consolas_with_Yahei" "unibit" "wqy" "wqy-unibit-mono" "DejaVu Sans Mono" "Monospace" "Ubuntu Mono" "Courier New") ":pixelsize=16"
+;;  '("Consolas_with_Yahei" "unibit" "文泉驿等宽微米黑" "wqy-unibit-mono" "黑体" "Microsoft Yahei" "新宋体" "宋体"))
+                      
+;; (albert/set-font "unibit" "unibit" 16 16)
 
 (defun albert-notebook-font()
   "Config font on HP zhan66."
@@ -101,17 +236,19 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
                             charset
                             (font-spec :family "Microsoft Yahei" :size 16))))))
 
-;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-;; s2319的宽度是509mm X 286mm
-(if (>= (display-mm-width) 509)
-  (albert-s2319-font))
-
-;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
-;; HP ZHAN66 309mm X 175mm
-;; Thinkpad T430 4xxmm X 20xmm?
-(if (<= (display-mm-width) 500)
-  (albert-notebook-font))
+(if (eq system-type 'windows-nt)
+  (progn
+    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+    ;; s2319的宽度是509mm X 286mm
+    (if (>= (display-mm-width) 509)
+      (albert-s2319-font))
+    
+    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+    ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
+    ;; HP ZHAN66 309mm X 175mm
+    ;; Thinkpad T430 4xxmm X 20xmm?
+    (if (<= (display-mm-width) 500)
+      (albert-notebook-font))))
 
 ;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
 ;; 效果不好。
@@ -155,20 +292,39 @@ Source Code Variable 无法和Yahei配合对齐。
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 
+;; (setq current-language-environment "UTF-8")
+;; (setq default-input-method "chinese-py")
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+
 (if (eq system-type 'windows-nt)
-  (setq file-name-coding-system 'gbk)
-)
+  (progn
+    (setq file-name-coding-system 'gbk)))
 #+END_SRC
 
 * evil
 
 #+BEGIN_SRC emacs-lisp
+;; [2018-12-28 Fri 14:48:49] tab will work on linux term
+(setq evil-want-C-i-jump nil)
 (use-package evil
   :ensure t
+  :defer t
   :init (evil-mode 1)
   :config 
     (progn
-      (setq evil-want-visual-char-semi-exclusive t)))
+      (setq evil-want-visual-char-semi-exclusive t))
+      ;; (define-key evil-insert-state-map (kbd "S-<insert>") 'clipboard-yank)
+      (eval-after-load 'ggtags
+        '(progn
+           (evil-make-overriding-map ggtags-mode-map 'normal)
+           ;; force update evil keymaps after ggtags-mode loaded
+           (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps))))
+
+(when evil-want-C-i-jump
+  (define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward))
 #+end_src
 
 * helm
@@ -177,8 +333,14 @@ Source Code Variable 无法和Yahei配合对齐。
 ;; (require 'helm-config)
 
 #+BEGIN_SRC emacs-lisp
-(use-package helm-config)
-(helm-mode 1)
+(use-package helm
+  :diminish helm-mode
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (use-package helm-config)
+    (helm-mode 1)))
 ;; (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "C-c m") 'helm-mini)
 (global-set-key (kbd "C-c n") 'helm-mini)
@@ -270,7 +432,7 @@ TIP: Bind helm-all-mark-ring to C-c SPACE.
 
 NOTE: helm-all-mark-ring handle global-mark-ring also.
 
-* helm-swoop
+** helm-swoop
 [2014-11-21 周五 09:26:34]
 
 #+BEGIN_SRC emacs-lisp
@@ -281,6 +443,22 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
         ("M-I" . helm-swoop-back-to-last-point)
         ( "C-c M-i" . helm-multi-swoop)
         ( "C-x M-i" . helm-multi-swoop-all)))
+#+END_SRC
+
+* ggtags
+
+#+BEGIN_SRC emacs-lisp
+(use-package ggtags
+  :defer t
+  :ensure t)
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+      (progn
+        ;; (linum-mode 1)
+        (flycheck-mode 1)
+        (ggtags-mode 1)))))
 #+END_SRC
 
 * window-number
@@ -299,6 +477,7 @@ different from window-numbering.el
 
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
+  :ensure t
   :defer t
   :config
     (progn
@@ -326,34 +505,85 @@ pdb setup, note the python version
 ;;                  (file-name-nondirectory buffer-file-name)))))
 #+end_src
 
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'after-init-hook #'global-flycheck-mode);
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(use-package py-autopep8
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+#+END_SRC
+
 [2018-11-29 周四 16:15:34]
 #+BEGIN_SRC emacs-lisp
 (setq python-shell-interpreter "ipython"
 ;; (setq python-shell-interpreter "python"
       python-shell-interpreter-args "-i --simple-prompt")
 
-(use-package python-mode
-  :mode (("SConstruct\\'" . python-mode)
-         ("SConscript\\'" . python-mode)
-         ("\\.py\\'"      . python-mode))
+;; (use-package python-mode
+;;   :mode (("SConstruct\\'" . python-mode)
+;;          ("SConscript\\'" . python-mode)
+;;          ("\\.py\\'"      . python-mode))
+;;   :defer t
+;;   ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
+;;   ;; :init (elpy-enable)
+;;   ;; :config
+;; )
+(use-package elpy
+  :ensure t
   :defer t
-  ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
-  :init (elpy-enable)
+  :init
+  (progn
+    (advice-add 'python-mode :before 'elpy-enable))
   :config
-  (use-package elpy
-    :ensure t
-    :defer t
-    :init
-    (progn
-      ;;(setq elpy-rpc-python-command "python3")
-      (elpy-use-ipython)
-      ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
-      ;; use flycheck not flymake with elpy
-      (when (require 'flycheck nil t)
-        (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-        (add-hook 'elpy-mode-hook 'flycheck-mode)))))
+  (progn
+    ;; (advice-add 'python-mode :before 'elpy-enable)
+    ;;(setq elpy-rpc-python-command "python3")
+    ;; (elpy-use-ipython)
+    ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
+    ;; use flycheck not flymake with elpy
+    (when (require 'flycheck nil t)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode))))
+    ;; ))
+
+;; (use-package flycheck
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;     (when (require 'flycheck nil t)
+;;       (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;       (add-hook 'elpy-mode-hook 'flycheck-mode)))
 
 ;; (elpy-enable)
+
+#+END_SRC
+
+* flycheck [2019-06-10 Mon 15:07:51]
+#+BEGIN_SRC emacs-lisp
+;; tools/flycheck/autoload.el
+(defun +flycheck|init-popups ()
+  "Activate `flycheck-posframe-mode' if available and in GUI Emacs.
+Activate `flycheck-popup-tip-mode' otherwise.
+Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
+  (unless (and (bound-and-true-p lsp-ui-mode)
+               lsp-ui-sideline-enable)
+    (if (and (fboundp 'flycheck-posframe-mode)
+             (display-graphic-p))
+        (flycheck-posframe-mode +1)
+      (flycheck-popup-tip-mode +1))))
+
+(use-package flycheck-posframe
+  ;; :when (and EMACS26+ (featurep! +childframe))
+  :defer t
+  :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
+  :config
+  (setq flycheck-posframe-warning-prefix "☎ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix "✕ "))
 #+END_SRC
 
 * basic setting - 可以推迟启动的
@@ -375,7 +605,8 @@ pdb setup, note the python version
 #+begin_src emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
+(if (or (eq window-system 'x) (eq window-system 'w32))
+  (scroll-bar-mode -1))
 #+end_src
 
 ** 光标靠近鼠标的时候，让鼠标自动让开，别挡住视线
@@ -429,11 +660,50 @@ emacs24自带的最喜欢的theme。
 [2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
 (load-theme 'deeper-blue t)
+;; (load-theme 'tango-dark t)
+;; (load-theme 'manoj-dark t)
 #+END_SRC
 
 ;; (load-theme 'solarized t)
 ;; (load-theme 'tango-dark t)
 ;; (load-theme 'manoj-dark t)
+
+*** doom-themes [2019-05-21 周二 09:19:44]
+昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
+和现在使用的deeper-blue差异太大，就自己增加了一个theme。
+
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :disabled t
+  ;; :defer t
+  ;; :init
+  :config
+  (progn
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
+                                       ; 禁用粗体，否则org-mode的outline字体太难看
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    ;; 在load-theme之前设置，让modeline更亮一点，
+    ;; [2019-05-21 周二 16:54:51] 不知道改了doom-deeper-blue-theme.el的哪个地方，貌似modeline中的文件名能看清楚了。
+    (setq doom-deeper-blue-brighter-modeline nil)
+
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
+    ;; (load-theme 'doom-one t)
+    (load-theme 'doom-deeper-blue t)
+    
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (doom-themes-treemacs-config)
+    
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
+#+END_SRC
 
 ** Diredplus
 
@@ -452,25 +722,56 @@ before dired+ loaded
   :defer t)
 #+END_SRC
 
+** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
+#+BEGIN_SRC emacs-lisp
+(use-package dired-k
+  ;; :unless (featurep! +ranger)
+  :defer t
+  :hook (dired-initial-position . dired-k)
+  :hook (dired-after-readin . dired-k-no-revert)
+  :config
+  (defun +dired*interrupt-process (orig-fn &rest args)
+    "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
+.git/index.lock files."
+    (cl-letf (((symbol-function #'kill-process)
+               (symbol-function #'interrupt-process)))
+      (apply orig-fn args)))
+  (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
+
+  (defun +dired*dired-k-highlight (orig-fn &rest args)
+    "Butt out if the requested directory is remote (i.e. through tramp)."
+    (unless (file-remote-p default-directory)
+      (apply orig-fn args)))
+  (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
+#+END_SRC
+
 ** 多行代码的注释/反注释
 
 其实可以考虑vim的 =<leader> + \= 进行注释的。
 #+BEGIN_SRC emacs-lisp
-(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+(if (eq system-type 'windows-nt)
+  (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region))
 
-(defun my-comment-or-uncomment-region (beg end &optional arg)  
-  (interactive (if (use-region-p)  
-                   (list (region-beginning) (region-end) nil)  
-                   (list (line-beginning-position)  
-                       (line-beginning-position 2))))  
-  (comment-or-uncomment-region beg end arg)  
-)  
-(global-set-key [remap comment-or-uncomment-region] 'my-comment-or-uncomment-region)  
+(if (eq system-type 'gnu/linux)
+  (global-set-key [?\C-c ?\C-_] 'comment-or-uncomment-region))
+
+;; for x11 [2019-01-30 Wed 12:34:48]
+(if (eq window-system 'x)
+  (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region))
+
+(defun albert|comment-or-uncomment-region (beg end &optional arg)
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end) nil)
+                   (list (line-beginning-position)
+                       (line-beginning-position 2))))
+  (comment-or-uncomment-region beg end arg))
+
+(global-set-key [remap comment-or-uncomment-region] 'albert|comment-or-uncomment-region)
 #+END_SRC
 
 ** ibuffer
 
-使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
+使用emacs时经常需要管理多个buffer， =/C-x C-b/= 的默认界面太过简陋。emacs事实上已
 经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
 
 启用ibuffer支持，增强 *buffer*, 用了helm，ibuffer可以退休了。  
@@ -509,6 +810,17 @@ from sacha chua
 ;;另外一个显示行号的插件，个人更喜欢的风格
 ;(require 'linum)
 ;(global-linum-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; (global-display-line-numbers-mode t)
+(setq display-line-numbers-width-start 5)
+
+(add-hook 'org-mode-hook 'display-line-numbers-mode)
+(add-hook 'python-mode-hook 'display-line-numbers-mode)
+(add-hook 'c-mode-common-hook 'display-line-numbers-mode)
+(add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
+(add-hook 'sh-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 
 ** F5插入当前时间
@@ -550,14 +862,13 @@ Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tri
   (interactive)
   (split-window-vertically)
   (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
+
 (defun hsplit-last-buffer ()
   (interactive)
-   (split-window-horizontally)
+  (split-window-horizontally)
   (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
 
 (global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
 (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
@@ -688,6 +999,11 @@ smart-mode-line和powerline都不好用，速度太慢。
 
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
+  :ensure t
+  :defer t)
+
+(use-package highlight-parentheses
+  :ensure t
   :defer t)
 
 ;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
@@ -716,6 +1032,67 @@ smart-mode-line和powerline都不好用，速度太慢。
 ;;          )))
 ;;       ;; (powerline-default-theme)))
 ;;       ;; (powerline-center-evil-theme)))
+#+END_SRC
+
+*** doom-modeline
+[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
+如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
+
+https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
+
++ 优点
+  1. 速度很快
+  2. 显示很漂亮
+     
++ Install
+  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
+
+//#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
+(use-package all-the-icons
+  :ensure t
+  ;; :disabled t
+  :defer t
+  )
+  
+(use-package doom-modeline
+  :ensure t
+  ;; :disabled t
+  :defer t
+  ;; :init
+  :config
+  (progn
+    ;; How tall the mode-line should be (only respected in GUI Emacs).
+    (setq doom-modeline-height 25)
+    
+    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+    (setq doom-modeline-bar-width 3)
+
+    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+    (setq doom-modeline-icon t)
+    
+    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-major-mode-icon t)
+    
+    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+    (setq doom-modeline-major-mode-color-icon t)
+    
+    ;; Whether display minor modes or not. Non-nil to display in mode-line.
+    (setq doom-modeline-minor-modes nil)
+    
+    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+    (setq inhibit-compacting-font-caches t)
+    
+    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+    (setq doom-modeline-lsp nil)
+    
+    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+    (setq doom-modeline-mu4e nil)
+    
+    ;; Whether display irc notifications or not. Requires `circe' package.
+    (setq doom-modeline-irc nil)
+    )
+  :hook (after-init . doom-modeline-mode))
 #+END_SRC
 
 * scheme [2017-03-02 周四 21:27:47]
@@ -785,6 +1162,7 @@ smart-mode-line和powerline都不好用，速度太慢。
 
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
+  :ensure t
   :defer t)
 #+END_SRC
 * markdown-mode
@@ -871,12 +1249,180 @@ process monitor在用了vpn后会导致机器hang。
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
+  :ensure t
   :defer t
   :config
     (progn
       (setq magit-last-seen-setup-instructions "1.4.0")))
 #+end_src
 
+* gdb
+#+BEGIN_SRC emacs-lisp
+;; set gdb multi-windows when open
+
+(setq gdb-many-windows t)
+
+;; customize the gdb multi-windows
+; (defadvice gdb-setup-windows (after my-setup-gdb-windows activate)
+;   "My GDB UI"
+;   (gdb-get-buffer-create 'gdb-stack-buffer)
+;   (set-window-dedicated-p (selected-window) nil)
+;   (switch-to-buffer gud-comint-buffer)
+;   (delete-other-windows)
+;   (let ((win0 (selected-window))
+;         (win1 (split-window nil nil 'left))  ;; code and output
+;         (win2 (split-window-below (/ (* (window-height) 3) 4)))  ;; stack
+;         )
+;     (select-window win2)
+;     (gdb-set-window-buffer (gdb-stack-buffer-name))
+;     (select-window win1)
+;     (set-window-buffer
+;      win1
+;      (if gud-last-last-frame
+;          (gud-find-file (car gud-last-last-frame))
+;        (if gdb-main-file
+;            (gud-find-file gdb-main-file)
+;          ;; Put buffer list in window if we
+;          ;; can't find a source file.
+;          (list-buffers-noselect))))
+;     (setq gdb-source-window (selected-window))
+;     (let ((win3 (split-window nil (/ (* (window-height) 3) 4))))  ;; io
+;       (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-inferior-io) nil win3))
+;     (select-window win0)
+;     ))
+#+END_SRC
+
+* pyim 
+https://github.com/tumashu/pyim
+#+BEGIN_SRC emacs-lisp
+(use-package pyim
+  :disabled t
+  :ensure t
+  ;; :demand t
+  :config
+  ;; 激活 basedict 拼音词库
+  (use-package pyim-basedict
+    :ensure nil
+    :config (pyim-basedict-enable))
+
+  (progn
+    (setq default-input-method "pyim")
+
+    (setq pyim-default-scheme 'quanpin)
+
+    ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+    ;; 我自己使用的中英文动态切换规则是：
+    ;; 1. 光标只有在注释里面时，才可以输入中文。
+    ;; 2. 光标前是汉字字符时，才能输入中文。
+    ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+    (setq-default pyim-english-input-switch-functions
+                  '(pyim-probe-dynamic-english
+                    pyim-probe-isearch-mode
+                    pyim-probe-program-mode
+                    pyim-probe-org-structure-template))
+
+    (setq-default pyim-punctuation-half-width-functions
+                  '(pyim-probe-punctuation-line-beginning
+                    pyim-probe-punctuation-after-punctuation))
+
+    ;; 开启拼音搜索功能
+    (pyim-isearch-mode 1)
+
+    ;; 使用 pupup-el 来绘制选词框, 如果用 emacs26, 建议设置
+    ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+    ;; 手动安装 posframe 包。
+    (setq pyim-page-tooltip 'popup)
+
+    ;; 选词框显示5个候选词
+    (setq pyim-page-length 9)
+
+    (setq pyim-fuzzy-pinyin-alist
+      '(("en" "eng")
+        ("in" "ing")
+        ("ch" "c")
+        ("sh" "s")
+        ("zh" "z")))
+  )
+
+  :bind
+  (("M-j" . pyim-convert-code-at-point) ;与 pyim-probe-dynamic-english 配合
+   ("C-;" . pyim-delete-word-from-personal-buffer))
+)
+
+
+#+END_SRC
+* c-mode coding style [2019-01-05 周六 11:20:13]
+
+emacs使用google-c-style
+google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
+
+http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
+
+elpa中安装就可以了。
+
+下载下来，放在emacs.d目录下，然后在.emacs配置文件中添加几行：
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (setq c-default-style "k&r" c-basic-offset 4)
+            (c-set-offset 'substatement-open 0)))
+
+#+BEGIN_SRC emacs-lisp
+
+(setq c-default-style "linux")
+(setq c-basic-offset 4)
+
+(setq default-tab-width 4)
+(setq-default indent-tabs-mode nil)
+
+;; (setq tab-width 4)
+;; (setq tab-stop-list ())
+#+END_SRC
+* xclipboard [2019-01-30 Wed 11:14:55]
+
+use mouse-2 middle wheel to paste text to emacs.
+#+BEGIN_SRC emacs-lisp
+;(case system-type
+;  ('darwin (unless window-system
+;             (setq interprogram-cut-function
+;                   (lambda (text &optional push)
+;                     (let* ((process-connection-type nil)
+;                            (pbproxy (start-process "pbcopy" "pbcopy" "/usr/bin/pbcopy")))
+;                       (process-send-string pbproxy text)
+;                       (process-send-eof pbproxy))))))
+;  ('gnu/linux (progn
+;                (setq x-select-enable-clipboard t)
+;                (defun xsel-cut-function (text &optional push)
+;                  (with-temp-buffer
+;                    (insert text)
+;                    (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")))
+;                (defun xsel-paste-function()
+;
+;                  (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
+;                    (unless (string= (car kill-ring) xsel-output)
+;                      xsel-output )))
+;                (setq interprogram-cut-function 'xsel-cut-function)
+;                (setq interprogram-paste-function 'xsel-paste-function))))
+
+;(if (eq system-type 'gnu/linux)
+;  (progn
+;     (setq x-select-enable-clipboard t)
+;     (defun xsel-cut-function (text &optional push)
+;       (with-temp-buffer
+;         (insert text)
+;         (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")))
+;     (defun xsel-paste-function()
+;       (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
+;         (unless (string= (car kill-ring) xsel-output)
+;           xsel-output )))
+;     (setq interprogram-cut-function 'xsel-cut-function)
+;     (setq interprogram-paste-function 'xsel-paste-function)))
+#+END_SRC
 * 现在没用的配置
 ** 反显选中区域
 

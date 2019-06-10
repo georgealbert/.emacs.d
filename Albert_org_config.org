@@ -2,6 +2,22 @@
 * org mode
 http://doc.norang.ca/org-mode.html
 ** 4.2 Org-Mode Setup
+
+#+BEGIN_SRC emacs-lisp
+;;; Albert_org_config.el -*- lexical-binding: t; -*-
+;; (defvar org-modules
+;; (setq org-modules
+;;   '(org-w3m
+;;     ;; org-bbdb
+;;     ;; org-bibtex
+;;     org-docview
+;;     ;; org-gnus
+;;     org-info
+;;     ;; org-irc
+;;     ;; org-mhe
+;;     ;; org-rmail
+;;     ))
+#+END_SRC
 org-mode is the default mode for .org, .org_archive, and .txt files.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
@@ -1391,6 +1407,65 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+#+END_SRC
+
+*** 18.17 Handling Encryption
+
+I used to keep my encrypted data like account passwords in a separate GPG encrypted file. Now I keep them in my org-mode files with a special tag instead. Encrypted data is kept in the org-mode file that it is associated with.
+
+org-crypt allows you to tag headings with a special tag crypt and org-mode can keep data in these headings encrypted when saved to disk. You decrypt the heading temporarily when you need access to the data and org-mode re-encrypts the heading as soon as you save the file.
+
+I use the following setup for encryption:
+
+org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
+[2019-06-05 周三 10:03:54] 为什么用use-package会报错?
+#+BEGIN_SRC emacs-lisp
+;; (use-package org-crypt
+;;   ;; :defer t
+;;   :ensure nil
+;;   :init
+;;     (progn
+;;       ; Encrypt all entries before saving
+;;       (org-crypt-use-before-save-magic)
+;;       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;;       ; GPG key to use for encryption
+;;       ;; (setq org-crypt-key "F0B66B40")
+;;       ;; 使用对称加密算法加密
+;;       (setq org-crypt-key nil)
+;;     ))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; (setq epg-gpg-home-directory "c:/Users/Albert/AppData/Roaming/gnupg")
+;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
+(require 'org-crypt)
+; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+; GPG key to use for encryption
+;; (setq org-crypt-key "F0B66B40")
+;; 使用对称加密算法加密
+;; (setq org-crypt-key nil)
+;; (setq org-crypt-key "3B0195C3")
+(setq org-crypt-key "39DBDC76")
+#+END_SRC
+
+M-x org-decrypt-entry will prompt for the passphrase associated with your encryption key and replace the encrypted data where the point is with the plaintext details for your encrypted entry. As soon as you save the file the data is re-encrypted for your key. Encrypting does not require prompting for the passphrase - that's only for looking at the plain text version of the data.
+
+I tend to have a single level 1 encrypted entry per file (like * Passwords). I prevent the crypt tag from using inheritance so that I don't have encrypted data inside encrypted data. I found M-x org-decrypt-entries prompting for the passphrase to decrypt data over and over again (once per entry to decrypt) too inconvenient.
+
+I leave my entries encrypted unless I have to look up data - I decrypt on demand and then save the file again to re-encrypt the data. This keeps the data in plain text as short as possible.
+**** 18.17.1 Auto Save Files
+
+Emacs temporarily saves your buffer in an autosave file while you are editing your org buffer and a sufficient number of changes have accumulated. If you have decrypted subtrees in your buffer these will be written to disk in plain text which possibly leaks sensitive information. To combat this org-mode now asks if you want to disable the autosave functionality in this buffer.
+
+Personally I really like the autosave feature. 99% of the time my encrypted entries are perfectly safe to write to the autosave file since they are still encrypted. I tend to decrypt an entry, read the details for what I need to look up and then immediately save the file again with C-x C-s which re-encrypts the entry immediately. This pretty much guarantees that my autosave files never have decrypted data stored in them.
+
+I disable the default org crypt auto-save setting as follows:
+
+#+BEGIN_SRC emacs-lisp
+;; (setq org-crypt-disable-auto-save nil)
+(setq org-crypt-disable-auto-save 'encrypt)
 #+END_SRC
 
 *** 18.44 Showing source block syntax highlighting
