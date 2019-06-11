@@ -54,7 +54,8 @@ determine the exact padding."
 
   ;; name        default   256       16
   ((bg         '("#181a26" "#1c1c1c" nil             )) ;; background from deeper-blue-theme.el
-   (bg-alt     '("#181a26" nil       nil             ))
+   ;; (bg-alt     '("#181a26" nil       nil             ))
+   (bg-alt     '("gray30" nil       nil             ))
    (base0      '("#100e23" "black"   "black"         ))
    (base1      '("#292F37" "#1e1e1e" "brightblack"   ))
    (base2      '("#103050" "#2e2e2e" "brightblack"   )) ;; region(#103050)
