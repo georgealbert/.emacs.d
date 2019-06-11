@@ -50,14 +50,22 @@ decrease this. If you experience stuttering, increase this.")
 (add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
 ;; 显示加载时间
-(defvar albert-init-time 'nil)
-(defun albert-display-benchmark()
+(defvar albert-init-time 'nil
+  "The time it took, in seconds, for Doom Emacs to initialize.")
+
+(defun albert|display-benchmark()
+  "Display a benchmark, showing number of packages and modules, and how quickly
+they were loaded at startup."
   (message "Emacs loaded %s packages in %.03fs"
            (length package-activated-list)
            (or albert-init-time
                (setq albert-init-time
                      (float-time (time-subtract (current-time) before-init-time))))))
-(add-hook 'emacs-startup-hook #'albert-display-benchmark)
+
+(add-hook 'emacs-startup-hook #'albert|display-benchmark)
+
+;; doom-emacs用的hook是 window-setup-hook
+;; (add-hook 'window-setup-hook #'albert|display-benchmark)
 ;; end of 启动优化
 
 ;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
@@ -110,7 +118,7 @@ decrease this. If you experience stuttering, increase this.")
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
    (quote
-    (neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
+    (flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
  '(safe-local-variable-values (quote ((encoding . UTF-8))))
  '(vc-annotate-background "#181a26")
  '(vc-annotate-color-map
@@ -134,15 +142,9 @@ decrease this. If you experience stuttering, increase this.")
     (cons 340 "#ffe4b5")
     (cons 360 "#ffe4b5")))
  '(vc-annotate-very-old-color nil))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
+ '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button))))))
