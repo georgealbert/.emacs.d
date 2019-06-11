@@ -166,7 +166,6 @@ CJK (Chinese, Japanese, Korean)
                             (font-spec :family "Microsoft Yahei" :size 16))))))
                             ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
 
-                           
 (if (eq window-system 'w32)
   (progn
     ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
@@ -207,7 +206,7 @@ Source Code Variable 无法和Yahei配合对齐。
 
 [2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
 
-** Performace problem
+** Performace problem on windows
 
 [2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
 如果打开会看见很多QueryBasicInformation这样的调用.
@@ -275,8 +274,7 @@ Source Code Variable 无法和Yahei配合对齐。
 ** minibuffer
 [2014-09-12 09:24:17]
 
-It often displays so much information, even temporarily, that it is nice to give
-it some room to breath.
+It often displays so much information, even temporarily, that it is nice to give it some room to breath.
 
 #+BEGIN_SRC emacs-lisp
 (setq resize-mini-windows t)
@@ -354,9 +352,9 @@ Jedit Grey 灰底黑字也可以
     (doom-themes-visual-bell-config)
     
     ;; Enable custom neotree theme (all-the-icons must be installed!)
-    (doom-themes-neotree-config)
+    ;; (doom-themes-neotree-config)
     ;; or for treemacs users
-    (doom-themes-treemacs-config)
+    ;; (doom-themes-treemacs-config)
     
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
@@ -372,10 +370,34 @@ before dired+ loaded
 
 也可以按 =(= 打开或关闭detail显示。
 
+[2019-06-09 周日 22:15:45] 如果要用dired+的话，把 =:defer t= 注释掉。现在用vanilla dired就ok了。dired+在delete files的时候，显示不完全。而且在emacs启动时会加载一些package。
 #+BEGIN_SRC emacs-lisp
 (setq diredp-hide-details-initially-flag nil)
 (use-package dired+
   :defer t)
+#+END_SRC
+** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-k
+  ;; :unless (featurep! +ranger)
+  :defer t
+  :hook (dired-initial-position . dired-k)
+  :hook (dired-after-readin . dired-k-no-revert)
+  :config
+  (defun +dired*interrupt-process (orig-fn &rest args)
+    "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
+.git/index.lock files."
+    (cl-letf (((symbol-function #'kill-process)
+               (symbol-function #'interrupt-process)))
+      (apply orig-fn args)))
+  (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
+
+  (defun +dired*dired-k-highlight (orig-fn &rest args)
+    "Butt out if the requested directory is remote (i.e. through tramp)."
+    (unless (file-remote-p default-directory)
+      (apply orig-fn args)))
+  (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
 #+END_SRC
 
 ** 多行代码的注释/反注释
@@ -966,6 +988,26 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
         (ggtags-mode 1)))))
 #+END_SRC
 
+** global [2019-06-11 周二 17:11:26]
+GNU Global具有强大的跨平台能力，无论是在Linux还是在BSD系统还是Windows都可以使用。GNU Global具有以下功能：
+
++ 内置6种语法分析程序（定义和引用）C，C++，Yacc，Java，PHP4和汇编
++ 通过ctags的语法解析插件可以支持25中语言（定义和引用）Awk, Dos batch, COBOL, C, C++, C#, Erlang,Fortran, Java, JavaScript, Lisp, Lua, Pascal, Perl, PHP, Python, Ruby, Matlab, OCaml, Scheme, Tcl, TeX, Verilog, Vhdl and Vim
+
+GNU Global使用
+命令行下使用GLOBAL，在开始使用前可以看一下FAQ
+#+BEGIN_SRC sh
+$less /your/gtags/path/FAQ
+#+END_SRC
+
+首先我们需要使用gtags命令来产生代码树的tag文件，例如当我想要浏览内核代码时，只需要执行以下命令
+#+BEGIN_SRC sh
+$cd ~/code/kernel/
+$gtags -v
+#+END_SRC
+
+执行完之后会发现，在kernel目录下产生了3个tag文件分别是GPATH，GRTAGS，GTAGS，GTAGS是定义的数据库，GRTAGS是引用的数据库，GPATH是路径的数据库。
+
 * window-number
 
 和 window-numbering.el 不是一个package。
@@ -1096,6 +1138,28 @@ pip install flake8
 ;;   )
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+;; tools/flycheck/autoload.el
+(defun +flycheck|init-popups ()
+  "Activate `flycheck-posframe-mode' if available and in GUI Emacs.
+Activate `flycheck-popup-tip-mode' otherwise.
+Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
+  (unless (and (bound-and-true-p lsp-ui-mode)
+               lsp-ui-sideline-enable)
+    (if (and (fboundp 'flycheck-posframe-mode)
+             (display-graphic-p))
+        (flycheck-posframe-mode +1)
+      (flycheck-popup-tip-mode +1))))
+
+(use-package flycheck-posframe
+  ;; :when (and EMACS26+ (featurep! +childframe))
+  :defer t
+  :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
+  :config
+  (setq flycheck-posframe-warning-prefix "☎ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix "✕ "))
+#+END_SRC
 * scheme [2017-03-02 周四 21:27:47]
 
 ;; (require 'cmuscheme)
@@ -3027,6 +3091,7 @@ Always hilight the current agenda line
           'append)
 #+END_SRC
 
+[2019-06-10 周一 12:36:03] 去掉mode-line中的clock高亮设置的背景色。
 #+BEGIN_SRC emacs-lisp
 ;; The following custom-set-faces create the highlights
 (custom-set-faces
@@ -3034,7 +3099,8 @@ Always hilight the current agenda line
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button)))) t))
+ ;; '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button)))) t))
+ '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button)))) t))
 #+END_SRC
 
 **** 18.3.2 Keep tasks with timestamps visible on the global todo lists
