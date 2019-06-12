@@ -400,22 +400,6 @@ before dired+ loaded
   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
 #+END_SRC
 
-** 多行代码的注释/反注释
-
-其实可以考虑vim的 =<leader> + \= 进行注释的。
-#+BEGIN_SRC emacs-lisp
-(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
-
-(defun my-comment-or-uncomment-region (beg end &optional arg)  
-  (interactive (if (use-region-p)  
-                   (list (region-beginning) (region-end) nil)  
-                   (list (line-beginning-position)  
-                       (line-beginning-position 2))))  
-  (comment-or-uncomment-region beg end arg)  
-)  
-(global-set-key [remap comment-or-uncomment-region] 'my-comment-or-uncomment-region)  
-#+END_SRC
-
 ** ibuffer
 
 使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
@@ -426,14 +410,6 @@ before dired+ loaded
 (use-package ibuffer
   :defer t
   :config (global-set-key (kbd "C-x C-b") 'ibuffer))
-#+END_SRC
-
-** 字体放大缩小
-
-from sacha chua
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
 
 ** 显示匹配的括号
@@ -606,139 +582,6 @@ Turn on save place so that when opening a file, the cursor will be at the last p
   :init (save-place-mode 1))
 #+END_SRC
 
-** mode-line
-*** doom-modeline
-[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
-如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
-
-https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
-
-+ 优点
-  1. 速度很快
-  2. 显示很漂亮
-     
-+ Install
-  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
-
-#+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :ensure t
-  :defer t)
-  
-(use-package doom-modeline
-  :ensure t
-  :defer t
-  ;; :init
-  :config
-  (progn
-    ;; How tall the mode-line should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-height 20)
-    
-    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-bar-width 3)
-
-    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-    (setq doom-modeline-icon t)
-    
-    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-    (setq doom-modeline-major-mode-icon t)
-    
-    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
-    (setq doom-modeline-major-mode-color-icon t)
-    
-    ;; Whether display minor modes or not. Non-nil to display in mode-line.
-    (setq doom-modeline-minor-modes nil)
-    
-    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-    (setq inhibit-compacting-font-caches t)
-    
-    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
-    (setq doom-modeline-lsp nil)
-    
-    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
-    (setq doom-modeline-mu4e nil)
-    
-    ;; Whether display irc notifications or not. Requires `circe' package.
-    (setq doom-modeline-irc nil)
-    )
-  :hook (after-init . doom-modeline-mode))
-#+END_SRC
-
-*** modeline中的时间格式设置
-[2014-11-21 周五 10:35:59]
-
-在modeline上显示日期时间。
-
-;; (setq display-time-24hr-format t)
-;; (setq display-time-use-mail-icon t)
-;; (setq display-time-interval 60)
-
-#+BEGIN_SRC emacs-lisp
-(setq display-time-day-and-date t)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
-(display-time)
-#+END_SRC
-
-*** 不显示一些无用的minor mode
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :ensure t
-  :defer t)
-
-;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
-(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
-
-(diminish 'visual-line-mode)
-#+END_SRC
-
-*** smart-mode-line和powerline都不好用，速度太慢。
-#+BEGIN_SRC lisp
-;; (use-package smart-mode-line
-;;   :disabled t
-;;   :init
-;;   (progn
-;;   (setq-default
-;;    mode-line-format 
-;;    '("%e"
-;;      mode-line-front-space
-;;      mode-line-mule-info
-;;      mode-line-client
-;;      mode-line-modified
-;;      mode-line-remote
-;;      mode-line-frame-identification
-;;      mode-line-buffer-identification
-;;      "   "
-;;      mode-line-position
-;;      (vc-mode vc-mode)
-;;      "  "
-;;      mode-line-modes
-;;      mode-line-misc-info
-;;      mode-line-end-spaces))))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (use-package powerline
-;;   :disabled t
-;;   :ensure t
-;;   :config 
-;;     (progn
-;;        (powerline-center-evil-theme)
-;;        (setq powerline-arrow-shape 'arrow)
-;;        (custom-set-faces  
-;;          '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
-;;          ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
-;;          )))
-;;       ;; (powerline-default-theme)))
-;;       ;; (powerline-center-evil-theme)))
-#+END_SRC
 * editor
 ** evil
 
@@ -968,104 +811,112 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 *** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
 
-* ggtags [2019-01-01 周二 00:32:00]
+* lang
+** 多行代码的注释/反注释
 
-| key     | function              | 说明                       |
-|---------+-----------------------+----------------------------|
-| M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
-| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
-| M-]     | ggtags-find-reference | 查询调用了tag的reference   |
-
+其实可以考虑vim的 =<leader> + \= 进行注释的。
 #+BEGIN_SRC emacs-lisp
-(use-package ggtags
-  :ensure t
-  :defer t)
+(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+
+(defun my-comment-or-uncomment-region (beg end &optional arg)  
+  (interactive (if (use-region-p)  
+                   (list (region-beginning) (region-end) nil)  
+                   (list (line-beginning-position)  
+                       (line-beginning-position 2))))  
+  (comment-or-uncomment-region beg end arg)  
+)  
+(global-set-key [remap comment-or-uncomment-region] 'my-comment-or-uncomment-region)  
+#+END_SRC
+
+** c-mode coding style [2019-01-05 周六 11:20:13]
+
+emacs使用google-c-style
+google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
+
+http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
+
+elpa中安装就可以了。
+
+下载下来，放在emacs.d目录下，然后在.emacs配置文件中添加几行：
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
 (add-hook 'c-mode-common-hook
-  (lambda ()
-    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-      (progn
-        ;; (linum-mode 1)
-        ;; (flycheck-mode 1)
-        (ggtags-mode 1)))))
+          (lambda ()
+            (setq c-default-style "k&r" c-basic-offset 4)
+            (c-set-offset 'substatement-open 0)))
+
+#+BEGIN_SRC emacs-lisp
+(setq c-default-style "linux")
+(setq c-basic-offset 4)
+
+(setq default-tab-width 4)
+(setq-default indent-tabs-mode nil)
+
+;; (setq tab-width 4)
+;; (setq tab-stop-list ())
 #+END_SRC
 
-** global [2019-06-11 周二 17:11:26]
-GNU Global具有强大的跨平台能力，无论是在Linux还是在BSD系统还是Windows都可以使用。GNU Global具有以下功能：
-
-+ 内置6种语法分析程序（定义和引用）C，C++，Yacc，Java，PHP4和汇编
-+ 通过ctags的语法解析插件可以支持25中语言（定义和引用）Awk, Dos batch, COBOL, C, C++, C#, Erlang,Fortran, Java, JavaScript, Lisp, Lua, Pascal, Perl, PHP, Python, Ruby, Matlab, OCaml, Scheme, Tcl, TeX, Verilog, Vhdl and Vim
-
-GNU Global使用
-命令行下使用GLOBAL，在开始使用前可以看一下FAQ
-#+BEGIN_SRC sh
-$less /your/gtags/path/FAQ
-#+END_SRC
-
-首先我们需要使用gtags命令来产生代码树的tag文件，例如当我想要浏览内核代码时，只需要执行以下命令
-#+BEGIN_SRC sh
-$cd ~/code/kernel/
-$gtags -v
-#+END_SRC
-
-执行完之后会发现，在kernel目录下产生了3个tag文件分别是GPATH，GRTAGS，GTAGS，GTAGS是定义的数据库，GRTAGS是引用的数据库，GPATH是路径的数据库。
-
-* window-number
-
-和 window-numbering.el 不是一个package。
-直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
-
+*** flycheck在虚机中的配置 [2019-05-24 周五 14:39:51]
+在笔记本上就不配置c-mode的flycheck了，没有gcc。add-hook在ggtags的配置里面enable了flycheck-mode。
 #+BEGIN_SRC lisp
-(use-package window-numbering
-  :ensure t
-  :config (window-numbering-mode 1))
-  ;; :init (window-numbering-mode 1))
+;; 在目录中建 .dir-locals.el
+((c-mode . ((flycheck-gcc-include-path . (;; list
+                                          ;; (expand-file-name "~/tengine")
+                                          "/home/albert/tengine/src/"
+                                          "/home/albert/tengine/src/core/")))))
 #+END_SRC
 
-* winum [2019-06-12 周三 09:50:41]
-从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
+** emacs-lisp
+[2014-09-27 01:58:44]
+
+lisp语言入门，写得很不错，找不到原出处了 http://www.cnblogs.com/suiqirui19872005/archive/2007/12/05/984517.html
+
+emacs自带的帮助也不错，可以了解emacs lisp的特点，和common lisp的区别慢慢体会。
+
+*** 括号高亮
+http://www.emacswiki.org/emacs/HighlightParentheses
+
+http://ergoemacs.org/emacs/emacs_editing_lisp.html
 
 #+BEGIN_SRC emacs-lisp
-(use-package winum
-  :config (winum-mode +1)
-  :init
-  (setq winum-keymap
-      (let ((map (make-sparse-keymap)))
-        (define-key map (kbd "C-`") 'winum-select-window-by-number)
-        (define-key map (kbd "C-²") 'winum-select-window-by-number)
-        (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-        (define-key map (kbd "M-1") 'winum-select-window-1)
-        (define-key map (kbd "M-2") 'winum-select-window-2)
-        (define-key map (kbd "M-3") 'winum-select-window-3)
-        (define-key map (kbd "M-4") 'winum-select-window-4)
-        (define-key map (kbd "M-5") 'winum-select-window-5)
-        (define-key map (kbd "M-6") 'winum-select-window-6)
-        (define-key map (kbd "M-7") 'winum-select-window-7)
-        (define-key map (kbd "M-8") 'winum-select-window-8)
-        map)))
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+             (highlight-parentheses-mode)))
+
+(define-globalized-minor-mode global-highlight-parentheses-mode
+  highlight-parentheses-mode
+  (lambda ()
+    (highlight-parentheses-mode t)))
+(global-highlight-parentheses-mode t)
 #+END_SRC
 
-* undotree
+*** eldoc-mode
+http://sachachua.com/blog/2014/06/read-lisp-tweak-emacs-beginner-24-understand-emacs-lisp-code/
+
+turns on eldoc-mode, which displays the argument list for the current function. 
+You can move your cursor around to see argument lists for other functions.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+#+END_SRC
+
+** markdown-mode
 
 #+BEGIN_SRC emacs-lisp
-(use-package undo-tree
-  :ensure t
+(use-package markdown-mode
+  ;; :ensure t
   :defer t
-  :diminish undo-tree-mode
-  :config
-    (progn
-      (global-undo-tree-mode)
-      (setq undo-tree-visualizer-timestamps t)
-      (setq undo-tree-visualizer-diff t)))
-
-(defalias 'redo 'undo-tree-redo)
-;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
-;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
-;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
-(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 #+END_SRC
-
-* python
+  
+** python
 
 pdb setup, note the python version
 #+BEGIN_SRC lisp
@@ -1128,7 +979,7 @@ pdb setup, note the python version
     ))
 #+END_SRC
 
-** autopep8 [2019-05-17 周五 11:29:37]
+*** autopep8 [2019-05-17 周五 11:29:37]
 
 =M-x elpy-config= 的检查结果
 
@@ -1145,48 +996,7 @@ pip install autopep8
     (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
 #+END_SRC
 
-** Flycheck - http://www.flycheck.org
-[2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
-
-flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake支持更多的语言，更多的第三方工具。检查python的语法，要先安装flake8。
-#+BEGIN_SRC sh
-pip install flake8
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (use-package flycheck
-;;   :ensure t
-;;   :defer t
-;;   ;; :init
-;;   ;;   (when (require 'flycheck nil t)
-;;   ;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;   ;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
-;;   )
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;; tools/flycheck/autoload.el
-(defun +flycheck|init-popups ()
-  "Activate `flycheck-posframe-mode' if available and in GUI Emacs.
-Activate `flycheck-popup-tip-mode' otherwise.
-Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
-  (unless (and (bound-and-true-p lsp-ui-mode)
-               lsp-ui-sideline-enable)
-    (if (and (fboundp 'flycheck-posframe-mode)
-             (display-graphic-p))
-        (flycheck-posframe-mode +1)
-      (flycheck-popup-tip-mode +1))))
-
-(use-package flycheck-posframe
-  ;; :when (and EMACS26+ (featurep! +childframe))
-  :defer t
-  :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
-  :config
-  (setq flycheck-posframe-warning-prefix "☎ "
-        flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix "✕ "))
-#+END_SRC
-* scheme [2017-03-02 周四 21:27:47]
+** scheme [2017-03-02 周四 21:27:47]
 
 ;; (require 'cmuscheme)
 #+BEGIN_SRC emacs-lisp
@@ -1248,170 +1058,328 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   :defer t
   :init (global-paren-face-mode 1))
 #+END_SRC
-* web-mode [2018-02-08 周四 17:03:42]
+** web-mode [2018-02-08 周四 17:03:42]
 
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
   :ensure t
   :defer t)
 #+END_SRC
-* markdown-mode
+* ui
+** 字体放大缩小
 
+from sacha chua
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-  ;; :ensure t
-  :defer t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
-  
-* xah-find [2018-09-29 周六 22:09:48]
-http://ergoemacs.org/emacs/elisp-xah-find-text.html
 
-1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
-2. 不知道是怎么找的扩展名，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
+** mode-line
+*** doom-modeline
+[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
+如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
+
+https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
+
++ 优点
+  1. 速度很快
+  2. 显示很漂亮
+     
++ Install
+  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
 
 #+BEGIN_SRC emacs-lisp
-(use-package xah-find
+(use-package all-the-icons
   :ensure t
   :defer t)
-#+END_SRC
-
-* emacs-lisp
-[2014-09-27 01:58:44]
-
-lisp语言入门，写得很不错，找不到原出处了 http://www.cnblogs.com/suiqirui19872005/archive/2007/12/05/984517.html
-
-emacs自带的帮助也不错，可以了解emacs lisp的特点，和common lisp的区别慢慢体会。
-
-** 括号高亮
-http://www.emacswiki.org/emacs/HighlightParentheses
-
-http://ergoemacs.org/emacs/emacs_editing_lisp.html
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (highlight-parentheses-mode)))
-
-(define-globalized-minor-mode global-highlight-parentheses-mode
-  highlight-parentheses-mode
-  (lambda ()
-    (highlight-parentheses-mode t)))
-(global-highlight-parentheses-mode t)
-#+END_SRC
-
-** eldoc-mode
-http://sachachua.com/blog/2014/06/read-lisp-tweak-emacs-beginner-24-understand-emacs-lisp-code/
-
-turns on eldoc-mode, which displays the argument list for the current function. 
-You can move your cursor around to see argument lists for other functions.
-#+BEGIN_SRC emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-#+END_SRC
-
-* magit
-[2014-09-11 10:22:26] disable emacs自带的vc，用 *process monitor* 看，vc每次打开都会把支持的版本管理都查一遍，会比较慢。
-但是去掉了以后，magit没法在status bar上显示文件在哪个branch上了。哎。
-
-process monitor在用了vpn后会导致机器hang。
-
-把vc disable后会快不少，还是去了吧。
-
-#+BEGIN_SRC lisp
-;; (custom-set-variables
-;; '(vc-handled-backends (quote (Git))))
-
-;; disable default vc
-;(setq vc-handled-backends nil)
-#+end_src
-
-[2014-09-11 14:25:06] 即使更新到了0908的magit，仍然发现有多次调用git.exe的情况， *magit-status* 还是慢
-把git的path设置到最前面，貌似速度也没快多少，最多0.001s吧。
-
-;;(if (eq system-type 'windows-nt)
-;;    (progn
-;;      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
-;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
-
-#+BEGIN_SRC emacs-lisp
-(use-package magit
+  
+(use-package doom-modeline
   :ensure t
   :defer t
+  ;; :init
   :config
-    (progn
-      (setq magit-last-seen-setup-instructions "1.4.0")))
-#+end_src
+  (progn
+    ;; How tall the mode-line should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-height 20)
+    
+    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-bar-width 3)
 
-* tramp on windows [2018-12-28 周五 11:14:58]
-
-+ new session
-  /plink:user@host:/path/to/your/file/on/server
-
-+ saved session
-  /plinkx:sessname:/path/to/your/file/on/server
-  
-+ 不需要设置 tramp-shell-prompt-pattern 和 tramp-password-end-of-line 。
-+ plink要在PATH里有。
-
-[2019-06-08 周六 01:44:30] tramp在windows上没法用，连虚机都能感觉到实在是太卡了。
-#+BEGIN_SRC lisp
-(use-package tramp
-  :defer t
-  :config
-    (progn
-      (setq exec-path (cons "E:/tools/putty" exec-path))
-      ;; (setq tramp-password-end-of-line "\r\n")
-      ;; (setq tramp-shell-prompt-pattern "^[ $]# +")
-      (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-      (setq tramp-default-method "plink")))
+    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+    (setq doom-modeline-icon t)
+    
+    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-major-mode-icon t)
+    
+    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+    (setq doom-modeline-major-mode-color-icon t)
+    
+    ;; Whether display minor modes or not. Non-nil to display in mode-line.
+    (setq doom-modeline-minor-modes nil)
+    
+    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+    (setq inhibit-compacting-font-caches t)
+    
+    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+    (setq doom-modeline-lsp nil)
+    
+    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+    (setq doom-modeline-mu4e nil)
+    
+    ;; Whether display irc notifications or not. Requires `circe' package.
+    (setq doom-modeline-irc nil)
+    )
+  :hook (after-init . doom-modeline-mode))
 #+END_SRC
-* c-mode coding style [2019-01-05 周六 11:20:13]
 
-emacs使用google-c-style
-google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
+*** modeline中的时间格式设置
+[2014-11-21 周五 10:35:59]
 
-http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
+在modeline上显示日期时间。
 
-elpa中安装就可以了。
-
-下载下来，放在emacs.d目录下，然后在.emacs配置文件中添加几行：
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
-(require 'google-c-style)
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (setq c-default-style "k&r" c-basic-offset 4)
-            (c-set-offset 'substatement-open 0)))
+;; (setq display-time-24hr-format t)
+;; (setq display-time-use-mail-icon t)
+;; (setq display-time-interval 60)
 
 #+BEGIN_SRC emacs-lisp
-(setq c-default-style "linux")
-(setq c-basic-offset 4)
-
-(setq default-tab-width 4)
-(setq-default indent-tabs-mode nil)
-
-;; (setq tab-width 4)
-;; (setq tab-stop-list ())
+(setq display-time-day-and-date t)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
 #+END_SRC
 
-** flycheck在虚机中的配置 [2019-05-24 周五 14:39:51]
-在笔记本上就不配置c-mode的flycheck了，没有gcc。add-hook在ggtags的配置里面enable了flycheck-mode。
+*** 不显示一些无用的minor mode
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :defer t)
+
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
+
+(diminish 'visual-line-mode)
+#+END_SRC
+
+*** smart-mode-line和powerline都不好用，速度太慢。
 #+BEGIN_SRC lisp
-;; 在目录中建 .dir-locals.el
-((c-mode . ((flycheck-gcc-include-path . (;; list
-                                          ;; (expand-file-name "~/tengine")
-                                          "/home/albert/tengine/src/"
-                                          "/home/albert/tengine/src/core/")))))
+;; (use-package smart-mode-line
+;;   :disabled t
+;;   :init
+;;   (progn
+;;   (setq-default
+;;    mode-line-format 
+;;    '("%e"
+;;      mode-line-front-space
+;;      mode-line-mule-info
+;;      mode-line-client
+;;      mode-line-modified
+;;      mode-line-remote
+;;      mode-line-frame-identification
+;;      mode-line-buffer-identification
+;;      "   "
+;;      mode-line-position
+;;      (vc-mode vc-mode)
+;;      "  "
+;;      mode-line-modes
+;;      mode-line-misc-info
+;;      mode-line-end-spaces))))
 #+END_SRC
 
-* graphviz [2019-01-08 周二 18:13:47]
+#+BEGIN_SRC lisp
+;; (use-package powerline
+;;   :disabled t
+;;   :ensure t
+;;   :config 
+;;     (progn
+;;        (powerline-center-evil-theme)
+;;        (setq powerline-arrow-shape 'arrow)
+;;        (custom-set-faces  
+;;          '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
+;;          ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
+;;          )))
+;;       ;; (powerline-default-theme)))
+;;       ;; (powerline-center-evil-theme)))
+#+END_SRC
+** treemacs [2019-06-12 周三 09:41:52]
+
++ =q= 退出treemacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      t
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         30)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+#+END_SRC
+** window-select
+*** window-number - 不用了
+
+和 window-numbering.el 不是一个package。
+直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
+
+#+BEGIN_SRC lisp
+(use-package window-numbering
+  :ensure t
+  :config (window-numbering-mode 1))
+  ;; :init (window-numbering-mode 1))
+#+END_SRC
+
+*** winum [2019-06-12 周三 09:50:41]
+从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
+
+#+BEGIN_SRC emacs-lisp
+(use-package winum
+  :config (winum-mode +1)
+  :init
+  (setq winum-keymap
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "C-`") 'winum-select-window-by-number)
+        (define-key map (kbd "C-²") 'winum-select-window-by-number)
+        (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+        (define-key map (kbd "M-1") 'winum-select-window-1)
+        (define-key map (kbd "M-2") 'winum-select-window-2)
+        (define-key map (kbd "M-3") 'winum-select-window-3)
+        (define-key map (kbd "M-4") 'winum-select-window-4)
+        (define-key map (kbd "M-5") 'winum-select-window-5)
+        (define-key map (kbd "M-6") 'winum-select-window-6)
+        (define-key map (kbd "M-7") 'winum-select-window-7)
+        (define-key map (kbd "M-8") 'winum-select-window-8)
+        map)))
+#+END_SRC
+
+** winner-mode [2019-01-09 周三 18:04:05]
+winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
+
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :defer t)
+ 
+;; (winner-mode t)
+#+END_SRC
+* tools [2019-06-12 周三 09:41:28]
+** Flycheck - http://www.flycheck.org
+[2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
+
+flycheck是emacs的语法检查工具，用来替换老的flymake，比flymake支持更多的语言，更多的第三方工具。检查python的语法，要先安装flake8。
+#+BEGIN_SRC sh
+pip install flake8
+#+END_SRC
+
+#+BEGIN_SRC lisp
+;; (use-package flycheck
+;;   :ensure t
+;;   :defer t
+;;   ;; :init
+;;   ;;   (when (require 'flycheck nil t)
+;;   ;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   ;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+;;   )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; tools/flycheck/autoload.el
+(defun +flycheck|init-popups ()
+  "Activate `flycheck-posframe-mode' if available and in GUI Emacs.
+Activate `flycheck-popup-tip-mode' otherwise.
+Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
+  (unless (and (bound-and-true-p lsp-ui-mode)
+               lsp-ui-sideline-enable)
+    (if (and (fboundp 'flycheck-posframe-mode)
+             (display-graphic-p))
+        (flycheck-posframe-mode +1)
+      (flycheck-popup-tip-mode +1))))
+
+(use-package flycheck-posframe
+  ;; :when (and EMACS26+ (featurep! +childframe))
+  :defer t
+  :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
+  :config
+  (setq flycheck-posframe-warning-prefix "☎ "
+        flycheck-posframe-info-prefix "··· "
+        flycheck-posframe-error-prefix "✕ "))
+#+END_SRC
+** graphviz [2019-01-08 周二 18:13:47]
 
 主要思想是解析 =buffer= 中选中的文本，通过正则表达式来匹配，从中找到 struct name 以及其中的各个 fields， 最后根据 =dot= 语法将其组成一个 =subgraph= 。其实应该有更好的方法（比如通过 CEDET 的 Semantic 解析结果来做），但对 CEDET 的代码实在不熟，所以现在就只能这样了。
 #+BEGIN_SRC emacs-lisp
@@ -1506,7 +1474,7 @@ elpa中安装就可以了。
 使用方法
 用起来很简单：找到一个 C 代码，标记整个 struct 定义，然后M-x 输入： yyc/datastruct-to-dot 即可。命令执行完毕后，会打开一个新的 tmp.dot buffer，其中包含了用于绘制该 struct 的代码。前面也提到了，这生成的仅仅是个 subgraph，需要将这个 subgraph 添加到真正的 graph 下，才能生成图像。我通过 autoinsert 来自动创建用于放置 subgraph 的 graph 。
 
-** autoinsert配置
+*** autoinsert配置
 autoinsert 是 Emacs 自带的功能，稍加配置即可使用：
 
 #+BEGIN_SRC emacs-lisp
@@ -1628,7 +1596,7 @@ digraph Name {
 // XXX: place to put subgraph
 }
 
-** 用法示例
+*** 用法示例
 一个简单的使用示例，有如下步骤：
 
 1. 打开一个 C 文件
@@ -1653,7 +1621,7 @@ digraph Name {
 
    很简单，通过 “->” 画两条线就可以了。
 
-** semantic [2019-01-08 周二 20:47:56]
+*** semantic [2019-01-08 周二 20:47:56]
 https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referral [译] Emacs Lisp 速成
 
 ;; 这样写不太好看
@@ -1771,16 +1739,127 @@ https://segmentfault.com/a/1190000004910645?utm_source=tuicool&utm_medium=referr
   ;; (message (semantic-lex-buffer)))
   ;;(semantic-lex start end 1))
 #+END_SRC
-* winner-mode [2019-01-09 周三 18:04:05]
-winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
+** magit
+[2014-09-11 10:22:26] disable emacs自带的vc，用 *process monitor* 看，vc每次打开都会把支持的版本管理都查一遍，会比较慢。
+但是去掉了以后，magit没法在status bar上显示文件在哪个branch上了。哎。
+
+process monitor在用了vpn后会导致机器hang。
+
+把vc disable后会快不少，还是去了吧。
+
+#+BEGIN_SRC lisp
+;; (custom-set-variables
+;; '(vc-handled-backends (quote (Git))))
+
+;; disable default vc
+;(setq vc-handled-backends nil)
+#+end_src
+
+[2014-09-11 14:25:06] 即使更新到了0908的magit，仍然发现有多次调用git.exe的情况， *magit-status* 还是慢
+把git的path设置到最前面，貌似速度也没快多少，最多0.001s吧。
+
+;;(if (eq system-type 'windows-nt)
+;;    (progn
+;;      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
+;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 
 #+BEGIN_SRC emacs-lisp
-(use-package winner
-  :defer t)
- 
-;; (winner-mode t)
+(use-package magit
+  :ensure t
+  :defer t
+  :config
+    (progn
+      (setq magit-last-seen-setup-instructions "1.4.0")))
+#+end_src
+
+** neotree - 不用了 [2019-05-27 周一 16:05:25]
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'neotree-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 #+END_SRC
-* GDB [2019-01-11 周五 21:23:16]
+** tramp on windows [2018-12-28 周五 11:14:58]
+
++ new session
+  /plink:user@host:/path/to/your/file/on/server
+
++ saved session
+  /plinkx:sessname:/path/to/your/file/on/server
+  
++ 不需要设置 tramp-shell-prompt-pattern 和 tramp-password-end-of-line 。
++ plink要在PATH里有。
+
+[2019-06-08 周六 01:44:30] tramp在windows上没法用，连虚机都能感觉到实在是太卡了。
+#+BEGIN_SRC lisp
+(use-package tramp
+  :defer t
+  :config
+    (progn
+      (setq exec-path (cons "E:/tools/putty" exec-path))
+      ;; (setq tramp-password-end-of-line "\r\n")
+      ;; (setq tramp-shell-prompt-pattern "^[ $]# +")
+      (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+      (setq tramp-default-method "plink")))
+#+END_SRC
+** xah-find [2018-09-29 周六 22:09:48]
+http://ergoemacs.org/emacs/elisp-xah-find-text.html
+
+1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
+2. 不知道是怎么找的扩展名，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
+
+#+BEGIN_SRC emacs-lisp
+(use-package xah-find
+  :ensure t
+  :defer t)
+#+END_SRC
+
+** ggtags [2019-01-01 周二 00:32:00]
+
+| key     | function              | 说明                       |
+|---------+-----------------------+----------------------------|
+| M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
+| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
+| M-]     | ggtags-find-reference | 查询调用了tag的reference   |
+
+#+BEGIN_SRC emacs-lisp
+(use-package ggtags
+  :ensure t
+  :defer t)
+
+(add-hook 'c-mode-common-hook
+  (lambda ()
+    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+      (progn
+        ;; (linum-mode 1)
+        ;; (flycheck-mode 1)
+        (ggtags-mode 1)))))
+#+END_SRC
+
+*** global [2019-06-11 周二 17:11:26]
+GNU Global具有强大的跨平台能力，无论是在Linux还是在BSD系统还是Windows都可以使用。GNU Global具有以下功能：
+
++ 内置6种语法分析程序（定义和引用）C，C++，Yacc，Java，PHP4和汇编
++ 通过ctags的语法解析插件可以支持25中语言（定义和引用）Awk, Dos batch, COBOL, C, C++, C#, Erlang,Fortran, Java, JavaScript, Lisp, Lua, Pascal, Perl, PHP, Python, Ruby, Matlab, OCaml, Scheme, Tcl, TeX, Verilog, Vhdl and Vim
+
+GNU Global使用
+命令行下使用GLOBAL，在开始使用前可以看一下FAQ
+#+BEGIN_SRC sh
+$less /your/gtags/path/FAQ
+#+END_SRC
+
+首先我们需要使用gtags命令来产生代码树的tag文件，例如当我想要浏览内核代码时，只需要执行以下命令
+#+BEGIN_SRC sh
+$cd ~/code/kernel/
+$gtags -v
+#+END_SRC
+
+执行完之后会发现，在kernel目录下产生了3个tag文件分别是GPATH，GRTAGS，GTAGS，GTAGS是定义的数据库，GRTAGS是引用的数据库，GPATH是路径的数据库。
+
+** GDB [2019-01-11 周五 21:23:16]
 
 这是在Linux上用，windows不需要配置。
 =M-x gdb=
@@ -1838,102 +1917,26 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 ;;     (select-window win0)
 ;;     ))
 #+END_SRC
-* tools [2019-06-12 周三 09:41:28]
-** treemacs [2019-06-12 周三 09:41:52]
-
-+ =q= 退出treemacs
+** undotree
 
 #+BEGIN_SRC emacs-lisp
-(use-package treemacs
+(use-package undo-tree
   :ensure t
   :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :diminish undo-tree-mode
   :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         30)
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)))
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(use-package treemacs-evil
-  :after treemacs evil
-  :ensure t)
-
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
-
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
+(defalias 'redo 'undo-tree-redo)
+;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
+;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
+;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
+(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
-** neotree [2019-05-27 周一 16:05:25]
 
-#+BEGIN_SRC emacs-lisp
-(add-hook 'neotree-mode-hook
-            (lambda ()
-              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
-              (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
-              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
-              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
-#+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
 
