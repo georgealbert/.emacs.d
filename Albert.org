@@ -739,7 +739,8 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 ;;       ;; (powerline-default-theme)))
 ;;       ;; (powerline-center-evil-theme)))
 #+END_SRC
-* evil
+* editor
+** evil
 
 #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -763,11 +764,13 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 https://blog.csdn.net/Levi_Huang/article/details/84288493
 
 [2019-01-01 周二 00:08:18] helm-gtags不能在statusbar上显示tag的值，这点不如ggtags好用。先用ggtags吧。
-
-* helm
+* completion
+** helm
 [2014-09-16 09:27:15]
 
 ;; (require 'helm-config)
+
+[2019-06-12 周三 17:15:36] 不直接启动helm，在 *scratch* 里面直接执行 (benchmark-init/show-durations-tree) ，可以看出来helm在启动的时候是没加载的。
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
@@ -776,6 +779,7 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
   :diminish helm-mode
   :config
   (progn
+    (helm-mode +1)
     ;; rebind tab to run persistent action
     (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
     ;; make TAB works in terminal
@@ -785,7 +789,7 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
   )
   :init
   (progn
-    (require 'helm-config)
+    ;; (require 'helm-config)
     ;; From https://gist.github.com/antifuchs/9238468
     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
           ;;
@@ -805,7 +809,7 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
           helm-M-x-requires-pattern nil
           ;;
           helm-ff-skip-boring-files t)
-    (helm-mode)
+    ;; (helm-mode)
   )
   :bind (("C-c m" . helm-mini)
          ("C-c n" . helm-mini)
@@ -825,8 +829,6 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
          ;; ("C-z" . 'helm-select-action)
          ("C-x c SPC" . helm-all-mark-rings)))
 
-;; (use-package helm-config)
-;; (helm-mode 1)
 ;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
 ;; (global-set-key (kbd "C-c m") 'helm-mini)
 ;; (global-set-key (kbd "C-c n") 'helm-mini)
@@ -851,7 +853,7 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 (ido-mode -1)
 #+END_SRC
 
-** Search buffers by major-mode
+*** Search buffers by major-mode
 
 + multi buffer search
   1. *C-c h* 调出helm-mini buffer
@@ -880,11 +882,11 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 
 [2014-10-13 周一 17:51:09] helm mini中，选择buffer后，按 =F9= 可以查找，这个更加方便。
 
-** grep
+*** grep
 
 =helm-resume= 恢复上次的command
 
-*** Grep from helm-find-files
+**** Grep from helm-find-files
 
 From helm-find-files (helm-command-prefix-key C-x C-f) Open the action
 menu with tab and choose grep. A prefix arg will launch recursive
@@ -893,7 +895,7 @@ grep.
 NOTE:You can now launch grep with (C-u) M-g s without switching to the
 action pannel.
 
-*** Grep thing at point
+**** Grep thing at point
 
 Before lauching helm, put your cursor on the start of symbol or sexp
 you will want to grep. Then launch helm-do-grep or helm-find-files,
@@ -902,7 +904,7 @@ and when in the grep prompt hit C-w as many time as needed.
 光标在一个word前面，然后 =helm-do-grep= ，选择grep的目录和文件 ，就可以grep这个word，按 =C-w=
 可以跟着grep这个word后面的word。
 
-*** Grep persistent action
+**** Grep persistent action
 
 As always, C-z will bring you in the buffer corresponding to the file
 you are grepping. Well nothing new, but using C-u C-z will record this
@@ -923,7 +925,7 @@ TIP: Bind helm-all-mark-ring to C-c SPACE.
 
 NOTE: helm-all-mark-ring handle global-mark-ring also.
 
-** helm-swoop
+*** helm-swoop
 [2014-11-21 周五 09:26:34]
 
 #+BEGIN_SRC emacs-lisp
@@ -936,7 +938,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
          ("C-x M-i" . helm-multi-swoop-all)))
 #+END_SRC
 
-** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
+*** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
 
 [2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
 
@@ -963,7 +965,7 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 ;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
 #+END_SRC
 
-** helm-ag [2019-01-01 周二 00:15:53]
+*** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
 
 * ggtags [2019-01-01 周二 00:32:00]
