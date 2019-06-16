@@ -182,9 +182,8 @@ M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key [(f5)] '(lambda () (interactive) 
-(insert (format-time-string "[%Y-%m-%d %a %T]"))
-))
+  (global-set-key [(f5)] '(lambda () (interactive) 
+                      (insert (format-time-string "[%Y-%m-%d %a %T]"))))
 #+END_SRC
 
 ** Reading
@@ -255,7 +254,7 @@ zlib1.dll
 +  :: C-q C-a
 
 + C-q X :: 是一个通用的输入特殊字符的解决办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后是一个就可以输入这个特殊字符。
-一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 C-j ， ASCII 10。
+一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 =C-j= ，ASCII 10。
 除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
 #+BEGIN_SRC lisp
 (setq read-quoted-char-radix 10)
