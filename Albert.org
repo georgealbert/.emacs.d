@@ -134,7 +134,7 @@ Disk space is cheap. Save lots.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
 
-** Diredplus
+** Diredplus - 不用了
 
 [2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
 
@@ -146,12 +146,15 @@ before dired+ loaded
 也可以按 =(= 打开或关闭detail显示。
 
 [2019-06-09 周日 22:15:45] 如果要用dired+的话，把 =:defer t= 注释掉。现在用vanilla dired就ok了。dired+在delete files的时候，显示不完全。而且在emacs启动时会加载一些package。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (setq diredp-hide-details-initially-flag nil)
 (use-package dired+
   :defer t)
 #+END_SRC
 ** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
+
+[2019-06-16 周日 00:02:50] 突然发现在dired里面 查找后 按 n，不是查询下一个。
+因为默认在dired.el里面 n 是 binding为下一行。doom-emacs里面是什么样的?
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-k
@@ -772,7 +775,9 @@ directory"
 ;;       )))
 
 ;; (elpy-enable)
+#+END_SRC
 
+#+BEGIN_SRC lisp
 (use-package elpy
   :ensure t
   :defer t
