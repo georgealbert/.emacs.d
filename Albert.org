@@ -20,29 +20,7 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 
 [2019-05-18 周六 21:54:06] emacs 26.2启动时间15s，先注释掉吧。内存设置过大在长时间使用后gc会导致响应慢。
 [2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
-#+BEGIN_SRC lisp
-;; (when (eq system-type 'windows-nt)
-;;   (setq gc-cons-threshold (* 512 1024 1024))
-;;   (setq gc-cons-percentage 0.5)
-;;   (run-with-idle-timer 5 t #'garbage-collect)
-;;   ;; 显示垃圾回收信息，这个可以作为debug用
-;;   (setq garbage-collection-messages t))
-#+END_SRC
 
-[2019-05-20 周一 10:48:24] https://github.com/jacmoe/emacs.d/blob/master/jacmoe.org
-
-#+BEGIN_SRC lisp
-;; (setq-default
-;;   gc-cons-threshold most-positive-fixnum          ; Increase garbage collector treshold
-;; )
-#+END_SRC
-
-Reset garbage collector treshold after initialization is finished and garbage-collect on focus-out. Emacs should feel snappier.
-#+BEGIN_SRC lisp
-;; (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
-;; (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
-;; (add-hook 'focus-out-hook 'garbage-collect)
-#+END_SRC
 ** elpa
 
 #+BEGIN_SRC emacs-lisp
@@ -1276,46 +1254,6 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (diminish 'visual-line-mode)
 #+END_SRC
 
-*** smart-mode-line和powerline都不好用，速度太慢。
-#+BEGIN_SRC lisp
-;; (use-package smart-mode-line
-;;   :disabled t
-;;   :init
-;;   (progn
-;;   (setq-default
-;;    mode-line-format 
-;;    '("%e"
-;;      mode-line-front-space
-;;      mode-line-mule-info
-;;      mode-line-client
-;;      mode-line-modified
-;;      mode-line-remote
-;;      mode-line-frame-identification
-;;      mode-line-buffer-identification
-;;      "   "
-;;      mode-line-position
-;;      (vc-mode vc-mode)
-;;      "  "
-;;      mode-line-modes
-;;      mode-line-misc-info
-;;      mode-line-end-spaces))))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (use-package powerline
-;;   :disabled t
-;;   :ensure t
-;;   :config 
-;;     (progn
-;;        (powerline-center-evil-theme)
-;;        (setq powerline-arrow-shape 'arrow)
-;;        (custom-set-faces  
-;;          '(mode-line ((t (:foreground "white" :background "#8080ff" :box nil))))  
-;;          ;; '(mode-line-inactive ((t (:foreground "white" :background "#ff8080" :box nil))))  
-;;          )))
-;;       ;; (powerline-default-theme)))
-;;       ;; (powerline-center-evil-theme)))
-#+END_SRC
 ** treemacs [2019-06-12 周三 09:41:52]
 
 + =q= 退出treemacs
