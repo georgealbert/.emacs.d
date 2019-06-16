@@ -1021,12 +1021,14 @@ Jedit Grey 灰底黑字也可以
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
 #+END_SRC
-** Font setting on win7/win10
+** Font setting on windows and X
 
-可以用 C-u C-x = or C-u g a 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
-另一个有用的函数是 =describe-fontset=
+可以用 *C-u C-x =* or *C-u g a* 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
+
+另一个有用的函数是 =M-x describe-fontset= 。
 
 中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
+
 CJK (Chinese, Japanese, Korean)
 
 #+BEGIN_SRC lisp
