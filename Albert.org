@@ -624,6 +624,108 @@ You can move your cursor around to see argument lists for other functions.
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+END_SRC
 
+** lsp-mode [2019-06-14 周五 21:30:36]
+
+=M-x lsp-workspace-folders-add= 把目录加到lsp里去。
+
+seagle0128 18年11月
+请参考 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-lsp.el 和 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-python.el
+
+https://vxlabs.com/2018/11/19/configuring-emacs-lsp-mode-and-microsofts-visual-studio-code-python-language-server/ 
+https://github.com/emacs-lsp/lsp-python-ms
+#+BEGIN_SRC emacs-lisp
+;; Emacs client for the Language Server Protocol
+;; https://github.com/emacs-lsp/lsp-mode#supported-languages
+(use-package lsp-mode
+  ;; :diminish lsp-mode
+  :defer t
+  ;; :hook (prog-mode . lsp)
+  :hook (python-mode . lsp)
+  :bind (:map lsp-mode-map
+              ("C-c C-d" . lsp-describe-thing-at-point))
+  :init
+  (setq lsp-auto-guess-root t)       ; Detect project root
+  ;; disable Yasnippet
+  (setq lsp-enable-snippet nil)
+  (setq lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
+  (setq flymake-fringe-indicator-position 'right-fringe)
+  
+  ;; 在lsp-clients.el里面直接require的，无效，照样加载
+  ;; (setq lsp-disabled-clients '(ruby java dart clojure metals go xml vetur rust solargraph elm))
+  ;; :config
+  ;; Configure LSP clients
+)
+
+;; (use-package lsp-clients
+;;   :defer t
+;;   :ensure nil
+;;   )
+
+    ;; :init
+    ;; (setq lsp-clients-python-library-directories '("/usr/local/" "/usr/"))))
+    
+
+(use-package lsp-ui
+  :defer t
+  :custom-face
+  (lsp-ui-doc-background ((t (:background nil))))
+  :bind (:map lsp-ui-mode-map
+              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+              ([remap xref-find-references] . lsp-ui-peek-find-references)
+              ("C-c u" . lsp-ui-imenu))
+  :init (setq lsp-ui-doc-enable t
+              lsp-ui-doc-use-webkit t
+              lsp-ui-doc-include-signature t
+              lsp-ui-doc-position 'top
+              lsp-ui-doc-border (face-foreground 'default)
+
+              lsp-ui-sideline-enable nil
+              lsp-ui-sideline-ignore-duplicate t)
+  :config
+  ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+  ;; https://github.com/emacs-lsp/lsp-ui/issues/243
+  (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+    (setq mode-line-format nil)))
+
+(use-package company-lsp
+  :defer t
+  :init (setq company-lsp-cache-candidates 'auto))
+  
+(use-package lsp-treemacs
+  :defer t
+  :bind (:map lsp-mode-map
+  ("M-9" . lsp-treemacs-errors-list)))
+#+END_SRC
+
+[2019-06-15 周六 22:19:27] 为什么用了mspyls后就找不到其他的package，而用pyls就可以找到？
+pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
+
+[2019-06-15 周六 23:57:36]
+在下面的函数中打印 =workspace-root= 。
+#+BEGIN_SRC lisp
+(defun lsp-python-ms--extra-init-params (&optional workspace)
+directory"
+  (let ((workspace-root (if workspace (lsp--workspace-root workspace) (lsp-python-ms--workspace-root))))
+    (message "lsp-python-ms: workspace-root is %s." workspace-root)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-python-ms
+  ;; :ensure nil
+  ;; :defer t
+  :demand
+  :after lsp-mode
+  :hook (python-mode . lsp)
+  :config
+  ;; for ali rds
+  ;; (setq lsp-python-ms-extra-paths "E:/CU/ali/3.5.2/RDS/usr/local/rds/agent-node-mysql/0.0.13/lib/python2.7")
+  ;; for dev build of language server
+  (setq lsp-python-ms-dir
+        (expand-file-name "e:/workspace/python-language-server/output/bin/Release/"))
+  ;; for executable of language server, if it's not symlinked on your PATH
+  (setq lsp-python-ms-executable
+        "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer"))
+#+END_SRC
 ** markdown-mode
 
 #+BEGIN_SRC emacs-lisp
