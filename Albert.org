@@ -34,7 +34,7 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 ;; (unless (assoc-default "org" package-archives)
 ;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
 
-(package-initialize)
+;; (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
 
 (unless (package-installed-p 'use-package)
@@ -277,7 +277,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ;; (setq-default save-place t)
 
 ;; For GNU Emacs 25.1 and newer versions
-(setq-default save-place t)
+;; (setq-default save-place t)
 (use-package saveplace
   ;; :ensure t
   :init (save-place-mode 1))
@@ -643,7 +643,6 @@ https://github.com/emacs-lsp/lsp-python-ms
 
     ;; :init
     ;; (setq lsp-clients-python-library-directories '("/usr/local/" "/usr/"))))
-    
 
 (use-package lsp-ui
   :defer t
@@ -659,7 +658,10 @@ https://github.com/emacs-lsp/lsp-python-ms
               lsp-ui-doc-position 'top
               lsp-ui-doc-border (face-foreground 'default)
 
+              ;; lsp-enable-snippet nil
               lsp-ui-sideline-enable nil
+              ;; emacs26.2 经常陷入卡顿, set it to nil.
+              lsp-use-native-json nil
               lsp-ui-sideline-ignore-duplicate t)
   :config
   ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
@@ -697,6 +699,7 @@ directory"
   :after lsp-mode
   :hook (python-mode . lsp)
   :config
+  ;; :init
   ;; for ali rds
   ;; (setq lsp-python-ms-extra-paths "E:/CU/ali/3.5.2/RDS/usr/local/rds/agent-node-mysql/0.0.13/lib/python2.7")
   ;; for dev build of language server
@@ -704,7 +707,7 @@ directory"
         (expand-file-name "e:/workspace/python-language-server/output/bin/Release/"))
   ;; for executable of language server, if it's not symlinked on your PATH
   (setq lsp-python-ms-executable
-        "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer"))
+        "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
 #+END_SRC
 ** markdown-mode
 
@@ -1053,7 +1056,7 @@ CJK (Chinese, Japanese, Korean)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun albert-notebook-font()
+(defun albert|notebook-font()
   "Config font on HP zhan66."
   (interactive)
   (if (eq system-type 'windows-nt)
@@ -1066,7 +1069,7 @@ CJK (Chinese, Japanese, Korean)
                             charset
                             (font-spec :family "Microsoft Yahei" :size 22))))))
 
-(defun albert-s2319-font()
+(defun albert|s2319-font()
   "Config font on dell s2319. 
    Ubuntu Mono 10 + Yahei 14 太小了
    Ubuntu Mono 12 + Yahei 16 比较合适
@@ -1076,27 +1079,31 @@ CJK (Chinese, Japanese, Korean)
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-      ;; (set-face-attribute 'default nil :font "Monaco 10")
+      ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
       ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
       ;; Chinese Font
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
               (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Microsoft Yahei" :size 16))))))
+                            ;; DejaVu Sans Mono在windows上没有 gb2312 编码的，设置了无效。
+                            ;; (font-spec :family "DejaVu Sans Mono" :size 16))))))
                             ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
 
 (if (eq window-system 'w32)
   (progn
     ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-    ;; DELL S2319HS 分辨率1920x1080, 屏幕尺寸是509mm X 286mm
+    ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
+    ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
+    ;; (display-mm-height)
     (if (>= (display-mm-width) 509)
-      (albert-s2319-font))
+      (albert|s2319-font))
     
     ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
     ;; HP ZHAN66 309mm X 175mm
     ;; Thinkpad T430 4xxmm X 20xmm?
-    (if (<= (display-mm-width) 500)
-      (albert-notebook-font))))
+    (if (eq (display-mm-width) 309)
+      (albert|notebook-font))))
 
 ;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
 ;; 效果不好。
@@ -1333,6 +1340,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
 (use-package treemacs-icons-dired
   :after treemacs dired
+  :disabled t
   :ensure t
   :config (treemacs-icons-dired-mode))
 
