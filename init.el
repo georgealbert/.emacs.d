@@ -79,7 +79,7 @@ they were loaded at startup."
 ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
 
 ;; Load the rest of the packages
-(package-initialize t)
+;; (package-initialize t)
 (setq package-enable-at-startup nil)
 (require 'benchmark-init-modes)
 (require 'benchmark-init)
@@ -118,7 +118,7 @@ they were loaded at startup."
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
    (quote
-    (flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
+    (lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
  '(safe-local-variable-values (quote ((encoding . UTF-8))))
  '(vc-annotate-background "#181a26")
  '(vc-annotate-color-map
@@ -147,4 +147,5 @@ they were loaded at startup."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(lsp-ui-doc-background ((t (:background nil))))
  '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button))))))
