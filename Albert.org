@@ -112,23 +112,6 @@ Disk space is cheap. Save lots.
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 #+END_SRC
 
-** Diredplus - 不用了
-
-[2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
-
-[2014-11-18 周二 10:54:56] 为什么在24.4上就不显示时间戳和权限了呢？
-
-set =diredp-hide-details-initially-flag= to nil in 24.4 to display details, set
-before dired+ loaded
-
-也可以按 =(= 打开或关闭detail显示。
-
-[2019-06-09 周日 22:15:45] 如果要用dired+的话，把 =:defer t= 注释掉。现在用vanilla dired就ok了。dired+在delete files的时候，显示不完全。而且在emacs启动时会加载一些package。
-#+BEGIN_SRC lisp
-(setq diredp-hide-details-initially-flag nil)
-(use-package dired+
-  :defer t)
-#+END_SRC
 ** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
 
 [2019-06-16 周日 00:02:50] 突然发现在dired里面 查找后 按 n，不是查询下一个。
@@ -156,18 +139,6 @@ before dired+ loaded
   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
 #+END_SRC
 
-** ibuffer
-
-使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
-经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
-
-启用ibuffer支持，增强 *buffer*, 用了helm，ibuffer可以退休了。  
-#+BEGIN_SRC emacs-lisp
-(use-package ibuffer
-  :defer t
-  :config (global-set-key (kbd "C-x C-b") 'ibuffer))
-#+END_SRC
-
 ** 显示匹配的括号
 
 #+BEGIN_SRC emacs-lisp
@@ -182,8 +153,8 @@ M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
 #+END_EXAMPLE
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key [(f5)] '(lambda () (interactive) 
-                      (insert (format-time-string "[%Y-%m-%d %a %T]"))))
+(global-set-key [(f5)] '(lambda () (interactive) 
+                          (insert (format-time-string "[%Y-%m-%d %a %T]"))))
 #+END_SRC
 
 ** Reading
@@ -620,7 +591,8 @@ https://github.com/emacs-lsp/lsp-python-ms
   ;; :diminish lsp-mode
   :defer t
   ;; :hook (prog-mode . lsp)
-  :hook (python-mode . lsp)
+  :hook (python-mode . lsp-deferred)
+        (go-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
   :init
@@ -685,10 +657,10 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
 [2019-06-15 周六 23:57:36]
 在下面的函数中打印 =workspace-root= 。
 #+BEGIN_SRC lisp
-(defun lsp-python-ms--extra-init-params (&optional workspace)
-directory"
-  (let ((workspace-root (if workspace (lsp--workspace-root workspace) (lsp-python-ms--workspace-root))))
-    (message "lsp-python-ms: workspace-root is %s." workspace-root)
+;; (defun lsp-python-ms--extra-init-params (&optional workspace)
+;; directory"
+;;   (let ((workspace-root (if workspace (lsp--workspace-root workspace) (lsp-python-ms--workspace-root))))
+;;     (message "lsp-python-ms: workspace-root is %s." workspace-root)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -731,6 +703,29 @@ directory"
 ;; (setq python-shell-interpreter "python"
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
+
+;; (defun albert|python-shell-send-buffer (&optional send-main msg)
+;;   "Send the entire buffer to inferior Python process.
+;; When optional argument SEND-MAIN is non-nil, allow execution of
+;; code inside blocks delimited by \"if __name__== \\='__main__\\=':\".
+;; When called interactively SEND-MAIN defaults to nil, unless it's
+;; called with prefix argument.  When optional argument MSG is
+;; non-nil, forces display of a user-friendly message if there's no
+;; process running; defaults to t when called interactively."
+;;   (interactive (list current-prefix-arg t))
+;;   (save-restriction
+;;     (widen)
+;;     (set-language-environment 'Chinese-GB18030)
+;;     (python-shell-send-region (point-min) (point-max) send-main msg)
+;;     (set-language-environment 'UTF-8)))
+
+;; (add-hook 'python-mode-hook
+;;   (lambda ()
+;;     (define-key python-mode-map (kbd "C-c C-c") 'albert|python-shell-send-buffer)))
+
+;; [2019-08-05 周一 17:00:08] ipython使用cp936，即GBK编码，中文显示终于正常了。上面的hook无效。
+;; search keyword: process 中文, https://emacs-china.org/t/emacs-shell/2730/2
+(setq process-coding-system-alist (cons '("ipython" . (cp936 . cp936)) process-coding-system-alist))
 
 ;; (use-package python-mode
 ;;   :mode (("SConstruct\\'" . python-mode)
@@ -875,6 +870,8 @@ google的代码格式化工具。
   :ensure t
   :defer t)
 #+END_SRC
+** go [2019-07-04 周四 16:59:53]
+
 * ui
 ** Frame title
 
@@ -938,6 +935,7 @@ It often displays so much information, even temporarily, that it is nice to give
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
 (add-hook 'sh-mode-hook 'display-line-numbers-mode)
+(add-hook 'go-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 
 ** Make window splitting more useful
@@ -1033,27 +1031,6 @@ Jedit Grey 灰底黑字也可以
 
 CJK (Chinese, Japanese, Korean)
 
-#+BEGIN_SRC lisp
-;; (if (eq system-type 'windows-nt)
-;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-;;   (progn
-;;     ;; Setting English Font
-;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
-;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
-;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
-;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
-;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
-;; 
-;;     ;; Chinese Font
-;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;             (set-fontset-font (frame-parameter nil 'font)
-;;                           charset
-;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
-#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (defun albert|notebook-font()
@@ -1104,7 +1081,29 @@ CJK (Chinese, Japanese, Korean)
     ;; Thinkpad T430 4xxmm X 20xmm?
     (if (eq (display-mm-width) 309)
       (albert|notebook-font))))
+#+END_SRC
 
+#+BEGIN_SRC lisp
+;; (if (eq system-type 'windows-nt)
+;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+;;   (progn
+;;     ;; Setting English Font
+;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
+;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
+;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
+;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
+;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
+;; 
+;;     ;; Chinese Font
+;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;             (set-fontset-font (frame-parameter nil 'font)
+;;                           charset
+;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
+;;
 ;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
 ;; 效果不好。
 ;; (set-default-font "Consolas-with-Yahei 9")
@@ -1349,18 +1348,6 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   :ensure t)
 #+END_SRC
 ** window-select
-*** window-number - 不用了
-
-和 window-numbering.el 不是一个package。
-直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
-
-#+BEGIN_SRC lisp
-(use-package window-numbering
-  :ensure t
-  :config (window-numbering-mode 1))
-  ;; :init (window-numbering-mode 1))
-#+END_SRC
-
 *** winum [2019-06-12 周三 09:50:41]
 从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
 
@@ -1438,7 +1425,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ** graphviz [2019-01-08 周二 18:13:47]
 
 主要思想是解析 =buffer= 中选中的文本，通过正则表达式来匹配，从中找到 struct name 以及其中的各个 fields， 最后根据 =dot= 语法将其组成一个 =subgraph= 。其实应该有更好的方法（比如通过 CEDET 的 Semantic 解析结果来做），但对 CEDET 的代码实在不熟，所以现在就只能这样了。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; Function used to add fields of struct into a dot file (for Graphviz).
 (defconst yyc/dot-head "subgraph cluster_%s {
     node [shape=record fontsize=12 fontname=Courier style=filled];
@@ -1533,7 +1520,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 *** autoinsert配置
 autoinsert 是 Emacs 自带的功能，稍加配置即可使用：
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; ************** Autoinsert templates *****************
 (use-package autoinsert
   :defer t)
@@ -1828,16 +1815,6 @@ process monitor在用了vpn后会导致机器hang。
       (setq magit-last-seen-setup-instructions "1.4.0")))
 #+end_src
 
-** neotree - 不用了 [2019-05-27 周一 16:05:25]
-
-#+BEGIN_SRC lisp
-(add-hook 'neotree-mode-hook
-            (lambda ()
-              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
-              (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
-              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
-              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
-#+END_SRC
 ** tramp on windows [2018-12-28 周五 11:14:58]
 
 + new session
@@ -3676,6 +3653,23 @@ emacs 23以后默认。
 #+begin_src lisp
 ;(transient-mark-mode t) 
 #+end_src
+** Diredplus - 不用了
+
+[2014-09-11 10:47:57] 昨天刚开始用的，五颜六色的比较好看。
+
+[2014-11-18 周二 10:54:56] 为什么在24.4上就不显示时间戳和权限了呢？
+
+set =diredp-hide-details-initially-flag= to nil in 24.4 to display details, set
+before dired+ loaded
+
+也可以按 =(= 打开或关闭detail显示。
+
+[2019-06-09 周日 22:15:45] 如果要用dired+的话，把 =:defer t= 注释掉。现在用vanilla dired就ok了。dired+在delete files的时候，显示不完全。而且在emacs启动时会加载一些package。
+#+BEGIN_SRC lisp
+(setq diredp-hide-details-initially-flag nil)
+(use-package dired+
+  :defer t)
+#+END_SRC
 ** Mode line format
 [2014-09-16 18:18:58]
 
@@ -3705,10 +3699,33 @@ Display a more compact mode line.
 ;     mode-line-end-spaces))))
 ;(my-line)
 #+END_SRC
+** neotree - 不用了 [2019-05-27 周一 16:05:25]
+
+#+BEGIN_SRC lisp
+(add-hook 'neotree-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
+              (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+              (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
+#+END_SRC
 ** ido
 
 #+BEGIN_SRC lisp
 ;(require 'ido)
+#+END_SRC
+
+** ibuffer
+[2019-07-04 周四 09:30:07] 现在使用helm，不需要ibuffer
+
+使用emacs时经常需要管理多个buffer， /C-x C-b/ 的默认界面太过简陋。emacs事实上已
+经提供了更好的buffer管理界面ibuffer，在配置文件中选用即可。
+
+启用ibuffer支持，增强 *buffer*, 用了helm，ibuffer可以退休了。  
+#+BEGIN_SRC lisp
+(use-package ibuffer
+  :defer t
+  :config (global-set-key (kbd "C-x C-b") 'ibuffer))
 #+END_SRC
 
 ** smex
@@ -3766,4 +3783,16 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ;;;If you use evil
 ;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 #+END_SRC 
+
+** window-number - 不用了
+
+和 window-numbering.el 不是一个package。
+直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
+
+#+BEGIN_SRC lisp
+(use-package window-numbering
+  :ensure t
+  :config (window-numbering-mode 1))
+  ;; :init (window-numbering-mode 1))
+#+END_SRC
 
