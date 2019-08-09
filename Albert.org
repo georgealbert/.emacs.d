@@ -27,7 +27,8 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 (require 'package)
 
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.org/packages/") t)
+  '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
+;;  '("melpa" . "http://melpa.org/packages/") t)
 
 ;; (unless (assoc-default "melpa" package-archives)
 ;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
