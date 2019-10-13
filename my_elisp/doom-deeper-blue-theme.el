@@ -248,6 +248,17 @@ determine the exact padding."
    (magit-diff-removed-highlight :foreground "white" :background (doom-blend red base3 0.2))
 
    (magit-diff-context-highlight :foreground fg :background "gray30")
+
+   ;; ediff
+   ;; (ediff-fine-diff-A :background violet :weight 'bold)
+   ;; (ediff-fine-diff-A :background (doom-blend red bg 0.3) :weight 'bold)
+   ;; (ediff-fine-diff-A :background red :weight 'bold)
+   (ediff-fine-diff-A :background "coral2" :foreground "white" :weight 'bold)
+
+   ;; (diff-changed :background "coral2" :foreground "white")
+
+   (diff-refine-changed :foreground "DarkBlue")
+   ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
    )
    
   ;; --- extra variables ---------------------
