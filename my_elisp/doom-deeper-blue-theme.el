@@ -250,14 +250,23 @@ determine the exact padding."
    (magit-diff-context-highlight :foreground fg :background "gray30")
 
    ;; ediff
+
+   ;; 设置整行不同的背景色
+   (ediff-current-diff-A :background "magenta4")
+
    ;; (ediff-fine-diff-A :background violet :weight 'bold)
    ;; (ediff-fine-diff-A :background (doom-blend red bg 0.3) :weight 'bold)
    ;; (ediff-fine-diff-A :background red :weight 'bold)
-   (ediff-fine-diff-A :background "coral2" :foreground "white" :weight 'bold)
 
+   ;; (ediff-fine-diff-A :background "coral2" :foreground "white" :weight 'bold)
+
+   ;; find-diff是指有改变的，不是有差异的整行，vim是背景色 red，前景色 white
+   (ediff-fine-diff-A :background "red" :foreground "white" :weight 'bold)
+
+   ;; vdiff使用diff-mode的faces
    ;; (diff-changed :background "coral2" :foreground "white")
-
-   (diff-refine-changed :foreground "DarkBlue")
+   (diff-changed :background "magenta4" :foreground "white")
+   (diff-refine-changed :background "red" :foreground "whtie")
    ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
    )
    
