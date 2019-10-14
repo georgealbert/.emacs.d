@@ -295,7 +295,11 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 (setq-default ediff-forward-word-function 'forward-char)
 
 ;; (setq-default ediff-highlight-all-diffs nil)
+
+;; 让diff能识别中文目录
+(setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist))
 #+END_SRC
+
 ** vdiff [2019-10-12 周六 15:47:08]
 
 https://github.com/justbur/emacs-vdiff
