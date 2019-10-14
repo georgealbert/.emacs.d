@@ -284,6 +284,10 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 [2019-10-07 周一 21:50:16] evil-commands.el 中把 (require 'ispell) 注释掉，反正也不用ispell
 ** ediff [2019-10-12 周六 14:23:33]
 
++ 问题 :: ediff的老毛病
+  1. 不能显示所有的修改(refinement)，这样看着很不舒服，vimdiff的显示方式就好很多
+  2. 一个buffer删除的行在另外一个buffer中没有对应显示出来
+
 #+BEGIN_SRC emacs-lisp
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
@@ -312,18 +316,16 @@ https://github.com/justbur/emacs-vdiff
     ;; M-x vdiff refine
     (setq vdiff-auto-refine t)
 
-    (setq vdiff-default-refinement-syntax-code "_")
-    ;; (setq vdiff-default-refinement-syntax-code "w_")
+    ;; (setq vdiff-default-refinement-syntax-code "_")
+    (setq vdiff-default-refinement-syntax-code "w_")
     ;; (setq vdiff-default-refinement-syntax-code "w")
+    (setq vdiff-diff-algorithm 'diff-minimal)
 )
 
 ;; (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map)
 #+END_SRC
 * completion
-** helm
-[2014-09-16 09:27:15]
-
-;; (require 'helm-config)
+** helm [2014-09-16 09:27:15]
 
 [2019-06-12 周三 17:15:36] 不直接启动helm，在 *scratch* 里面直接执行 (benchmark-init/show-durations-tree) ，可以看出来helm在启动的时候是没加载的。
 
@@ -344,7 +346,6 @@ https://github.com/justbur/emacs-vdiff
   )
   :init
   (progn
-    ;; (require 'helm-config)
     ;; From https://gist.github.com/antifuchs/9238468
     (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
           ;;
@@ -364,7 +365,6 @@ https://github.com/justbur/emacs-vdiff
           helm-M-x-requires-pattern nil
           ;;
           helm-ff-skip-boring-files t)
-    ;; (helm-mode)
   )
   :bind (("C-c m" . helm-mini)
          ("C-c n" . helm-mini)
@@ -412,11 +412,11 @@ https://github.com/justbur/emacs-vdiff
 
 + multi buffer search
   1. *C-c h* 调出helm-mini buffer
-  1. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
-  1. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
-  1. 按 *C-s* search file content
-  1. *C-j* 打开buffer并跳到选择的行
-  1. *enter* 打开文件
+  2. 在pattern: 中 输入 *org 选择buffer中的file，可以匹配多个文件
+  3. *Esc m* 或者 *M-SPC* mark刚才匹配的files，会高亮
+  4. 按 *C-s* search file content
+  5. *C-j* 打开buffer并跳到选择的行
+  6. *enter* 打开文件
 
 + M-SPC/Esc-SPC/C-@ :: 用 *M-SPC* 最方便了，mark当前的buffer，如果已经mark了会取消，先C-n/C-p移动到要取消的file
 
@@ -480,8 +480,7 @@ TIP: Bind helm-all-mark-ring to C-c SPACE.
 
 NOTE: helm-all-mark-ring handle global-mark-ring also.
 
-*** helm-swoop
-[2014-11-21 周五 09:26:34]
+*** helm-swoop [2014-11-21 周五 09:26:34]
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm-swoop
@@ -962,15 +961,7 @@ It often displays so much information, even temporarily, that it is nice to give
 (column-number-mode t)
 #+END_SRC
 
-[2014-03-17 17:54:25] 不显示行号，否则速度会非常慢
-
-#+BEGIN_SRC lisp
-;;另外一个显示行号的插件，个人更喜欢的风格
-;(require 'linum)
-;(global-linum-mode t)
-#+END_SRC
-
-[2019-05-15 周三 15:33:55] emacs 26.2可以用，显示速度比linum快很多。
+[2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 #+BEGIN_SRC emacs-lisp
 ;; (global-display-line-numbers-mode t)
 (setq display-line-numbers-width-start 5)
