@@ -2004,7 +2004,18 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 ;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
 (global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
-
+** org-static-blog [2019-10-15 周二 09:30:53]
+默认把最新的blog显示在index.html。不好用。不用了。
+#+BEGIN_SRC lisp
+(setq org-static-blog-publish-title "My Static Org Blog")
+(setq org-static-blog-publish-url "https://www.albertzhou.net/")
+(setq org-static-blog-publish-directory "~/projects/blog/")
+(setq org-static-blog-posts-directory "~/projects/blog/posts/")
+(setq org-static-blog-drafts-directory "~/projects/blog/drafts/")
+(setq org-static-blog-enable-tags t)
+(setq org-export-with-toc t)
+(setq org-export-with-section-numbers nil)
+#+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
 
@@ -3681,6 +3692,122 @@ turn off the default style, customize org-html-head-include-default-style variab
 ;; (setq org-html-style-default
 ;;   "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/org-manual.css\" />")
 #+END_SRC
+
+*** 在publish生成html时去掉多余的<div>
+
+修改 *lisp/org/ox-html.el* 中的 =org-export-define-backend= 中的 =(headline . org-html-headline)=
+      
+用 =advice-add= *override* 原来的 =org-html-headline= ，去掉生成headline的 *<div id="org???"></div>* 去掉。
+
+#+BEGIN_SRC lisp
+(advice-add #'org-export-get-reference :override #'unpackaged/org-export-get-reference)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(advice-add #'org-html-headline :override #'albert|org-html-headline)
+                    
+(defun albert|org-html-headline (headline contents info)
+  "Transcode a HEADLINE element from Org to HTML.
+CONTENTS holds the contents of the headline.  INFO is a plist
+holding contextual information."
+  (unless (org-element-property :footnote-section-p headline)
+    (let* ((numberedp (org-export-numbered-headline-p headline info))
+           (numbers (org-export-get-headline-number headline info))
+           (level (+ (org-export-get-relative-level headline info)
+                     (1- (plist-get info :html-toplevel-hlevel))))
+           (todo (and (plist-get info :with-todo-keywords)
+                      (let ((todo (org-element-property :todo-keyword headline)))
+                        (and todo (org-export-data todo info)))))
+           (todo-type (and todo (org-element-property :todo-type headline)))
+           (priority (and (plist-get info :with-priority)
+                          (org-element-property :priority headline)))
+           (text (org-export-data (org-element-property :title headline) info))
+           (tags (and (plist-get info :with-tags)
+                      (org-export-get-tags headline info)))
+           (full-text (funcall (plist-get info :html-format-headline-function)
+                               todo todo-type priority text tags info))
+           (contents (or contents ""))
+	   (ids (delq nil
+                      (list (org-element-property :CUSTOM_ID headline)
+                            (org-export-get-reference headline info)
+                            (org-element-property :ID headline))))
+           (preferred-id (car ids))
+           (extra-ids
+	    (mapconcat
+	     (lambda (id)
+	       (org-html--anchor
+		(if (org-uuidgen-p id) (concat "ID-" id) id)
+		nil nil info))
+	     (cdr ids) "")))
+      (if (org-export-low-level-p headline info)
+          ;; This is a deep sub-tree: export it as a list item.
+          (let* ((html-type (if numberedp "ol" "ul")))
+	    (concat
+	     (and (org-export-first-sibling-p headline info)
+		  (apply #'format "<%s class=\"org-%s\">\n"
+			 (make-list 2 html-type)))
+	     (org-html-format-list-item
+                   contents (if numberedp 'ordered 'unordered)
+		   nil info nil
+                   (concat (org-html--anchor preferred-id nil nil info)
+                           extra-ids
+                           full-text)) "\n"
+	     (and (org-export-last-sibling-p headline info)
+		  (format "</%s>\n" html-type))))
+	;; Standard headline.  Export it as a section.
+        (let ((extra-class (org-element-property :HTML_CONTAINER_CLASS headline))
+              (first-content (car (org-element-contents headline))))
+          (format "%s%s\n"
+                  (format "\n<h%d>%s</h%d>\n"
+                  ;; format "\n<h%d id=\"%s\">%s%s</h%d>\n"
+                          level
+                          ;;preferred-id
+                          ;;extra-ids
+                          (concat
+                           (and numberedp
+                                (format
+                                 "<span class=\"section-number-%d\">%s</span> "
+                                 level
+                                 (mapconcat #'number-to-string numbers ".")))
+                           full-text)
+                          level)
+                  (if (eq (org-element-type first-content) 'section) contents
+                    (concat (org-html-section first-content "" info) contents))))))))
+#+END_SRC
+
+=advice-add= 的讨论参考 https://emacs-china.org/t/defadvice-advice-add/7355/19
+
+=advice-add= override某个函数的方法参考 https://github.com/alphapapa/unpackaged.el#export-to-html-with-useful-anchors
+*** 修改org-html-section，去掉每个headline后面的<div>块
+
+#+BEGIN_SRC emacs-lisp
+(advice-add #'org-html-section :override #'albert|org-html-section)
+
+(defun albert|org-html-section (section contents info)
+  "Transcode a SECTION element from Org to HTML.
+CONTENTS holds the contents of the section.  INFO is a plist
+holding contextual information."
+  (let ((parent (org-export-get-parent-headline section)))
+    ;; Before first headline: no container, just return CONTENTS.
+    (if (not parent) contents
+      ;; Get div's class and id references.
+      (let* ((class-num (+ (org-export-get-relative-level parent info)
+			   (1- (plist-get info :html-toplevel-hlevel))))
+	     (section-number
+	      (and (org-export-numbered-headline-p parent info)
+		   (mapconcat
+		    #'number-to-string
+		    (org-export-get-headline-number parent info) "-"))))
+        ;; Build return value.
+	(format "\n%s\n" (or contents ""))))))
+#+END_SRC
+
+*** 源代码块可以修改 =org-html-src-block=
+未修改。
+
+*** list可以修改 =org-html-format-list-item=
+未修改。
+
 * 现在没用的配置
 ** 反显选中区域
 
