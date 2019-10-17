@@ -3808,6 +3808,53 @@ holding contextual information."
 *** list可以修改 =org-html-format-list-item=
 未修改。
 
+** org-download [2019-10-17 周四 11:41:22]
+
+具体问题可以看 https://github.com/abo-abo/org-download/issues， 里面有不少问题的解决办法
+
++ 问题
+  1. firefox拖拽图片到emacs中，会保存为bmp格式，bmp格式的图片很大，而且emacs不能显示
+     1. 在firefox中右键图片-> 复制link
+     2. M-x org-download-yank
+        
+  2. 保存图片的目录
+     1. 为什么在org文件中指定保存目录，但是没有生效?
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-download
+  :after org
+  ;;:defer t
+  :config
+  ;; org-download-heading-lvl默认是 0，改为nil，保存到当前目录。
+  (setq-default org-download-heading-lvl nil)
+  ;;(setq-default org-download-image-dir "e:/home/albert/org/notes/images/tcpdump_vlan")
+  )
+#+END_SRC
+
+下面的配置参考了 https://emacs-china.org/t/org-download/1672/6 tumashu的配置。
+不用了。
+#+BEGIN_SRC lisp
+(use-package org-download
+  :after org
+  :bind (:map org-mode-map
+              ("<f2>" . org-download-screenshot))
+  :ensure t
+  :config
+  (setq org-download-method 'attach)
+
+  ;; 用 posframe 预览插入的图片，不直接在org显示图片
+  ;; (setq org-download-display-inline-images 'posframe)
+
+  ;; 去掉插入图片时图片上面的那一行的说明
+  (setq org-download-annotate-function 'ignore)
+
+  (setq org-download-screenshot-file (concat temporary-file-directory "image.png"))
+  (setq org-download-image-attr-list
+        '("#+ATTR_HTML: :width 80% :align center"))
+  (when (eq system-type 'windows-nt)
+    (setq org-download-screenshot-method "convert clipboard: %s"))
+  (org-download-enable))
+#+END_SRC
 * 现在没用的配置
 ** 反显选中区域
 
