@@ -15,40 +15,38 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 
 优化Emacs启动速度的方法论 https://manateelazycat.github.io/emacs/2019/05/12/emacs-optimize-startup-speed.html
 *** garbage collector优化 [2019-05-20 周一 10:53:13]
-[2019-05-18 周六 20:43:50] 从10s -> 5.5s左右，不知道效果能持续多久。
-设置垃圾回收，在Windows下，emacs 25版本会频繁出发垃圾回收，所以需要设置。
-
-[2019-05-18 周六 21:54:06] emacs 26.2启动时间15s，先注释掉吧。内存设置过大在长时间使用后gc会导致响应慢。
 [2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
 
 ** elpa
 
 #+BEGIN_SRC emacs-lisp
-(require 'package)
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
 
-(add-to-list 'package-archives
-  '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
-;;  '("melpa" . "http://melpa.org/packages/") t)
+     (require 'package)
+   
+     (add-to-list 'package-archives
+                  '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
+     ;;  '("melpa" . "http://melpa.org/packages/") t)
+   
+     ;; (unless (assoc-default "melpa" package-archives)
+     ;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+     ;; (unless (assoc-default "org" package-archives)
+     ;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
+   
+     (unless (package-installed-p 'use-package)
+       (package-install 'use-package))
 
-;; (unless (assoc-default "melpa" package-archives)
-;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-;; (unless (assoc-default "org" package-archives)
-;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
-
-;; (package-initialize)
-;(setq package-user-dir (concat dotfiles-dir "/elpa"))
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+     (use-package auto-compile
+       :config (auto-compile-on-load-mode))
+     (setq load-prefer-newer t)
+     ))
 
 ;; [2019-01-11 周五 23:23:40] always-ensure一打开就起不来了，可能网络不好
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 (require 'use-package)
-
-(use-package auto-compile
-  :config (auto-compile-on-load-mode))
-(setq load-prefer-newer t)
 #+end_src
 
 代理配置
@@ -195,8 +193,16 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+     (require 'saveplace)
+     (save-place-mode 1)
+     ))
+#+END_SRC
+
+#+BEGIN_SRC lisp
 (use-package saveplace
-  ;; :ensure t
   :init (save-place-mode 1))
 #+END_SRC
 
@@ -204,6 +210,24 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ** evil
 
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+     (require 'evil)
+
+     (evil-mode 1)
+
+     (eval-after-load 'ggtags
+       '(progn
+          (evil-make-overriding-map ggtags-mode-map 'normal)
+          ;; force update evil keymaps after ggtags-mode loaded
+          (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
+
+     (setq evil-want-visual-char-semi-exclusive t)
+     ))
+#+end_src
+
+#+BEGIN_SRC lisp
 (use-package evil
   :ensure t
   :defer t
@@ -219,7 +243,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
            ;; force update evil keymaps after ggtags-mode loaded
            (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
       (setq evil-want-visual-char-semi-exclusive t)))
-#+end_src
+#+END_SRC
 
 为ggtags修改默认的键绑定，可以用 =M-.= 。
 参考spacemacs的配置 https://blog.csdn.net/Levi_Huang/article/details/84288493
@@ -254,7 +278,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 vdiff的问题是速度太慢了，vim是秒开。还是要用vim。
 
 https://github.com/justbur/emacs-vdiff
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package vdiff
   :ensure t
   :defer t
@@ -980,7 +1004,7 @@ Jedit Grey 灰底黑字也可以
 ;#+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
 
 (use-package doom-themes
   :ensure t
@@ -1031,6 +1055,7 @@ CJK (Chinese, Japanese, Korean)
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+      ;; (set-face-attribute 'default nil :font "Inconsolata 11")
       ;; Chinese Font
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
               (set-fontset-font (frame-parameter nil 'font)
@@ -1121,6 +1146,8 @@ Source Code Variable 无法和Yahei配合对齐。
 "Ubuntu Mono 11 + Microsoft Yahei 22" org mode table是可以对齐的，字体大小正好。
 
 [2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
+
+[2019-11-16 周六 22:25:44] 试了一下google的Inconsolata，不如ubuntu的字体，感觉太瘦高了，字体好细 https://www.levien.com/type/myfonts/inconsolata.html
 
 ** 不显示工具栏和滚动条
 
@@ -1239,6 +1266,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
   :ensure t
+  :disabled t
   :defer t)
 
 ;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
@@ -1345,33 +1373,60 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
 
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+     (require 'winum)
+     (winum-mode +1)
+     (setq winum-keymap
+           (let ((map (make-sparse-keymap)))
+             (define-key map (kbd "C-`") 'winum-select-window-by-number)
+             (define-key map (kbd "C-²") 'winum-select-window-by-number)
+             (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+             (define-key map (kbd "M-1") 'winum-select-window-1)
+             (define-key map (kbd "M-2") 'winum-select-window-2)
+             (define-key map (kbd "M-3") 'winum-select-window-3)
+             (define-key map (kbd "M-4") 'winum-select-window-4)
+             (define-key map (kbd "M-5") 'winum-select-window-5)
+             (define-key map (kbd "M-6") 'winum-select-window-6)
+             (define-key map (kbd "M-7") 'winum-select-window-7)
+             (define-key map (kbd "M-8") 'winum-select-window-8)
+             map))
+     ))
+#+END_SRC
+
+#+BEGIN_SRC lisp
 (use-package winum
   :config (winum-mode +1)
   :init
   (setq winum-keymap
-      (let ((map (make-sparse-keymap)))
-        (define-key map (kbd "C-`") 'winum-select-window-by-number)
-        (define-key map (kbd "C-²") 'winum-select-window-by-number)
-        (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-        (define-key map (kbd "M-1") 'winum-select-window-1)
-        (define-key map (kbd "M-2") 'winum-select-window-2)
-        (define-key map (kbd "M-3") 'winum-select-window-3)
-        (define-key map (kbd "M-4") 'winum-select-window-4)
-        (define-key map (kbd "M-5") 'winum-select-window-5)
-        (define-key map (kbd "M-6") 'winum-select-window-6)
-        (define-key map (kbd "M-7") 'winum-select-window-7)
-        (define-key map (kbd "M-8") 'winum-select-window-8)
-        map)))
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-`") 'winum-select-window-by-number)
+          (define-key map (kbd "C-²") 'winum-select-window-by-number)
+          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+          (define-key map (kbd "M-1") 'winum-select-window-1)
+          (define-key map (kbd "M-2") 'winum-select-window-2)
+          (define-key map (kbd "M-3") 'winum-select-window-3)
+          (define-key map (kbd "M-4") 'winum-select-window-4)
+          (define-key map (kbd "M-5") 'winum-select-window-5)
+          (define-key map (kbd "M-6") 'winum-select-window-6)
+          (define-key map (kbd "M-7") 'winum-select-window-7)
+          (define-key map (kbd "M-8") 'winum-select-window-8)
+          map)))
 #+END_SRC
 
 ** winner-mode [2019-01-09 周三 18:04:05]
 winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
 
 #+BEGIN_SRC emacs-lisp
-(use-package winner
-  :defer t)
- 
-;; (winner-mode t)
+  (run-with-idle-timer
+   1 nil
+   #'(lambda ()
+       (use-package winner
+         :defer t)
+       ))
+
+  ;; (winner-mode t)
 #+END_SRC
 * tools
 ** Flycheck - http://www.flycheck.org
@@ -1973,6 +2028,18 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 (setq org-static-blog-enable-tags t)
 (setq org-export-with-toc t)
 (setq org-export-with-section-numbers nil)
+#+END_SRC
+** aweshell [2019-11-16 周六 15:10:26]
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/elisp/aweshell"))
+
+;; lazy load the plugin
+(run-with-idle-timer
+ 3 nil
+ #'(lambda ()
+     (require 'aweshell)
+     ))
 #+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
@@ -3467,14 +3534,18 @@ org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-crypt)
-; Encrypt all entries before saving
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-;; nil 使用对称加密算法加密，非nil则使用公钥加密
-;; (setq org-crypt-key nil)
-;; keyid可以用key的username/email or pub的指纹的后8个字符
-(setq org-crypt-key "georgealbert@qq.com")
+(run-with-idle-timer
+ 5 nil
+ #'(lambda ()
+     (require 'org-crypt)
+     ;; Encrypt all entries before saving
+     (org-crypt-use-before-save-magic)
+     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+     ;; nil 使用对称加密算法加密，非nil则使用公钥加密
+     ;; (setq org-crypt-key nil)
+     ;; keyid可以用key的username/email or pub的指纹的后8个字符
+     (setq org-crypt-key "georgealbert@qq.com")
+     ))
 #+END_SRC
 
 =M-x org-set-property= 设置heading的properties为 =CRYPTKEY= 为某个key的id，单独对一个heading使用不同的加密方式和key。
