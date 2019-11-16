@@ -771,6 +771,10 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
 ;; search keyword: process 中文, https://emacs-china.org/t/emacs-shell/2730/2
 (setq process-coding-system-alist (cons '("ipython" . (cp936 . cp936)) process-coding-system-alist))
 
+(dolist (cmd '("python" "ping"))
+  (setq process-coding-system-alist (cons (cons cmd '(cp936 . cp936))
+                                          process-coding-system-alist)))
+
 ;; (use-package python-mode
 ;;   :mode (("SConstruct\\'" . python-mode)
 ;;          ("SConscript\\'" . python-mode)
@@ -1026,6 +1030,9 @@ Jedit Grey 灰底黑字也可以
 
 ;#+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
+;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
+
 (use-package doom-themes
   :ensure t
   ;; :disabled t
@@ -1257,6 +1264,9 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
     
     ;; Whether display irc notifications or not. Requires `circe' package.
     (setq doom-modeline-irc nil)
+    
+    ;; 2019.11.06修改为图标的了，不好看
+    (setq doom-modeline-evil-state-icon nil)
     )
   :hook (after-init . doom-modeline-mode))
 #+END_SRC
@@ -2005,7 +2015,7 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 (global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
 ** org-static-blog [2019-10-15 周二 09:30:53]
-默认把最新的blog显示在index.html。不好用。不用了。
+默认把最新的blog显示在index.html，其他的都在归档里，我比较喜欢列出博文的目录。不好用。不用了。
 #+BEGIN_SRC lisp
 (setq org-static-blog-publish-title "My Static Org Blog")
 (setq org-static-blog-publish-url "https://www.albertzhou.net/")
@@ -3608,16 +3618,16 @@ In order for filling to work correctly this needs to be set before the exporters
       ;:with-date nil
       ;:author "Albert"
       ;:email "georgealbert@qq.com"
-      ;:auto-sitemap t                ; Generate sitemap.org automagically...
-      :sitemap-filename "index.org"  ; ... call it sitemap.org (it's the default)...
-      ;:sitemap-title "Albert's blog"         ; ... with title 'Sitemap'.
+      ;;:auto-sitemap t                ; Generate sitemap.org automagically...
+      :sitemap-filename "index.org"            ; ... call it sitemap.org (it's the default)...
+      ;;:sitemap-title "Albert's blog"         ; ... with title 'Sitemap'.
       :with-toc nil                            ; 不要toc，否则太难看
       :sitemap-sort-files anti-chronologically
       :sitemap-file-entry-format "%d %t"
       :html-head-include-scripts nil           ; 不输出<head>中的javascript脚本
       :html-postamble nil                      ; 不输出creator、date和validation
       :html-validation-link nil
-      :html-link-use-abs-url t                ; 用绝对路径，看看解决静态资源文件定位问题 [2018-11-24 周六 23:22:08]
+      :html-link-use-abs-url t                 ; 用绝对路径，看看解决静态资源文件定位问题 [2018-11-24 周六 23:22:08]
       :html-doctype "html5"                    ; 用html5可以让html的代码输出少点
       ;:html-link-home "https://www.albertzhou.net"
       )
@@ -3823,12 +3833,13 @@ holding contextual information."
 #+BEGIN_SRC emacs-lisp
 (use-package org-download
   :after org
-  ;;:defer t
+  :defer t
   :config
   ;; org-download-heading-lvl默认是 0，改为nil，保存到当前目录。
   (setq-default org-download-heading-lvl nil)
-  ;;(setq-default org-download-image-dir "e:/home/albert/org/notes/images/tcpdump_vlan")
   )
+  ;;(setq-default org-download-image-dir "e:/home/albert/org/notes/images/tcpdump_vlan")
+  ;;(add-hook 'org-mode-hook 'org-download-enable))
 #+END_SRC
 
 下面的配置参考了 https://emacs-china.org/t/org-download/1672/6 tumashu的配置。
