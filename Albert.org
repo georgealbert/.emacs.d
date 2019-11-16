@@ -206,6 +206,541 @@ Turn on save place so that when opening a file, the cursor will be at the last p
   :init (save-place-mode 1))
 #+END_SRC
 
+* ui
+** Frame title
+
+#+begin_src emacs-lisp
+(setq frame-title-format "Albert@%f")
+#+end_src
+
+;;(setq frame-title-format "Albert@%b")
+** minibuffer
+[2014-09-12 09:24:17]
+
+It often displays so much information, even temporarily, that it is nice to give it some room to breath.
+
+#+BEGIN_SRC emacs-lisp
+(setq resize-mini-windows t)
+(setq max-mini-window-height 0.33)
+#+END_SRC
+
+** 去掉启动欢迎界面
+
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t) 
+#+end_src
+
+** 光标靠近鼠标的时候，让鼠标自动让开，不挡住视线
+
+#+begin_src emacs-lisp
+(mouse-avoidance-mode 'animate)
+#+end_src
+
+** 不要总是没完没了的问yes or no
+
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+** 显示行、列号
+
+在status bar显示，不在buffer的左侧显示每行的行号，否则真的会很慢。
+
+列号是从0开始的。
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+#+END_SRC
+
+[2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
+#+BEGIN_SRC emacs-lisp
+;; (global-display-line-numbers-mode t)
+(setq display-line-numbers-width-start 5)
+
+(add-hook 'org-mode-hook 'display-line-numbers-mode)
+(add-hook 'python-mode-hook 'display-line-numbers-mode)
+(add-hook 'c-mode-common-hook 'display-line-numbers-mode)
+(add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
+(add-hook 'sh-mode-hook 'display-line-numbers-mode)
+(add-hook 'go-mode-hook 'display-line-numbers-mode)
+#+END_SRC
+
+** Make window splitting more useful
+
+I added these snippets to my .emacs so that when I split the screen with C-x 2 or C-x 3, 
+it opens the previous buffer instead of giving me two panes with the same buffer:
+
+Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+#+BEGIN_SRC emacs-lisp
+(defun vsplit-last-buffer ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil)
+  (switch-to-next-buffer)
+  )
+(defun hsplit-last-buffer ()
+  (interactive)
+   (split-window-horizontally)
+  (other-window 1 nil)
+  (switch-to-next-buffer)
+  )
+
+(global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
+(global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
+#+END_SRC
+
+** Color theme
+
+emacs24自带的最喜欢的theme。
+
+[2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
+#+BEGIN_SRC emacs-lisp
+;; (load-theme 'deeper-blue t)
+#+END_SRC
+
+;; (load-theme 'solarized t)
+;; (load-theme 'tango-dark t)
+;; (load-theme 'manoj-dark t)
+
+[2019-01-11 周五 21:55:40] 下面的theme不是用load-theme加载，不如什么theme都不用，纯白的。
+;; (load-theme 'Snowish t)
+;; (load-theme 'Bharadwaj-Slate t)
+;; (load-theme 'Infodoc t)
+
+JB Simple 白底黑字不错
+Jedit Grey 灰底黑字也可以
+
+*** doom-themes [2019-05-21 周二 09:19:44]
+昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
+和现在使用的deeper-blue差异太大，就自己增加了一个theme。
+
+;#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
+;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
+
+(use-package doom-themes
+  :ensure t
+  ;; :disabled t
+  :defer t
+  :init
+  ;; :config
+  (progn
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
+                                       ; 禁用粗体，否则org-mode的outline字体太难看
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+    ;; 在load-theme之前设置，让modeline更亮一点，
+    ;; [2019-05-21 周二 16:54:51] 不知道改了doom-deeper-blue-theme.el的哪个地方，貌似modeline中的文件名能看清楚了。
+    (setq doom-deeper-blue-brighter-modeline nil)
+
+    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
+    ;; (load-theme 'doom-one t)
+    (load-theme 'doom-deeper-blue t)
+    
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    ;; (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (doom-themes-treemacs-config)
+    
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config)))
+#+END_SRC
+** Font setting on windows and X
+
+可以用 *C-u C-x =* or *C-u g a* 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
+
+另一个有用的函数是 =M-x describe-fontset= 。
+
+中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
+
+CJK (Chinese, Japanese, Korean)
+
+#+BEGIN_SRC emacs-lisp
+(defun albert|notebook-font()
+  "Config font on HP zhan66."
+  (interactive)
+  (if (eq system-type 'windows-nt)
+    (progn
+      ;; Setting English Font
+      (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+      ;; (set-face-attribute 'default nil :font "Inconsolata 11")
+      ;; Chinese Font
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+              (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Microsoft Yahei" :size 22))))))
+
+(defun albert|s2319-font()
+  "Config font on dell s2319. 
+   Ubuntu Mono 10 + Yahei 14 太小了
+   Ubuntu Mono 12 + Yahei 16 比较合适
+   "
+  (interactive)
+  (if (eq system-type 'windows-nt)
+    (progn
+      ;; Setting English Font
+      (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
+      ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
+      ;; Chinese Font
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+              (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Microsoft Yahei" :size 16))))))
+                            ;; DejaVu Sans Mono在windows上没有 gb2312 编码的，设置了无效。
+                            ;; (font-spec :family "DejaVu Sans Mono" :size 16))))))
+                            ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
+
+(if (eq window-system 'w32)
+  (progn
+    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+    ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
+    ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
+    ;; (display-mm-height)
+    (if (>= (display-mm-width) 509)
+      (albert|s2319-font))
+    
+    ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
+    ;; HP ZHAN66 309mm X 175mm
+    ;; Thinkpad T430 4xxmm X 20xmm?
+    (if (eq (display-mm-width) 309)
+      (albert|notebook-font))))
+#+END_SRC
+
+#+BEGIN_SRC lisp
+;; (if (eq system-type 'windows-nt)
+;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
+;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
+;;   (progn
+;;     ;; Setting English Font
+;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
+;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
+;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
+;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
+;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
+;; 
+;;     ;; Chinese Font
+;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;             (set-fontset-font (frame-parameter nil 'font)
+;;                           charset
+;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
+;;
+;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
+;; 效果不好。
+;; (set-default-font "Consolas-with-Yahei 9")
+
+;; (if (eq system-type 'windows-nt)
+;;      (set-face-attribute
+;;        'default nil :font "Consolas-with-Yahei 11"))
+#+END_SRC
+
+[2018-12-10 周一 11:39:52] Consolas 10 + Microsoft Yahei 24 org mode table是可以对齐的，但是中文太大了。
+Consolas 8 + Microsoft Yahei 20 org mode table是可以对齐的，但是英文太小了。
+默认用Consolas 11 + Microsoft Yahei 20的时候不能对齐。
+
+Source Code Variable 无法和Yahei配合对齐。
+
+[2018-12-10 周一 12:17:01] https://github.com/cstrap/monaco-font 
+字体下载 https://raw.githubusercontent.com/todylu/monaco.ttf/master/monaco.ttf
+"Monaco 8 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
+"Monaco 10 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
+
+[2018-12-10 周一 13:30:29] https://design.ubuntu.com/font/
+"Ubuntu Mono 10 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
+"Ubuntu Mono 12 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
+"Ubuntu Mono 11 + Microsoft Yahei 22" org mode table是可以对齐的，字体大小正好。
+
+[2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
+
+[2019-11-16 周六 22:25:44] 试了一下google的Inconsolata，不如ubuntu的字体，感觉太瘦高了，字体好细 https://www.levien.com/type/myfonts/inconsolata.html
+
+** 不显示工具栏和滚动条
+
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+
+(if (eq window-system 'w32)
+  (scroll-bar-mode -1))
+#+end_src
+
+** Window size
+
+T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，
+控制窗口大小，让buffer显示在下面。
+
+#+BEGIN_SRC emacs-lisp
+;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
+(if (eq system-type 'windows-nt)
+  ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
+  (toggle-frame-maximized)
+
+  ;; "Maximize emacs window in windows os" WM_SYSCOMMAND #xf030 maximize  
+  ;; [2018-09-07 周五 09:53:36] 不知道为什么没有效果
+  ;; (interactive)
+  ;; (w32-send-sys-command 61488)
+)
+#+END_SRC
+
+** 字体放大缩小
+
+from sacha chua
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+#+END_SRC
+
+** mode-line
+*** doom-modeline
+[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
+如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
+
+https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
+
++ 优点
+  1. 速度很快
+  2. 显示很漂亮
+     
++ Install
+  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :defer t)
+  
+(use-package doom-modeline
+  :ensure t
+  :defer t
+  ;; :init
+  :config
+  (progn
+    ;; How tall the mode-line should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-height 20)
+    
+    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-bar-width 3)
+
+    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+    (setq doom-modeline-icon t)
+    
+    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-major-mode-icon t)
+    
+    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+    (setq doom-modeline-major-mode-color-icon t)
+    
+    ;; Whether display minor modes or not. Non-nil to display in mode-line.
+    (setq doom-modeline-minor-modes nil)
+    
+    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+    (setq inhibit-compacting-font-caches t)
+    
+    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+    (setq doom-modeline-lsp nil)
+    
+    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+    (setq doom-modeline-mu4e nil)
+    
+    ;; Whether display irc notifications or not. Requires `circe' package.
+    (setq doom-modeline-irc nil)
+    
+    ;; 2019.11.06修改为图标的了，不好看
+    (setq doom-modeline-evil-state-icon nil)
+    )
+  :hook (after-init . doom-modeline-mode))
+#+END_SRC
+
+*** modeline中的时间格式设置
+[2014-11-21 周五 10:35:59]
+
+在modeline上显示日期时间。
+
+;; (setq display-time-24hr-format t)
+;; (setq display-time-use-mail-icon t)
+;; (setq display-time-interval 60)
+
+#+BEGIN_SRC emacs-lisp
+(setq display-time-day-and-date t)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
+#+END_SRC
+
+*** 不显示一些无用的minor mode
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :disabled t
+  :defer t)
+
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
+
+(diminish 'visual-line-mode)
+#+END_SRC
+
+** treemacs [2019-06-12 周三 09:41:52]
+
++ =q= 退出treemacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      t
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         30)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :disabled t
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+#+END_SRC
+** window-select
+*** winum [2019-06-12 周三 09:50:41]
+从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
+
+#+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+     (require 'winum)
+     (winum-mode +1)
+     (setq winum-keymap
+           (let ((map (make-sparse-keymap)))
+             (define-key map (kbd "C-`") 'winum-select-window-by-number)
+             (define-key map (kbd "C-²") 'winum-select-window-by-number)
+             (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+             (define-key map (kbd "M-1") 'winum-select-window-1)
+             (define-key map (kbd "M-2") 'winum-select-window-2)
+             (define-key map (kbd "M-3") 'winum-select-window-3)
+             (define-key map (kbd "M-4") 'winum-select-window-4)
+             (define-key map (kbd "M-5") 'winum-select-window-5)
+             (define-key map (kbd "M-6") 'winum-select-window-6)
+             (define-key map (kbd "M-7") 'winum-select-window-7)
+             (define-key map (kbd "M-8") 'winum-select-window-8)
+             map))
+     ))
+#+END_SRC
+
+#+BEGIN_SRC lisp
+(use-package winum
+  :config (winum-mode +1)
+  :init
+  (setq winum-keymap
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-`") 'winum-select-window-by-number)
+          (define-key map (kbd "C-²") 'winum-select-window-by-number)
+          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+          (define-key map (kbd "M-1") 'winum-select-window-1)
+          (define-key map (kbd "M-2") 'winum-select-window-2)
+          (define-key map (kbd "M-3") 'winum-select-window-3)
+          (define-key map (kbd "M-4") 'winum-select-window-4)
+          (define-key map (kbd "M-5") 'winum-select-window-5)
+          (define-key map (kbd "M-6") 'winum-select-window-6)
+          (define-key map (kbd "M-7") 'winum-select-window-7)
+          (define-key map (kbd "M-8") 'winum-select-window-8)
+          map)))
+#+END_SRC
+
+** winner-mode [2019-01-09 周三 18:04:05]
+winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
+
+#+BEGIN_SRC emacs-lisp
+  (run-with-idle-timer
+   1 nil
+   #'(lambda ()
+       (use-package winner
+         :defer t)
+       ))
+
+  ;; (winner-mode t)
+#+END_SRC
 * editor
 ** evil
 
@@ -893,541 +1428,6 @@ google的代码格式化工具。
 #+END_SRC
 ** go [2019-07-04 周四 16:59:53]
 
-* ui
-** Frame title
-
-#+begin_src emacs-lisp
-(setq frame-title-format "Albert@%f")
-#+end_src
-
-;;(setq frame-title-format "Albert@%b")
-** minibuffer
-[2014-09-12 09:24:17]
-
-It often displays so much information, even temporarily, that it is nice to give it some room to breath.
-
-#+BEGIN_SRC emacs-lisp
-(setq resize-mini-windows t)
-(setq max-mini-window-height 0.33)
-#+END_SRC
-
-** 去掉启动欢迎界面
-
-#+begin_src emacs-lisp
-(setq inhibit-startup-message t) 
-#+end_src
-
-** 光标靠近鼠标的时候，让鼠标自动让开，不挡住视线
-
-#+begin_src emacs-lisp
-(mouse-avoidance-mode 'animate)
-#+end_src
-
-** 不要总是没完没了的问yes or no
-
-#+begin_src emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-** 显示行、列号
-
-在status bar显示，不在buffer的左侧显示每行的行号，否则真的会很慢。
-
-列号是从0开始的。
-#+BEGIN_SRC emacs-lisp
-(column-number-mode t)
-#+END_SRC
-
-[2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
-#+BEGIN_SRC emacs-lisp
-;; (global-display-line-numbers-mode t)
-(setq display-line-numbers-width-start 5)
-
-(add-hook 'org-mode-hook 'display-line-numbers-mode)
-(add-hook 'python-mode-hook 'display-line-numbers-mode)
-(add-hook 'c-mode-common-hook 'display-line-numbers-mode)
-(add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
-(add-hook 'sh-mode-hook 'display-line-numbers-mode)
-(add-hook 'go-mode-hook 'display-line-numbers-mode)
-#+END_SRC
-
-** Make window splitting more useful
-
-I added these snippets to my .emacs so that when I split the screen with C-x 2 or C-x 3, 
-it opens the previous buffer instead of giving me two panes with the same buffer:
-
-Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
-
-#+BEGIN_SRC emacs-lisp
-(defun vsplit-last-buffer ()
-  (interactive)
-  (split-window-vertically)
-  (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
-(defun hsplit-last-buffer ()
-  (interactive)
-   (split-window-horizontally)
-  (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
-
-(global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
-(global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
-#+END_SRC
-
-** Color theme
-
-emacs24自带的最喜欢的theme。
-
-[2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
-#+BEGIN_SRC emacs-lisp
-;; (load-theme 'deeper-blue t)
-#+END_SRC
-
-;; (load-theme 'solarized t)
-;; (load-theme 'tango-dark t)
-;; (load-theme 'manoj-dark t)
-
-[2019-01-11 周五 21:55:40] 下面的theme不是用load-theme加载，不如什么theme都不用，纯白的。
-;; (load-theme 'Snowish t)
-;; (load-theme 'Bharadwaj-Slate t)
-;; (load-theme 'Infodoc t)
-
-JB Simple 白底黑字不错
-Jedit Grey 灰底黑字也可以
-
-*** doom-themes [2019-05-21 周二 09:19:44]
-昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
-和现在使用的deeper-blue差异太大，就自己增加了一个theme。
-
-;#+BEGIN_SRC lisp
-#+BEGIN_SRC emacs-lisp
-;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
-;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
-
-(use-package doom-themes
-  :ensure t
-  ;; :disabled t
-  :defer t
-  :init
-  ;; :config
-  (progn
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
-                                       ; 禁用粗体，否则org-mode的outline字体太难看
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-    ;; 在load-theme之前设置，让modeline更亮一点，
-    ;; [2019-05-21 周二 16:54:51] 不知道改了doom-deeper-blue-theme.el的哪个地方，貌似modeline中的文件名能看清楚了。
-    (setq doom-deeper-blue-brighter-modeline nil)
-
-    ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
-    ;; (load-theme 'doom-one t)
-    (load-theme 'doom-deeper-blue t)
-    
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-    
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
-    ;; (doom-themes-neotree-config)
-    ;; or for treemacs users
-    (doom-themes-treemacs-config)
-    
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config)))
-#+END_SRC
-** Font setting on windows and X
-
-可以用 *C-u C-x =* or *C-u g a* 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
-
-另一个有用的函数是 =M-x describe-fontset= 。
-
-中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
-
-CJK (Chinese, Japanese, Korean)
-
-#+BEGIN_SRC emacs-lisp
-(defun albert|notebook-font()
-  "Config font on HP zhan66."
-  (interactive)
-  (if (eq system-type 'windows-nt)
-    (progn
-      ;; Setting English Font
-      (set-face-attribute 'default nil :font "Ubuntu Mono 11")
-      ;; (set-face-attribute 'default nil :font "Inconsolata 11")
-      ;; Chinese Font
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-              (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            (font-spec :family "Microsoft Yahei" :size 22))))))
-
-(defun albert|s2319-font()
-  "Config font on dell s2319. 
-   Ubuntu Mono 10 + Yahei 14 太小了
-   Ubuntu Mono 12 + Yahei 16 比较合适
-   "
-  (interactive)
-  (if (eq system-type 'windows-nt)
-    (progn
-      ;; Setting English Font
-      (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-      ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
-      ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
-      ;; Chinese Font
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-              (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            (font-spec :family "Microsoft Yahei" :size 16))))))
-                            ;; DejaVu Sans Mono在windows上没有 gb2312 编码的，设置了无效。
-                            ;; (font-spec :family "DejaVu Sans Mono" :size 16))))))
-                            ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
-
-(if (eq window-system 'w32)
-  (progn
-    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-    ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
-    ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
-    ;; (display-mm-height)
-    (if (>= (display-mm-width) 509)
-      (albert|s2319-font))
-    
-    ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
-    ;; HP ZHAN66 309mm X 175mm
-    ;; Thinkpad T430 4xxmm X 20xmm?
-    (if (eq (display-mm-width) 309)
-      (albert|notebook-font))))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (if (eq system-type 'windows-nt)
-;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-;;   (progn
-;;     ;; Setting English Font
-;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
-;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
-;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
-;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
-;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
-;; 
-;;     ;; Chinese Font
-;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;             (set-fontset-font (frame-parameter nil 'font)
-;;                           charset
-;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
-;;
-;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
-;; 效果不好。
-;; (set-default-font "Consolas-with-Yahei 9")
-
-;; (if (eq system-type 'windows-nt)
-;;      (set-face-attribute
-;;        'default nil :font "Consolas-with-Yahei 11"))
-#+END_SRC
-
-[2018-12-10 周一 11:39:52] Consolas 10 + Microsoft Yahei 24 org mode table是可以对齐的，但是中文太大了。
-Consolas 8 + Microsoft Yahei 20 org mode table是可以对齐的，但是英文太小了。
-默认用Consolas 11 + Microsoft Yahei 20的时候不能对齐。
-
-Source Code Variable 无法和Yahei配合对齐。
-
-[2018-12-10 周一 12:17:01] https://github.com/cstrap/monaco-font 
-字体下载 https://raw.githubusercontent.com/todylu/monaco.ttf/master/monaco.ttf
-"Monaco 8 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
-"Monaco 10 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
-
-[2018-12-10 周一 13:30:29] https://design.ubuntu.com/font/
-"Ubuntu Mono 10 + Microsoft Yahei 20" org mode table是可以对齐的，但是英文太小了。
-"Ubuntu Mono 12 + Microsoft Yahei 24" org mode table是可以对齐的，但是中文太大了。
-"Ubuntu Mono 11 + Microsoft Yahei 22" org mode table是可以对齐的，字体大小正好。
-
-[2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
-
-[2019-11-16 周六 22:25:44] 试了一下google的Inconsolata，不如ubuntu的字体，感觉太瘦高了，字体好细 https://www.levien.com/type/myfonts/inconsolata.html
-
-** 不显示工具栏和滚动条
-
-#+begin_src emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-
-(if (eq window-system 'w32)
-  (scroll-bar-mode -1))
-#+end_src
-
-** Window size
-
-T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边打开，看见的内容太少了，
-控制窗口大小，让buffer显示在下面。
-
-#+BEGIN_SRC emacs-lisp
-;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(if (eq system-type 'windows-nt)
-  ;; (setq default-frame-alist '((top . 0) (left . 0) (height . 42) (width . 159)))
-  (toggle-frame-maximized)
-
-  ;; "Maximize emacs window in windows os" WM_SYSCOMMAND #xf030 maximize  
-  ;; [2018-09-07 周五 09:53:36] 不知道为什么没有效果
-  ;; (interactive)
-  ;; (w32-send-sys-command 61488)
-)
-#+END_SRC
-
-** 字体放大缩小
-
-from sacha chua
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-#+END_SRC
-
-** mode-line
-*** doom-modeline
-[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
-如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
-
-https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
-
-+ 优点
-  1. 速度很快
-  2. 显示很漂亮
-     
-+ Install
-  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
-
-#+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :ensure t
-  :defer t)
-  
-(use-package doom-modeline
-  :ensure t
-  :defer t
-  ;; :init
-  :config
-  (progn
-    ;; How tall the mode-line should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-height 20)
-    
-    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-bar-width 3)
-
-    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-    (setq doom-modeline-icon t)
-    
-    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-    (setq doom-modeline-major-mode-icon t)
-    
-    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
-    (setq doom-modeline-major-mode-color-icon t)
-    
-    ;; Whether display minor modes or not. Non-nil to display in mode-line.
-    (setq doom-modeline-minor-modes nil)
-    
-    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-    (setq inhibit-compacting-font-caches t)
-    
-    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
-    (setq doom-modeline-lsp nil)
-    
-    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
-    (setq doom-modeline-mu4e nil)
-    
-    ;; Whether display irc notifications or not. Requires `circe' package.
-    (setq doom-modeline-irc nil)
-    
-    ;; 2019.11.06修改为图标的了，不好看
-    (setq doom-modeline-evil-state-icon nil)
-    )
-  :hook (after-init . doom-modeline-mode))
-#+END_SRC
-
-*** modeline中的时间格式设置
-[2014-11-21 周五 10:35:59]
-
-在modeline上显示日期时间。
-
-;; (setq display-time-24hr-format t)
-;; (setq display-time-use-mail-icon t)
-;; (setq display-time-interval 60)
-
-#+BEGIN_SRC emacs-lisp
-(setq display-time-day-and-date t)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
-(display-time)
-#+END_SRC
-
-*** 不显示一些无用的minor mode
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :ensure t
-  :disabled t
-  :defer t)
-
-;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
-(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
-
-(diminish 'visual-line-mode)
-#+END_SRC
-
-** treemacs [2019-06-12 周三 09:41:52]
-
-+ =q= 退出treemacs
-
-#+BEGIN_SRC emacs-lisp
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         30)
-
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(use-package treemacs-evil
-  :after treemacs evil
-  :ensure t)
-
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :disabled t
-  :ensure t
-  :config (treemacs-icons-dired-mode))
-
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
-#+END_SRC
-** window-select
-*** winum [2019-06-12 周三 09:50:41]
-从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
-
-#+BEGIN_SRC emacs-lisp
-(run-with-idle-timer
- 1 nil
- #'(lambda ()
-     (require 'winum)
-     (winum-mode +1)
-     (setq winum-keymap
-           (let ((map (make-sparse-keymap)))
-             (define-key map (kbd "C-`") 'winum-select-window-by-number)
-             (define-key map (kbd "C-²") 'winum-select-window-by-number)
-             (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-             (define-key map (kbd "M-1") 'winum-select-window-1)
-             (define-key map (kbd "M-2") 'winum-select-window-2)
-             (define-key map (kbd "M-3") 'winum-select-window-3)
-             (define-key map (kbd "M-4") 'winum-select-window-4)
-             (define-key map (kbd "M-5") 'winum-select-window-5)
-             (define-key map (kbd "M-6") 'winum-select-window-6)
-             (define-key map (kbd "M-7") 'winum-select-window-7)
-             (define-key map (kbd "M-8") 'winum-select-window-8)
-             map))
-     ))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-(use-package winum
-  :config (winum-mode +1)
-  :init
-  (setq winum-keymap
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "C-`") 'winum-select-window-by-number)
-          (define-key map (kbd "C-²") 'winum-select-window-by-number)
-          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-          (define-key map (kbd "M-1") 'winum-select-window-1)
-          (define-key map (kbd "M-2") 'winum-select-window-2)
-          (define-key map (kbd "M-3") 'winum-select-window-3)
-          (define-key map (kbd "M-4") 'winum-select-window-4)
-          (define-key map (kbd "M-5") 'winum-select-window-5)
-          (define-key map (kbd "M-6") 'winum-select-window-6)
-          (define-key map (kbd "M-7") 'winum-select-window-7)
-          (define-key map (kbd "M-8") 'winum-select-window-8)
-          map)))
-#+END_SRC
-
-** winner-mode [2019-01-09 周三 18:04:05]
-winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
-
-#+BEGIN_SRC emacs-lisp
-  (run-with-idle-timer
-   1 nil
-   #'(lambda ()
-       (use-package winner
-         :defer t)
-       ))
-
-  ;; (winner-mode t)
-#+END_SRC
 * tools
 ** Flycheck - http://www.flycheck.org
 [2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
@@ -2011,11 +2011,11 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
       (setq undo-tree-visualizer-timestamps t)
       (setq undo-tree-visualizer-diff t)))
 
-(defalias 'redo 'undo-tree-redo)
+;; (defalias 'redo 'undo-tree-redo)
 ;;(global-set-key (kbd "C-z") 'undo) ; [Ctrl+z]
 ;;(global-set-key (kbd "C-S-z") 'redo) ; [Ctrl+Shift+z];  Mac style
 ;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
-(global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
+;; (global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
 ** org-static-blog [2019-10-15 周二 09:30:53]
 默认把最新的blog显示在index.html，其他的都在归档里，我比较喜欢列出博文的目录。不好用。不用了。
