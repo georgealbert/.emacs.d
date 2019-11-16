@@ -172,54 +172,6 @@ This command is convenient when reading novel, documentation."
     (set-window-margins nil 0 0)))
 #+END_SRC
 
-** 图片支持
-[2014-09-18 08:49:12]
-
-=M-x list-dynamics-libraries= 找到对应的dll的name。
-
-可以运行下面几行代码检查一下是否已经支持了图片。
-
-#+BEGIN_SRC lisp
-(image-type-available-p 'gif)
-
-(image-type-available-p 'jpeg)
-
-(image-type-available-p 'tiff)
-
-(image-type-available-p 'xbm)
-
-(image-type-available-p 'xpm)
-
-(image-type-available-p 'png)
-#+END_SRC
-
-这几个函数复制到Lisp模式的buffer，然后在每一行行尾按 *C-j* ，就可以看到每个函数运行的结果，返回 *t* 证明已经可以支持图片了。
-
-win的emacs不能显示图片是因为编译后默认没有带几个dll文件。把dll copy到emacs安装目录的bin目录下，就可以显示图片了。
-
-*** emacs 24.4
-+ png
-  [2014-11-18 周二 15:48:21] emacs 24.4需要libpng16-16.dll or libpng16.dll 和 zlib1.dll，都在libpng的压缩包里面
-  可以从 http://sourceforge.net/projects/ezwinports/files/ 下载
-
-*** emacs 24.3
-+ png :: libpng14.dll
-
-#+BEGIN_EXAMPLE
-jpeg62.dll
-libgcrypt-11.dll
-libgnutls-26.dll
-libpng14-14.dll
-libtasn1-3.dll
-libtiff3.dll
-libungif4.dll
-libXpm.dll
-xpm4.dll
-zlib1.dll
-#+END_EXAMPLE
-
-可以从 https://github.com/winterTTr/emacs-of-winterTTr/tree/master/.emacs.d/extra-bin/dlls 下载
-
 ** 输入特殊字符
 [2014-09-29 周一 17:20:40]
 

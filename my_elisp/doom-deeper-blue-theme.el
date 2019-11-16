@@ -269,7 +269,7 @@ determine the exact padding."
    (diff-refine-changed :background "red" :foreground "whtie")
    ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
    )
-   
+  
   ;; --- extra variables ---------------------
   ;; ()
 
