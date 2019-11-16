@@ -244,8 +244,6 @@ It often displays so much information, even temporarily, that it is nice to give
 
 ** 显示行、列号
 
-在status bar显示，不在buffer的左侧显示每行的行号，否则真的会很慢。
-
 列号是从0开始的。
 #+BEGIN_SRC emacs-lisp
 (column-number-mode t)
@@ -350,6 +348,103 @@ Jedit Grey 灰底黑字也可以
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
 #+END_SRC
+** mode-line
+*** doom-modeline
+[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
+如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
+
+https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
+
++ 优点
+  1. 速度很快
+  2. 显示很漂亮
+     
++ Install
+  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :defer t)
+  
+(use-package doom-modeline
+  :ensure t
+  :defer t
+  ;; :init
+  :config
+  (progn
+    ;; How tall the mode-line should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-height 20)
+    
+    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+    ;; (setq doom-modeline-bar-width 3)
+
+    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+    (setq doom-modeline-icon t)
+    
+    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-major-mode-icon t)
+    
+    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+    (setq doom-modeline-major-mode-color-icon t)
+    
+    ;; Whether display minor modes or not. Non-nil to display in mode-line.
+    (setq doom-modeline-minor-modes nil)
+    
+    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+    (setq inhibit-compacting-font-caches t)
+    
+    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+    (setq doom-modeline-lsp nil)
+    
+    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+    (setq doom-modeline-mu4e nil)
+    
+    ;; Whether display irc notifications or not. Requires `circe' package.
+    (setq doom-modeline-irc nil)
+    
+    ;; 2019.11.06修改为图标的了，不好看
+    (setq doom-modeline-evil-state-icon nil)
+    )
+  :hook (after-init . doom-modeline-mode))
+#+END_SRC
+
+*** modeline中的时间格式设置
+[2014-11-21 周五 10:35:59]
+
+在modeline上显示日期时间。
+
+;; (setq display-time-24hr-format t)
+;; (setq display-time-use-mail-icon t)
+;; (setq display-time-interval 60)
+
+#+BEGIN_SRC emacs-lisp
+(setq display-time-day-and-date t)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
+(display-time)
+#+END_SRC
+
+*** 不显示一些无用的minor mode
+#+BEGIN_SRC emacs-lisp
+(use-package diminish
+  :ensure t
+  :disabled t
+  :defer t)
+
+;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
+;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
+
+(diminish 'visual-line-mode)
+#+END_SRC
+
 ** Font setting on windows and X
 
 可以用 *C-u C-x =* or *C-u g a* 来查看光标上的汉字是用什么字体显示的，从而确定应该用什么字体显示中文。
@@ -498,103 +593,6 @@ from sacha chua
 (global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
 
-** mode-line
-*** doom-modeline
-[2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
-如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
-
-https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看见了。
-
-+ 优点
-  1. 速度很快
-  2. 显示很漂亮
-     
-+ Install
-  1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
-
-#+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :ensure t
-  :defer t)
-  
-(use-package doom-modeline
-  :ensure t
-  :defer t
-  ;; :init
-  :config
-  (progn
-    ;; How tall the mode-line should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-height 20)
-    
-    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-bar-width 3)
-
-    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-    (setq doom-modeline-icon t)
-    
-    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-    (setq doom-modeline-major-mode-icon t)
-    
-    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
-    (setq doom-modeline-major-mode-color-icon t)
-    
-    ;; Whether display minor modes or not. Non-nil to display in mode-line.
-    (setq doom-modeline-minor-modes nil)
-    
-    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-    (setq inhibit-compacting-font-caches t)
-    
-    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
-    (setq doom-modeline-lsp nil)
-    
-    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
-    (setq doom-modeline-mu4e nil)
-    
-    ;; Whether display irc notifications or not. Requires `circe' package.
-    (setq doom-modeline-irc nil)
-    
-    ;; 2019.11.06修改为图标的了，不好看
-    (setq doom-modeline-evil-state-icon nil)
-    )
-  :hook (after-init . doom-modeline-mode))
-#+END_SRC
-
-*** modeline中的时间格式设置
-[2014-11-21 周五 10:35:59]
-
-在modeline上显示日期时间。
-
-;; (setq display-time-24hr-format t)
-;; (setq display-time-use-mail-icon t)
-;; (setq display-time-interval 60)
-
-#+BEGIN_SRC emacs-lisp
-(setq display-time-day-and-date t)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
-(display-time)
-#+END_SRC
-
-*** 不显示一些无用的minor mode
-#+BEGIN_SRC emacs-lisp
-(use-package diminish
-  :ensure t
-  :disabled t
-  :defer t)
-
-;(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
-;(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-;(eval-after-load "smartparens" '(diminish 'smartparens-mode))
-;(eval-after-load "guide-key" '(diminish 'guide-key-mode))
-(eval-after-load "eldoc" '(diminish 'eldoc-mode))
-(eval-after-load "org-indent" '(diminish 'org-indent-mode))
-(eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
-(eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
-
-(diminish 'visual-line-mode)
-#+END_SRC
-
 ** treemacs [2019-06-12 周三 09:41:52]
 
 + =q= 退出treemacs
@@ -689,43 +687,24 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (run-with-idle-timer
  1 nil
  #'(lambda ()
-     (require 'winum)
-     (winum-mode +1)
-     (setq winum-keymap
-           (let ((map (make-sparse-keymap)))
-             (define-key map (kbd "C-`") 'winum-select-window-by-number)
-             (define-key map (kbd "C-²") 'winum-select-window-by-number)
-             (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-             (define-key map (kbd "M-1") 'winum-select-window-1)
-             (define-key map (kbd "M-2") 'winum-select-window-2)
-             (define-key map (kbd "M-3") 'winum-select-window-3)
-             (define-key map (kbd "M-4") 'winum-select-window-4)
-             (define-key map (kbd "M-5") 'winum-select-window-5)
-             (define-key map (kbd "M-6") 'winum-select-window-6)
-             (define-key map (kbd "M-7") 'winum-select-window-7)
-             (define-key map (kbd "M-8") 'winum-select-window-8)
-             map))
+     (use-package winum
+       :config (winum-mode +1)
+       :init
+       (setq winum-keymap
+             (let ((map (make-sparse-keymap)))
+               (define-key map (kbd "C-`") 'winum-select-window-by-number)
+               (define-key map (kbd "C-²") 'winum-select-window-by-number)
+               (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+               (define-key map (kbd "M-1") 'winum-select-window-1)
+               (define-key map (kbd "M-2") 'winum-select-window-2)
+               (define-key map (kbd "M-3") 'winum-select-window-3)
+               (define-key map (kbd "M-4") 'winum-select-window-4)
+               (define-key map (kbd "M-5") 'winum-select-window-5)
+               (define-key map (kbd "M-6") 'winum-select-window-6)
+               (define-key map (kbd "M-7") 'winum-select-window-7)
+               (define-key map (kbd "M-8") 'winum-select-window-8)
+               map)))
      ))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-(use-package winum
-  :config (winum-mode +1)
-  :init
-  (setq winum-keymap
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "C-`") 'winum-select-window-by-number)
-          (define-key map (kbd "C-²") 'winum-select-window-by-number)
-          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-          (define-key map (kbd "M-1") 'winum-select-window-1)
-          (define-key map (kbd "M-2") 'winum-select-window-2)
-          (define-key map (kbd "M-3") 'winum-select-window-3)
-          (define-key map (kbd "M-4") 'winum-select-window-4)
-          (define-key map (kbd "M-5") 'winum-select-window-5)
-          (define-key map (kbd "M-6") 'winum-select-window-6)
-          (define-key map (kbd "M-7") 'winum-select-window-7)
-          (define-key map (kbd "M-8") 'winum-select-window-8)
-          map)))
 #+END_SRC
 
 ** winner-mode [2019-01-09 周三 18:04:05]
@@ -2101,6 +2080,7 @@ Custom Key Bindings
 (global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
 (global-set-key (kbd "<f9> w") 'widen)
 
+;; 打卡签到签退
 (global-set-key (kbd "<f9> I") 'bh/punch-in)
 (global-set-key (kbd "<f9> O") 'bh/punch-out)
 
@@ -2131,9 +2111,9 @@ Custom Key Bindings
 #+END_SRC
 
 ** 6 Adding New Tasks Quickly with Org Capture
-*** 6.1 Capture Templates
+*** 6.1 Capture Templates - 捕获模板
 When a new task needs to be added I categorize it into one of a few things:
-对于一个新增加的task，我把它分为下面几类:
+对于一个新增加的task，分为下面几类:
 
 - A phone call (p) 电话
 - A meeting (m) 会议
@@ -2201,7 +2181,7 @@ Here is my setup for org-capture
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+END_SRC
 
-** 7 Refiling Tasks
+** 7 Refiling Tasks - 重新整理task
 *** 7.1 Refile Setup
 
 #+BEGIN_SRC emacs-lisp
@@ -2344,13 +2324,13 @@ Tasks show project-related tasks that are hidden when not narrowed to a project.
 
 This makes it easy to focus on the task at hand.
 
-这样会容易聚焦到正在做的task。
+这样会容易关注到正在做的task。
 
 I generally work top-down on the agenda.  Things with deadlines and
 scheduled dates (planned to work on today or earlier) show up in the
 agenda at the top.
 
-通常从上到下处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）在agenda的顶部显示出来。
+通常从上到下的方式处理agenda。有deadline和计划日期的事情（今天或者以前计划的工作）在agenda的顶部显示出来。
 
 My day goes generally like this:
 
@@ -2518,7 +2498,7 @@ and enter the topic and file it.  This takes practically no time at
 all and I know the note is safely filed for later retrieval.  The time
 I spend in the capture buffer is clocked with that capture note.
 
-** 9 Time Clocking 计时
+** 9 Time Clocking - 计时
 I now use the concept of =punching in= and =punching out= at the start and end of my work day. I punch in when I arrive at work, punch out for lunch, punch in after lunch, and punch out at the end of the day. Every minute is clocked between punch-in and punch-out times. 
 
 I'll work on this file in the following sequence:
@@ -3134,9 +3114,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
 #+END_SRC
 
-#+results:
-: ((plantuml . fundamental) (ocaml . tuareg) (elisp . emacs-lisp) (ditaa . artist) (asymptote . asy) (dot . fundamental) (sqlite . sql) (calc . fundamental) (C . c) (cpp . c++) (C++ . c++) (screen . shell-script) (shell . sh) (bash . sh))
-
 ** 18 Productivity Tools
 *** 18.2.1 Narrowing to a subtree with bh/org-todo
 
@@ -3502,7 +3479,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 #+END_SRC
 
-*** 18.17 Handling Encryption
+*** 18.17 Handling Encryption - 加密
 
 I used to keep my encrypted data like account passwords in a separate GPG encrypted file. Now I keep them in my org-mode files with a special tag instead. Encrypted data is kept in the org-mode file that it is associated with.
 
@@ -3510,7 +3487,7 @@ org-crypt allows you to tag headings with a special tag crypt and org-mode can k
 
 I use the following setup for encryption:
 
-org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
+org-crypt是org-mode自带的。
 [2019-06-05 周三 10:03:54] 为什么用use-package会报错?
 #+BEGIN_SRC emacs-lisp
 ;; (use-package org-crypt
