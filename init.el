@@ -47,7 +47,6 @@ decrease this. If you experience stuttering, increase this.")
   ;; You get a minor speed up by nooping this.
   (setq file-name-handler-alist nil)
   ;; Not restoring these to their defaults will cause stuttering/freezes.
-(add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
 ;; 显示加载时间
 (defvar albert-init-time 'nil
@@ -62,46 +61,65 @@ they were loaded at startup."
                (setq albert-init-time
                      (float-time (time-subtract (current-time) before-init-time))))))
 
-(add-hook 'emacs-startup-hook #'albert|display-benchmark)
+;; (let (
+;;       ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
+;;       ;; (gc-cons-threshold most-positive-fixnum)
+;;       (gc-cons-threshold 536870912) ;; 512mb
+;;       ;; 清空避免加载远程文件的时候分析文件。
+;;       (file-name-handler-alist nil))
 
-;; doom-emacs用的hook是 window-setup-hook
-;; (add-hook 'window-setup-hook #'albert|display-benchmark)
-;; end of 启动优化
+;;   (require 'benchmark-init-modes)
+;;   (require 'benchmark-init)
+;;   (benchmark-init/activate)
 
-;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
-;; (toggle-debug-on-error)
+  ;; 下面才写你的其它配置
+  (add-hook 'emacs-startup-hook #'albert|display-benchmark)
 
-;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
-(package-initialize nil)
+  ;; doom-emacs用的hook是 window-setup-hook
+  ;; (add-hook 'window-setup-hook #'albert|display-benchmark)
+  ;; end of 启动优化
 
-;; Override the packages with the git version of Org and other packages
-;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
-;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
+  ;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
+  ;; (toggle-debug-on-error)
 
-;; Load the rest of the packages
-;; (package-initialize t)
-(setq package-enable-at-startup nil)
-(require 'benchmark-init-modes)
-(require 'benchmark-init)
-(benchmark-init/activate)
+  ;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
+  (package-initialize nil)
 
-;; (setq org-modules
-(defvar org-modules
-  '(;; org-w3m
-    ;; org-bbdb
-    ;; org-bibtex
-    ;; org-docview
-    ;; org-gnus
-    ;; org-info
-    ;; org-irc
-    ;; org-mhe
-    ;; org-rmail
-    ))
+  ;; Override the packages with the git version of Org and other packages
+                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
+                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
 
-(require 'org)
-(require 'ob-tangle)
-(org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
-;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
+  ;; Load the rest of the packages
+  ;; (package-initialize t)
+
+  ;; [2019-10-30 周三 17:37:50] emacs 27.0不需要了
+  (setq package-enable-at-startup nil)
+
+  (require 'benchmark-init-modes)
+  (require 'benchmark-init)
+  (benchmark-init/activate)
+
+  ;; (setq org-modules
+  (defvar org-modules
+    '(;; org-w3m
+      ;; org-bbdb
+      ;; org-bibtex
+      ;; org-docview
+      ;; org-gnus
+      ;; org-info
+      ;; org-irc
+      ;; org-mhe
+      ;; org-rmail
+      ))
+
+  ;; (require 'org)
+  (require 'ob-tangle)
+  (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
+  ;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
+
+  ;; )
+
+(add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -110,16 +128,16 @@ they were loaded at startup."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#181a26" "#FF0000" "#4eee94" "#FFFF00" "#0000cd" "#f08080" "#00FFFF" "#cccccc"])
- '(custom-safe-themes (quote (default)))
+ '(custom-safe-themes '(default))
  '(fci-rule-color "#ffe4b5")
  '(jdee-db-active-breakpoint-face-colors (cons "#100e23" "#EE82EE"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#100e23" "#4eee94"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   (quote
-    (lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init)))
- '(safe-local-variable-values (quote ((encoding . UTF-8))))
+   '(lua-mode org-download org-static-blog lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init))
+ '(safe-local-variable-values '((encoding . UTF-8)))
+ '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
  '(vc-annotate-color-map
    (list
