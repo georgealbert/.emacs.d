@@ -177,7 +177,7 @@ This command is convenient when reading novel, documentation."
 
 +  :: C-q C-a
 
-+ C-q X :: 是一个通用的输入特殊字符的解决办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后是一个就可以输入这个特殊字符。
++ C-q X :: 是一个通用的输入特殊字符的办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后就可以输入这个特殊字符。
 一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 =C-j= ，ASCII 10。
 除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
 #+BEGIN_SRC lisp
@@ -195,13 +195,6 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
-;; For GNU Emacs 24.5 and older versions
-;; (require 'saveplace)
-;; (setq save-place-file (concat user-emacs-directory "saveplace.el") ) ; use standard emacs dir
-;; (setq-default save-place t)
-
-;; For GNU Emacs 25.1 and newer versions
-;; (setq-default save-place t)
 (use-package saveplace
   ;; :ensure t
   :init (save-place-mode 1))
@@ -228,8 +221,8 @@ Turn on save place so that when opening a file, the cursor will be at the last p
       (setq evil-want-visual-char-semi-exclusive t)))
 #+end_src
 
-为ggtags修改默认的键绑定，可以用 M-.
-https://blog.csdn.net/Levi_Huang/article/details/84288493
+为ggtags修改默认的键绑定，可以用 =M-.= 。
+参考spacemacs的配置 https://blog.csdn.net/Levi_Huang/article/details/84288493
 
 [2019-01-01 周二 00:08:18] helm-gtags不能在statusbar上显示tag的值，这点不如ggtags好用。先用ggtags吧。
 
@@ -257,6 +250,8 @@ https://blog.csdn.net/Levi_Huang/article/details/84288493
 #+END_SRC
 
 ** vdiff [2019-10-12 周六 15:47:08]
+
+vdiff的问题是速度太慢了，vim是秒开。还是要用vim。
 
 https://github.com/justbur/emacs-vdiff
 #+BEGIN_SRC emacs-lisp
@@ -493,7 +488,8 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 
 ** c-mode coding style [2019-01-05 周六 11:20:13]
 
-emacs使用google-c-style
+emacs使用google-c-style。
+
 google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
 
 http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el
@@ -570,11 +566,12 @@ You can move your cursor around to see argument lists for other functions.
 
 =M-x lsp-workspace-folders-add= 把目录加到lsp里去。
 
-seagle0128 18年11月
-请参考 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-lsp.el 和 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-python.el
+seagle0128 18年11月 参考 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-lsp.el 和 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-python.el
 
 https://vxlabs.com/2018/11/19/configuring-emacs-lsp-mode-and-microsofts-visual-studio-code-python-language-server/ 
+
 https://github.com/emacs-lsp/lsp-python-ms
+
 #+BEGIN_SRC emacs-lisp
 ;; Emacs client for the Language Server Protocol
 ;; https://github.com/emacs-lsp/lsp-mode#supported-languages
@@ -1126,7 +1123,6 @@ Source Code Variable 无法和Yahei配合对齐。
 [2019-01-30 周三 14:28:50] 试了一下文泉驿等宽正黑12 + 文泉驿等宽正黑16，中文字体显示发虚。
 
 ** 不显示工具栏和滚动条
-[2014-11-18 周二 17:39:59] 把scrollbar也去掉了
 
 #+begin_src emacs-lisp
 (menu-bar-mode -1)
@@ -3929,42 +3925,29 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ** ace-jump [2014-11-20 周四 18:09:04]
 
 #+BEGIN_SRC lisp
-;;;
-;;; ace jump mode major function
-;;; 
-;(autoload
-;  'ace-jump-mode
-;  "ace-jump-mode"
-;  "Emacs quick move minor mode"
-;  t)
-;;; you can select the key you prefer to
-;(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-;
-;;; 
-;;; enable a more powerful jump back function from ace jump mode
-;;;
-;(autoload
-;  'ace-jump-mode-pop-mark
-;  "ace-jump-mode"
-;  "Ace jump back:-)"
-;  t)
-;(eval-after-load "ace-jump-mode"
-;  '(ace-jump-mode-enable-mark-sync))
-;(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-;
-;;;If you use evil
-;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+;;
+;; ace jump mode major function
+;; 
+(autoload
+  'ace-jump-mode
+  "ace-jump-mode"
+  "Emacs quick move minor mode"
+  t)
+;; you can select the key you prefer to
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+;; 
+;; enable a more powerful jump back function from ace jump mode
+;;
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
+(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+
+;;If you use evil
+(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 #+END_SRC 
-
-** window-number - 不用了
-
-和 window-numbering.el 不是一个package。
-直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
-
-#+BEGIN_SRC lisp
-(use-package window-numbering
-  :ensure t
-  :config (window-numbering-mode 1))
-  ;; :init (window-numbering-mode 1))
-#+END_SRC
-
