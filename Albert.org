@@ -254,7 +254,7 @@ It often displays so much information, even temporarily, that it is nice to give
 ;; (global-display-line-numbers-mode t)
 (setq display-line-numbers-width-start 5)
 
-(add-hook 'org-mode-hook 'display-line-numbers-mode)
+;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
 (add-hook 'python-mode-hook 'display-line-numbers-mode)
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
@@ -312,7 +312,7 @@ Jedit Grey 灰底黑字也可以
 昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
 和现在使用的deeper-blue差异太大，就自己增加了一个theme。
 
-;#+BEGIN_SRC lisp
+;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
@@ -362,6 +362,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 + Install
   1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
 
+;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
   :ensure t
