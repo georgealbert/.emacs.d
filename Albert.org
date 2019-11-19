@@ -55,6 +55,18 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 ;     ("http" . "134.80.3.27:8080")
 ;     ("https" . "134.80.3.27:8080")))
 
+** lazy-load [2019-11-18 周一 10:33:05]
+
+http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/elisp/lazy-load"))
+(require 'lazy-load)
+
+(setq w32-pass-lwindow-to-system nil)
+(setq w32-lwindow-modifier 'super)
+(w32-register-hot-key [s-])
+#+END_SRC
+
 ** HOME
 默认目录设为 =HOME= 目录，不设的话默认是 /emacs安装目录/bin/ 。
 
@@ -194,7 +206,7 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
 (run-with-idle-timer
- 1 nil
+ 2 nil
  #'(lambda ()
      (require 'saveplace)
      (save-place-mode 1)
@@ -203,6 +215,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 #+BEGIN_SRC lisp
 (use-package saveplace
+  :defer 2
   :init (save-place-mode 1))
 #+END_SRC
 
@@ -320,9 +333,9 @@ Jedit Grey 灰底黑字也可以
 (use-package doom-themes
   :ensure t
   ;; :disabled t
-  :defer t
-  :init
-  ;; :config
+  ;;:defer 1
+  ;; :init
+  :config
   (progn
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
@@ -364,13 +377,13 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
 ;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :ensure t
-  :defer t)
+;; (use-package all-the-icons
+;;   :ensure t
+;;   :defer t)
   
 (use-package doom-modeline
   :ensure t
-  :defer t
+  :defer 1
   ;; :init
   :config
   (progn
@@ -427,7 +440,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 #+END_SRC
 
 *** 不显示一些无用的minor mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package diminish
   :ensure t
   :disabled t
@@ -686,7 +699,7 @@ from sacha chua
 
 #+BEGIN_SRC emacs-lisp
 (run-with-idle-timer
- 1 nil
+ 2 nil
  #'(lambda ()
      (use-package winum
        :config (winum-mode +1)
@@ -713,7 +726,7 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 
 #+BEGIN_SRC emacs-lisp
   (run-with-idle-timer
-   1 nil
+   2 nil
    #'(lambda ()
        (use-package winner
          :defer t)
@@ -724,7 +737,7 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 * editor
 ** evil
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (run-with-idle-timer
  1 nil
  #'(lambda ()
@@ -742,13 +755,14 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
      ))
 #+end_src
 
-#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t
-  :defer t
-  :init (evil-mode 1)
+  :defer 1
+  ;;:init (evil-mode 1)
   :config 
     (progn
+      (evil-mode 1)
       ;; (eval-after-load 'helm-gtags
       ;;    '(progn
       ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
@@ -796,16 +810,19 @@ https://github.com/justbur/emacs-vdiff
 #+BEGIN_SRC lisp
 (use-package vdiff
   :ensure t
-  :defer t
+  ;; :defer t
   :config
     ;; 设置了auto refine会把差异找出来，是再次全文件比较吗？为什么这么慢?
     ;; M-x vdiff refine
-    (setq vdiff-auto-refine t)
+    (setq vdiff-auto-refine nil)
 
     ;; (setq vdiff-default-refinement-syntax-code "_")
     (setq vdiff-default-refinement-syntax-code "w_")
     ;; (setq vdiff-default-refinement-syntax-code "w")
-    (setq vdiff-diff-algorithm 'diff-minimal)
+    ;; (setq vdiff-diff-algorithm 'diff-minimal)
+    (setq vdiff-diff-algorithm 'git-diff-minimal)
+    ;; (setq vdiff-diff-algorithm 'git-diff)
+    ;; (setq vdiff-diff-algorithm 'custom)
 )
 
 ;; (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map)
@@ -871,11 +888,7 @@ https://github.com/justbur/emacs-vdiff
          ("C-x c SPC" . helm-all-mark-rings)))
 
 ;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
-;; (global-set-key (kbd "C-c m") 'helm-mini)
-;; (global-set-key (kbd "C-c n") 'helm-mini)
-;; (global-set-key (kbd "M-x") 'helm-M-x)
 ;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
-;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
@@ -1037,6 +1050,7 @@ elpa中安装就可以了。
 
 下载下来，放在emacs.d目录下，然后在.emacs配置文件中添加几行：
 
+#+BEGIN_SRC lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
@@ -1046,6 +1060,7 @@ elpa中安装就可以了。
           (lambda ()
             (setq c-default-style "k&r" c-basic-offset 4)
             (c-set-offset 'substatement-open 0)))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (setq c-default-style "linux")
@@ -1257,9 +1272,10 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
 
 ;; [2019-08-05 周一 17:00:08] ipython使用cp936，即GBK编码，中文显示终于正常了。上面的hook无效。
 ;; search keyword: process 中文, https://emacs-china.org/t/emacs-shell/2730/2
-(setq process-coding-system-alist (cons '("ipython" . (cp936 . cp936)) process-coding-system-alist))
 
-(dolist (cmd '("python" "ping"))
+;; (setq process-coding-system-alist (cons '("ipython" . (cp936 . cp936)) process-coding-system-alist))
+
+(dolist (cmd '("ipython" "python" "ping"))
   (setq process-coding-system-alist (cons (cons cmd '(cp936 . cp936))
                                           process-coding-system-alist)))
 
@@ -1339,7 +1355,6 @@ google的代码格式化工具。
 
 ** scheme [2017-03-02 周四 21:27:47]
 
-;; (require 'cmuscheme)
 #+BEGIN_SRC emacs-lisp
 (use-package cmuscheme
   :defer t)
@@ -1406,8 +1421,6 @@ google的代码格式化工具。
   :ensure t
   :defer t)
 #+END_SRC
-** go [2019-07-04 周四 16:59:53]
-
 * tools
 ** Flycheck - http://www.flycheck.org
 [2019-05-17 周五 14:49:48] 使用flycheck替换默认的flymake。
@@ -2011,15 +2024,28 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 #+END_SRC
 ** aweshell [2019-11-16 周六 15:10:26]
 
+https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init-key.el
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/elisp/aweshell"))
 
 ;; lazy load the plugin
-(run-with-idle-timer
- 3 nil
- #'(lambda ()
-     (require 'aweshell)
-     ))
+;; (run-with-idle-timer
+;;  3 nil
+;;  #'(lambda ()
+;;      (require 'aweshell)
+;;      ))
+
+;;; ### Aweshell ###
+;;; --- 多标签式的shell
+(lazy-load-global-keys
+ '(
+   ("s-n" . aweshell-new)
+   ;; ("C-c e" . aweshell-new)
+   ("s-h" . aweshell-toggle)
+   ("s-x s-x" . aweshell-dedicated-toggle)
+   )
+ "aweshell")
 #+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
@@ -3831,12 +3857,19 @@ holding contextual information."
 (use-package org-download
   :after org
   :defer t
+  :bind (("s-y" . org-download-yank))
   :config
   ;; org-download-heading-lvl默认是 0，改为nil，保存到当前目录。
   (setq-default org-download-heading-lvl nil)
   )
   ;;(setq-default org-download-image-dir "e:/home/albert/org/notes/images/tcpdump_vlan")
   ;;(add-hook 'org-mode-hook 'org-download-enable))
+  
+;; (lazy-load-global-keys
+;;  '(
+;;    ("s-y" . org-download-yank)
+;;    )
+;;  "org-download")
 #+END_SRC
 
 下面的配置参考了 https://emacs-china.org/t/org-download/1672/6 tumashu的配置。
@@ -3886,35 +3919,6 @@ before dired+ loaded
 (setq diredp-hide-details-initially-flag nil)
 (use-package dired+
   :defer t)
-#+END_SRC
-** Mode line format
-[2014-09-16 18:18:58]
-
-Display a more compact mode line.
-
-#+BEGIN_SRC lisp
-;(use-package smart-mode-line
-;(defun my-line()
-;  :init
-;  (progn
-;  (setq-default
-;   mode-line-format 
-;   '("%e"
-;     mode-line-front-space
-;     mode-line-mule-info
-;     mode-line-client
-;     mode-line-modified
-;     mode-line-remote
-;     mode-line-frame-identification
-;     mode-line-buffer-identification
-;     "   "
-;     mode-line-position
-;     (vc-mode vc-mode)
-;     "  "
-;     mode-line-modes
-;     mode-line-misc-info
-;     mode-line-end-spaces))))
-;(my-line)
 #+END_SRC
 ** neotree - 不用了 [2019-05-27 周一 16:05:25]
 

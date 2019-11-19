@@ -36,18 +36,6 @@ decrease this. If you experience stuttering, increase this.")
      ;; GC all sneaky breeky like
      (add-hook 'focus-out-hook #'garbage-collect))))
 
-
-(if (ignore-errors (or after-init-time noninteractive))
-    (setq gc-cons-threshold doom-gc-cons-threshold)
-  ;; A big contributor to startup times is garbage collection. We up the gc
-  ;; threshold to temporarily prevent it from running, then reset it later in
-  ;; `doom|restore-startup-optimizations'.
-  (setq gc-cons-threshold doom-gc-cons-upper-limit)
-  ;; This is consulted on every `require', `load' and various path/io functions.
-  ;; You get a minor speed up by nooping this.
-  (setq file-name-handler-alist nil)
-  ;; Not restoring these to their defaults will cause stuttering/freezes.
-
 ;; 显示加载时间
 (defvar albert-init-time 'nil
   "The time it took, in seconds, for Doom Emacs to initialize.")
@@ -61,23 +49,33 @@ they were loaded at startup."
                (setq albert-init-time
                      (float-time (time-subtract (current-time) before-init-time))))))
 
-;; (let (
-;;       ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
-;;       ;; (gc-cons-threshold most-positive-fixnum)
-;;       (gc-cons-threshold 536870912) ;; 512mb
-;;       ;; 清空避免加载远程文件的时候分析文件。
-;;       (file-name-handler-alist nil))
+(if (ignore-errors (or after-init-time noninteractive))
+    (setq gc-cons-threshold doom-gc-cons-threshold)
+  ;; A big contributor to startup times is garbage collection. We up the gc
+  ;; threshold to temporarily prevent it from running, then reset it later in
+  ;; `doom|restore-startup-optimizations'.
+  (setq gc-cons-threshold doom-gc-cons-upper-limit)
+  ;; This is consulted on every `require', `load' and various path/io functions.
+  ;; You get a minor speed up by nooping this.
+  (setq file-name-handler-alist nil)
+  ;; Not restoring these to their defaults will cause stuttering/freezes.
 
-;;   (require 'benchmark-init-modes)
-;;   (require 'benchmark-init)
-;;   (benchmark-init/activate)
+
+  ;; (let (
+  ;;       ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
+  ;;       ;; (gc-cons-threshold most-positive-fixnum)
+  ;;       (gc-cons-threshold 536870912) ;; 512mb
+  ;;       ;; 清空避免加载远程文件的时候分析文件。
+  ;;       (file-name-handler-alist nil))
+
+  (require 'benchmark-init-modes)
+  (require 'benchmark-init)
+  (benchmark-init/activate)
 
   ;; 下面才写你的其它配置
-  (add-hook 'emacs-startup-hook #'albert|display-benchmark)
 
   ;; doom-emacs用的hook是 window-setup-hook
-  ;; (add-hook 'window-setup-hook #'albert|display-benchmark)
-  ;; end of 启动优化
+  (add-hook 'window-setup-hook #'albert|display-benchmark)
 
   ;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
   ;; (toggle-debug-on-error)
@@ -86,18 +84,14 @@ they were loaded at startup."
   (package-initialize nil)
 
   ;; Override the packages with the git version of Org and other packages
-                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
-                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
+  ;; (add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
+  ;; (add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
 
   ;; Load the rest of the packages
   ;; (package-initialize t)
 
   ;; [2019-10-30 周三 17:37:50] emacs 27.0不需要了
   (setq package-enable-at-startup nil)
-
-  (require 'benchmark-init-modes)
-  (require 'benchmark-init)
-  (benchmark-init/activate)
 
   ;; (setq org-modules
   (defvar org-modules
@@ -119,7 +113,7 @@ they were loaded at startup."
 
   ;; )
 
-(add-hook 'after-init-hook #'doom|restore-startup-optimizations))
+  (add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
