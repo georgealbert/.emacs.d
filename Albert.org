@@ -698,27 +698,30 @@ from sacha chua
 从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
 
 #+BEGIN_SRC emacs-lisp
-(run-with-idle-timer
- 2 nil
- #'(lambda ()
-     (use-package winum
-       :config (winum-mode +1)
-       :init
-       (setq winum-keymap
-             (let ((map (make-sparse-keymap)))
-               (define-key map (kbd "C-`") 'winum-select-window-by-number)
-               (define-key map (kbd "C-²") 'winum-select-window-by-number)
-               (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-               (define-key map (kbd "M-1") 'winum-select-window-1)
-               (define-key map (kbd "M-2") 'winum-select-window-2)
-               (define-key map (kbd "M-3") 'winum-select-window-3)
-               (define-key map (kbd "M-4") 'winum-select-window-4)
-               (define-key map (kbd "M-5") 'winum-select-window-5)
-               (define-key map (kbd "M-6") 'winum-select-window-6)
-               (define-key map (kbd "M-7") 'winum-select-window-7)
-               (define-key map (kbd "M-8") 'winum-select-window-8)
-               map)))
-     ))
+;; (run-with-idle-timer
+;;  2 nil
+;;  #'(lambda ()
+;;
+;;     ))
+
+(use-package winum
+  :defer 2
+  :config (winum-mode +1)
+  :init
+  (setq winum-keymap
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-`") 'winum-select-window-by-number)
+          (define-key map (kbd "C-²") 'winum-select-window-by-number)
+          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+          (define-key map (kbd "M-1") 'winum-select-window-1)
+          (define-key map (kbd "M-2") 'winum-select-window-2)
+          (define-key map (kbd "M-3") 'winum-select-window-3)
+          (define-key map (kbd "M-4") 'winum-select-window-4)
+          (define-key map (kbd "M-5") 'winum-select-window-5)
+          (define-key map (kbd "M-6") 'winum-select-window-6)
+          (define-key map (kbd "M-7") 'winum-select-window-7)
+          (define-key map (kbd "M-8") 'winum-select-window-8)
+          map)))
 #+END_SRC
 
 ** winner-mode [2019-01-09 周三 18:04:05]
@@ -1849,8 +1852,9 @@ process monitor在用了vpn后会导致机器hang。
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-  :ensure t
+  ;; :ensure t
   :defer t
+  ;; :load-path "~/elisp/magit/lisp"
   :config
     (progn
       (setq magit-last-seen-setup-instructions "1.4.0")))
@@ -2026,7 +2030,7 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 
 https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init-key.el
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (add-to-list 'load-path (expand-file-name "~/elisp/aweshell"))
 
 ;; lazy load the plugin
@@ -2046,6 +2050,14 @@ https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/ini
    ("s-x s-x" . aweshell-dedicated-toggle)
    )
  "aweshell")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package aweshell
+  :load-path "~/elisp/aweshell"
+  :bind (("s-n" . aweshell-new)
+     ("s-h" . aweshell-toggle)
+     ("s-x s-x" . aweshell-dedicated-toggle)))
 #+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
