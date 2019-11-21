@@ -347,7 +347,6 @@ Jedit Grey 灰底黑字也可以
     (setq doom-deeper-blue-brighter-modeline nil)
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
-    ;; (load-theme 'doom-one t)
     (load-theme 'doom-deeper-blue t)
     
     ;; Enable flashing mode-line on errors
@@ -356,7 +355,7 @@ Jedit Grey 灰底黑字也可以
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     ;; (doom-themes-neotree-config)
     ;; or for treemacs users
-    (doom-themes-treemacs-config)
+    ;; (doom-themes-treemacs-config)
     
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
@@ -383,6 +382,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   
 (use-package doom-modeline
   :ensure t
+  ;; :disabled t
   :defer 1
   ;; :init
   :config
@@ -648,7 +648,7 @@ from sacha chua
           treemacs-silent-filewatch              nil
           treemacs-silent-refresh                nil
           treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
+          treemacs-space-between-root-nodes      nil
           treemacs-tag-follow-cleanup            t
           treemacs-tag-follow-delay              1.5
           treemacs-width                         30)
