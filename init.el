@@ -111,6 +111,9 @@ they were loaded at startup."
   (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
   ;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
 
+  ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
+  ;; (require 'init-albert)
+
   ;; )
 
   (add-hook 'after-init-hook #'doom|restore-startup-optimizations))

@@ -28,12 +28,6 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
    
      (add-to-list 'package-archives
                   '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
-     ;;  '("melpa" . "http://melpa.org/packages/") t)
-   
-     ;; (unless (assoc-default "melpa" package-archives)
-     ;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-     ;; (unless (assoc-default "org" package-archives)
-     ;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
    
      (unless (package-installed-p 'use-package)
        (package-install 'use-package))
@@ -42,6 +36,13 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
        :config (auto-compile-on-load-mode))
      (setq load-prefer-newer t)
      ))
+
+     ;;  '("melpa" . "http://melpa.org/packages/") t)
+   
+     ;; (unless (assoc-default "melpa" package-archives)
+     ;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+     ;; (unless (assoc-default "org" package-archives)
+     ;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
 
 ;; [2019-01-11 周五 23:23:40] always-ensure一打开就起不来了，可能网络不好
 (setq use-package-always-ensure t)
@@ -268,6 +269,16 @@ It often displays so much information, even temporarily, that it is nice to give
 (setq display-line-numbers-width-start 5)
 
 ;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
+
+(defun albert|display-org-mode-line-numbers ()
+  "org-mode的文件，如果总行数小于10000行就显示行号."
+  (let ((last (line-number-at-pos (point-max))))
+    (message "Opening %s, total lines: %d" (buffer-file-name) last)
+    (if (< last 10000)
+        (display-line-numbers-mode 1))))
+
+(add-hook 'org-mode-hook 'albert|display-org-mode-line-numbers)
+
 (add-hook 'python-mode-hook 'display-line-numbers-mode)
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
@@ -419,6 +430,9 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
     
     ;; 2019.11.06修改为图标的了，不好看
     (setq doom-modeline-evil-state-icon nil)
+    
+    ;; 2019.11.22又改成下面这个变量了
+    (setq doom-modeline-modal-icon nil)
     )
   :hook (after-init . doom-modeline-mode))
 #+END_SRC
@@ -1177,11 +1191,13 @@ https://github.com/emacs-lsp/lsp-python-ms
 
               ;; lsp-enable-snippet nil
               lsp-ui-sideline-enable nil
+
               ;; emacs26.2 经常陷入卡顿, set it to nil.
               ;; lsp-use-native-json nil
 
               ;; emacs 27.0.50, https://emacs-lsp.github.io/lsp-mode/lsp-mode.html
               lsp-use-native-json t
+
               lsp-json-use-lists t
 
               lsp-ui-sideline-ignore-duplicate t)
@@ -2847,7 +2863,7 @@ org-mode to the rescue!
 
 Often I'll find some cool feature or thing I want to remember while reading the org-mode and git mailing lists in Gnus. To create a note I use my note capture template C-c c n, type a heading for the note and C-c C-c to save it. The only other thing to do is to refile it (later) to the appropriate project file.
 
-看见一下有意思的东西可以用note模板进行记录，按 =C-c c n= ，然后输入note的标题，再按 =C-c C-c= 保存。剩下要做的事是以后找个合适的file保存这个node。
+看到有意思的东西可以用note capture template记录下来，按 =C-c c n= ，然后输入note的标题，再按 =C-c C-c= 保存。接下来将note归档到一个合适的file中。
 
 I have an agenda view just to find notes. Notes are refiled to an appropriate project file and task. If there is no specific task it belongs to it goes to the catchall * Notes task. I generally have a catchall notes task in every project file. Notes are created with a NOTE tag already applied by the capture template so I'm free to refile the note anywhere. As long as the note is in a project file that contributes to my agenda (ie. in org-agenda-files) then I can find the note back easily with my notes agenda view by hitting the key combination F12 N. I'm free to limit the agenda view of notes using standard agenda tag filtering.
 
@@ -4016,3 +4032,7 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ;;If you use evil
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 #+END_SRC 
+** provide [2019-11-22 周五 22:48:34]
+#+BEGIN_SRC emacs-lisp
+(provide 'init-albert)
+#+END_SRC
