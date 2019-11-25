@@ -270,14 +270,14 @@ It often displays so much information, even temporarily, that it is nice to give
 
 ;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
 
-(defun albert|display-org-mode-line-numbers ()
+(defun albert|display-line-numbers ()
   "org-mode的文件，如果总行数小于10000行就显示行号."
   (let ((last (line-number-at-pos (point-max))))
     (message "Opening %s, total lines: %d" (buffer-file-name) last)
     (if (< last 10000)
         (display-line-numbers-mode 1))))
 
-(add-hook 'org-mode-hook 'albert|display-org-mode-line-numbers)
+(add-hook 'org-mode-hook 'albert|display-line-numbers)
 
 (add-hook 'python-mode-hook 'display-line-numbers-mode)
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
