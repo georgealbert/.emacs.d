@@ -20,22 +20,13 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 ** elpa
 
 #+BEGIN_SRC emacs-lisp
-(run-with-idle-timer
- 1 nil
- #'(lambda ()
+(require 'package)
 
-     (require 'package)
-   
-     (add-to-list 'package-archives
-                  '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
-   
-     (unless (package-installed-p 'use-package)
-       (package-install 'use-package))
+(add-to-list 'package-archives
+             '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
 
-     (use-package auto-compile
-       :config (auto-compile-on-load-mode))
-     (setq load-prefer-newer t)
-     ))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
      ;;  '("melpa" . "http://melpa.org/packages/") t)
    
@@ -44,10 +35,17 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
      ;; (unless (assoc-default "org" package-archives)
      ;;   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
 
-;; [2019-01-11 周五 23:23:40] always-ensure一打开就起不来了，可能网络不好
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 (require 'use-package)
+
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+     (use-package auto-compile
+       :config (auto-compile-on-load-mode))
+     (setq load-prefer-newer t)
+     ))
 #+end_src
 
 代理配置
