@@ -1055,6 +1055,32 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 *** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
 
+[2019-11-29 周五 14:58:37] 测试ripgrep，不知道为什么grep 中文没有结果，但是ag是ok的。eshell中grep中文没有结果。在cmd中rg "中文"是ok的。奇怪啊。
+
+#+BEGIN_SRC lisp
+;; 用这个参数可以高亮关键字，但是中文有问题，如果加上 --encoding 会导致输出乱码，而且没法grep utf-8编码的文件，ag就没有这个问题。奇怪啊。
+(setq helm-ag-base-command "rg --encoding gb18030 -i --line-number --no-heading")
+(setq helm-ag-base-command "rg -i --line-number --no-heading")
+
+;; helm-ag推荐使用，但是没有高亮关键字
+(setq helm-ag-base-command "rg --no-heading")
+
+;; (setq helm-ag-base-command "ag --vimgrep")
+
+
+;; (modify-coding-system-alist 'process "rg" '(utf-8 . chinese-gbk-dos))
+;; (modify-coding-system-alist 'process "rg" '(cp936 . cp936))
+
+;; 在eshell中可以正确的显示中文了
+(modify-coding-system-alist 'process "rg" '(utf-8 . cp936))
+
+(defun my/helm-ag-gbk (&rest args)
+  (set-terminal-coding-system nil)
+  (set-keyboard-coding-system nil)
+  (set-language-environment 'chinese-gbk))
+
+(advice-add 'helm-do-ag :before #'my/helm-ag-gbk)
+#+END_SRC
 * lang
 ** 多行代码的注释/反注释
 
