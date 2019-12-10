@@ -489,6 +489,9 @@ CJK (Chinese, Japanese, Korean)
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+      ;; Fixedsys在笔记本上字体有点发虚
+      ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
+      ;; (set-face-attribute 'default nil :font "Fira Code Retina 9")
       ;; (set-face-attribute 'default nil :font "Inconsolata 11")
       ;; Chinese Font
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -505,7 +508,15 @@ CJK (Chinese, Japanese, Korean)
   (if (eq system-type 'windows-nt)
     (progn
       ;; Setting English Font
-      (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+      ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
+      (set-face-attribute 'default nil :font "Fixedsys 12")
+      ;; (set-face-attribute 'default nil :font "Consolas 12")
+      ;; (set-face-attribute 'default nil :font "YaHei Monaco Hybird 11")
+      ;; (set-face-attribute 'default nil :font "Fira Code 10")
+      ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+      ;; (set-face-attribute 'default nil :font "Monaco 10")
+      ;; (set-face-attribute 'default nil :font "Hack 11")
       ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
       ;; (set-face-attribute 'default nil :font "文泉驿等宽正黑 12")
       ;; Chinese Font
@@ -517,20 +528,24 @@ CJK (Chinese, Japanese, Korean)
                             ;; (font-spec :family "DejaVu Sans Mono" :size 16))))))
                             ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
 
-(if (eq window-system 'w32)
-  (progn
+(defun albert|adjust-font()
+  (interactive)
+  (if (eq window-system 'w32)
+    (progn
     ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
-    ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
-    ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
-    ;; (display-mm-height)
-    (if (>= (display-mm-width) 509)
-      (albert|s2319-font))
-    
-    ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
-    ;; HP ZHAN66 309mm X 175mm
-    ;; Thinkpad T430 4xxmm X 20xmm?
-    (if (eq (display-mm-width) 309)
-      (albert|notebook-font))))
+      ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
+      ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
+      ;; (display-mm-height)
+      (if (>= (display-mm-width) 509)
+        (albert|s2319-font))
+      
+        ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
+      ;; HP ZHAN66 309mm X 175mm
+      ;; Thinkpad T430 4xxmm X 20xmm?
+      (if (eq (display-mm-width) 309)
+        (albert|notebook-font)))))
+        
+(albert|adjust-font)
 #+END_SRC
 
 #+BEGIN_SRC lisp
@@ -540,12 +555,13 @@ CJK (Chinese, Japanese, Korean)
 ;;   (progn
 ;;     ;; Setting English Font
 ;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
-;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 8")
+;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 10")
 ;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
 ;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-;;     (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code 8")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
+;;     (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code 9")
+;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 9")
+;;     ;; (set-face-attribute 'default nil :font "Bitstream Vera Sans Mono 9")
 ;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
 ;; 
 ;;     ;; Chinese Font
@@ -583,6 +599,9 @@ Source Code Variable 无法和Yahei配合对齐。
 
 [2019-11-16 周六 22:25:44] 试了一下google的Inconsolata，不如ubuntu的字体，感觉太瘦高了，字体好细 https://www.levien.com/type/myfonts/inconsolata.html
 
+[2019-12-06 周五 12:46:39] https://github.com/tonsky/FiraCode
+"Fira Code 10 + Microsoft Yahei 16" 在s2319 org mode table是可以对齐的，但是中文太大了。
+"Fira Code 9 + Microsoft Yahei 22" 在HP zhan66 G1 org mode table是可以对齐的，字体小了一点点，再大点就好了。
 ** 不显示工具栏和滚动条
 
 #+begin_src emacs-lisp
