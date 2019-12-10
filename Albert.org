@@ -337,7 +337,7 @@ Jedit Grey 灰底黑字也可以
 ;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
-;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
 
 (use-package doom-themes
   :ensure t
