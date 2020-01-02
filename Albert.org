@@ -302,12 +302,7 @@ It often displays so much information, even temporarily, that it is nice to give
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-** 显示行、列号
-
-列号是从0开始的。
-#+BEGIN_SRC emacs-lisp
-(column-number-mode t)
-#+END_SRC
+** 显示行号
 
 [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 #+BEGIN_SRC emacs-lisp
@@ -316,14 +311,14 @@ It often displays so much information, even temporarily, that it is nice to give
 
 ;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
 
-(defun albert|display-line-numbers ()
+(defun albert-display-line-numbers ()
   "org-mode的文件，如果总行数小于10000行就显示行号."
   (let ((last (line-number-at-pos (point-max))))
     (message "Opening %s, total lines: %d" (buffer-file-name) last)
     (if (< last 10000)
         (display-line-numbers-mode 1))))
 
-(add-hook 'org-mode-hook 'albert|display-line-numbers)
+(add-hook 'org-mode-hook 'albert-display-line-numbers)
 
 (add-hook 'python-mode-hook 'display-line-numbers-mode)
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
@@ -390,7 +385,7 @@ Jedit Grey 灰底黑字也可以
 (use-package doom-themes
   :ensure t
   ;; :disabled t
-  ;;:defer 1
+  ;; :defer 1
   ;; :init
   :config
   (progn
@@ -417,7 +412,7 @@ Jedit Grey 灰底黑字也可以
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
 #+END_SRC
-** mode-line
+** modeline
 *** doom-modeline
 [2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
 如果不用doom-themes而是使用Emacs的deeper-blue，modeline的前景色会很难看，而且文件名看不清楚。
@@ -440,47 +435,52 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (use-package doom-modeline
   :ensure t
   ;; :disabled t
-  :defer 1
+  ;; :defer 1
   ;; :init
   :config
-  (progn
-    ;; How tall the mode-line should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-height 20)
-    
-    ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    ;; (setq doom-modeline-bar-width 3)
+  ;; How tall the mode-line should be (only respected in GUI Emacs).
+  ;; (setq doom-modeline-height 20)
+  
+  ;; How wide the mode-line bar should be (only respected in GUI Emacs).
+  ;; (setq doom-modeline-bar-width 3)
 
-    ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-    (setq doom-modeline-icon t)
-    
-    ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-    (setq doom-modeline-major-mode-icon t)
-    
-    ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
-    (setq doom-modeline-major-mode-color-icon t)
-    
-    ;; Whether display minor modes or not. Non-nil to display in mode-line.
-    (setq doom-modeline-minor-modes nil)
-    
-    ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-    (setq inhibit-compacting-font-caches t)
-    
-    ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
-    (setq doom-modeline-lsp nil)
-    
-    ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
-    (setq doom-modeline-mu4e nil)
-    
-    ;; Whether display irc notifications or not. Requires `circe' package.
-    (setq doom-modeline-irc nil)
-    
-    ;; 2019.11.06修改为图标的了，不好看
-    (setq doom-modeline-evil-state-icon nil)
-    
-    ;; 2019.11.22又改成下面这个变量了
-    (setq doom-modeline-modal-icon nil)
-    )
+  ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+  (setq doom-modeline-icon t)
+  
+  ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+  (setq doom-modeline-major-mode-icon t)
+  
+  ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
+  (setq doom-modeline-major-mode-color-icon t)
+  
+  ;; Whether display minor modes or not. Non-nil to display in mode-line.
+  (setq doom-modeline-minor-modes nil)
+  
+  ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
+  (setq inhibit-compacting-font-caches t)
+  
+  ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
+  (setq doom-modeline-lsp nil)
+  
+  ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
+  (setq doom-modeline-mu4e nil)
+  
+  ;; Whether display irc notifications or not. Requires `circe' package.
+  (setq doom-modeline-irc nil)
+  
+  ;; 2019.11.06修改为图标的了，不好看
+  (setq doom-modeline-evil-state-icon nil)
+  
+  ;; 2019.11.22又改成下面这个变量了
+  (setq doom-modeline-modal-icon nil)
   :hook (after-init . doom-modeline-mode))
+#+END_SRC
+
+列号是从0开始的。
+#+BEGIN_SRC emacs-lisp
+(column-number-mode +1)
+
+(size-indication-mode +1) ; filesize in modeline
 #+END_SRC
 
 *** modeline中的时间格式设置
@@ -499,7 +499,7 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (display-time)
 #+END_SRC
 
-*** 不显示一些无用的minor mode
+*** 不显示一些无用的minor mode - 未使用
 #+BEGIN_SRC lisp
 (use-package diminish
   :ensure t
