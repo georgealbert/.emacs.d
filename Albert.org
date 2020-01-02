@@ -16,7 +16,33 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 优化Emacs启动速度的方法论 https://manateelazycat.github.io/emacs/2019/05/12/emacs-optimize-startup-speed.html
 *** garbage collector优化 [2019-05-20 周一 10:53:13]
 [2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
-*** Optimizations [2020-01-02 周四 11:34:04]
+*** doom-emacs/core/core-lib.el [2020-01-02 周四 16:03:40]
+#+BEGIN_SRC emacs-lisp
+(defmacro add-transient-hook! (hook-or-function &rest forms)
+  "Attaches a self-removing function to HOOK-OR-FUNCTION.
+
+FORMS are evaluated once, when that function/hook is first invoked, then never
+again.
+
+HOOK-OR-FUNCTION can be a quoted hook or a sharp-quoted function (which will be
+advised)."
+  (declare (indent 1))
+  (let ((append (if (eq (car forms) :after) (pop forms)))
+        (fn (intern (format "doom--transient-%s-h" (sxhash hook-or-function)))))
+    `(let ((sym ,hook-or-function))
+       (defun ,fn (&rest _)
+         ,@forms
+         (let ((sym ,hook-or-function))
+           (cond ((functionp sym) (advice-remove sym #',fn))
+                 ((symbolp sym)   (remove-hook sym #',fn))))
+         (unintern ',fn nil))
+       (cond ((functionp sym)
+              (advice-add ,hook-or-function ,(if append :after :before) #',fn))
+             ((symbolp sym)
+              (put ',fn 'permanent-local-hook t)
+              (add-hook sym #',fn ,append))))))
+#+END_SRC
+*** doom-emacs/core/core.el [2020-01-02 周四 11:34:04]
 #+BEGIN_SRC emacs-lisp
 ;; doom-emacs/core/core.el
 (defconst EMACS27+   (> emacs-major-version 26))
@@ -24,6 +50,38 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 (defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
+
+(defvar doom-interactive-mode (not noninteractive)
+  "If non-nil, Emacs is in interactive mode.")
+  
+(defvar doom--initial-file-name-handler-alist file-name-handler-alist)
+
+;; This is consulted on every `require', `load' and various path/io functions.
+;; You get a minor speed up by nooping this.
+(setq file-name-handler-alist nil)
+
+;; This is consulted on every `require', `load' and various path/io functions.
+;; You get a minor speed up by nooping this.
+(setq file-name-handler-alist nil)
+
+;; Restore `file-name-handler-alist', because it is needed for handling
+;; encrypted or compressed files, among other things.
+(defun doom-reset-file-handler-alist-h ()
+  (setq file-name-handler-alist doom--initial-file-name-handler-alist))
+(add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
+
+;; 显示加载时间
+(defvar albert-init-time 'nil
+  "The time that emacs init took, in seconds, for Doom Emacs to initialize.")
+
+(defun albert-display-benchmark-h()
+  "Display a benchmark, showing number of packages and modules, and how quickly
+they were loaded at startup."
+  (message "Emacs loaded %s packages in %.03fs"
+           (length package-activated-list)
+           (or albert-init-time
+               (setq albert-init-time
+                     (float-time (time-subtract (current-time) before-init-time))))))
 
 ;;
 ;;; Optimizations
@@ -61,6 +119,20 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
   ;; fonts on Windows. Whether it has a noteable affect on Linux and Mac hasn't
   ;; been determined.
   (setq inhibit-compacting-font-caches t))
+  
+;; Adopt a sneaky garbage collection strategy of waiting until idle time to
+;; collect; staving off the collector while the user is working.
+(when doom-interactive-mode
+  (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
+  (with-eval-after-load 'gcmh
+    (setq gcmh-idle-delay 10
+          gcmh-verbose t)
+    (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
+    
+;; doom-emacs用的hook是 window-setup-hook
+(when doom-interactive-mode
+  (add-hook 'window-setup-hook #'albert-display-benchmark-h 'append))
+
 #+END_SRC
 
 ** elpa
