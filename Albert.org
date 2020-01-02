@@ -586,9 +586,10 @@ CJK (Chinese, Japanese, Korean)
                             ;; (font-spec :family "DejaVu Sans Mono" :size 16))))))
                             ;;(font-spec :family "文泉驿等宽正黑" :size 16))))))
 
-(defun albert|adjust-font()
+(defun albert-adjust-font()
   (interactive)
-  (if (eq window-system 'w32)
+  ;;(if (eq window-system 'w32)
+  (when IS-WINDOWS
     (progn
     ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
       ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
@@ -603,38 +604,7 @@ CJK (Chinese, Japanese, Korean)
       (if (eq (display-mm-width) 309)
         (albert|notebook-font)))))
         
-(albert|adjust-font)
-#+END_SRC
-
-#+BEGIN_SRC lisp
-;; (if (eq system-type 'windows-nt)
-;;   ;(set-fontset-font t 'han (font-spec :family "Microsoft Yahei" :size 12))
-;;   ;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2)))
-;;   (progn
-;;     ;; Setting English Font
-;;     ;; (set-face-attribute 'default nil :font "Consolas 11")
-;;     ;; (set-face-attribute 'default nil :font "Source Code Variable 10")
-;;     ;; (set-face-attribute 'default nil :font "Monaco 10")
-;;     ;; (set-face-attribute 'default nil :font "Liberation Mono 10")
-;;     (set-face-attribute 'default nil :font "Ubuntu Mono 11")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code 9")
-;;     ;; (set-face-attribute 'default nil :font "Fira Code Retina 9")
-;;     ;; (set-face-attribute 'default nil :font "Bitstream Vera Sans Mono 9")
-;;     ;; (set-face-attribute 'default nil :font "DejaVu Sans Mono 10")
-;; 
-;;     ;; Chinese Font
-;;     (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;             (set-fontset-font (frame-parameter nil 'font)
-;;                           charset
-;;                           (font-spec :family "Microsoft Yahei" :size 16)))))
-;;
-;; [2018-12-10 周一 11:30:55] 测试了https://github.com/crvdgc/Consolas-with-Yahei
-;; 效果不好。
-;; (set-default-font "Consolas-with-Yahei 9")
-
-;; (if (eq system-type 'windows-nt)
-;;      (set-face-attribute
-;;        'default nil :font "Consolas-with-Yahei 11"))
+(albert-adjust-font)
 #+END_SRC
 
 [2018-12-10 周一 11:39:52] Consolas 10 + Microsoft Yahei 24 org mode table是可以对齐的，但是中文太大了。
