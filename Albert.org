@@ -196,7 +196,7 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
 [2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
 如果打开会看见很多QueryBasicInformation这样的调用.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (if (eq system-type 'windows-nt)
     (setq w32-get-true-file-attributes nil))
 #+END_SRC
@@ -708,7 +708,8 @@ Source Code Variable 无法和Yahei配合对齐。
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 
-(if (eq window-system 'w32)
+;; (if (eq window-system 'w32)
+(when IS-WINDOWS
   (scroll-bar-mode -1))
 #+end_src
 
