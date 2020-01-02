@@ -489,6 +489,9 @@ CJK (Chinese, Japanese, Korean)
     (progn
       ;; Setting English Font
       (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+      ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 11")
+      ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 10")
+      ;; (set-face-attribute 'default nil :font "Sarasa Term SC 10")
       ;; Fixedsys在笔记本上字体有点发虚
       ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
       ;; (set-face-attribute 'default nil :font "Fira Code Retina 9")
@@ -498,6 +501,13 @@ CJK (Chinese, Japanese, Korean)
               (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Microsoft Yahei" :size 22))))))
+                            
+;; (defun albert|notebook-font()
+;;   "Config font on HP zhan66."
+;;   (interactive)
+;;   (if (eq system-type 'windows-nt)
+;;     (set-face-attribute 'default nil :font "等距更纱黑体 T SC 10")
+;;   ))
 
 (defun albert|s2319-font()
   "Config font on dell s2319. 
