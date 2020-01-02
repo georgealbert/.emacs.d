@@ -16,6 +16,52 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 优化Emacs启动速度的方法论 https://manateelazycat.github.io/emacs/2019/05/12/emacs-optimize-startup-speed.html
 *** garbage collector优化 [2019-05-20 周一 10:53:13]
 [2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
+*** Optimizations [2020-01-02 周四 11:34:04]
+#+BEGIN_SRC emacs-lisp
+;; doom-emacs/core/core.el
+(defconst EMACS27+   (> emacs-major-version 26))
+(defconst IS-MAC     (eq system-type 'darwin))
+(defconst IS-LINUX   (eq system-type 'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
+
+;;
+;;; Optimizations
+
+;; Disable bidirectional text rendering for a modest performance boost. Of
+;; course, this renders Emacs unable to detect/display right-to-left languages
+;; (sorry!), but for us left-to-right language speakers/writers, it's a boon.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+
+;; Reduce rendering/line scan work for Emacs by not rendering cursors or regions
+;; in non-focused windows.
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+;; More performant rapid scrolling over unfontified regions. May cause brief
+;; spells of inaccurate fontification immediately after scrolling.
+(setq fast-but-imprecise-scrolling t)
+
+;; Resizing the Emacs frame can be a terribly expensive part of changing the
+;; font. By inhibiting this, we halve startup times, particularly when we use
+;; fonts that are larger than the system default (which would resize the frame).
+(setq frame-inhibit-implied-resize t)
+
+;; Don't ping things that look like domain names.
+(setq ffap-machine-p-known 'reject)
+
+;; Performance on Windows is considerably worse than elsewhere, especially if
+;; WSL is involved. We'll need everything we can get.
+(when IS-WINDOWS
+  ;; Reduce the workload when doing file IO
+  (setq w32-get-true-file-attributes nil)
+
+  ;; Font compacting can be terribly expensive, especially for rendering icon
+  ;; fonts on Windows. Whether it has a noteable affect on Linux and Mac hasn't
+  ;; been determined.
+  (setq inhibit-compacting-font-caches t))
+#+END_SRC
 
 ** elpa
 
@@ -90,11 +136,13 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 
-(if (eq system-type 'windows-nt)
+;; (if (eq system-type 'windows-nt)
+(when IS-WINDOWS
   (setq file-name-coding-system 'gbk))
 
 ;; for linux terminal
-(if (eq system-type 'gnu/linux)
+;; (if (eq system-type 'gnu/linux)
+(when IS-LINUX
   (progn
     (setq locale-coding-system 'utf-8)
     (set-terminal-coding-system 'utf-8)
