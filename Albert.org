@@ -172,16 +172,24 @@ they were loaded at startup."
 ;     ("http" . "134.80.3.27:8080")
 ;     ("https" . "134.80.3.27:8080")))
 
+** gcmh [2020-01-02 周四 17:17:52]
+#+BEGIN_SRC emacs-lisp
+(use-package gcmh
+  :ensure t
+  :defer 1)
+#+END_SRC
 ** lazy-load [2019-11-18 周一 10:33:05]
 
 http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/elisp/lazy-load"))
-(require 'lazy-load)
 
-(setq w32-pass-lwindow-to-system nil)
-(setq w32-lwindow-modifier 'super)
-(w32-register-hot-key [s-])
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'load-path (expand-file-name "~/elisp/lazy-load"))
+;; (require 'lazy-load)
+
+(when IS-WINDOWS
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super)
+  (w32-register-hot-key [s-]))
 #+END_SRC
 
 ** HOME
