@@ -1137,6 +1137,7 @@ elpa中安装就可以了。
 (setq c-basic-offset 4)
 
 (setq default-tab-width 4)
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 ;; (setq tab-width 4)
@@ -1196,6 +1197,8 @@ https://vxlabs.com/2018/11/19/configuring-emacs-lsp-mode-and-microsofts-visual-s
 
 https://github.com/emacs-lsp/lsp-python-ms
 
+[2019-12-19 周四 16:15:16] python在win10和linux上都稳定。go在win10上不稳定，只要不是同一个package下，就报AST错误。在linux下稳定。
+
 #+BEGIN_SRC emacs-lisp
 ;; Emacs client for the Language Server Protocol
 ;; https://github.com/emacs-lsp/lsp-mode#supported-languages
@@ -1204,11 +1207,13 @@ https://github.com/emacs-lsp/lsp-python-ms
   :defer t
   ;; :hook (prog-mode . lsp)
   :hook (python-mode . lsp-deferred)
-        (go-mode . lsp-deferred)
+        ;; (go-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
   :init
-  (setq lsp-auto-guess-root t)       ; Detect project root
+  (setq lsp-auto-guess-root nil)       ; Detect project root 貌似设置为t后，go总是找不到对应的package
+  ; Auto-kill LSP server
+  (setq lsp-keep-workspace-alive nil)
   ;; disable Yasnippet
   (setq lsp-enable-snippet nil)
   (setq lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
@@ -1237,7 +1242,7 @@ https://github.com/emacs-lsp/lsp-python-ms
               ([remap xref-find-references] . lsp-ui-peek-find-references)
               ("C-c u" . lsp-ui-imenu))
   :init (setq lsp-ui-doc-enable t
-              lsp-ui-doc-use-webkit t
+              lsp-ui-doc-use-webkit nil
               lsp-ui-doc-include-signature t
               lsp-ui-doc-position 'top
               lsp-ui-doc-border (face-foreground 'default)
@@ -1299,6 +1304,11 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
   ;; for executable of language server, if it's not symlinked on your PATH
   (setq lsp-python-ms-executable
         "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
+#+END_SRC
+** eglot [2019-12-25 周三 09:10:01]
+感觉不如lsp-mode用得顺手
+#+BEGIN_SRC emacs-lisp
+(add-hook 'go-mode-hook 'eglot-ensure)
 #+END_SRC
 ** markdown-mode
 
