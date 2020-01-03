@@ -6,7 +6,7 @@ doom-emacs介绍了它是如何做到启动速度这么快的 https://github.com
 
 Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of your elisp files. This can break code if you’ve written it to depend on dynamic variables, but I’ve written Doom not to.
 
-[2019-05-18 周六 23:35:01] 好像没什么效果。
+[2019-05-18 周六 23:35:01]
 #+BEGIN_SRC emacs-lisp
 ;;; Albert.el -*- lexical-binding: t; -*-
 #+END_SRC
@@ -14,10 +14,9 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 [2019-05-18 周六 23:34:20] 学习anything的作者 https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init.el
 
 优化Emacs启动速度的方法论 https://manateelazycat.github.io/emacs/2019/05/12/emacs-optimize-startup-speed.html
-*** garbage collector优化 [2019-05-20 周一 10:53:13]
-[2019-05-24 周五 09:12:45] 参考doom-emacs的init.el，代码放到在init.el里
 *** doom-emacs/core/core-lib.el [2020-01-02 周四 16:03:40]
 #+BEGIN_SRC emacs-lisp
+;; doom-emacs/core/core-lib.el
 (defmacro add-transient-hook! (hook-or-function &rest forms)
   "Attaches a self-removing function to HOOK-OR-FUNCTION.
 
@@ -126,13 +125,12 @@ they were loaded at startup."
   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
   (with-eval-after-load 'gcmh
     (setq gcmh-idle-delay 10
-          gcmh-verbose t)
+          gcmh-verbose nil)
     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
     
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
   (add-hook 'window-setup-hook #'albert-display-benchmark-h 'append))
-
 #+END_SRC
 
 ** elpa
@@ -173,9 +171,11 @@ they were loaded at startup."
 ;     ("https" . "134.80.3.27:8080")))
 
 ** gcmh [2020-01-02 周四 17:17:52]
+主要是为了能自动安装gcmh。
 #+BEGIN_SRC emacs-lisp
 (use-package gcmh
   :ensure t
+  :disabled t
   :defer 1)
 #+END_SRC
 ** lazy-load [2019-11-18 周一 10:33:05]
@@ -199,7 +199,7 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
 (setq default-directory "~/")
 #+END_SRC
 
-** Performace problem on windows
+** Performace problem on windows - 已放到启动优化
 
 [2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
 如果打开会看见很多QueryBasicInformation这样的调用.
