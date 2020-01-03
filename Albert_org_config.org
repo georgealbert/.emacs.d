@@ -1031,7 +1031,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
          ;; (ledger . t)
          ;; (org . t)
          ;; (latex . t)
-         (plantuml . t)
+         ;; (plantuml . t)
 )))
 
 ; Do not prompt to confirm evaluation
@@ -1436,18 +1436,23 @@ org-crypt是org-mode自带的。使用require加载耗时12ms，可以接受。
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;; (setq epg-gpg-home-directory "c:/Users/Albert/AppData/Roaming/gnupg")
-;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
-(require 'org-crypt)
-; Encrypt all entries before saving
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
-; GPG key to use for encryption
-;; (setq org-crypt-key "F0B66B40")
-;; 使用对称加密算法加密
-;; (setq org-crypt-key nil)
-;; (setq org-crypt-key "3B0195C3")
-(setq org-crypt-key "39DBDC76")
+  (run-with-idle-timer
+   1 nil
+   #'(lambda ()
+
+       ;; (setq epg-gpg-home-directory "c:/Users/Albert/AppData/Roaming/gnupg")
+       ;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
+       (require 'org-crypt)
+                                          ; Encrypt all entries before saving
+       (org-crypt-use-before-save-magic)
+       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+                                          ; GPG key to use for encryption
+       ;; (setq org-crypt-key "F0B66B40")
+       ;; 使用对称加密算法加密
+       ;; (setq org-crypt-key nil)
+       ;; (setq org-crypt-key "3B0195C3")
+       (setq org-crypt-key "39DBDC76")
+       ))
 #+END_SRC
 
 M-x org-decrypt-entry will prompt for the passphrase associated with your encryption key and replace the encrypted data where the point is with the plaintext details for your encrypted entry. As soon as you save the file the data is re-encrypted for your key. Encrypting does not require prompting for the passphrase - that's only for looking at the plain text version of the data.
@@ -1505,6 +1510,7 @@ ediff org mode时的folding有点讨厌。
 #+BEGIN_SRC emacs-lisp
 ;; (require 'ox-publish)
 (use-package ox-publish
+  :ensure nil
   :defer t)
 (setq org-publish-project-alist
   '(

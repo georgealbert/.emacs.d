@@ -6,15 +6,30 @@
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+
 (require 'package)
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.org/packages/") t)
+  '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
+  ;; '("melpa" . "http://melpa.org/packages/") t)
 
-(package-initialize)
+;; (package-initialize)
 ;(setq package-user-dir (concat dotfiles-dir "/elpa"))
+))
 
+(setq use-package-always-ensure t)
 (setq use-package-verbose t)
 (require 'use-package)
+
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+(use-package auto-compile
+  :config (auto-compile-on-load-mode))
+(setq load-prefer-newer t)
+))
 #+end_src
 
 代理配置
@@ -75,13 +90,22 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
                    ;; "all-the-icons")
 
      ;; Setting English Font
-     ;; (set-face-attribute 'default nil :font "Ubuntu Mono 16")
+     ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
      ;; (set-face-attribute 'default nil :font "monaco")
-     ;; (set-face-attribute 'default nil :font "Consolas 16")
+     ;; (set-face-attribute 'default nil :font "Consolas 12")
+     ;; (set-face-attribute 'default nil :font "consolas_with_yahei 10")
 
      ;; (set-set-font "fontset-standard" "wqy-unibit-mono")
+
      (set-face-attribute 'default nil :font "wqy-unibit-mono")
-     ;; (set-face-attribute 'default nil :font "unibit 16")
+     ;; (set-face-attribute 'default nil :font "wenquanyi-unibit")
+     ;; (set-face-attribute 'default nil :font "unibit")
+
+     ;; [2019-12-19 Thu 11:15:27]
+     ;; (set-face-attribute 'default nil :font "sarasa mono t sc 12")
+
+     ;; (set-face-attribute 'default nil :font "unibit")
+
      ;; (set-face-attribute 'default nil :font "luxi mono 14")
 
      ;; for all-the-icons.el, emacs will coredump
@@ -99,8 +123,9 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
      (dolist (charset '(kana han symbol cjk-misc bopomofo))
              (set-fontset-font (frame-parameter nil 'font)
                            charset
-                             (font-spec :family "wqy-unibit-mono" :size 16)))))
-                           ;;  (font-spec :family "Microsoft Yahei" :size 16)))))
+                             (font-spec :family "unibit" :size 16)))))
+                           ;;  (font-spec :family "wqy-unibit-mono" :size 16)))))
+                           ;;  (font-spec :family "sarasa mono t sc" :size 14)))))
                            ;; (font-spec :family "consolas_with_yahei" :size 10)))))
                            ;; (font-spec :family "fangsong ti")))))
                            ;;  (font-spec :family "fangsong ti" :size 10)))))
@@ -238,7 +263,7 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 
 (if (eq system-type 'windows-nt)
   (progn
-    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+  ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
     ;; s2319的宽度是509mm X 286mm
     (if (>= (display-mm-width) 509)
       (albert-s2319-font))
@@ -307,6 +332,10 @@ Source Code Variable 无法和Yahei配合对齐。
 * evil
 
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+
 ;; [2018-12-28 Fri 14:48:49] tab will work on linux term
 (setq evil-want-C-i-jump nil)
 (use-package evil
@@ -325,6 +354,7 @@ Source Code Variable 无法和Yahei配合对齐。
 
 (when evil-want-C-i-jump
   (define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward))
+))
 #+end_src
 
 * helm
@@ -339,7 +369,7 @@ Source Code Variable 无法和Yahei配合对齐。
   :defer t
   :init
   (progn
-    (use-package helm-config)
+    ;; (use-package helm-config)
     (helm-mode 1)))
 ;; (global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "C-c m") 'helm-mini)
@@ -466,16 +496,48 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 different from window-numbering.el
 直接按 *M-num* 就ok，完了，用了这个都忘记怎么切窗口了， ^_^ *C-x o*, *C-x 1*
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package window-numbering
   :ensure t
   :defer t
   :init (window-numbering-mode 1))
 #+END_SRC
 
+* winum [2019-06-12 周三 09:50:41]
+从treemacs学到的。winum是window-number.el的新的扩展和活跃的维护版本。
+
+#+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+
+(use-package winum
+  :config (winum-mode +1)
+  :init
+  (setq winum-keymap
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "C-`") 'winum-select-window-by-number)
+        (define-key map (kbd "C-²") 'winum-select-window-by-number)
+        (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+        (define-key map (kbd "M-1") 'winum-select-window-1)
+        (define-key map (kbd "M-2") 'winum-select-window-2)
+        (define-key map (kbd "M-3") 'winum-select-window-3)
+        (define-key map (kbd "M-4") 'winum-select-window-4)
+        (define-key map (kbd "M-5") 'winum-select-window-5)
+        (define-key map (kbd "M-6") 'winum-select-window-6)
+        (define-key map (kbd "M-7") 'winum-select-window-7)
+        (define-key map (kbd "M-8") 'winum-select-window-8)
+        map)))
+        ))
+#+END_SRC
+
 * undotree
 
 #+BEGIN_SRC emacs-lisp
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
+
 (use-package undo-tree
   :ensure t
   :defer t
@@ -490,6 +552,8 @@ different from window-numbering.el
 ;;(global-set-key (kbd "C-S-z") 'redo) ; 【Ctrl+Shift+z】;  Mac style
 ;;(global-set-key (kbd "C-y") 'redo) ; 【Ctrl+y】; Microsoft Windows style
 (global-set-key (kbd "C-r") 'redo) ; 【Ctrl+r】; VIM style
+
+))
 #+END_SRC
 
 * python
@@ -532,6 +596,9 @@ pdb setup, note the python version
 ;;   ;; :init (elpy-enable)
 ;;   ;; :config
 ;; )
+#+END_SRC
+
+#+BEGIN_SRC lisp
 (use-package elpy
   :ensure t
   :defer t
@@ -584,6 +651,138 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (setq flycheck-posframe-warning-prefix "☎ "
         flycheck-posframe-info-prefix "··· "
         flycheck-posframe-error-prefix "✕ "))
+#+END_SRC
+
+* lsp-mode [2019-06-12 Wed 11:14:11] 
+Language Server Protocol (LSP) configurations.
+
+lsp and pyls is too slow to use.
+
+请参考 https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-lsp.el 和 
+https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-python.el 
+
+如果不是 git 项目，最新的 lsp-mode 需要你手工在 python 文件目录下创建一个.projectile 文件，或者在 init-lsp.el 中打开我注释的代码。
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package eglot
+;;   :hook (prog-mode . eglot-ensure))
+
+;; Emacs client for the Language Server Protocol
+;; https://github.com/emacs-lsp/lsp-mode#supported-languages
+(use-package lsp-mode
+  ;; :diminish lsp-mode
+  :defer t
+  ;; :ensure company-jedi
+  :hook (python-mode . lsp-deferred)
+        (go-mode . lsp-deferred)
+      ;; (python-mode . (lambda ()
+	;; 		   (lsp)
+	;; 		   ;; (setq-local company-backends '(company-jedi company-files))
+	;; 		   ))
+  :bind (:map lsp-mode-map
+              ("C-c C-d" . lsp-describe-thing-at-point))
+  :init
+  (setq lsp-auto-guess-root t)       ; Detect project root
+  (setq lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
+  (setq flymake-fringe-indicator-position 'right-fringe))
+;;   :config
+;;   ;; Configure LSP clients
+;;   (use-package lsp-clients
+;;     :defer t
+;;     :ensure nil
+;;     :init
+;;     (setq lsp-clients-python-library-directories '("/usr/local/" "/usr/"))))
+
+(use-package lsp-ui
+  :defer t
+  :custom-face
+  (lsp-ui-doc-background ((t (:background nil))))
+  :bind (:map lsp-ui-mode-map
+              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+              ([remap xref-find-references] . lsp-ui-peek-find-references)
+              ("C-c u" . lsp-ui-imenu))
+  :init (setq ;; lsp-ui-doc-enable nil
+              lsp-ui-doc-enable t
+              lsp-ui-doc-use-webkit nil
+              ;; lsp-ui-doc-use-webkit t
+              lsp-ui-doc-include-signature t
+              lsp-ui-doc-position 'top
+              lsp-ui-doc-border (face-foreground 'default)
+
+              lsp-enable-snippet nil
+              lsp-ui-sideline-enable nil
+
+              ;; emacs26.2经常陷入卡顿, set it to nil.
+              ;; emacs 27.0.50 will be ok to support native json
+              lsp-use-native-json t
+              lsp-json-use-lists t
+
+              lsp-ui-sideline-ignore-duplicate t)
+  :config
+  ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+  ;; https://github.com/emacs-lsp/lsp-ui/issues/243
+  (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+    (setq mode-line-format nil)))
+
+(use-package company-lsp
+  :defer t
+  :init (setq company-lsp-cache-candidates 'auto))
+
+;; Debug
+(use-package dap-mode
+  :after lsp-mode
+  :defer t
+  :diminish
+  :hook ((after-init . dap-mode)
+         (dap-mode . dap-ui-mode)
+
+         ;; (go-mode . (lambda () (require 'dap-go)))
+         ;; (java-mode . (lambda () (require 'dap-java)))
+         ;; ((c-mode c++-mode objc-mode swift) . (lambda () (require 'dap-lldb)))
+         ;; (php-mode . (lambda () (require 'dap-php)))
+         (python-mode . (lambda () (require 'dap-python)))))
+
+;; `lsp-mode' and `treemacs' integration.
+;; (when emacs/>=25.2p
+  (use-package lsp-treemacs
+    :defer t
+    :bind (:map lsp-mode-map
+                ("M-9" . lsp-treemacs-errors-list)))
+;; )
+
+;; ;; C/C++/Objective-C support
+;; (use-package ccls
+;;   :defines projectile-project-root-files-top-down-recurring
+;;   :hook ((c-mode c++-mode objc-mode cuda-mode) . (lambda ()
+;;                                                    (require 'ccls)
+;;                                                    (lsp)))
+;;   :config
+;;   (with-eval-after-load 'projectile
+;;     (setq projectile-project-root-files-top-down-recurring
+;;           (append '("compile_commands.json"
+;;                     ".ccls")
+;;                   projectile-project-root-files-top-down-recurring))))
+
+;; ;; Java support
+;; (use-package lsp-java
+;;   :hook (java-mode . (lambda ()
+;;                        (require 'lsp-java)
+;;                        (lsp))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-python-ms
+  :ensure t
+  :demand
+  :after lsp-mode
+  :hook (python-mode . lsp)
+  :config
+  ;; for dev build of language server
+  (setq lsp-python-ms-dir
+        (expand-file-name "~/mspyls/python-language-server/output/bin/Release/"))
+  ;; for executable of language server, if it's not symlinked on your PATH
+  (setq lsp-python-ms-executable
+        "/home/albert/mspyls/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.LanguageServer"))
 #+END_SRC
 
 * basic setting - 可以推迟启动的
@@ -659,7 +858,8 @@ emacs24自带的最喜欢的theme。
 
 [2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
 #+BEGIN_SRC emacs-lisp
-(load-theme 'deeper-blue t)
+;; (load-theme 'deeper-blue t)
+
 ;; (load-theme 'tango-dark t)
 ;; (load-theme 'manoj-dark t)
 #+END_SRC
@@ -675,8 +875,8 @@ emacs24自带的最喜欢的theme。
 #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :ensure t
-  :disabled t
-  ;; :defer t
+  ;;:disabled t
+  ;; :defer 1
   ;; :init
   :config
   (progn
@@ -697,7 +897,7 @@ emacs24自带的最喜欢的theme。
     (doom-themes-visual-bell-config)
     
     ;; Enable custom neotree theme (all-the-icons must be installed!)
-    (doom-themes-neotree-config)
+    ;; (doom-themes-neotree-config)
     ;; or for treemacs users
     (doom-themes-treemacs-config)
     
@@ -719,6 +919,7 @@ before dired+ loaded
 #+BEGIN_SRC emacs-lisp
 (setq diredp-hide-details-initially-flag nil)
 (use-package dired+
+  :ensure nil
   :defer t)
 #+END_SRC
 
@@ -821,6 +1022,7 @@ from sacha chua
 (add-hook 'c-mode-common-hook 'display-line-numbers-mode)
 (add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
 (add-hook 'sh-mode-hook 'display-line-numbers-mode)
+(add-hook 'go-mode-hook 'display-line-numbers-mode)
 #+END_SRC
 
 ** F5插入当前时间
@@ -951,10 +1153,15 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 ;; (setq-default save-place t)
 
 ;; For GNU Emacs 25.1 and newer versions
-(setq-default save-place t)
+;; (setq-default save-place t)
+
+(run-with-idle-timer
+ 1 nil
+ #'(lambda ()
 (use-package saveplace
   :ensure t
   :init (save-place-mode 1))
+  ))
 #+END_SRC
 
 ** mode-line
@@ -1048,28 +1255,30 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
 
 //#+BEGIN_SRC emacs-lisp
-#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
 (use-package all-the-icons
   :ensure t
   ;; :disabled t
-  :defer t
+  :defer 1
   )
   
 (use-package doom-modeline
   :ensure t
   ;; :disabled t
-  :defer t
+  ;; :defer 1
   ;; :init
   :config
   (progn
     ;; How tall the mode-line should be (only respected in GUI Emacs).
-    (setq doom-modeline-height 25)
+    ;; (setq doom-modeline-height 25)
     
     ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    (setq doom-modeline-bar-width 3)
+    ;; (setq doom-modeline-bar-width 3)
 
     ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-    (setq doom-modeline-icon t)
+
+    ;; emacs coredump with all-the-icons
+    (setq doom-modeline-icon nil)
     
     ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
     (setq doom-modeline-major-mode-icon t)
@@ -1294,11 +1503,14 @@ process monitor在用了vpn后会导致机器hang。
 
 * pyim 
 https://github.com/tumashu/pyim
+
+[2019-07-08 Mon 14:22:43] 如果用的话，demand 要设置，先输入英文，然后按 M-j , 选择候选词，翻页用 C-n/C-p 或者 +/- , 不能用 ,和.
 #+BEGIN_SRC emacs-lisp
 (use-package pyim
   :disabled t
+  ;; :defer t
   :ensure t
-  ;; :demand t
+  :demand t
   :config
   ;; 激活 basedict 拼音词库
   (use-package pyim-basedict
@@ -1310,7 +1522,7 @@ https://github.com/tumashu/pyim
 
     (setq pyim-default-scheme 'quanpin)
 
-    ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+    ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换
     ;; 我自己使用的中英文动态切换规则是：
     ;; 1. 光标只有在注释里面时，才可以输入中文。
     ;; 2. 光标前是汉字字符时，才能输入中文。
@@ -1346,12 +1558,23 @@ https://github.com/tumashu/pyim
 
   :bind
   (("M-j" . pyim-convert-code-at-point) ;与 pyim-probe-dynamic-english 配合
-   ("C-;" . pyim-delete-word-from-personal-buffer))
+   ("C-;" . pyim-delete-word-from-personal-buffer)
+   ;; ("," . pyim-page-previous-page)
+   ;; ("." . pyim-page-next-page)
+  )
 )
-
-
 #+END_SRC
-* c-mode coding style [2019-01-05 周六 11:20:13]
+* lang
+** c
+*** ccls [2019-06-14 Fri 17:27:58]
+#+BEGIN_SRC emacs-lisp
+(use-package ccls
+  :disabled t
+  :defer t
+  :hook ((c-mode c++-mode objc-mode) .
+         (lambda () (require 'ccls) (lsp))))
+#+END_SRC
+*** c-mode coding style [2019-01-05 周六 11:20:13]
 
 emacs使用google-c-style
 google c++编码规范很全面，现在已经逐渐习惯了这种编码规范，突然想到或许emacs中有合适的el支持这种规范，到网上一找，果然有。
@@ -1377,7 +1600,7 @@ elpa中安装就可以了。
 (setq c-default-style "linux")
 (setq c-basic-offset 4)
 
-(setq default-tab-width 4)
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 ;; (setq tab-width 4)
@@ -1423,6 +1646,104 @@ use mouse-2 middle wheel to paste text to emacs.
 ;     (setq interprogram-cut-function 'xsel-cut-function)
 ;     (setq interprogram-paste-function 'xsel-paste-function)))
 #+END_SRC
+* tools [2019-06-12 Wed 10:06:46]
+** treemacs [2019-06-12 周三 09:41:52]
+
+#+BEGIN_SRC emacs-lisp
+(use-package treemacs
+  ;; :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      nil
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         30)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+    ;;(treemacs-resize-icons 10)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+;; (use-package treemacs-icons-dired
+;;   :after treemacs dired
+;;   :ensure t
+;;   :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+#+END_SRC
+
+** aweshell [2019-11-16 周六 15:10:26]
+
+https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init-key.el
+
+#+BEGIN_SRC emacs-lisp
+(use-package aweshell
+  :load-path "~/.emacs.d/elisp/aweshell"
+  :bind (("s-n" . aweshell-new)
+     ("s-h" . aweshell-toggle)
+     ("M-n M-n" . aweshell-dedicated-toggle)))
+#+END_SRC
+
 * 现在没用的配置
 ** 反显选中区域
 

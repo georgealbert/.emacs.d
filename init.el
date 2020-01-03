@@ -34,7 +34,6 @@ decrease this. If you experience stuttering, increase this.")
      ;; GC all sneaky breeky like
      (add-hook 'focus-out-hook #'garbage-collect))))
 
-
 (if (ignore-errors (or after-init-time noninteractive))
     (setq gc-cons-threshold doom-gc-cons-threshold)
   ;; A big contributor to startup times is garbage collection. We up the gc
@@ -45,70 +44,76 @@ decrease this. If you experience stuttering, increase this.")
   ;; You get a minor speed up by nooping this.
   (setq file-name-handler-alist nil)
   ;; Not restoring these to their defaults will cause stuttering/freezes.
-(add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
-;; 显示加载时间
-(defvar albert-init-time 'nil)
+  ;; 显示加载时间
+  (defvar albert-init-time 'nil)
 
-(defun albert|display-benchmark()
-  (message "Emacs loaded %s packages in %.03fs"
-           (length package-activated-list)
-           (or albert-init-time
-               (setq albert-init-time
-                     (float-time (time-subtract (current-time) before-init-time))))))
+  (defun albert|display-benchmark()
+    (message "Emacs loaded %s packages in %.03fs"
+             (length package-activated-list)
+             (or albert-init-time
+                 (setq albert-init-time
+                       (float-time (time-subtract (current-time) before-init-time))))))
 
-(add-hook 'emacs-startup-hook #'albert|display-benchmark)
-;; (add-hook 'window-setup-hook #'albert|display-benchmark)
-;; end of 启动优化
+  (add-hook 'emacs-startup-hook #'albert|display-benchmark)
+  ;; (add-hook 'window-setup-hook #'albert|display-benchmark)
+  ;; end of 启动优化
 
-;; This sets up the load path so that we can override it
+  ;; This sets up the load path so that we can override it
 
-;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
-;; (toggle-debug-on-error)
+  ;; [2018-11-29 周四 22:28:22] 测试emacs启动需要30s+的问题
+  ;; (toggle-debug-on-error)
 
-;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
-(package-initialize nil)
+  ;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
 
-;; Override the packages with the git version of Org and other packages
-;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
-;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
+  ;; [2019-10-30 Wed 17:34:38] 27.0 does not need this
+  (package-initialize nil)
 
-;; Load the rest of the packages
-(package-initialize t)
-(setq package-enable-at-startup nil)
-(require 'benchmark-init-modes)
-(require 'benchmark-init)
-(benchmark-init/activate)
+  ;; Override the packages with the git version of Org and other packages
+                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/lisp")
+                                        ;(add-to-list 'load-path "~/.emacs.d/lisp/org-8.2.7c/contrib/lisp")
 
-(defvar org-modules
-  '(;; org-w3m
-    ;; org-bbdb
-    ;; org-bibtex
-    ;; org-docview
-    ;; org-gnus
-    ;; org-info
-    ;; org-irc
-    ;; org-mhe
-    ;; org-rmail
-    ))
+  ;; Load the rest of the packages
+  ;; (package-initialize t)
 
-(require 'org)
-(require 'ob-tangle)
-(org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
-(org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
+  ;; [2019-10-30 Wed 17:34:45] 27.0 does not need this
+  (setq package-enable-at-startup nil)
+
+  (require 'benchmark-init-modes)
+  (require 'benchmark-init)
+  (benchmark-init/activate)
+
+  (defvar org-modules
+    '(;; org-w3m
+      ;; org-bbdb
+      ;; org-bibtex
+      ;; org-docview
+      ;; org-gnus
+      ;; org-info
+      ;; org-irc
+      ;; org-mhe
+      ;; org-rmail
+      ))
+
+  ;; (require 'org)
+  (require 'ob-tangle)
+  (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
+  (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
+
+  (add-hook 'after-init-hook #'doom|restore-startup-optimizations))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote (default)))
+ '(custom-safe-themes '(default))
  '(package-selected-packages
-   (quote
-    (flycheck-posframe dired-k helm-ag doom-modeline doom-themes py-autopep8 flycheck pyim ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy diminish benchmark-init))))
+   '(treemacs treemacs-evil treemacs-projectile treemacs-icons-dired lsp-python-ms ccls flycheck-posframe dired-k helm-ag doom-modeline doom-themes py-autopep8 flycheck pyim ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy diminish benchmark-init)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(lsp-ui-doc-background ((t (:background nil))))
  '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
