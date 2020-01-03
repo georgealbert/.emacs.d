@@ -606,12 +606,10 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
 另一个有用的函数是 =M-x describe-fontset= 。
 
-中文用雅黑，英文用consolas比直接用雅黑的混合字体显示效果好。混合字体对一个特定的字体大小显示效果好。
-
 CJK (Chinese, Japanese, Korean)
 
 #+BEGIN_SRC emacs-lisp
-(defun albert|notebook-font()
+(defun albert-notebook-font()
   "Config font on HP zhan66."
   (interactive)
   (if (eq system-type 'windows-nt)
@@ -630,15 +628,8 @@ CJK (Chinese, Japanese, Korean)
               (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "Microsoft Yahei" :size 22))))))
-                            
-;; (defun albert|notebook-font()
-;;   "Config font on HP zhan66."
-;;   (interactive)
-;;   (if (eq system-type 'windows-nt)
-;;     (set-face-attribute 'default nil :font "等距更纱黑体 T SC 10")
-;;   ))
 
-(defun albert|s2319-font()
+(defun albert-s2319-font()
   "Config font on dell s2319. 
    Ubuntu Mono 10 + Yahei 14 太小了
    Ubuntu Mono 12 + Yahei 16 比较合适
@@ -650,7 +641,6 @@ CJK (Chinese, Japanese, Korean)
       ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
       ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
       (set-face-attribute 'default nil :font "Fixedsys 12")
-      ;; (set-face-attribute 'default nil :font "Consolas 12")
       ;; (set-face-attribute 'default nil :font "YaHei Monaco Hybird 11")
       ;; (set-face-attribute 'default nil :font "Fira Code 10")
       ;; (set-face-attribute 'default nil :font "Fira Code Retina 10")
@@ -672,18 +662,18 @@ CJK (Chinese, Japanese, Korean)
   ;;(if (eq window-system 'w32)
   (when IS-WINDOWS
     (progn
-    ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
+      ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
       ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
       ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
       ;; (display-mm-height)
       (if (>= (display-mm-width) 509)
-        (albert|s2319-font))
+        (albert-s2319-font))
       
         ;; 宽度在500mm的认为是笔记本?或者更加精确一点的方式来匹配不同的笔记本型号?
       ;; HP ZHAN66 309mm X 175mm
       ;; Thinkpad T430 4xxmm X 20xmm?
       (if (eq (display-mm-width) 309)
-        (albert|notebook-font)))))
+        (albert-notebook-font)))))
         
 (albert-adjust-font)
 #+END_SRC
