@@ -1,7 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-;; This sets up the load path so that we can override it
-
 ;; In noninteractive sessions, prioritize non-byte-compiled source files to
 ;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
 ;; to skip the mtime checks on every *.elc file.
@@ -30,10 +28,8 @@
     ;; org-rmail
     ))
 
-;; (require 'org)
 (require 'ob-tangle)
 (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
-;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert_org_config.org"))
 
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
 ;; (require 'init-albert)
