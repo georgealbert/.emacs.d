@@ -1181,7 +1181,12 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 
 其实可以考虑vim的 =<leader> + \= 进行注释的。
 #+BEGIN_SRC emacs-lisp
-(global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region)
+;; linux的term
+(if (eq system-type 'gnu/linux)
+  (global-set-key [?\C-c ?\C-_] 'comment-or-uncomment-region))
+
+(when (or IS-WINDOWS (eq window-system 'x))
+  (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region))
 
 (defun my-comment-or-uncomment-region (beg end &optional arg)  
   (interactive (if (use-region-p)  
