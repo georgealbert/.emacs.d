@@ -387,12 +387,14 @@ It often displays so much information, even temporarily, that it is nice to give
 [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 #+BEGIN_SRC emacs-lisp
 ;; (global-display-line-numbers-mode t)
-(setq display-line-numbers-width-start 5)
+
+;; 文件超过10000行，别显示行号，只留4位吧
+(setq display-line-numbers-width-start 4)
 
 ;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
 
 (defun albert-display-line-numbers ()
-  "org-mode的文件，如果总行数小于10000行就显示行号."
+  "org-mode的文件，如果行数<10000行就显示行号."
   (let ((last (line-number-at-pos (point-max))))
     (message "Opening %s, total lines: %d" (buffer-file-name) last)
     (if (< last 10000)
@@ -433,26 +435,6 @@ Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tri
 #+END_SRC
 
 ** Color theme
-
-emacs24自带的最喜欢的theme。
-
-[2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
-#+BEGIN_SRC emacs-lisp
-;; (load-theme 'deeper-blue t)
-#+END_SRC
-
-;; (load-theme 'solarized t)
-;; (load-theme 'tango-dark t)
-;; (load-theme 'manoj-dark t)
-
-[2019-01-11 周五 21:55:40] 下面的theme不是用load-theme加载，不如什么theme都不用，纯白的。
-;; (load-theme 'Snowish t)
-;; (load-theme 'Bharadwaj-Slate t)
-;; (load-theme 'Infodoc t)
-
-JB Simple 白底黑字不错
-Jedit Grey 灰底黑字也可以
-
 *** doom-themes [2019-05-21 周二 09:19:44]
 昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
 和现在使用的deeper-blue差异太大，就自己增加了一个theme。
@@ -492,6 +474,25 @@ Jedit Grey 灰底黑字也可以
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)))
 #+END_SRC
+*** emacs24自带的最喜欢的theme
+
+[2017-04-30 周日 23:55:59] 试了一下solarized，在light mode下不好看，太晃眼，helm不知道选中了哪个，dark mode也一样，org mode中代码的高亮没有了。deeper-blue更好。
+#+BEGIN_SRC lisp
+;; (load-theme 'deeper-blue t)
+#+END_SRC
+
+;; (load-theme 'solarized t)
+;; (load-theme 'tango-dark t)
+;; (load-theme 'manoj-dark t)
+
+[2019-01-11 周五 21:55:40] 下面的theme不是用load-theme加载，不如什么theme都不用，纯白的。
+;; (load-theme 'Snowish t)
+;; (load-theme 'Bharadwaj-Slate t)
+;; (load-theme 'Infodoc t)
+
+JB Simple 白底黑字不错
+Jedit Grey 灰底黑字也可以
+
 ** modeline
 *** doom-modeline
 [2019-05-21 周二 17:05:01] 其实主要是为了用doom-modeline才修改doom-themes的。
@@ -868,16 +869,17 @@ from sacha chua
 winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
 
 #+BEGIN_SRC emacs-lisp
-  (run-with-idle-timer
-   2 nil
-   #'(lambda ()
-       (use-package winner
-         :defer t)
-       ))
+(run-with-idle-timer
+ 2 nil
+ #'(lambda ()
+     (use-package winner
+       :defer t)
+     ))
 
-  ;; (winner-mode t)
+;; (winner-mode t)
 #+END_SRC
 ** cursor [2020-01-02 周四 13:53:49]
+参考doom-emacs
 #+BEGIN_SRC emacs-lisp
 ;;
 ;;; Cursor
@@ -988,7 +990,7 @@ https://github.com/justbur/emacs-vdiff
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  ;; :ensure t
+  :ensure t
   :defer t
   :diminish helm-mode
   :config
@@ -1041,6 +1043,9 @@ https://github.com/justbur/emacs-vdiff
          ;; ("C-z" . 'helm-select-action)
          ("C-x c SPC" . helm-all-mark-rings)))
 
+(ido-mode -1)
+#+END_SRC
+
 ;; ;; (global-set-key (kbd "C-c h") 'helm-mini)
 ;; ;; (global-set-key (kbd "C-c a") 'helm-apropos)
 
@@ -1058,8 +1063,6 @@ https://github.com/justbur/emacs-vdiff
 ;;       helm-ff-skip-boring-files t)
 
 ;; Turn off ido mode in case I enabled it accidentally
-(ido-mode -1)
-#+END_SRC
 
 *** Search buffers by major-mode
 
@@ -1145,33 +1148,6 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
          ("C-x M-i" . helm-multi-swoop-all)))
 #+END_SRC
 
-*** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
-
-[2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
-
-#+BEGIN_SRC lisp
-;; (use-package helm-gtags
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;     (setq helm-gtags-ignore-case t
-;;           helm-gtags-auto-update t
-;;           helm-gtags-use-input-at-cursor t
-;;           helm-gtags-pulse-at-cursor t
-;;           helm-gtags-prefix-key "\C-cg"
-;;           helm-gtags-suggested-key-mapping t))
-;; 
-;; (defun set-helm-gtags-keybindings ()
-;;   (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
-;;   (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
-;;   (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
-;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
-;; 
-;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
-#+END_SRC
-
 *** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
 
@@ -1186,7 +1162,6 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 (setq helm-ag-base-command "rg --no-heading")
 
 ;; (setq helm-ag-base-command "ag --vimgrep")
-
 
 ;; (modify-coding-system-alist 'process "rg" '(utf-8 . chinese-gbk-dos))
 ;; (modify-coding-system-alist 'process "rg" '(cp936 . cp936))
@@ -1417,7 +1392,7 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
 #+END_SRC
 ** eglot [2019-12-25 周三 09:10:01]
 感觉不如lsp-mode用得顺手
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (add-hook 'go-mode-hook 'eglot-ensure)
 #+END_SRC
 ** markdown-mode
@@ -2072,24 +2047,12 @@ process monitor在用了vpn后会导致机器hang。
       (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
       (setq tramp-default-method "plink")))
 #+END_SRC
-** xah-find [2018-09-29 周六 22:09:48]
-http://ergoemacs.org/emacs/elisp-xah-find-text.html
-
-1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
-2. 不知道是怎么找的扩展名，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
-
-#+BEGIN_SRC emacs-lisp
-(use-package xah-find
-  :ensure t
-  :defer t)
-#+END_SRC
-
 ** ggtags [2019-01-01 周二 00:32:00]
 
 | key     | function              | 说明                       |
 |---------+-----------------------+----------------------------|
 | M-.     | ggtags-find-tag-dwim  | C-] 在evil-mode中 无法bind |
-| M-,/C-T | xref-pop-marker-stack | C-T bind的是 pop-tag-mark  |
+| M-,/C-t | xref-pop-marker-stack | C-t bind的是 pop-tag-mark  |
 | M-]     | ggtags-find-reference | 查询调用了tag的reference   |
 
 #+BEGIN_SRC emacs-lisp
@@ -2101,7 +2064,6 @@ http://ergoemacs.org/emacs/elisp-xah-find-text.html
   (lambda ()
     (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
       (progn
-        ;; (linum-mode 1)
         ;; (flycheck-mode 1)
         (ggtags-mode 1)))))
 #+END_SRC
@@ -2203,21 +2165,17 @@ emacs默认的gdb-many-windows有6个调试窗口，有些不常用的，比如�
 ;;(global-set-key (kbd "C-y") 'redo) ; [Ctrl+y]; Microsoft Windows style
 ;; (global-set-key (kbd "C-r") 'redo) ; [Ctrl+r]; VIM style
 #+END_SRC
-** org-static-blog [2019-10-15 周二 09:30:53]
-默认把最新的blog显示在index.html，其他的都在归档里，我比较喜欢列出博文的目录。不好用。不用了。
-#+BEGIN_SRC lisp
-(setq org-static-blog-publish-title "My Static Org Blog")
-(setq org-static-blog-publish-url "https://www.albertzhou.net/")
-(setq org-static-blog-publish-directory "~/projects/blog/")
-(setq org-static-blog-posts-directory "~/projects/blog/posts/")
-(setq org-static-blog-drafts-directory "~/projects/blog/drafts/")
-(setq org-static-blog-enable-tags t)
-(setq org-export-with-toc t)
-(setq org-export-with-section-numbers nil)
-#+END_SRC
 ** aweshell [2019-11-16 周六 15:10:26]
 
 https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init-key.el
+
+#+BEGIN_SRC emacs-lisp
+(use-package aweshell
+  :load-path "~/elisp/aweshell"
+  :bind (("s-n" . aweshell-new)
+     ("s-h" . aweshell-toggle)
+     ("s-x s-x" . aweshell-dedicated-toggle)))
+#+END_SRC
 
 #+BEGIN_SRC lisp
 (add-to-list 'load-path (expand-file-name "~/elisp/aweshell"))
@@ -2241,13 +2199,6 @@ https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/ini
  "aweshell")
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package aweshell
-  :load-path "~/elisp/aweshell"
-  :bind (("s-n" . aweshell-new)
-     ("s-h" . aweshell-toggle)
-     ("s-x s-x" . aweshell-dedicated-toggle)))
-#+END_SRC
 * org mode
 http://doc.norang.ca/org-mode.html
 
@@ -4208,4 +4159,55 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ** provide [2019-11-22 周五 22:48:34]
 #+BEGIN_SRC emacs-lisp
 (provide 'init-albert)
+#+END_SRC
+** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
+
+[2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
+
+#+BEGIN_SRC lisp
+;; (use-package helm-gtags
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;     (setq helm-gtags-ignore-case t
+;;           helm-gtags-auto-update t
+;;           helm-gtags-use-input-at-cursor t
+;;           helm-gtags-pulse-at-cursor t
+;;           helm-gtags-prefix-key "\C-cg"
+;;           helm-gtags-suggested-key-mapping t))
+;; 
+;; (defun set-helm-gtags-keybindings ()
+;;   (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g s") 'helm-gtags-select)
+;;   (define-key helm-gtags-mode-map (kbd "M-."    ) 'helm-gtags-dwim)
+;;   (define-key helm-gtags-mode-map (kbd "M-,"    ) 'helm-gtags-pop-stack)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g p") 'helm-gtags-previous-history)
+;;   (define-key helm-gtags-mode-map (kbd "C-c g n") 'helm-gtags-next-history))
+;; 
+;; (add-hook 'helm-gtags-mode-hook 'set-helm-gtags-keybindings)
+#+END_SRC
+
+** xah-find [2018-09-29 周六 22:09:48] - 不用了
+http://ergoemacs.org/emacs/elisp-xah-find-text.html
+
+1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
+2. 不知道是怎么找的扩展名，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
+
+#+BEGIN_SRC lisp
+(use-package xah-find
+  :ensure t
+  :defer t)
+#+END_SRC
+
+** org-static-blog [2019-10-15 周二 09:30:53]
+默认把最新的blog显示在index.html，其他的都在归档里，我比较喜欢列出博文的目录。不好用。不用了。
+#+BEGIN_SRC lisp
+(setq org-static-blog-publish-title "My Static Org Blog")
+(setq org-static-blog-publish-url "https://www.albertzhou.net/")
+(setq org-static-blog-publish-directory "~/projects/blog/")
+(setq org-static-blog-posts-directory "~/projects/blog/posts/")
+(setq org-static-blog-drafts-directory "~/projects/blog/drafts/")
+(setq org-static-blog-enable-tags t)
+(setq org-export-with-toc t)
+(setq org-export-with-section-numbers nil)
 #+END_SRC
