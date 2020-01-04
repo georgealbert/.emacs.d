@@ -184,7 +184,7 @@ they were loaded at startup."
 
 ** gcmh [2020-01-02 周四 17:17:52]
 主要是为了能自动安装gcmh。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package gcmh
   :ensure t
   :disabled t
@@ -197,7 +197,7 @@ they were loaded at startup."
 #+BEGIN_SRC emacs-lisp
 (defun albert-tangle-init ()
   "If the current buffer is 'Albert.org' the code-blocks are
-tangled, and the tangled file is compiled."
+tangled, the tangled file is not compiled."
   (when (and (eq major-mode 'org-mode)
              (equal (buffer-file-name)
                     (expand-file-name "~/.emacs.d/Albert.org")))
@@ -207,19 +207,20 @@ tangled, and the tangled file is compiled."
       )))
 
 (add-hook 'after-save-hook 'albert-tangle-init)
-#+END_SRC
-** lazy-load [2019-11-18 周一 10:33:05]
 
-http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
-
-#+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path (expand-file-name "~/elisp/lazy-load"))
-;; (require 'lazy-load)
-
+;; use win key in windows
 (when IS-WINDOWS
   (setq w32-pass-lwindow-to-system nil)
   (setq w32-lwindow-modifier 'super)
   (w32-register-hot-key [s-]))
+#+END_SRC
+** lazy-load [2019-11-18 周一 10:33:05] - 不用了
+
+http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
+
+#+BEGIN_SRC lisp
+;; (add-to-list 'load-path (expand-file-name "~/elisp/lazy-load"))
+;; (require 'lazy-load)
 #+END_SRC
 
 ** HOME
