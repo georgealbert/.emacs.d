@@ -16,21 +16,22 @@
 (benchmark-init/activate)
 
 ;; (setq org-modules
-(defvar org-modules
-  '(;; org-w3m
-    ;; org-bbdb
-    ;; org-bibtex
-    ;; org-docview
-    ;; org-gnus
-    ;; org-info
-    ;; org-irc
-    ;; org-mhe
-    ;; org-rmail
-    ))
+;; (defvar org-modules
+;;   '(;; org-w3m
+;;     ;; org-bbdb
+;;     ;; org-bibtex
+;;     ;; org-docview
+;;     ;; org-gnus
+;;     ;; org-info
+;;     ;; org-irc
+;;     ;; org-mhe
+;;     ;; org-rmail
+;;     ))
 
-(require 'ob-tangle)
-(org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
+;; (require 'ob-tangle)
+;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
 
+(load (expand-file-name "~/.emacs.d/Albert.el"))
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
 ;; (require 'init-albert)
 
@@ -48,7 +49,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(gcmh vimrc-mode eglot lua-mode org-download org-static-blog lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag helm-gtags ggtags go-mode xah-find window-numbering web-mode use-package spinner sesman seq queue powerline pkg-info paren-face org2blog markdown-mode magit highlight-parentheses helm-swoop evil-paredit elpy dired+ diminish benchmark-init))
+   '(gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode window-numbering web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit diminish benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")

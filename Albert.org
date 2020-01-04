@@ -1,4 +1,6 @@
-﻿
+﻿#+TITLE: Albert's Emacs config file.
+;;#+PROPERTY: header-args :tangle yes
+
 * common setting
 ** 启动优化 [2019-05-18 周六 22:43:45]
 
@@ -155,13 +157,13 @@ they were loaded at startup."
 (setq use-package-verbose t)
 (require 'use-package)
 
-(run-with-idle-timer
- 1 nil
- #'(lambda ()
-     (use-package auto-compile
-       :config (auto-compile-on-load-mode))
-     (setq load-prefer-newer t)
-     ))
+;; (run-with-idle-timer
+;;  1 nil
+;;  #'(lambda ()
+;;      (use-package auto-compile
+;;        :config (auto-compile-on-load-mode))
+;;      (setq load-prefer-newer t)
+;;      ))
 #+end_src
 
 代理配置
@@ -177,6 +179,24 @@ they were loaded at startup."
   :ensure t
   :disabled t
   :defer 1)
+#+END_SRC
+** auto tangle emacs-lisp in Albert.org [2020-01-04 周六 00:31:38]
+保存配置文件~/.emacs.d/Albert.org后，自动tangle emacs-lisp的block。
+
+参考 https://github.com/freetonik/emacs-dotfiles/blob/master/init.org
+#+BEGIN_SRC emacs-lisp
+(defun albert-tangle-init ()
+  "If the current buffer is 'Albert.org' the code-blocks are
+tangled, and the tangled file is compiled."
+  (when (and (eq major-mode 'org-mode)
+             (equal (buffer-file-name)
+                    (expand-file-name "~/.emacs.d/Albert.org")))
+    ;; Avoid running hooks when tangling.
+    (let ((prog-mode-hook nil))
+      (org-babel-tangle-file buffer-file-name "~/.emacs.d/Albert.el" "emacs-lisp")
+      )))
+
+(add-hook 'after-save-hook 'albert-tangle-init)
 #+END_SRC
 ** lazy-load [2019-11-18 周一 10:33:05]
 
@@ -810,9 +830,10 @@ from sacha chua
   :after treemacs evil
   :ensure t)
 
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
+;; (use-package treemacs-projectile
+;;   :after treemacs projectile
+;;   :disabled t
+;;   :ensure t)
 
 (use-package treemacs-icons-dired
   :after treemacs dired
@@ -906,6 +927,24 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
   :ensure t
   :defer 1
   ;;:init (evil-mode 1)
+  :preface
+  (setq evil-want-visual-char-semi-exclusive t
+        evil-echo-state t
+        evil-ex-search-vim-style-regexp t
+        ;; more vim-like behavior
+        ;; foo-bar 就是一个word，emacs会认为是2个
+        evil-symbol-word-search t
+        ;; cursor appearance
+        ;; evil-normal-state-cursor 'box
+        ;; evil-insert-state-cursor 'bar
+        ;; evil-visual-state-cursor 'hollow
+  )
+
+  ;; Slow this down from 0.02 to prevent blocking in large or folded buffers
+  ;; like magit while incrementally highlighting matches.
+  ;; (setq-hook! 'magit-mode-hook evil-ex-hl-update-delay 0.2)
+  ;; (setq-hook! 'so-long-minor-mode-hook evil-ex-hl-update-delay 0.25)
+
   :config 
     (progn
       (evil-mode 1)
@@ -917,7 +956,8 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
            (evil-make-overriding-map ggtags-mode-map 'normal)
            ;; force update evil keymaps after ggtags-mode loaded
            (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
-      (setq evil-want-visual-char-semi-exclusive t)))
+      ;; (setq evil-want-visual-char-semi-exclusive t)
+     ))
 #+END_SRC
 
 为ggtags修改默认的键绑定，可以用 =M-.= 。
@@ -2718,7 +2758,7 @@ I have the following org-mode settings for clocking:
 
 #+BEGIN_SRC emacs-lisp
 ;; Resume clocking task when emacs is restarted
-(org-clock-persistence-insinuate)
+;; (org-clock-persistence-insinuate)
 
 ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
 (setq org-clock-history-length 23)
@@ -3262,22 +3302,22 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       (org-display-inline-images)
     (error nil)))
 
-(org-babel-do-load-languages
- (quote org-babel-load-languages)
- (quote ((emacs-lisp . t)
-         ;; (dot . t)
-         ;; (ditaa . t)
-         ;; (R . t)
-         ;; (python . t)
-         ;; (ruby . t)
-         ;; (gnuplot . t)
-         ;; (clojure . t)
-         ;; (sh . t)
-         ;; (ledger . t)
-         ;; (org . t)
-         ;; (latex . t)
-         ;; (plantuml . t)
-)))
+;; (org-babel-do-load-languages
+;;  (quote org-babel-load-languages)
+;;  (quote ((emacs-lisp . t)
+;;          ;; (dot . t)
+;;          ;; (ditaa . t)
+;;          ;; (R . t)
+;;          ;; (python . t)
+;;          ;; (ruby . t)
+;;          ;; (gnuplot . t)
+;;          ;; (clojure . t)
+;;          ;; (sh . t)
+;;          ;; (ledger . t)
+;;          ;; (org . t)
+;;          ;; (latex . t)
+;;          ;; (plantuml . t)
+;; )))
 
 ; Do not prompt to confirm evaluation
 ; This may be dangerous - make sure you understand the consequences
@@ -3285,7 +3325,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (setq org-confirm-babel-evaluate nil)
 
 ; Use fundamental mode when editing plantuml blocks with C-c '
-(add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
+;; (add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
 #+END_SRC
 
 ** 18 Productivity Tools
@@ -3664,19 +3704,20 @@ I use the following setup for encryption:
 org-crypt是org-mode自带的。
 [2019-06-05 周三 10:03:54] 为什么用use-package会报错?
 #+BEGIN_SRC emacs-lisp
-;; (use-package org-crypt
-;;   ;; :defer t
-;;   :ensure nil
-;;   :init
-;;     (progn
-;;       ; Encrypt all entries before saving
-;;       (org-crypt-use-before-save-magic)
-;;       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-;;       ; GPG key to use for encryption
-;;       ;; (setq org-crypt-key "F0B66B40")
-;;       ;; 使用对称加密算法加密
-;;       (setq org-crypt-key nil)
-;;     ))
+(use-package org-crypt
+  ;; :defer t
+  :ensure nil
+  :after org
+  :config
+    (progn
+      ; Encrypt all entries before saving
+      (org-crypt-use-before-save-magic)
+      (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+      ; GPG key to use for encryption
+      ;; (setq org-crypt-key "F0B66B40")
+      ;; 使用对称加密算法加密
+      (setq org-crypt-key nil)
+    ))
 
 ;; (setq epg-debug t)
 ;; (setq epg-gpg-home-directory "C:/Users/Albert/AppData/Roaming/gnupg")
@@ -3684,7 +3725,7 @@ org-crypt是org-mode自带的。
 ;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (run-with-idle-timer
  5 nil
  #'(lambda ()
