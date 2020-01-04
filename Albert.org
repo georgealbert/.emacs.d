@@ -2251,20 +2251,20 @@ http://doc.norang.ca/org-mode.html
 #+END_SRC
 
 用了org-babel，org-modules要在init.el中(require 'org)之前设置。
-#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
 ;; (setq org-modules '(org-w3m org-docview org-info))
 
-;; (defvar org-modules
-;;   '(;; org-w3m
-;;     ;; org-bbdb
-;;     ;; org-bibtex
-;;     org-docview
-;;     ;; org-gnus
-;;     org-info
-;;     ;; org-irc
-;;     ;; org-mhe
-;;     ;; org-rmail
-;;     ))
+(defvar org-modules
+  '(;; org-w3m
+    ;; org-bbdb
+    ;; org-bibtex
+    ;; org-docview
+    ;; org-gnus
+    ;; org-info
+    ;; org-irc
+    ;; org-mhe
+    ;; org-rmail
+    ))
 #+END_SRC
 
 org-mode is the default mode for .org, .org_archive, and .txt files.
