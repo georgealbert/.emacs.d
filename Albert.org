@@ -80,9 +80,14 @@ advised)."
 they were loaded at startup."
   (message "Emacs loaded %s packages in %.03fs"
            (length package-activated-list)
+           ;; (length load-path)
            (or albert-init-time
                (setq albert-init-time
                      (float-time (time-subtract (current-time) before-init-time))))))
+
+;; Emacs "updates" its ui more often than it needs to, so we slow it down
+;; slightly, from 0.5s:
+(setq idle-update-delay 1)
 
 ;;
 ;;; Optimizations
@@ -120,6 +125,11 @@ they were loaded at startup."
   ;; fonts on Windows. Whether it has a noteable affect on Linux and Mac hasn't
   ;; been determined.
   (setq inhibit-compacting-font-caches t))
+  
+;; Remove command line options that aren't relevant to our current OS; means
+;; slightly less to process at startup.
+(unless IS-MAC   (setq command-line-ns-option-alist nil))
+(unless IS-LINUX (setq command-line-x-option-alist nil))
   
 ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
 ;; collect; staving off the collector while the user is working.

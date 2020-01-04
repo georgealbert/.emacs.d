@@ -15,7 +15,6 @@
 (require 'benchmark-init)
 (benchmark-init/activate)
 
-;; (setq org-modules
 ;; (defvar org-modules
 ;;   '(;; org-w3m
 ;;     ;; org-bbdb
