@@ -604,11 +604,12 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   
   ;; 2019.11.22又改成下面这个变量了
   (setq doom-modeline-modal-icon nil)
-  :hook (after-init . doom-modeline-mode))
-#+END_SRC
 
-列号是从0开始的。
-#+BEGIN_SRC emacs-lisp
+  ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
+  (setq doom-modeline-persp-name nil)
+  :hook (after-init . doom-modeline-mode))
+
+;; 列号是从0开始的。
 (column-number-mode +1)
 
 (size-indication-mode +1) ; filesize in modeline
