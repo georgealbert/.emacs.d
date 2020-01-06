@@ -230,16 +230,6 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
 (setq default-directory "~/")
 #+END_SRC
 
-** Performace problem on windows - 已放到启动优化
-
-[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
-如果打开会看见很多QueryBasicInformation这样的调用.
-
-#+BEGIN_SRC lisp
-(if (eq system-type 'windows-nt)
-    (setq w32-get-true-file-attributes nil))
-#+END_SRC
-
 ** UTF-8编码
 [2014-09-17 14:59:51]
 
@@ -1006,19 +996,25 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
   2. 一个buffer删除的行在另外一个buffer中没有对应显示出来
 
 #+BEGIN_SRC emacs-lisp
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(use-package ediff
+  :ensure nil
+  :hook(;; show org ediffs unfolded
+        (ediff-prepare-buffer . outline-show-all)
+        ;; restore window layout when done
+        (ediff-quit . winner-undo))
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-merge-split-window-function 'split-window-horizontally)
+  (setq-default ediff-ignore-similar-regions t)
+  (setq-default ediff-split-window-function 'split-window-horizontally)
 
-(setq-default ediff-ignore-similar-regions t)
+  ;; refinement, 设置后按字符比较，refinement是改变的地方
+  (setq-default ediff-forward-word-function 'forward-char)
 
-(setq-default ediff-split-window-function 'split-window-horizontally)
+  ;; (setq-default ediff-highlight-all-diffs nil)
 
-;; refinement, 设置后按字符比较，refinement是改变的地方
-(setq-default ediff-forward-word-function 'forward-char)
-
-;; (setq-default ediff-highlight-all-diffs nil)
-
-;; 让diff能识别中文目录
-(setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist))
+  ;; 让diff能识别中文目录
+  (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
 #+END_SRC
 
 ** vdiff [2019-10-12 周六 15:47:08]
@@ -1057,15 +1053,15 @@ https://github.com/justbur/emacs-vdiff
   :defer t
   :diminish helm-mode
   :config
-  (progn
+  ;;(progn
     (helm-mode +1)
     ;; rebind tab to run persistent action
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    ;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
     ;; make TAB works in terminal
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+    ;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
     ;; list actions using C-z
-    (define-key helm-map (kbd "C-z")  'helm-select-action)
-  )
+    ;; (define-key helm-map (kbd "C-z")  'helm-select-action)
+  ;;)
   :init
   (progn
     ;; From https://gist.github.com/antifuchs/9238468
@@ -1101,11 +1097,12 @@ https://github.com/justbur/emacs-vdiff
          ;; ("C-x c y" . helm-yas-complete)
          ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
          ;; ("C-x c b" . my/helm-do-grep-book-notes)
-         ;; ("<tab>" . 'helm-execute-persistent-action)
-         ;; ("C-i" . 'helm-execute-persistent-action)
-         ;; ("C-z" . 'helm-select-action)
+         ("<tab>" . 'helm-execute-persistent-action)
+         ("C-i" . 'helm-execute-persistent-action)
+         ("C-z" . 'helm-select-action)
          ("C-x c SPC" . helm-all-mark-rings)))
 
+;; Turn off ido mode in case I enabled it accidentally
 (ido-mode -1)
 #+END_SRC
 
@@ -1124,8 +1121,6 @@ https://github.com/justbur/emacs-vdiff
 ;; (setq helm-quick-update t
 ;;       helm-M-x-requires-pattern nil ; 在M-x时默认就不显示多余的pattern了，看着烦
 ;;       helm-ff-skip-boring-files t)
-
-;; Turn off ido mode in case I enabled it accidentally
 
 *** Search buffers by major-mode
 
@@ -4230,6 +4225,17 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 ;;If you use evil
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 #+END_SRC 
+
+** Performace problem on windows - 已放到启动优化
+
+[2014-09-12 09:34:00] 就算这样有时候会很卡，xp下就好多了，怀疑和win7/域用户有关。
+如果打开会看见很多QueryBasicInformation这样的调用.
+
+#+BEGIN_SRC lisp
+(if (eq system-type 'windows-nt)
+    (setq w32-get-true-file-attributes nil))
+#+END_SRC
+
 ** provide [2019-11-22 周五 22:48:34]
 #+BEGIN_SRC emacs-lisp
 (provide 'init-albert)
