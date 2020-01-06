@@ -363,12 +363,29 @@ M-x set-variable <RET> read-quoted-char-radix <RET>10
 
 Turn on save place so that when opening a file, the cursor will be at the last position.
 #+BEGIN_SRC emacs-lisp
-(run-with-idle-timer
- 2 nil
- #'(lambda ()
-     (require 'saveplace)
-     (save-place-mode 1)
-     ))
+;; (run-with-idle-timer
+;;  2 nil
+;;  #'(lambda ()
+;;      (require 'saveplace)
+;;      (save-place-mode 1)
+;;      ))
+
+;; History
+(use-package saveplace
+  :ensure nil
+  :hook (after-init . save-place-mode))
+  
+;; (use-package recentf
+;;   :ensure nil
+;;   :hook (after-init . recentf-mode)
+;;   :init (setq recentf-max-saved-items 300
+;;               recentf-exclude
+;;               '("\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
+;;                 "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+;;                 "\\.?ido\\.last$" "\\.revive$" "/G?TAGS$" "/.elfeed/"
+;;                 "^/tmp/" "^/var/folders/.+$" ; "^/ssh:"
+;;                 (lambda (file) (file-in-directory-p file package-user-dir))))
+;;   :config (push (expand-file-name recentf-save-file) recentf-exclude))
 #+END_SRC
 
 #+BEGIN_SRC lisp
@@ -452,27 +469,22 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 #+BEGIN_SRC emacs-lisp
-;; (global-display-line-numbers-mode t)
+(use-package display-line-numbers
+  :ensure nil
+  :hook (prog-mode . display-line-numbers-mode)
+  :config
+  ;; 文件超过10000行，别显示行号，只留4位吧
+  (setq display-line-numbers-width-start 4)
 
-;; 文件超过10000行，别显示行号，只留4位吧
-(setq display-line-numbers-width-start 4)
+  (defun albert-display-line-numbers ()
+    "org-mode的文件，如果行数<10000行就显示行号."
+    (let ((last (line-number-at-pos (point-max))))
+      (message "Opening %s, total lines: %d" (buffer-file-name) last)
+      (if (< last 10000)
+          (display-line-numbers-mode 1))))
 
-;; (add-hook 'org-mode-hook 'display-line-numbers-mode)
-
-(defun albert-display-line-numbers ()
-  "org-mode的文件，如果行数<10000行就显示行号."
-  (let ((last (line-number-at-pos (point-max))))
-    (message "Opening %s, total lines: %d" (buffer-file-name) last)
-    (if (< last 10000)
-        (display-line-numbers-mode 1))))
-
-(add-hook 'org-mode-hook 'albert-display-line-numbers)
-
-(add-hook 'python-mode-hook 'display-line-numbers-mode)
-(add-hook 'c-mode-common-hook 'display-line-numbers-mode)
-(add-hook 'emacs-lisp-mode-hook 'display-line-numbers-mode)
-(add-hook 'sh-mode-hook 'display-line-numbers-mode)
-(add-hook 'go-mode-hook 'display-line-numbers-mode)
+  (add-hook 'org-mode-hook 'albert-display-line-numbers)
+  )
 #+END_SRC
 
 ** Color theme
@@ -487,9 +499,7 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 (use-package doom-themes
   :ensure t
-  ;; :disabled t
   ;; :defer 1
-  ;; :init
   :config
   (progn
     ;; Global settings (defaults)
@@ -556,9 +566,8 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   
 (use-package doom-modeline
   :ensure t
-  ;; :disabled t
   ;; :defer 1
-  ;; :init
+  :hook (after-init . doom-modeline-mode)
   :config
   ;; How tall the mode-line should be (only respected in GUI Emacs).
   ;; (setq doom-modeline-height 20)
@@ -872,8 +881,9 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 ;;     ))
 
 (use-package winum
-  :defer 2
-  :config (winum-mode +1)
+  ;;:defer 3
+  :hook (after-init . winum-mode)
+  ;;:config (winum-mode +1)
   :init
   (setq winum-keymap
         (let ((map (make-sparse-keymap)))
@@ -891,18 +901,35 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
           map)))
 #+END_SRC
 
-** winner-mode [2019-01-09 周三 18:04:05]
+*** winner-mode [2019-01-09 周三 18:04:05]
 winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <left>= 和 =C-x <right>= 来对窗口布局实现undo/redo了。
 
 #+BEGIN_SRC emacs-lisp
-(run-with-idle-timer
- 2 nil
- #'(lambda ()
-     (use-package winner
-       :defer t)
-     ))
+;; (run-with-idle-timer
+;;  2 nil
+;;  #'(lambda ()
+;;      (use-package winner
+;;        :defer t)
+;;      ))
 
 ;; (winner-mode t)
+
+;; From seagle0128/.emacs.d/lisp/init-window.el
+;; Restore old window configurations
+(use-package winner
+  :ensure nil
+  :commands (winner-undo winner-redo)
+  :hook (after-init . winner-mode)
+  :init (setq winner-boring-buffers '("*Completions*"
+                                      "*Compile-Log*"
+                                      "*inferior-lisp*"
+                                      "*Fuzzy Completions*"
+                                      "*Apropos*"
+                                      "*Help*"
+                                      "*cvs*"
+                                      "*Buffer List*"
+                                      "*Ibuffer*"
+                                      "*esh command on file*")))
 #+END_SRC
 * editor
 ** evil
@@ -929,7 +956,8 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 (use-package evil
   :ensure t
   :defer 1
-  ;;:init (evil-mode 1)
+  ;; :init (evil-mode 1)
+  ;; :hook (after-init . evil-mode)
   :preface
   (setq evil-want-visual-char-semi-exclusive t
         evil-echo-state t
@@ -2056,8 +2084,13 @@ process monitor在用了vpn后会导致机器hang。
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   ;; :ensure t
-  :defer t
+  ;; :defer t
   ;; :load-path "~/elisp/magit/lisp"
+  :mode (("\\COMMIT_EDITMSG\\'" . text-mode)
+         ("\\MERGE_MSG\\'" . text-mode))
+  :bind (("C-x g" . magit-status)
+         ("C-x M-g" . magit-dispatch)
+         ("C-c M-g" . magit-file-popup))
   :config
     (progn
       (setq magit-last-seen-setup-instructions "1.4.0")))
