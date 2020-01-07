@@ -19,6 +19,16 @@ Use lexical-binding everywhere. Add ;; -*- lexical-binding: t; -*- to the top of
 *** doom-emacs/core/core-lib.el [2020-01-02 周四 16:03:40]
 #+BEGIN_SRC emacs-lisp
 ;; doom-emacs/core/core-lib.el
+(defmacro delq! (elt list &optional fetcher)
+  "`delq' ELT from LIST in-place.
+
+If FETCHER is a function, ELT is used as the key in LIST (an alist)."
+  `(setq ,list
+         (delq ,(if fetcher
+                    `(funcall ,fetcher ,elt ,list)
+                  elt)
+               ,list)))
+
 (defmacro add-transient-hook! (hook-or-function &rest forms)
   "Attaches a self-removing function to HOOK-OR-FUNCTION.
 
@@ -969,18 +979,22 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
   ;; (setq-hook! 'so-long-minor-mode-hook evil-ex-hl-update-delay 0.25)
 
   :config 
-    (progn
-      (evil-mode 1)
-      ;; (eval-after-load 'helm-gtags
-      ;;    '(progn
-      ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
-      (eval-after-load 'ggtags
-        '(progn
-           (evil-make-overriding-map ggtags-mode-map 'normal)
-           ;; force update evil keymaps after ggtags-mode loaded
-           (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
-      ;; (setq evil-want-visual-char-semi-exclusive t)
-     ))
+    (evil-mode 1)
+    ;; (eval-after-load 'helm-gtags
+    ;;    '(progn
+    ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
+    (eval-after-load 'ggtags
+      '(progn
+         (evil-make-overriding-map ggtags-mode-map 'normal)
+         ;; force update evil keymaps after ggtags-mode loaded
+         (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
+         
+    ;; Lazy load evil ex commands. From doom-emacs，好像看着还是load了evil-ex，不知道为什么
+    ;; (delq! 'evil-ex features)
+    ;; (add-transient-hook! 'evil-ex (provide 'evil-ex))
+
+    ;; (setq evil-want-visual-char-semi-exclusive t)
+)
 #+END_SRC
 
 为ggtags修改默认的键绑定，可以用 =M-.= 。
