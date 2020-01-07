@@ -220,8 +220,10 @@ determine the exact padding."
    (show-paren-mismatch :background "red1" :foreground "white")
 
    ;; helm
-   (helm-selection :background "DarkGreen" :distant-foreground "gold") ;; :background "darkgreen" 好像和 "green4" 差不多
+   (helm-selection :background "DarkGreen" :distant-foreground "gold" :extend t) ;; :background "darkgreen" 好像和 "green4" 差不多
    (helm-match :foreground "gold" :distant-foreground base8)
+   (helm-source-header :background base2 :foreground base5 :extend t)
+   ;; (helm-source-header :background "#223377" :foreground base5 :extend t)
 
    (cursor :background "green")
 
