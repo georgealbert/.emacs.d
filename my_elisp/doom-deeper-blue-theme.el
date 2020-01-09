@@ -210,9 +210,12 @@ determine the exact padding."
 
    ;; porting from deeper-blue
    ;; isearch and match
+   (lazy-highlight :background "cadetblue" :foreground "white") ;; cadetblue #5f9ea0
    (isearch :background "coral2" :foreground "white")
    (isearch-lazy-highlight-face :background "coral4" :foreground "white")
-   (lazy-highlight :background "cadetblue" :foreground "white") ;; cadetblue #5f9ea0
+
+   ;;(lazy-highlight :background dark-blue  :foreground base8 :distant-foreground base0 :weight 'bold)
+   ;;(evil-search-highlight-persist-highlight-face :inherit 'lazy-highlight)
    (match :background "DeepPink4")
 
    ;; paren match
@@ -226,6 +229,10 @@ determine the exact padding."
    ;; (helm-source-header :background "#223377" :foreground base5 :extend t)
 
    (cursor :background "green")
+
+   ;; counsel-M-x的match
+   ;; (ivy-current-match :background "DarkGreen" :distant-foreground nil)
+   ;; (ivy-current-match :background "coral2" :distant-foreground nil)
 
    ;; (minibuffer-prompt :foreground "CadetBlue1")
    ;; (primary-selection :background "blue3")
