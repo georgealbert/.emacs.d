@@ -72,10 +72,6 @@ advised)."
 ;; You get a minor speed up by nooping this.
 (setq file-name-handler-alist nil)
 
-;; This is consulted on every `require', `load' and various path/io functions.
-;; You get a minor speed up by nooping this.
-(setq file-name-handler-alist nil)
-
 ;; Restore `file-name-handler-alist', because it is needed for handling
 ;; encrypted or compressed files, among other things.
 (defun doom-reset-file-handler-alist-h ()
@@ -533,7 +529,6 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 昨天看了doom-emacs，觉得theme和modeline很漂亮，就试了一下。但是所有的theme的org block都是加亮的，
 和现在使用的deeper-blue差异太大，就自己增加了一个theme。
 
-;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
@@ -1312,6 +1307,13 @@ NOTE: helm-all-mark-ring handle global-mark-ring also.
 
 *** helm-ag [2019-01-01 周二 00:15:53]
 https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-ag的中文搜索问题
+
+#+begin_src emacs-lisp
+(use-package helm-ag
+  :bind
+  (("s-f" . helm-ag)
+   ("s-r" . helm-ag-project-root)))
+#+end_src
 
 [2019-11-29 周五 14:58:37] 测试ripgrep，不知道为什么grep 中文没有结果，但是ag是ok的。eshell中grep中文没有结果。在cmd中rg "中文"是ok的。奇怪啊。
 
