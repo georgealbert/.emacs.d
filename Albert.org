@@ -1051,6 +1051,17 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
     ;; (add-transient-hook! 'evil-ex (provide 'evil-ex))
 
     ;; (setq evil-want-visual-char-semi-exclusive t)
+    ;; (evil-select-search-module 'evil-search-module 'evil-search)
+    ;;(setq isearch-hide-immediately nil)
+    ;; (add-hook 'doom-escape-hook
+    ;;   (defun +evil-disable-ex-highlights-h ()
+    ;;     "Disable ex search buffer highlights."
+    ;;     (when (evil-ex-hl-active-p 'evil-ex-search)
+    ;;       (evil-ex-nohighlight)
+    ;;       t)))
+
+    ;; 使用isearch时，增加search结束后的，高亮时间到30s
+    (setq evil-flash-delay 30)
 )
 #+END_SRC
 
