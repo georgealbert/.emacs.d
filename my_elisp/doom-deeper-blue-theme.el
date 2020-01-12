@@ -70,7 +70,7 @@ determine the exact padding."
 
    (grey       base4)
    (red        '("#FF0000" "#ff6655" "red"               )) ;; red(#FF0000), #e45649 doom-one-light
-   (orange     '("gold" "#dd8844" "brightred"            )) ;; gold(#ffd700)
+   (orange     '("#ffd700" "#dd8844" "brightred"            )) ;; gold(#ffd700)
    (green      '("SeaGreen2" "#99bb66" "green"           )) ;; #98be65 from doom-one-theme.el, SeaGreen2(#4eee94)，#50a14f doom-one-light
    (teal       '("goldenrod" "#44b9b1" "brightgreen"     )) ;; goldenrod(#daa520), function-name 
    ;; (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
@@ -115,7 +115,9 @@ determine the exact padding."
       (if (integerp doom-deeper-blue-padded-modeline) doom-deeper-blue-padded-modeline 4)))
 
    (modeline-fg     nil)
-   (modeline-fg-alt base5)
+   ;; (modeline-fg-alt base5)
+   ;; 参考doom-vibrant的modeline inactive时的前景色
+   (modeline-fg-alt "#485060")
    ;; modeline inactive的时候用fg的gray80，不够醒目，继续用base5的颜色
    ;; (modeline-fg-alt fg)
 
