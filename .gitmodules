@@ -1,0 +1,3 @@
+[submodule "aweshell"]
+	path = site-lisp/extensions/aweshell
+	url = https://github.com/manateelazycat/aweshell.git

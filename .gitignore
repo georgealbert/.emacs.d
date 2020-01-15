@@ -1,0 +1,12 @@
+# lisp file
+# *.el
+*.elc
+
+%backup%~
+auto-save-list/
+backup/
+elpa/
+ido.last
+places
+recentf
+server/
