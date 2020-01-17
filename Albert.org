@@ -1419,6 +1419,19 @@ This is for use in `ivy-re-builders-alist'."
   (use-package ivy-hydra)
 )
 #+end_src
+** selectrum [2020-01-12 周日 21:56:34]
+*** description
+straight.el的作者，替代helm和cousel的补齐框架。
+
+感觉helm用得比selectrum更舒服。
+*** config
+#+begin_src lisp
+(use-package selectrum
+  :load-path "~/elisp/selectrum"
+  :config
+    (selectrum-mode +1)
+)
+#+end_src
 * lang
 ** 多行代码的注释/反注释
 
