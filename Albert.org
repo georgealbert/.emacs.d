@@ -513,18 +513,19 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 (use-package display-line-numbers
   :ensure nil
   :hook (prog-mode . display-line-numbers-mode)
+        (org-mode . albert-display-line-numbers)
   :config
   ;; 文件超过10000行，别显示行号，只留4位吧
   (setq display-line-numbers-width-start 4)
 
   (defun albert-display-line-numbers ()
     "org-mode的文件，如果行数<10000行就显示行号."
-    (let ((last (line-number-at-pos (point-max))))
-      (message "Opening %s, total lines: %d" (buffer-file-name) last)
-      (if (< last 10000)
+    (let ((num (line-number-at-pos (point-max))))
+      (message "Opening %s, total lines: %d" (buffer-file-name) num)
+      (if (< num 10000)
           (display-line-numbers-mode 1))))
 
-  (add-hook 'org-mode-hook 'albert-display-line-numbers)
+  ;;(add-hook 'org-mode-hook 'albert-display-line-numbers)
   )
 #+END_SRC
 
