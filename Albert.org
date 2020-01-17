@@ -2437,7 +2437,7 @@ https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/ini
 
 #+BEGIN_SRC emacs-lisp
 (use-package aweshell
-  :load-path "~/elisp/aweshell"
+  :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
   :bind (("s-n" . aweshell-new)
      ("s-h" . aweshell-toggle)
      ("s-x s-x" . aweshell-dedicated-toggle)))
