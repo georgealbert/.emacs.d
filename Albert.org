@@ -2501,6 +2501,30 @@ http://doc.norang.ca/org-mode.html
   (defvar org-modules
     '(org-tempo
       )))
+      
+(setq org-fontify-whole-heading-line t
+      ;; org-eldoc-breadcrumb-separator " → "
+      org-hide-leading-stars t
+      org-hide-leading-stars-before-indent-mode t
+      ;; org-image-actual-width nil
+      ;; org-tags-column 0
+      ;; org-list-description-max-indent 4
+)
+
+(use-package org-bullets ; "prettier" bullets
+  :disabled t
+  :hook (org-mode . org-bullets-mode)
+  :config
+    (setq org-bullets-bullet-list
+  '(;;; Large
+    "☯"
+    "♠"
+    "♥"
+    "♣"
+    "♦" 
+    "✿"
+    ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
+    )))
 #+END_SRC
 
 org-mode is the default mode for .org, .org_archive, and .txt files.
