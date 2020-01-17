@@ -564,7 +564,8 @@ Turn on save place so that when opening a file, the cursor will be at the last p
     ;; (doom-themes-treemacs-config)
     
     ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config)))
+    (doom-themes-org-config)
+))
 #+END_SRC
 *** emacs24自带的最喜欢的theme
 
@@ -1183,6 +1184,8 @@ https://github.com/justbur/emacs-vdiff
           ;; helm-move-to-line-cycle-in-source t
           helm-ff-file-name-history-use-recentf t
           ;;helm-echo-input-in-header-line t
+          ;; 在mini buffer中显示文件名长一点
+          helm-buffer-max-length 40
           )
   :bind (("C-c m" . helm-mini)
          ("C-c n" . helm-mini)
@@ -1191,20 +1194,17 @@ https://github.com/justbur/emacs-vdiff
          ("M-y" . helm-show-kill-ring)
          ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
-         ;; ("C-h a" . helm-apropos)
+         ("C-h a" . helm-apropos)
          ;; ("C-x c o" . helm-occur)
          ;; ("C-x c s" . helm-swoop)
          ;; ("C-x c y" . helm-yas-complete)
          ;; ("C-x c Y" . helm-yas-create-snippet-on-region)
          ;; ("C-x c b" . my/helm-do-grep-book-notes)
-         ;; ("<tab>" . 'helm-execute-persistent-action)
-         ;; ("C-i" . 'helm-execute-persistent-action)
-         ;; ("C-z" . 'helm-select-action)
-         ("C-x c SPC" . helm-all-mark-rings))
-        (:map helm-map
-          ("<tab>" . 'helm-execute-persistent-action)
-          ("C-i" . 'helm-execute-persistent-action)
-          ("C-z" . 'helm-select-action)))
+         ("C-x c SPC" . helm-all-mark-rings)
+         :map helm-map
+         ("<tab>" . 'helm-execute-persistent-action)
+         ("C-i" . 'helm-execute-persistent-action)
+         ("C-z" . 'helm-select-action)))
 
 ;; Turn off ido mode in case I enabled it accidentally
 (ido-mode -1)
