@@ -48,7 +48,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k neotree all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode window-numbering web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit diminish benchmark-init))
+   '(hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit diminish benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
@@ -79,4 +79,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(lsp-ui-doc-background ((t (:background nil))))
- '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button))))))
+ '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button)))) t))
