@@ -246,7 +246,7 @@ determine the exact padding."
    ;; (highlight :background "DodgerBlue4")
 
    ;; mode-line-buffer-id 即 filename的显示
-   (mode-line-buffer-id :weight normal :foreground blue) ;; DodgeBlue4
+   (mode-line-buffer-id :weight 'normal :foreground blue) ;; DodgeBlue4
 
    ;; magit
    ;; (magit-diff-added :foreground "white" :background (doom-blend green bg 0.1))
