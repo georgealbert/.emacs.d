@@ -3981,7 +3981,9 @@ org-crypt是org-mode自带的。
       ; GPG key to use for encryption
       ;; (setq org-crypt-key "F0B66B40")
       ;; 使用对称加密算法加密
-      (setq org-crypt-key nil)
+      ;; (setq org-crypt-key nil)
+      ;; keyid可以用key的username/email or pub的指纹的后8个字符
+      (setq org-crypt-key "georgealbert@qq.com")
     ))
 
 ;; (setq epg-debug t)
