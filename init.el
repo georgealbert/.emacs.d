@@ -6,7 +6,34 @@
 (setq load-prefer-newer noninteractive)
 
 ;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
-(package-initialize nil)
+;; (package-initialize nil)
+
+(defvar albert-dumped nil
+  "non-nil when a dump file is loaded (because dump.el sets this variable).")
+
+(defmacro albert-if-dump (then &rest else)
+  "Evaluate IF if running with a dump file, else evaluate ELSE."
+  (declare (indent 1))
+  `(if albert-dumped
+       ,then
+     ,@else))
+
+(albert-if-dump
+    (progn
+      (message "Using pdump to start emacs...")
+      (setq load-path albert-dumped-load-path)
+      (global-font-lock-mode)
+      (add-hook 'after-init-hook
+                (lambda ()
+                  (save-excursion
+                    (switch-to-buffer "*scratch*")
+                    (fundamental-mode)))))
+  ;; add load-path’s and load autoload files
+  (package-initialize))
+
+(when window-system
+  (albert-if-dump
+      (enable-theme 'doom-deeper-blue)))
 
 ;; [2019-10-30 周三 17:37:50] emacs 27.0不需要了
 ;; (setq package-enable-at-startup nil)
