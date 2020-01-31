@@ -302,26 +302,6 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
     (set-selection-coding-system 'utf-8)))
 #+END_SRC
 
-** Backups
-[2014-09-12 09:32:53]
-
-This is one of the things people usually want to change right away. By default, 
-Emacs saves backup files in the current directory. These are the files ending in ~ that are cluttering up your directory lists. 
-The following code stashes them all in ~/.emacs.d/backups, where I can find them with C-x C-f (find-file) if I really need to.
-
-#+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
-
-;; 自动存盘
-(setq auto-save-mode t) 
-#+END_SRC
-
-Disk space is cheap. Save lots.
-#+BEGIN_SRC emacs-lisp
-(setq delete-old-versions -1)
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-#+END_SRC
-
 ** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
 
 [2019-06-16 周日 00:02:50] 突然发现在dired里面 查找后 按 n，不是查询下一个。
@@ -353,18 +333,6 @@ Disk space is cheap. Save lots.
 
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode t)
-#+END_SRC
-
-** F5插入当前时间
-insert current time，要加上(interactive)啊，为什么呢？
-
-#+BEGIN_EXAMPLE
-M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
-#+END_EXAMPLE
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key [(f5)] '(lambda () (interactive) 
-                          (insert (format-time-string "[%Y-%m-%d %a %T]"))))
 #+END_SRC
 
 ** Reading
@@ -991,6 +959,27 @@ winner-mode是emacs自带，打开(winner-mode t)之后，就可以用 =C-x <lef
 #+END_SRC
 
 * editor
+** core-editor.el 
+
+#+begin_src emacs-lisp
+;; Don't autosave files or create lock/history/backup files. We don't want
+;; copies of potentially sensitive material floating around, and we'll rely on
+;; git and our own good fortune instead. Fingers crossed!
+(setq auto-save-default nil ; Disable auto save
+      create-lockfiles nil
+      make-backup-files nil ; Forbide to make backup files
+      ;; But have a place to store them in case we do use them...
+      auto-save-list-file-name  "~/.emacs.d/backup/autosave"
+      backup-directory-alist `(("." . "~/.emacs.d/backup/")))
+
+;; F5插入当前时间  
+;; e.g.
+;; M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
+
+(global-set-key [(f5)] '(lambda () (interactive) 
+                          (insert (format-time-string "[%Y-%m-%d %a %T]"))))
+#+end_src
+
 ** evil
 
 #+BEGIN_SRC lisp
