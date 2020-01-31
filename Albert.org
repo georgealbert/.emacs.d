@@ -259,7 +259,8 @@ tangled, the tangled file is not compiled."
 (when IS-WINDOWS
   (setq w32-pass-lwindow-to-system nil)
   (setq w32-lwindow-modifier 'super)
-  (w32-register-hot-key [s-]))
+  (w32-register-hot-key [s-])
+  (w32-register-hot-key [s-s]))
   
 ;; *scratch* buffer改为fundamental mode，就不会一启动就加载display-numbers-mode和hl-todo了。
 ;; 貌似Helm-lisp以前也没见到会加载，怎么也加载了呢?
@@ -1307,6 +1308,8 @@ https://emacs-china.org/t/emacs-helm-ag/6764/7 如何定位并解决Emacs helm-a
 (use-package helm-ag
   :bind
   (("s-f" . helm-ag)
+   ("s-s f" . helm-ag)
+   ("s-s r" . helm-ag-project-root)
    ("s-r" . helm-ag-project-root)))
 #+end_src
 
