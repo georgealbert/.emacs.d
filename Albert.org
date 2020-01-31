@@ -2466,13 +2466,9 @@ http://doc.norang.ca/org-mode.html
 
 参考 doom-emacs的配置文件 =.emacs.d.doom/modules/lang/org/config.el= ，只加载部分org-mode的modules，不需要邮件、irc。
 
-#+BEGIN_SRC lisp
-;;; Albert_org_config.el -*- lexical-binding: t; -*-
-#+END_SRC
-
 用了org-babel，org-modules要在init.el中(require 'org)之前设置。
 #+BEGIN_SRC emacs-lisp
-;; (setq org-modules '(org-w3m org-docview org-info))
+;; 4.2 Org-Mode Setup
 
 (if (< emacs-major-version 28)
   (defvar org-modules
@@ -2518,16 +2514,14 @@ http://doc.norang.ca/org-mode.html
     "☢" 
     ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
     )))
-#+END_SRC
 
-org-mode is the default mode for .org, .org_archive, and .txt files.
-#+BEGIN_SRC emacs-lisp
+;; org-mode is the default mode for .org, .org_archive, and .txt files.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 
 ;; Standard key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
+;; (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done t)
 #+END_SRC
 
@@ -2558,7 +2552,7 @@ Custom Key Bindings
 ;; (global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
 
 (global-set-key (kbd "<f9> r") 'boxquote-region)
-(global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
+;; (global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
 
 (global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
 (global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
@@ -2566,14 +2560,13 @@ Custom Key Bindings
 (global-set-key (kbd "<f9> v") 'visible-mode)
 (global-set-key (kbd "<f9> l") 'org-toggle-link-display)
 (global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
-(global-set-key (kbd "C-<f9>") 'previous-buffer)
+;; (global-set-key (kbd "C-<f9>") 'previous-buffer)
 (global-set-key (kbd "M-<f9>") 'org-toggle-inline-images)
 (global-set-key (kbd "C-x n r") 'narrow-to-region)
-(global-set-key (kbd "C-<f10>") 'next-buffer)
+;; (global-set-key (kbd "C-<f10>") 'next-buffer)
 (global-set-key (kbd "<f11>") 'org-clock-goto)
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
-(global-set-key (kbd "C-c c") 'org-capture)
 
 (setq org-agenda-files (list "~/org"))
 
@@ -2625,9 +2618,9 @@ Here is my setup for org-capture
 ;;   (find-file "/tmp/publish/scratch.org")
 ;;   (gnus-make-directory "/tmp/publish"))
 
-(defun bh/switch-to-scratch ()
-  (interactive)
-  (switch-to-buffer "*scratch*"))
+;; (defun bh/switch-to-scratch ()
+;;   (interactive)
+;;   (switch-to-buffer "*scratch*"))
 
 ;; I use C-c c to start capture mode
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -2656,6 +2649,8 @@ Here is my setup for org-capture
 *** 7.1 Refile Setup
 
 #+BEGIN_SRC emacs-lisp
+;; 7.1 Refile Setup
+
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 6)
                                  (org-agenda-files :maxlevel . 6))))
@@ -3014,7 +3009,10 @@ I keep clock times, state changes, and other notes in the :LOGBOOK: drawer.
 I have the following org-mode settings for clocking: 
 
 #+BEGIN_SRC emacs-lisp
+;; 9.1 Clock Setup 设置计时
+
 ;; Resume clocking task when emacs is restarted
+;; 用了以后，一启动就会load org-mode相关的module，启动太慢了。
 ;; (org-clock-persistence-insinuate)
 
 ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
@@ -3250,6 +3248,9 @@ After setting the effort values exit =column mode= with =q=.
 
 Tags with fast selection keys
 #+BEGIN_SRC emacs-lisp
+;; 11.1 Tags
+
+;; Tags with fast selection keys
 (setq org-tag-alist (quote ((:startgroup)
                             ("@errand" . ?e)
                             ("@office" . ?o)
@@ -3756,10 +3757,8 @@ Always hilight the current agenda line
 (add-hook 'org-agenda-mode-hook
           '(lambda () (hl-line-mode 1))
           'append)
-#+END_SRC
 
-[2019-06-10 周一 12:36:03] 去掉mode-line中的clock高亮设置的背景色。
-#+BEGIN_SRC emacs-lisp
+;; [2019-06-10 周一 12:36:03] 去掉mode-line中的clock高亮设置的背景色。
 ;; The following custom-set-faces create the highlights
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -3795,9 +3794,9 @@ Always hilight the current agenda line
 (setq org-agenda-skip-timestamp-if-done t)
 #+END_SRC
 
-**** 18.3.4 Searches include archive files
+**** 18.3.4 Searches include archive files - 未使用
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;; Include agenda archive files when searching for things
 (setq org-agenda-text-search-extra-files (quote (agenda-archives)))
 #+END_SRC
@@ -3962,7 +3961,6 @@ org-crypt是org-mode自带的。
 [2019-06-05 周三 10:03:54] 为什么用use-package会报错?
 #+BEGIN_SRC emacs-lisp
 (use-package org-crypt
-  ;; :defer t
   :ensure nil
   :after org
   :config
@@ -3977,14 +3975,14 @@ org-crypt是org-mode自带的。
       ;; keyid可以用key的username/email or pub的指纹的后8个字符
       (setq org-crypt-key "georgealbert@qq.com")
     ))
+#+END_SRC
 
+#+BEGIN_SRC lisp
 ;; (setq epg-debug t)
 ;; (setq epg-gpg-home-directory "C:/Users/Albert/AppData/Roaming/gnupg")
 ;; (setq epg-gpg-program "E:/Program Files (x86)/GnuPG/bin/gpg.exe")
 ;; (setq epg-gpgconf-program "E:\\Program Files (x86)\\GnuPG\\bin\\gpgconf.exe")
-#+END_SRC
 
-#+BEGIN_SRC lisp
 (run-with-idle-timer
  5 nil
  #'(lambda ()
@@ -4116,7 +4114,7 @@ In order for filling to work correctly this needs to be set before the exporters
 #+END_SRC
 
 [2018-11-23 周五 23:19:16] HTML doctypes默认是"xhtml-strict"，改为"html4-strict"是不行的。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 ;(setq org-html-doctype-alist '(("html5" . "<!DOCTYPE html>")))
 #+END_SRC
 
@@ -4495,10 +4493,6 @@ Extras: Limit commands to those relevant to the active major mode. Show frequent
 (diminish 'visual-line-mode)
 #+END_SRC
 
-** provide [2019-11-22 周五 22:48:34]
-#+BEGIN_SRC emacs-lisp
-(provide 'init-albert)
-#+END_SRC
 ** helm-gtags - 不用了 [2018-12-31 周一 23:31:48]
 
 [2019-01-11 周五 22:16:55] 不如ggtags好用，ggtags用着比较习惯。
