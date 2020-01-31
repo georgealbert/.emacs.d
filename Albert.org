@@ -2267,6 +2267,10 @@ process monitor在用了vpn后会导致机器hang。
 ;;      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 
 #+BEGIN_SRC emacs-lisp
+
+;; disable default vc
+(setq vc-handled-backends nil)
+
 (use-package magit
   ;; :ensure t
   ;; :defer t
@@ -2510,10 +2514,10 @@ http://doc.norang.ca/org-mode.html
   '(;;; Large
     "☯"
     "♠"
-    "♥"
+    "❀"
     "♣"
-    "♦" 
     "✿"
+    "☢" 
     ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
     )))
 #+END_SRC
