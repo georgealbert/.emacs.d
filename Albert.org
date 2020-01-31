@@ -477,12 +477,9 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 (global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
 (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
-#+end_src
 
-** 显示行号
-
-[2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
-#+BEGIN_SRC emacs-lisp
+;; 显示行号
+;; [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 (use-package display-line-numbers
   :ensure nil
   :hook (prog-mode . display-line-numbers-mode)
@@ -497,8 +494,6 @@ Turn on save place so that when opening a file, the cursor will be at the last p
       (message "Opening %s, total lines: %d" (buffer-file-name) num)
       (if (< num 10000)
           (display-line-numbers-mode 1))))
-
-  ;;(add-hook 'org-mode-hook 'albert-display-line-numbers)
   )
 #+END_SRC
 
@@ -513,7 +508,6 @@ Turn on save place so that when opening a file, the cursor will be at the last p
 
 (use-package doom-themes
   :ensure t
-  ;; :defer 1
   :config
   (progn
     ;; Global settings (defaults)
@@ -532,8 +526,6 @@ Turn on save place so that when opening a file, the cursor will be at the last p
     (doom-themes-visual-bell-config)
     
     ;; Enable custom neotree theme (all-the-icons must be installed!)
-    ;; (doom-themes-neotree-config)
-    ;; or for treemacs users
     ;; (doom-themes-treemacs-config)
     
     ;; Corrects (and improves) org-mode's native fontification.
@@ -573,7 +565,6 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 + Install
   1. all-the-icons包和里面的艺术字体，windows上手动安装字体。
 
-;; #+BEGIN_SRC lisp
 #+BEGIN_SRC emacs-lisp
 ;; (use-package all-the-icons
 ;;   :ensure t
@@ -581,15 +572,8 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   
 (use-package doom-modeline
   :ensure t
-  ;; :defer 1
   :hook (after-init . doom-modeline-mode)
   :config
-  ;; How tall the mode-line should be (only respected in GUI Emacs).
-  ;; (setq doom-modeline-height 20)
-  
-  ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-  ;; (setq doom-modeline-bar-width 3)
-
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
   (setq doom-modeline-icon t)
   
@@ -628,18 +612,13 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (column-number-mode +1)
 
 (size-indication-mode +1) ; filesize in modeline
-#+END_SRC
 
-*** modeline中的时间格式设置
-[2014-11-21 周五 10:35:59]
-
-在modeline上显示日期时间。
+;; modeline中的时间格式设置 [2014-11-21 周五 10:35:59]
 
 ;; (setq display-time-24hr-format t)
 ;; (setq display-time-use-mail-icon t)
 ;; (setq display-time-interval 60)
 
-#+BEGIN_SRC emacs-lisp
 (setq display-time-day-and-date t)
 (setq display-time-format "%Y-%m-%d %a %H:%M")
 (setq display-time-default-load-average nil)
