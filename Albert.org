@@ -1657,11 +1657,6 @@ pyls比mspyls会多起不少python进程，可能是jedi起来的，很讨厌。
   (setq lsp-python-ms-executable
         "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
 #+END_SRC
-** eglot [2019-12-25 周三 09:10:01]
-感觉不如lsp-mode用得顺手
-#+BEGIN_SRC lisp
-(add-hook 'go-mode-hook 'eglot-ensure)
-#+END_SRC
 ** markdown-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -4576,6 +4571,11 @@ straight.el的作者，替代helm和cousel的补齐框架。
     (selectrum-mode +1)
 )
 #+end_src
+** eglot [2019-12-25 周三 09:10:01]
+感觉不如lsp-mode用得顺手
+#+BEGIN_SRC lisp
+(add-hook 'go-mode-hook 'eglot-ensure)
+#+END_SRC
 ** provide [2019-11-22 周五 22:48:34]
 #+BEGIN_SRC emacs-lisp
 (provide 'init-albert)
