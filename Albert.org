@@ -304,102 +304,6 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
     (set-selection-coding-system 'utf-8)))
 #+END_SRC
 
-** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
-
-[2019-06-16 周日 00:02:50] 突然发现在dired里面 查找后 按 n，不是查询下一个。
-因为默认在dired.el里面 n 是 binding为下一行。doom-emacs里面是什么样的?
-
-#+BEGIN_SRC emacs-lisp
-(use-package dired-k
-  ;; :unless (featurep! +ranger)
-  :defer t
-  :hook (dired-initial-position . dired-k)
-  :hook (dired-after-readin . dired-k-no-revert)
-  :config
-  (defun +dired*interrupt-process (orig-fn &rest args)
-    "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
-     .git/index.lock files."
-    (cl-letf (((symbol-function #'kill-process)
-               (symbol-function #'interrupt-process)))
-      (apply orig-fn args)))
-  (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
-
-  (defun +dired*dired-k-highlight (orig-fn &rest args)
-    "Butt out if the requested directory is remote (i.e. through tramp)."
-    (unless (file-remote-p default-directory)
-      (apply orig-fn args)))
-  (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
-#+END_SRC
-
-** Reading
-
-https://github.com/xahlee/xah_emacs_init/blob/master/xah_emacs_font.el From Xah Lee:
-
-#+BEGIN_SRC emacs-lisp
-(defun xah-toggle-margin-right ()
-  "Toggle the right margin between `fill-column' or window width.
-This command is convenient when reading novel, documentation."
-  (interactive)
-  (if (eq (cdr (window-margins)) nil)
-      (set-window-margins nil 0 (- (window-body-width) fill-column))
-    (set-window-margins nil 0 0)))
-#+END_SRC
-
-** 输入特殊字符
-[2014-09-29 周一 17:20:40]
-
-+  :: C-q C-a
-
-+ C-q X :: 是一个通用的输入特殊字符的办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后就可以输入这个特殊字符。
-一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 =C-j= ，ASCII 10。
-除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
-#+BEGIN_SRC lisp
-(setq read-quoted-char-radix 10)
-;or
-(setq read-quoted-char-radix 16)
-#+END_SRC
-
-可以改为把八进制改为十进制或者十六进制。或者用命令
-#+BEGIN_EXAMPLE
-M-x set-variable <RET> read-quoted-char-radix <RET>10 
-#+END_EXAMPLE
-
-** save the cursor position for every file you opened
-
-Turn on save place so that when opening a file, the cursor will be at the last position.
-#+BEGIN_SRC emacs-lisp
-;; (run-with-idle-timer
-;;  2 nil
-;;  #'(lambda ()
-;;      (require 'saveplace)
-;;      (save-place-mode 1)
-;;      ))
-
-;; History
-(use-package saveplace
-  :ensure nil
-  :hook (after-init . save-place-mode))
-  
-(use-package recentf
-  :ensure nil
-  ;; :hook (after-init . recentf-mode)
-  :defer t
-  :init (setq recentf-max-saved-items 100
-              recentf-exclude
-              '("\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
-                "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
-                "\\.?ido\\.last$" "\\.revive$" "/G?TAGS$" "/.elfeed/"
-                "^/tmp/" "^/var/folders/.+$" ; "^/ssh:"
-                (lambda (file) (file-in-directory-p file package-user-dir))))
-  :config (push (expand-file-name recentf-save-file) recentf-exclude))
-#+END_SRC
-
-#+BEGIN_SRC lisp
-(use-package saveplace
-  :defer 2
-  :init (save-place-mode 1))
-#+END_SRC
-
 * ui
 ** config
 
@@ -1200,6 +1104,102 @@ https://github.com/justbur/emacs-vdiff
 
 ;; (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map)
 #+END_SRC
+** dired-k from doom-emacs [2019-06-10 Mon 11:09:35]
+
+[2019-06-16 周日 00:02:50] 突然发现在dired里面 查找后 按 n，不是查询下一个。
+因为默认在dired.el里面 n 是 binding为下一行。doom-emacs里面是什么样的?
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-k
+  ;; :unless (featurep! +ranger)
+  :defer t
+  :hook (dired-initial-position . dired-k)
+  :hook (dired-after-readin . dired-k-no-revert)
+  :config
+  (defun +dired*interrupt-process (orig-fn &rest args)
+    "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
+     .git/index.lock files."
+    (cl-letf (((symbol-function #'kill-process)
+               (symbol-function #'interrupt-process)))
+      (apply orig-fn args)))
+  (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
+
+  (defun +dired*dired-k-highlight (orig-fn &rest args)
+    "Butt out if the requested directory is remote (i.e. through tramp)."
+    (unless (file-remote-p default-directory)
+      (apply orig-fn args)))
+  (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
+#+END_SRC
+
+** save the cursor position for every file you opened
+
+Turn on save place so that when opening a file, the cursor will be at the last position.
+#+BEGIN_SRC emacs-lisp
+;; (run-with-idle-timer
+;;  2 nil
+;;  #'(lambda ()
+;;      (require 'saveplace)
+;;      (save-place-mode 1)
+;;      ))
+
+;; History
+(use-package saveplace
+  :ensure nil
+  :hook (after-init . save-place-mode))
+  
+(use-package recentf
+  :ensure nil
+  ;; :hook (after-init . recentf-mode)
+  :defer t
+  :init (setq recentf-max-saved-items 100
+              recentf-exclude
+              '("\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
+                "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+                "\\.?ido\\.last$" "\\.revive$" "/G?TAGS$" "/.elfeed/"
+                "^/tmp/" "^/var/folders/.+$" ; "^/ssh:"
+                (lambda (file) (file-in-directory-p file package-user-dir))))
+  :config (push (expand-file-name recentf-save-file) recentf-exclude))
+#+END_SRC
+
+#+BEGIN_SRC lisp
+(use-package saveplace
+  :defer 2
+  :init (save-place-mode 1))
+#+END_SRC
+
+** Reading - 未使用
+
+https://github.com/xahlee/xah_emacs_init/blob/master/xah_emacs_font.el From Xah Lee:
+
+#+BEGIN_SRC lisp
+(defun xah-toggle-margin-right ()
+  "Toggle the right margin between `fill-column' or window width.
+This command is convenient when reading novel, documentation."
+  (interactive)
+  (if (eq (cdr (window-margins)) nil)
+      (set-window-margins nil 0 (- (window-body-width) fill-column))
+    (set-window-margins nil 0 0)))
+#+END_SRC
+
+** 输入特殊字符
+[2014-09-29 周一 17:20:40]
+
++  :: C-q C-a
+
++ C-q X :: 是一个通用的输入特殊字符的办法，X 表示一个特殊字符， 在几乎所有的模式下，输入 =C-q= 然后就可以输入这个特殊字符。
+一般来说、所有的特殊的字符都和某一个特定的函数绑定在一起 了，例如 C-a , ASCII 1 , 表示 beginning-of-line 。 换行的字符就是 =C-j= ，ASCII 10。
+除了输入 C-j ，还可以输入回车字符的 ASCII 的 8 进制数， 例如 C-q 1 2 。 因为 C-j 对应的 ACSII 是 10, 012 八进制 ， 0xA 十六进制。
+#+BEGIN_SRC lisp
+(setq read-quoted-char-radix 10)
+;or
+(setq read-quoted-char-radix 16)
+#+END_SRC
+
+可以改为把八进制改为十进制或者十六进制。或者用命令
+#+BEGIN_EXAMPLE
+M-x set-variable <RET> read-quoted-char-radix <RET>10 
+#+END_EXAMPLE
+
 * completion
 ** helm [2014-09-16 09:27:15]
 
