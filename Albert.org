@@ -58,10 +58,10 @@ advised)."
 ;; doom-emacs/core/core.el
 (defconst EMACS27+   (> emacs-major-version 26))
 (defconst EMACS28+   (> emacs-major-version 27))
-(defconst IS-MAC     (eq system-type 'darwin))
+;; (defconst IS-MAC     (eq system-type 'darwin))
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
-(defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
+;; (defconst IS-BSD     (or IS-MAC (eq system-type 'berkeley-unix)))
 
 (defvar doom-interactive-mode (not noninteractive)
   "If non-nil, Emacs is in interactive mode.")
@@ -135,7 +135,7 @@ they were loaded at startup."
   
 ;; Remove command line options that aren't relevant to our current OS; means
 ;; slightly less to process at startup.
-(unless IS-MAC   (setq command-line-ns-option-alist nil))
+;; (unless IS-MAC   (setq command-line-ns-option-alist nil))
 (unless IS-LINUX (setq command-line-x-option-alist nil))
   
 ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
