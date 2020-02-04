@@ -231,11 +231,11 @@ all hooks after it are ignored.")
 
 ** gcmh [2020-01-02 周四 17:17:52]
 主要是为了能自动安装gcmh。
-#+BEGIN_SRC lisp
+#+BEGIN_SRC emacs-lisp
 (use-package gcmh
   :ensure t
-  :disabled t
-  :defer 1)
+  :diminish gcmh-mode
+  :defer t)
 #+END_SRC
 ** auto tangle emacs-lisp in Albert.org [2020-01-04 周六 00:31:38]
 保存配置文件~/.emacs.d/Albert.org后，自动tangle emacs-lisp的block。
