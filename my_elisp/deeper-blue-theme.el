@@ -121,6 +121,10 @@
    `(org-list-dt ((,class (:foreground "#EE82EE"))))
    `(org-verbatim ((,class (:foreground "SeaGreen2"))))
 
+
+   `(helm-selection ((,class (:background "DarkGreen" :distant-foreground "gold" :extend t)))) ;; :background "darkgreen" 好像和 "green4" 差不多
+   `(helm-source-header ((,class (:background "#103050" :foreground "moccasin" :extend t))))
+
    `(primary-selection ((,class (:background "blue3"))))
    `(region ((,class (:background "#103050"))))
    `(show-paren-match-face ((,class (:background "dodgerblue1" :foreground "white"))))
