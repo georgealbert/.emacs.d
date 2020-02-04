@@ -1521,11 +1521,13 @@ http://ergoemacs.org/emacs/emacs_editing_lisp.html
 (use-package highlight-parentheses
   :defer 2
   :init (global-highlight-parentheses-mode +1) 
+  :diminish highlight-parentheses-mode
   :config
   (setq hl-paren-colors
     ;; 从左到右，依次是从内到外的括号的颜色
     ;; '("firebrick1" "IndianRed1" "IndianRed3" "IndianRed4")
-    '("firebrick1" "green" "purple" "violet" "DeepPink" "IndianRed1" "IndianRed3" "IndianRed4")
+    ;; '("firebrick1" "orange" "yellow" "green" "DeepSkyBlue" "blue" "purple" "IndianRed1")
+    '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet" "IndianRed1" "IndianRed3" "IndianRed4")
     )
 )
 #+END_SRC
