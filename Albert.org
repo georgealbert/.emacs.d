@@ -231,7 +231,7 @@ all hooks after it are ignored.")
 
 ** gcmh [2020-01-02 周四 17:17:52]
 主要是为了能自动安装gcmh。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package gcmh
   :ensure t
   :diminish gcmh-mode
@@ -446,7 +446,7 @@ http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
     (load-theme 'doom-deeper-blue t)
     
     ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
+    ;; (doom-themes-visual-bell-config)
     
     ;; Enable custom neotree theme (all-the-icons must be installed!)
     ;; (doom-themes-treemacs-config)
@@ -496,7 +496,11 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode)
-  :config
+  :init
+  (unless after-init-time
+    ;; prevent flash of unstyled modeline at startup
+    (setq-default mode-line-format nil))
+
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
   (setq doom-modeline-icon t)
   
@@ -517,7 +521,11 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
   
   ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
   (setq doom-modeline-mu4e nil)
+
+  (setq doom-modeline-github nil)
   
+  (setq doom-modeline-persp-name nil)
+
   ;; Whether display irc notifications or not. Requires `circe' package.
   (setq doom-modeline-irc nil)
   
@@ -529,12 +537,13 @@ https://seagle0128.github.io/doom-modeline/ 国人写的，在emacs-china上看�
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
   (setq doom-modeline-persp-name nil)
-  :hook (after-init . doom-modeline-mode))
 
-;; 列号是从0开始的。
-(column-number-mode +1)
-
-(size-indication-mode +1) ; filesize in modeline
+  :config
+  ;; 列号是从0开始的。
+  (column-number-mode +1)
+  
+  (size-indication-mode +1) ; filesize in modeline
+  )
 
 ;; modeline中的时间格式设置 [2014-11-21 周五 10:35:59]
 
