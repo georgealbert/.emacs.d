@@ -224,6 +224,7 @@
                                        ; 禁用粗体，否则org-mode的outline字体太难看
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
+
     ;; 在load-theme之前设置，让modeline更亮一点，
     (setq doom-deeper-blue-brighter-modeline nil)
 
@@ -245,6 +246,8 @@
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
     (setq-default mode-line-format nil))
+
+  (setq doom-modeline-bar-width 3)
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
   (setq doom-modeline-icon t)
