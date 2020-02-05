@@ -90,6 +90,7 @@
   ;; but that is all Doom uses it for.
   ;;:after-call doom-switch-buffer-hook after-find-file
   ;; :hook (after-init . show-paren-mode)
+  :hook (prog-mode . show-smartparens-mode)
   :defer 2
   :diminish smartparens-mode
   :commands sp-pair sp-local-pair sp-with-modes sp-point-in-comment sp-point-in-string
@@ -150,7 +151,7 @@
       (when smartparens-mode
         (setq-local doom-buffer-smartparens-mode t)
         (turn-off-smartparens-mode))))
-  (show-smartparens-global-mode +1)
+  ;; (show-smartparens-global-mode +1)
   (smartparens-global-mode +1))
 
 
@@ -161,7 +162,7 @@
   :defer 2
   ;; :init (global-highlight-parentheses-mode +1) 
   :hook (prog-mode . highlight-parentheses-mode)
-  ;; :diminish highlight-parentheses-mode
+  :diminish highlight-parentheses-mode
   :config
   (setq hl-paren-colors
     ;; 从左到右，依次是从内到外的括号的颜色
