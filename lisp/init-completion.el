@@ -6,12 +6,6 @@
   :diminish helm-mode
   :config
   (helm-mode +1)
-  ;; rebind tab to run persistent action
-  ;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  ;; make TAB works in terminal
-  ;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-  ;; list actions using C-z
-  ;;(define-key helm-map (kbd "C-z")  'helm-select-action)
   
   ;;  (defun spacemacs//helm-hide-minibuffer-maybe ()
   ;;    "Hide minibuffer in Helm session if we use the header line as input field."

@@ -1,5 +1,4 @@
 ﻿#+TITLE: Albert's Emacs config file.
-;;#+PROPERTY: header-args :tangle yes
 
 * common setting
 ** 启动优化 [2019-05-18 周六 22:43:45]
@@ -895,6 +894,7 @@ T430的屏幕长了一点，要是全屏的话，org mode的buffer会在右边�
 
 (use-package treemacs-magit
   :after treemacs magit
+  :disabled t
   :ensure t)
 #+END_SRC
 ** window-select
