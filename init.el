@@ -57,9 +57,33 @@
 ;; (require 'ob-tangle)
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
 
-(load (expand-file-name "~/.emacs.d/Albert.el"))
-;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/my_elisp"))
-;; (require 'init-albert)
+;; (load (expand-file-name "~/.emacs.d/Albert.el"))
+
+;; Load path
+;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
+(defun update-load-path (&rest _)
+  "Update `load-path'."
+  (push (expand-file-name "site-lisp" user-emacs-directory) load-path)
+  (push (expand-file-name "lisp" user-emacs-directory) load-path))
+
+(defun add-subdirs-to-load-path (&rest _)
+  "Add subdirectories to `load-path'."
+  (let ((default-directory
+          (expand-file-name "site-lisp" user-emacs-directory)))
+    (normal-top-level-add-subdirs-to-load-path)))
+
+(advice-add #'package-initialize :after #'update-load-path)
+(advice-add #'package-initialize :after #'add-subdirs-to-load-path)
+
+(update-load-path)
+
+(require 'init-core)
+(require 'init-ui)
+(require 'init-editor)
+(require 'init-completion)
+(require 'init-lang)
+(require 'init-tools)
+(require 'init-org)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
