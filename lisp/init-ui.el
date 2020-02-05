@@ -183,14 +183,12 @@
   (interactive)
   (split-window-vertically)
   (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
 (defun hsplit-last-buffer ()
   (interactive)
    (split-window-horizontally)
   (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
 
 (global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
 (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
@@ -374,5 +372,154 @@
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
 (if (eq system-type 'windows-nt)
     (toggle-frame-maximized))
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      nil
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         30)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+;; (use-package treemacs-projectile
+;;   :after treemacs projectile
+;;   :disabled t
+;;   :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :disabled t
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :disabled t
+  :ensure t)
+
+(use-package winum
+  ;;:defer 3
+  :hook (after-init . winum-mode)
+  ;;:config (winum-mode +1)
+  :init
+  (setq winum-keymap
+        (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-`") 'winum-select-window-by-number)
+          (define-key map (kbd "C-²") 'winum-select-window-by-number)
+          (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+          (define-key map (kbd "M-1") 'winum-select-window-1)
+          (define-key map (kbd "M-2") 'winum-select-window-2)
+          (define-key map (kbd "M-3") 'winum-select-window-3)
+          (define-key map (kbd "M-4") 'winum-select-window-4)
+          (define-key map (kbd "M-5") 'winum-select-window-5)
+          (define-key map (kbd "M-6") 'winum-select-window-6)
+          (define-key map (kbd "M-7") 'winum-select-window-7)
+          (define-key map (kbd "M-8") 'winum-select-window-8)
+          map)))
+
+;; From seagle0128/.emacs.d/lisp/init-window.el
+;; Restore old window configurations
+(use-package winner
+  :ensure nil
+  :commands (winner-undo winner-redo)
+  :hook (after-init . winner-mode)
+  :init (setq winner-boring-buffers '("*Completions*"
+                                      "*Compile-Log*"
+                                      "*inferior-lisp*"
+                                      "*Fuzzy Completions*"
+                                      "*Apropos*"
+                                      "*Help*"
+                                      "*cvs*"
+                                      "*Buffer List*"
+                                      "*Ibuffer*"
+                                      "*esh command on file*")))
+
+;; doom-emacs/modules/ui/hl-todo
+(use-package hl-todo
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold)))
+
+  ;; Use a more primitive todo-keyword detection method in major modes that
+  ;; don't use/have a valid syntax table entry for comments.
+  ;; (add-hook '(pug-mode-hook haml-mode-hook)
+  ;;   (defun +hl-todo--use-face-detection-h ()
+  ;;     "Use a different, more primitive method of locating todo keywords."
+  ;;     (set (make-local-variable 'hl-todo-keywords)
+  ;;          '(((lambda (limit)
+  ;;               (let (case-fold-search)
+  ;;                 (and (re-search-forward hl-todo-regexp limit t)
+  ;;                      (memq 'font-lock-comment-face (doom-enlist (get-text-property (point) 'face))))))
+  ;;             (1 (hl-todo-get-face) t t))))
+  ;;     (when hl-todo-mode
+  ;;       (hl-todo-mode -1)
+  ;;       (hl-todo-mode +1))))
+)
 
 (provide 'init-ui)
