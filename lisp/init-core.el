@@ -57,17 +57,17 @@ advised)."
 (add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
 
 ;; 显示加载时间
-(defvar albert-init-time 'nil
+(defvar doom-init-time 'nil
   "The time that emacs init took, in seconds, for Doom Emacs to initialize.")
 
-(defun albert-display-benchmark-h()
+(defun doom-display-benchmark-h()
   "Display a benchmark, showing number of packages and modules, and how quickly
 they were loaded at startup."
   (message "Emacs loaded %s packages in %.03fs"
            (length package-activated-list)
            ;; (length load-path)
-           (or albert-init-time
-               (setq albert-init-time
+           (or doom-init-time
+               (setq doom-init-time
                      (float-time (time-subtract (current-time) before-init-time))))))
 
 ;; Emacs "updates" its ui more often than it needs to, so we slow it down
@@ -127,7 +127,7 @@ they were loaded at startup."
     
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
-  (add-hook 'window-setup-hook #'albert-display-benchmark-h 'append))
+  (add-hook 'window-setup-hook #'doom-display-benchmark-h 'append))
 
 (require 'package)
 
