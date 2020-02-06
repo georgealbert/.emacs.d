@@ -166,7 +166,8 @@
   :config
   (setq hl-paren-colors
     ;; 从左到右，依次是从内到外的括号的颜色
-    '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet" "IndianRed1" "IndianRed3" "IndianRed4")
+    ;; '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet" "IndianRed1" "IndianRed3" "IndianRed4")
+    '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet")
     ))
 ;; 字体放大缩小. from sacha chua
 (global-set-key (kbd "C-=") 'text-scale-increase)
@@ -223,7 +224,6 @@
     (setq doom-themes-enable-bold nil  ; if nil, bold is universally disabled
                                        ; 禁用粗体，否则org-mode的outline字体太难看
           doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
 
     ;; 在load-theme之前设置，让modeline更亮一点，
     (setq doom-deeper-blue-brighter-modeline nil)
