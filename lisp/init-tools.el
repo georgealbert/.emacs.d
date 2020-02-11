@@ -171,4 +171,11 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-h" . aweshell-toggle)
          ("s-x s-x" . aweshell-dedicated-toggle)))
 
+;; (use-package pdf-tools
+;;   :ensure nil
+;;   ;; :defer t
+;;   :hook (pdf-view-mode . pdf-tools-modes)
+;;   :load-path "~/.emacs.d/site-lisp/extensions/pdf-tools-1.0"
+;;   )
+
 (provide 'init-tools)
