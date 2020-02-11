@@ -77,11 +77,12 @@
          ("C-c M-i" . helm-multi-swoop)
          ("C-x M-i" . helm-multi-swoop-all)))
 
+;; https://github.com/syohex/emacs-helm-ag
 (use-package helm-ag
   :bind
   (("s-f" . helm-ag)
-   ("s-s f" . helm-ag)
-   ("s-s r" . helm-ag-project-root)
+   ;; ("s-s f" . helm-ag)
+   ;; ("s-s r" . helm-ag-project-root)
    ("s-r" . helm-ag-project-root)))
 
 (provide 'init-completion)
