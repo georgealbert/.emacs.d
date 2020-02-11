@@ -75,23 +75,29 @@
 ;; 显示匹配的括号
 (use-package paren
   :ensure nil
-  :disabled t
-  :defer 2
+  ;; :disabled t
+  ;; :defer 2
+  :hook (prog-mode . show-paren-mode)
   ;; highlight matching delimiters
   :config
   (setq show-paren-delay 0.1
         show-paren-highlight-openparen t
         show-paren-when-point-inside-paren t
         show-paren-when-point-in-periphery t)
-  (show-paren-mode +1))
-  
+  ;; (show-paren-mode +1)
+  )
+ 
+;;
+;; [2020-02-07 周五 12:17:50] 感觉smartparens太复杂了，改用awesome-pair
+;;
 (use-package smartparens
   ;; Auto-close delimiters and blocks as you type. It's more powerful than that,
   ;; but that is all Doom uses it for.
   ;;:after-call doom-switch-buffer-hook after-find-file
   ;; :hook (after-init . show-paren-mode)
+  :disabled t
   :hook (prog-mode . show-smartparens-mode)
-  :defer 2
+  ;; :defer 2
   :diminish smartparens-mode
   :commands sp-pair sp-local-pair sp-with-modes sp-point-in-comment sp-point-in-string
   :config
@@ -154,12 +160,10 @@
   ;; (show-smartparens-global-mode +1)
   (smartparens-global-mode +1))
 
-
 ;; http://www.emacswiki.org/emacs/HighlightParentheses
 ;; http://ergoemacs.org/emacs/emacs_editing_lisp.html
-
 (use-package highlight-parentheses
-  :defer 2
+  ;; :defer 2
   ;; :init (global-highlight-parentheses-mode +1) 
   :hook (prog-mode . highlight-parentheses-mode)
   :diminish highlight-parentheses-mode
@@ -169,6 +173,7 @@
     ;; '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet" "IndianRed1" "IndianRed3" "IndianRed4")
     '("firebrick1" "green" "purple" "DeepPink" "DeepSkyBlue" "violet")
     ))
+
 ;; 字体放大缩小. from sacha chua
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
