@@ -141,6 +141,8 @@ they were loaded at startup."
 (setq use-package-verbose t)
 (require 'use-package)
 
+(setq load-prefer-newer t)
+
 ;; use win key in windows
 (when IS-WINDOWS
   (setq w32-pass-lwindow-to-system nil)
