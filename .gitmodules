@@ -7,3 +7,6 @@
 [submodule "awesome-pair"]
 	path = site-lisp/extensions/awesome-pair
 	url = https://github.com/manateelazycat/awesome-pair
+[submodule "amx"]
+	path = site-lisp/extensions/amx
+	url = https://github.com/DarwinAwardWinner/amx

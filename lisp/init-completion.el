@@ -50,12 +50,12 @@
           ;; 在mini buffer中显示文件名长一点
           helm-buffer-max-length 40
           )
-  :bind (("C-c m" . helm-mini)
+  :bind (;; ("C-c m" . helm-mini)
          ("C-c n" . helm-mini)
-         ("C-x C-b" . helm-buffers-list)
+         ;; ("C-x C-b" . helm-buffers-list)
          ;; ("C-x b" . helm-buffers-list)
          ("M-y" . helm-show-kill-ring)
-         ("M-x" . helm-M-x)
+         ;; ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
          ("C-h a" . helm-apropos)
          ("C-x c SPC" . helm-all-mark-rings)
@@ -67,10 +67,8 @@
 ;; Turn off ido mode in case I enabled it accidentally
 (ido-mode -1)
 
-(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
-
 (use-package helm-swoop
-  :ensure t
+  ;; :ensure t
   :defer t
   :bind (("M-i" . helm-swoop)
          ("M-I" . helm-swoop-back-to-last-point)
