@@ -186,16 +186,49 @@
 ;; from seagle0128/.emacs.d/lisp/init-edit.el
 ;; Jump to things in Emacs tree-style
 (use-package avy
+  :defer t
   :bind (("C-:" . avy-goto-char)
          ("C-;" . avy-goto-char)
          ("C-'" . avy-goto-char-2)
          ("M-g f" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)
          ("M-g e" . avy-goto-word-0))
-  :hook (after-init . avy-setup-default)
+  ;; :hook (after-init . avy-setup-default)
   :config (setq avy-all-windows nil
                 avy-all-windows-alt t
                 avy-background t
                 avy-style 'pre))
+
+(use-package helpful
+  ;; a better *help* buffer
+  :commands helpful--read-symbol
+  :defer t
+  :init
+  (global-set-key [remap describe-function] #'helpful-callable)
+  (global-set-key [remap describe-command]  #'helpful-command)
+  (global-set-key [remap describe-variable] #'helpful-variable)
+  (global-set-key [remap describe-key]      #'helpful-key)
+  (global-set-key [remap describe-symbol]   #'doom/describe-symbol)
+
+  (defun doom-use-helpful-a (orig-fn &rest args)
+    "Force ORIG-FN to use helpful instead of the old describe-* commands."
+    (cl-letf (((symbol-function #'describe-function) #'helpful-function)
+              ((symbol-function #'describe-variable) #'helpful-variable))
+      (apply orig-fn args)))
+
+  ;; (after! apropos
+  ;;   ;; patch apropos buttons to call helpful instead of help
+  ;;   (dolist (fun-bt '(apropos-function apropos-macro apropos-command))
+  ;;     (button-type-put
+  ;;      fun-bt 'action
+  ;;      (lambda (button)
+  ;;        (helpful-callable (button-get button 'apropos-symbol)))))
+  ;;   (dolist (var-bt '(apropos-variable apropos-user-option))
+  ;;     (button-type-put
+  ;;      var-bt 'action
+  ;;      (lambda (button)
+  ;;        (helpful-variable (button-get button 'apropos-symbol))))))
+  )
+
 
 (provide 'init-editor)

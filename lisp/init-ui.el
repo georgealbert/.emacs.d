@@ -235,6 +235,7 @@
 
     ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme may have their own settings.
     (load-theme 'doom-deeper-blue t)
+    ;; (load-theme 'doom-vibrant t)
     
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config)
