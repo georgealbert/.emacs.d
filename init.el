@@ -78,12 +78,15 @@
 (update-load-path)
 
 (require 'init-core)
+(require 'init-keybinds)
 (require 'init-ui)
 (require 'init-editor)
 (require 'init-completion)
+;; (require 'init-ivy)
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
+(require 'init-keyfreq)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -99,7 +102,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit diminish benchmark-init))
+   '(ivy-hydra ivy-prescient prescient amx smartparens cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
@@ -129,5 +132,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ivy-minibuffer-match-face-1 ((t (:inherit font-lock-doc-face :foreground nil))))
  '(lsp-ui-doc-background ((t (:background nil))))
  '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button)))) t))
