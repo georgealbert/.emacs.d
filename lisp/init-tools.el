@@ -171,11 +171,10 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-h" . aweshell-toggle)
          ("s-x s-x" . aweshell-dedicated-toggle)))
 
-;; (use-package pdf-tools
-;;   :ensure nil
-;;   ;; :defer t
-;;   :hook (pdf-view-mode . pdf-tools-modes)
-;;   :load-path "~/.emacs.d/site-lisp/extensions/pdf-tools-1.0"
-;;   )
+(defun my-overview-of-current-buffer ()
+  "toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
+"
+  (interactive)
+  (set-selective-display (if selective-display nil 1)))
 
 (provide 'init-tools)
