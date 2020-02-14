@@ -100,6 +100,14 @@
       (apply orig-fn args)))
   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
 
+;; ;; Colourful dired
+;; (use-package diredfl
+;;   ;; :config (diredfl-global-mode 1)
+;;   :defer t
+;;   :hook (dired-initial-position . diredfl-mode)
+;;   :hook (dired-after-readin . diredfl-mode)
+;;   )
+
 ;; History
 (use-package saveplace
   :ensure nil
