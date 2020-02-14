@@ -33,11 +33,6 @@
         ;; evil-visual-state-cursor 'hollow
         )
 
-  ;; Slow this down from 0.02 to prevent blocking in large or folded buffers
-  ;; like magit while incrementally highlighting matches.
-  ;; (setq-hook! 'magit-mode-hook evil-ex-hl-update-delay 0.2)
-  ;; (setq-hook! 'so-long-minor-mode-hook evil-ex-hl-update-delay 0.25)
-
   :config 
   (evil-mode 1)
   ;; (eval-after-load 'helm-gtags
@@ -199,22 +194,23 @@
                 avy-background t
                 avy-style 'pre))
 
+;; https://github.com/Wilfred/helpful
 (use-package helpful
   ;; a better *help* buffer
-  :commands helpful--read-symbol
   :defer t
+  :commands helpful--read-symbol
   :init
   (global-set-key [remap describe-function] #'helpful-callable)
   (global-set-key [remap describe-command]  #'helpful-command)
   (global-set-key [remap describe-variable] #'helpful-variable)
   (global-set-key [remap describe-key]      #'helpful-key)
-  (global-set-key [remap describe-symbol]   #'doom/describe-symbol)
+  ;; (global-set-key [remap describe-symbol]   #'doom/describe-symbol)
 
-  (defun doom-use-helpful-a (orig-fn &rest args)
-    "Force ORIG-FN to use helpful instead of the old describe-* commands."
-    (cl-letf (((symbol-function #'describe-function) #'helpful-function)
-              ((symbol-function #'describe-variable) #'helpful-variable))
-      (apply orig-fn args)))
+  ;; (defun doom-use-helpful-a (orig-fn &rest args)
+  ;;   "Force ORIG-FN to use helpful instead of the old describe-* commands."
+  ;;   (cl-letf (((symbol-function #'describe-function) #'helpful-function)
+  ;;             ((symbol-function #'describe-variable) #'helpful-variable))
+  ;;     (apply orig-fn args)))
 
   ;; (after! apropos
   ;;   ;; patch apropos buttons to call helpful instead of help
