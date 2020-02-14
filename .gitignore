@@ -1,6 +1,8 @@
 # lisp file
 # *.el
 *.elc
+*.zip
+amx-items
 
 %backup%~
 auto-save-list/
@@ -10,3 +12,12 @@ ido.last
 places
 recentf
 server/
+var/
+transient/
+eshell/
+semanticdb/
+auto-save-list/
+backup/
+.cache/
+.cask/
+snippets/
