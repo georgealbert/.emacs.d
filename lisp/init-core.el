@@ -1,15 +1,15 @@
-;;; init-core.el -*- lexical-binding: t; -*-
+;;; init-core.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; doom-emacs/core/core-lib.el
-(defmacro delq! (elt list &optional fetcher)
-  "`delq' ELT from LIST in-place.
+;; (defmacro delq! (elt list &optional fetcher)
+;;   "`delq' ELT from LIST in-place.
 
-If FETCHER is a function, ELT is used as the key in LIST (an alist)."
-  `(setq ,list
-         (delq ,(if fetcher
-                    `(funcall ,fetcher ,elt ,list)
-                  elt)
-               ,list)))
+;; If FETCHER is a function, ELT is used as the key in LIST (an alist)."
+;;   `(setq ,list
+;;          (delq ,(if fetcher
+;;                     `(funcall ,fetcher ,elt ,list)
+;;                   elt)
+;;                ,list)))
 
 (defmacro add-transient-hook! (hook-or-function &rest forms)
   "Attaches a self-removing function to HOOK-OR-FUNCTION.
@@ -129,6 +129,8 @@ they were loaded at startup."
 (when doom-interactive-mode
   (add-hook 'window-setup-hook #'doom-display-benchmark-h 'append))
 
+(setq load-prefer-newer t)
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -141,14 +143,13 @@ they were loaded at startup."
 (setq use-package-verbose t)
 (require 'use-package)
 
-(setq load-prefer-newer t)
-
 ;; use win key in windows
 (when IS-WINDOWS
   (setq w32-pass-lwindow-to-system nil)
   (setq w32-lwindow-modifier 'super)
   (w32-register-hot-key [s-])
-  (w32-register-hot-key [s-s]))
+  ;; (w32-register-hot-key [s-s])
+  )
   
 ;; *scratch* buffer改为fundamental mode，就不会在emacs启动后显示*scratch* buffer
 ;; 时就加载display-numbers-mode和hl-todo了。
@@ -169,5 +170,15 @@ they were loaded at startup."
     (set-terminal-coding-system 'utf-8)
     (set-keyboard-coding-system 'utf-8)
     (set-selection-coding-system 'utf-8)))
+
+(use-package general
+  ;; :init
+  ;; Convenience aliases
+  ;; (defalias 'define-key! #'general-def)
+  ;; (defalias 'unmap! #'general-unbind)
+  ;; :config
+  ;; (general-evil-setup t)
+  )
+
 
 (provide 'init-core)
