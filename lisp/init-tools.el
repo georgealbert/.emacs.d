@@ -158,7 +158,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 (use-package undo-tree
   :ensure t
   :defer t
-  :diminish undo-tree-mode
+  ;; :diminish undo-tree-mode
   :config
   (progn
     (global-undo-tree-mode)

@@ -117,7 +117,10 @@
           forward-char
           forward-word
           goto-line
-          hippie-expand
+          ;; hippie-expand
+          helm-keyboard-quit
+          helm-next-line
+          helm-maybe-exit-minibuffer
           ido-complete
           ido-delete-backward-updir
           ido-exit-minibuffer
@@ -152,6 +155,8 @@
           keyfreq-show
           kill-sentence
           left-char
+          magit-section-forward
+          magit-section-backward
           minibuffer-complete
           minibuffer-complete-and-exit
           minibuffer-keyboard-quit
@@ -161,6 +166,7 @@
           newline-and-indent
           next-history-element
           next-line
+          newline
           org-beginning-of-line
           org-ctrl-c-ctrl-c
           org-cycle
