@@ -78,15 +78,18 @@
 (update-load-path)
 
 (require 'init-core)
-(require 'init-keybinds)
-(require 'init-ui)
 (require 'init-editor)
-(require 'init-completion)
 ;; (require 'init-ivy)
+(require 'init-completion)
+(require 'init-ui-theme)
+(require 'init-ui)
+(require 'init-keybinds)
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
 (require 'init-keyfreq)
+(require 'init-editor-paren)
+(require 'init-ui-treemacs)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
