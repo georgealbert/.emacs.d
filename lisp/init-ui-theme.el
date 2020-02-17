@@ -1,6 +1,10 @@
 ;;; init-ui-theme.el -*- lexical-binding: t; -*-
 
+;; (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
+;; (load-theme 'deeper-blue t)
+
 (use-package doom-themes
+  :demand t
   :config
   ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
   (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
@@ -16,11 +20,25 @@
   (load-theme 'doom-deeper-blue t)
   
   ;; org-mode的序号带颜色显示
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+
+  ;; UGLY HACK!
+  ;; Since Emacs 27 change the default behaviour of face.
+  ;; We use this to keep backward compatibility.
+  ;; Waiting upstream to fix this.
+  ;; (when (>= emacs-major-version 27)
+  ;;   (dolist (f (face-list))
+  ;;     (set-face-attribute f nil :extend t)))
+  )
   
 ;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
+  ;; :hook (after-init . doom-modeline-mode)
+  ;; 在evil启动后再启动，否则advice-add undo-tree-undo-1时有问题
+  ;; :after evil undo-tree
+  :after undo-tree
+  ;; :defer 1
+  ;; :disabled t
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
@@ -41,7 +59,7 @@
   (setq doom-modeline-minor-modes nil)
   
   ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-  (setq inhibit-compacting-font-caches t)
+  ;; (setq inhibit-compacting-font-caches t)
   
   ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
   (setq doom-modeline-lsp nil)
@@ -64,23 +82,23 @@
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
   (setq doom-modeline-persp-name nil)
-
   :config
-  ;; 列号是从0开始的。
-  (column-number-mode +1)
-  
-  ;; (size-indication-mode +1) ; filesize in modeline
-  ;; modeline中的时间格式设置 [2014-11-21 周五 10:35:59]
+;; [2014-11-21 周五 10:35:59] modeline中的时间格式设置
+(setq display-time-day-and-date t)
+(setq display-time-format "%Y-%m-%d %a %H:%M")
+(setq display-time-default-load-average nil)
 
-  ;; (setq display-time-24hr-format t)
-  ;; (setq display-time-use-mail-icon t)
-  ;; (setq display-time-interval 60)
+;; 在modeline显示时间
+(display-time)
 
-  (setq display-time-day-and-date t)
-  (setq display-time-format "%Y-%m-%d %a %H:%M")
-  (setq display-time-default-load-average nil)
+;; 列号是从0开始的。
+(column-number-mode +1)
 
-  (if (display-graphic-p)
-      (display-time)))
+;; 在modeline显示buffer或文件的大小
+(size-indication-mode +1) 
+
+  (doom-modeline-mode +1)
+  )
+
 
 (provide 'init-ui-theme)
