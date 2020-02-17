@@ -10,3 +10,6 @@
 [submodule "amx"]
 	path = site-lisp/extensions/amx
 	url = https://github.com/DarwinAwardWinner/amx
+[submodule "snails"]
+	path = site-lisp/extensions/snails
+	url = https://github.com/manateelazycat/snails

@@ -1,6 +1,7 @@
 ;;; init-completion.el -*- lexical-binding: t; -*-
 
 (use-package helm
+  :diminish
   :config
   (helm-mode +1)
   :init
@@ -29,6 +30,7 @@
          ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
          ("C-h a" . helm-apropos)
+         ("C-c b" . helm-bookmarks)
          ("C-x c SPC" . helm-all-mark-rings)
          ("C-c C-r" . helm-resume)
          (:map minibuffer-local-map
@@ -40,7 +42,7 @@
          ("C-z" . 'helm-select-action)))
 
 ;; Turn off ido mode in case I enabled it accidentally
-;; (ido-mode -1)
+(ido-mode -1)
 
 (use-package helm-swoop
   :bind (("M-i" . helm-swoop)
@@ -48,7 +50,8 @@
          ("C-c M-i" . helm-multi-swoop)
          ("C-x M-i" . helm-multi-swoop-all)))
 
-;; https://github.com/syohex/emacs-helm-ag
+;; desc: 用ag搜索当前目录或者project root
+;; homepage: https://github.com/syohex/emacs-helm-ag
 (use-package helm-ag
   :bind
   (("s-f" . helm-ag)
@@ -63,5 +66,10 @@
 ;;   :init
 ;;   (setq amx-history-length 50)
 ;;   (setq amx-backend 'helm))
+
+;; (use-package snails
+;;   :ensure nil
+;;   :load-path "~/.emacs.d/site-lisp/extensions/snails"
+;;   )
 
 (provide 'init-completion)
