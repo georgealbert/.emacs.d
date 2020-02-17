@@ -171,6 +171,10 @@ they were loaded at startup."
     (set-keyboard-coding-system 'utf-8)
     (set-selection-coding-system 'utf-8)))
 
+(use-package gcmh
+  :diminish
+  )
+
 (use-package general
   ;; :init
   ;; Convenience aliases
