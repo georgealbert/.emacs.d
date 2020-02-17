@@ -155,15 +155,16 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 ;; (flycheck-mode 1)
                 (ggtags-mode 1)))))
 
-(use-package undo-tree
-  :ensure t
-  :defer t
-  ;; :diminish undo-tree-mode
-  :config
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+;; (use-package undo-tree
+;;   :ensure t
+;;   :defer t
+;;   ;; :diminish undo-tree-mode
+;;   :diminish
+;;   :config
+;;   (progn
+;;     (global-undo-tree-mode)
+;;     (setq undo-tree-visualizer-timestamps t)
+;;     (setq undo-tree-visualizer-diff t)))
 
 (use-package aweshell
   :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
