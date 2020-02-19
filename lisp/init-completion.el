@@ -27,7 +27,7 @@
   :bind (("C-c n" . helm-mini)
          ;; ("C-x b" . helm-buffers-list)
          ("M-y" . helm-show-kill-ring)
-         ("M-x" . helm-M-x)
+         ;; ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
          ("C-h a" . helm-apropos)
          ("C-c b" . helm-bookmarks)
@@ -59,13 +59,14 @@
 
 ;; helm可以使用amx作为后端了，branch: helm-amx
 ;; https://github.com/DarwinAwardWinner/amx/issues/23
-;; (use-package amx
-;;   :ensure nil
-;;   :load-path "~/.emacs.d/site-lisp/extensions/amx"
-;;   :bind ("M-x" . amx)
-;;   :init
-;;   (setq amx-history-length 50)
-;;   (setq amx-backend 'helm))
+(use-package amx
+  :ensure nil
+  :load-path "~/.emacs.d/site-lisp/extensions/amx"
+  ;; :defer t
+  :bind ("M-x" . amx)
+  :init
+  (setq amx-history-length 50)
+  (setq amx-backend 'helm))
 
 ;; (use-package snails
 ;;   :ensure nil
