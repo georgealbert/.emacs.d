@@ -1,33 +1,98 @@
 ;;; init-ivy.el -*- lexical-binding: t; -*-
 
-;; (use-package ivy
-;;   ;; :defer t
-;;   :hook (after-init . ivy-mode)
-;;   :config
-;;   ;; :init
-;;   ;; Counsel changes a lot of ivy's state at startup; to control for that, we
-;;   ;; need to load it as early as possible. Some packages (like `ivy-prescient')
-;;   ;; require this.
-;;   (require 'counsel nil t)
+;; {{  C-o f to toggle case sensitive, @see https://github.com/abo-abo/swiper/issues/1104
+(defun re-builder-extended-pattern (str)
+  (let* ((len (length str)))
+    (cond
+     ;; do nothing
+     ((<= (length str) 0)
+      (ivy--regex-plus str)
+      )
 
-;;   (setq ivy-height 20
-;;         ivy-wrap t
-;;         ivy-count-format "(%d/%d) "
-;;         ivy-fixed-height-minibuffer t
-;;         ;; projectile-completion-system 'ivy
-;;         ;; disable magic slash on non-match
-;;         ivy-magic-slash-non-match-action nil
-;;         ;; don't show recent files in switch-buffer
-;;         ivy-use-virtual-buffers t
+     ;; If the first charater of input in ivy is ":",
+     ;; remaining input is converted into Chinese pinyin regex.
+     ((string= (substring str 0 1) ":")
+      ;; pinyinlib-build-regexp-string加上最后2个参数 "nil t"，只搜索简体中文，不包括开头的首字母。
+      (let ((str (pinyinlib-build-regexp-string (substring str 1 len) t nil t)))
+        ;; 拼音不做正则匹配，否则太慢了。
+        (ivy--regex-ignore-order str)
+        ;; (ivy--regex str)
+        ))
 
-;;         ;; ...but if that ever changes, show their full path
-;;         ivy-virtual-abbreviate 'full
-;;         ;; don't quit minibuffer on delete-error
-;;         ivy-on-del-error-function #'ignore
-;;         ;; enable ability to select prompt (alternative to `ivy-immediate-done')
-;;         ivy-use-selectable-prompt t)
+     ;; If the first charater of input in ivy is "/",
+     ;; remaining input is converted to pattern to search camel case word
+     ;; For example, input "/ic" match "isController" or "isCollapsed"
+     ((string= (substring str 0 1) "/")
+      (let* ((rlt "")
+             (i 0)
+             (subs (substring str 1 len))
+             c)
+        (when (> len 2)
+          (setq subs (upcase subs))
+          (while (< i (length subs))
+            (setq c (elt subs i))
+            (setq rlt (concat rlt (cond
+                                   ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+                                    (format "%c" c))
+                                   (t
+                                    (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
+                                              (format "%c" c))
+                                            "[a-z]+")))))
+            (setq i (1+ i))))
+        (setq str rlt)
+        (ivy--regex-plus str)
+        ))
 
-;;   (ivy-mode +1)
+     (t
+      ;; 不能用ivy--regex-ignore-order，否则英文用空格分隔时的结果，match的高亮不对。
+      (ivy--regex-plus str)))))
+
+    ;; (ivy--regex-plus str)))
+    ;; (ivy--regex-ignore-order str)))
+;; }}
+
+
+(use-package ivy
+  :defer t
+  ;; :hook (after-init . ivy-mode)
+  :config
+  ;; :init
+  ;; Counsel changes a lot of ivy's state at startup; to control for that, we
+  ;; need to load it as early as possible. Some packages (like `ivy-prescient')
+  ;; require this.
+  (require 'counsel nil t)
+
+  (setq ivy-height 12
+        ;; 不循环，否则不知道是否到底了。
+        ;; ivy-wrap t
+        ivy-count-format "(%d/%d) "
+        ivy-fixed-height-minibuffer t
+        ;; projectile-completion-system 'ivy
+        ;; disable magic slash on non-match
+        ivy-magic-slash-non-match-action nil
+        ;; don't show recent files in switch-buffer
+        ivy-use-virtual-buffers t
+
+        ;; ...but if that ever changes, show their full path
+        ivy-virtual-abbreviate 'full
+        ;; don't quit minibuffer on delete-error
+        ivy-on-del-error-function #'ignore
+        ;; enable ability to select prompt (alternative to `ivy-immediate-done')
+        ivy-use-selectable-prompt t)
+
+  ;; https://zhuanlan.zhihu.com/p/67307599
+  ;; pinyinlib暴力搜索中文首字母开头的中文
+  ;; 如 :搜索，!排除 不要
+  ;; :zw !by
+  ;; homepage: https://github.com/cute-jumper/pinyinlib.el
+  (use-package pinyinlib)
+  (setq ivy-re-builders-alist '(
+                                ;; (counsel-evil-marks . ivy--regex-plus)
+                                (t . re-builder-extended-pattern)
+                                ))
+
+  (ivy-mode +1)
+  )
 
   ;; Additional key bindings for Ivy
   ;; (use-package ivy-hydra
@@ -43,13 +108,65 @@
   ;; )
 
 (use-package ivy-rich
-  :after ivy
-  :config
+  :after (ivy)
+  ;; :defer 1
+  ;; :disabled t
   ;; :init
+  :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
 
-  ;; (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (setcdr (assq t ivy-format-functions-alist)
+          #'ivy-format-function-line)
+
+  ;; 下面的配置是seagle0128的
+  ;; Setting tab size to 1, to insert tabs as delimiters
+  (add-hook 'minibuffer-setup-hook
+            (lambda ()
+              (setq tab-width 1)))
+
+  ;; (setq ivy-rich-display-transformers-list
+  ;;       '(ivy-switch-buffer
+  ;;         (:columns
+  ;;          ((ivy-rich-candidate (:width 20))
+  ;;           ;; (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3)))))
+  ;;           (ivy-rich-switch-buffer-path (:width 20))
+  ;;           (ivy-rich-switch-buffer-size (:width 7))
+  ;;           (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+  ;;           (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
+  ;;           ;; (ivy-rich-switch-buffer-project (:width 15 :face success))
+  ;;           )
+  ;;          :predicate
+  ;;          (lambda (cand) (get-buffer cand))
+  ;;          :delimiter "\t")
+  ;;         ivy-switch-buffer-other-window
+  ;;         (:columns
+  ;;          ((ivy-rich-candidate (:width 30))
+  ;;           (ivy-rich-switch-buffer-size (:width 7))
+  ;;           (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+  ;;           (ivy-rich-switch-buffer-major-mode (:width 20 :face warning))
+  ;;           ;; (ivy-rich-switch-buffer-project (:width 15 :face success))
+  ;;           (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+  ;;          :predicate
+  ;;          (lambda (cand) (get-buffer cand))
+  ;;          :delimiter "\t")
+  ;;         counsel-switch-buffer
+  ;;         (:columns
+  ;;          ((ivy-rich-candidate (:width 30))
+  ;;           (ivy-rich-switch-buffer-size (:width 7))
+  ;;           (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
+  ;;           (ivy-rich-switch-buffer-major-mode (:width 20 :face warning))
+  ;;           ;; (ivy-rich-switch-buffer-project (:width 15 :face success))
+  ;;           (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3)))))
+  ;;           ;; (ivy-rich-switch-buffer-path (:width 20 :face success))
+  ;;           )
+  ;;          :predicate
+  ;;          (lambda (cand) (get-buffer cand))
+  ;;          :delimiter "\t")))
+
+  ;; 'full or 'absolute
+  (setq ivy-rich-path-style 'abbrev)
+  (ivy-rich-mode +1))
 
   ;; (when (featurep! +icons)
   ;;   (cl-pushnew '(+ivy-rich-buffer-icon)
@@ -82,9 +199,9 @@
 
   ;; 下面的配置是seagle0128的
   ;; Setting tab size to 1, to insert tabs as delimiters
-  (add-hook 'minibuffer-setup-hook
-            (lambda ()
-              (setq tab-width 1)))
+  ;; (add-hook 'minibuffer-setup-hook
+  ;;           (lambda ()
+  ;;             (setq tab-width 1)))
 
   ;; (with-no-warnings
   ;;   (defun ivy-rich-bookmark-name (candidate)
@@ -433,8 +550,6 @@
   ;;           (ivy-rich-candidate))
   ;;          :delimiter "\t")))
 
-  (ivy-rich-mode +1))
-
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
@@ -454,32 +569,31 @@ If N is not nil, only list directories in current project."
 
 (use-package counsel
   :defer t
+  :after (ivy)
   ;; :diminish ivy-mode counsel-mode
   ;; :bind ("C-c n" . counsel-buffer-or-recentf)
   ;; :hook (ivy-mode . counsel-mode)
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
 
-  (setq ivy-use-selectable-prompt t
-        ivy-use-virtual-buffers t    ; Enable bookmarks and recentf
-        ivy-height 20
-        ivy-fixed-height-minibuffer t
-        ivy-count-format "(%d/%d) "
-        ivy-on-del-error-function nil
-        ivy-initial-inputs-alist nil)
-  
+  ;; (setq ivy-use-selectable-prompt t
+  ;;       ivy-use-virtual-buffers t    ; Enable bookmarks and recentf
+  ;;       ivy-height 10
+  ;;       ivy-fixed-height-minibuffer t
+  ;;       ivy-count-format "(%d/%d) "
+  ;;       ivy-on-del-error-function nil
+  ;;       ivy-initial-inputs-alist nil)
   :config
-
   ;; Integrate with `helpful'
   (setq counsel-describe-function-function #'helpful-callable
         counsel-describe-variable-function #'helpful-variable)
 
   ;; Enhance M-x
-  (use-package amx
-    :ensure nil
-    :defer t
-    :load-path "~/.emacs.d/site-lisp/extensions/amx"
-    :init (setq amx-history-length 50))
+  ;; (use-package amx
+  ;;   :ensure nil
+  ;;   :defer t
+  ;;   :load-path "~/.emacs.d/site-lisp/extensions/amx"
+  ;;   :init (setq amx-history-length 50))
 
   ;; Better sorting and filtering
 ;;   (use-package prescient
@@ -522,5 +636,21 @@ If N is not nil, only list directories in current project."
 
 ;;     (ivy-prescient-mode 1))
   )
+
+(use-package ivy-posframe
+  :after ivy
+  ;; :delight
+  ;; :disabled t
+  :custom
+  (ivy-posframe-height-alist '((swiper . 15)
+                               (t      . 20)))
+  (ivy-posframe-display-functions-alist
+   '((swiper          . nil)
+     (swiper-isearch  . nil)
+     (complete-symbol . ivy-posframe-display-at-point)
+     (counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
+     (t               . ivy-posframe-display-at-frame-center)))
+  :config
+  (ivy-posframe-mode 1))
 
 (provide 'init-ivy)

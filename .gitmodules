@@ -13,3 +13,6 @@
 [submodule "snails"]
 	path = site-lisp/extensions/snails
 	url = https://github.com/manateelazycat/snails
+[submodule "pinyinlib"]
+	path = site-lisp/extensions/pinyinlib
+	url = https://github.com/georgealbert/pinyinlib.el
