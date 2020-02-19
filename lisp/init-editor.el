@@ -84,33 +84,48 @@
   ;; 让diff能识别中文目录
   (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
 
-(use-package dired-k
-  ;; :unless (featurep! +ranger)
-  :defer t
-  :hook (dired-initial-position . dired-k)
-  :hook (dired-after-readin . dired-k-no-revert)
-  :config
-  (defun +dired*interrupt-process (orig-fn &rest args)
-    "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
-     .git/index.lock files."
-    (cl-letf (((symbol-function #'kill-process)
-               (symbol-function #'interrupt-process)))
-      (apply orig-fn args)))
-  (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
-
-  (defun +dired*dired-k-highlight (orig-fn &rest args)
-    "Butt out if the requested directory is remote (i.e. through tramp)."
-    (unless (file-remote-p default-directory)
-      (apply orig-fn args)))
-  (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
-
-;; ;; Colourful dired
-;; (use-package diredfl
-;;   ;; :config (diredfl-global-mode 1)
+;; (use-package dired-k
+;;   ;; :unless (featurep! +ranger)
 ;;   :defer t
-;;   :hook (dired-initial-position . diredfl-mode)
-;;   :hook (dired-after-readin . diredfl-mode)
-;;   )
+;;   :hook (dired-initial-position . dired-k)
+;;   :hook (dired-after-readin . dired-k-no-revert)
+;;   :config
+;;   (defun +dired*interrupt-process (orig-fn &rest args)
+;;     "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
+;;      .git/index.lock files."
+;;     (cl-letf (((symbol-function #'kill-process)
+;;                (symbol-function #'interrupt-process)))
+;;       (apply orig-fn args)))
+;;   (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
+
+;;   (defun +dired*dired-k-highlight (orig-fn &rest args)
+;;     "Butt out if the requested directory is remote (i.e. through tramp)."
+;;     (unless (file-remote-p default-directory)
+;;       (apply orig-fn args)))
+;;   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
+
+;; Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
+(use-package diredfl
+  ;; :config (diredfl-global-mode 1)
+  :defer t
+  :hook (dired-initial-position . diredfl-mode)
+        ;; (dired-after-readin . diredfl-mode)
+  :config
+  (defface my-diredfl-read-priv
+  '((((background dark)) (:background "bg"))
+    (t                   (:background "LightGray")))
+    "*Face used for read privilege indicator (w) in Dired buffers."
+    :group 'diredfl)
+  (setq diredfl-read-priv 'my-diredfl-read-priv)
+
+  (defface my-diredfl-write-priv
+    '((((background dark)) (:background "bg"))
+    ;; '((((background dark)) (:foreground "pink"))
+      (t                   (:background "Orchid")))
+    "*Face used for write privilege indicator (w) in Dired buffers."
+    :group 'diredfl)
+  (setq diredfl-write-priv 'my-diredfl-write-priv)
+  )
 
 ;; History
 (use-package saveplace
