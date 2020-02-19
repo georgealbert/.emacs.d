@@ -234,5 +234,72 @@
   ;;        (helpful-variable (button-get button 'apropos-symbol))))))
   )
 
+;; from redguardtoo, 快捷键 SPC ww
+;; {{ narrow region
+(defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
+  "Indirect buffer could multiple widen on same file."
+  (if (region-active-p) (deactivate-mark))
+  (if use-indirect-buffer
+      (with-current-buffer (clone-indirect-buffer
+                            (generate-new-buffer-name
+                             (format "%s-indirect-:%s-:%s"
+                                     (buffer-name)
+                                     (line-number-at-pos start)
+                                     (line-number-at-pos end)))
+                            'display)
+        (narrow-to-region start end)
+        (goto-char (point-min)))
+      (narrow-to-region start end)))
+
+;; @see https://gist.github.com/mwfogleman/95cc60c87a9323876c6c
+;; fixed to behave correctly in org-src buffers; taken from:
+;; https://lists.gnu.org/archive/html/emacs-orgmode/2019-09/msg00094.html
+(defun narrow-or-widen-dwim (&optional use-indirect-buffer)
+  "If the buffer is narrowed, it widens.
+ Otherwise, it narrows to region, or Org subtree.
+If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen content."
+  (interactive "P")
+  (cond
+   ((and (not use-indirect-buffer) (buffer-narrowed-p))
+    (widen))
+
+   ((and (not use-indirect-buffer)
+         (eq major-mode 'org-mode)
+         (fboundp 'org-src-edit-buffer-p)
+         (org-src-edit-buffer-p))
+    (org-edit-src-exit))
+
+   ;; narrow to region
+   ((region-active-p)
+    (narrow-to-region-indirect-buffer-maybe (region-beginning)
+                                            (region-end)
+                                            use-indirect-buffer))
+
+   ;; narrow to specific org element
+   ((derived-mode-p 'org-mode)
+    (cond
+     ((ignore-errors (org-edit-src-code)) t)
+     ((ignore-errors (org-narrow-to-block) t))
+     ((ignore-errors (org-narrow-to-element) t))
+     (t (org-narrow-to-subtree))))
+
+   ((derived-mode-p 'diff-mode)
+    (let* (b e)
+      (save-excursion
+        ;; If the (point) is already beginning or end of file diff,
+        ;; the `diff-beginning-of-file' and `diff-end-of-file' return nil
+        (setq b (progn (diff-beginning-of-file) (point)))
+        (setq e (progn (diff-end-of-file) (point))))
+      (when (and b e (< b e))
+        (narrow-to-region-indirect-buffer-maybe b e use-indirect-buffer))))
+
+   ((derived-mode-p 'prog-mode)
+    (mark-defun)
+    (narrow-to-region-indirect-buffer-maybe (region-beginning)
+                                            (region-end)
+                                            use-indirect-buffer))
+   (t (error "Please select a region to narrow to"))))
+;; }}
+
 
 (provide 'init-editor)

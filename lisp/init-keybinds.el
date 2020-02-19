@@ -32,7 +32,8 @@
       "bk" '(kill-current-buffer :which-key "Kill buffer")
       "br" '(revert-buffer :which-key "Revert buffer")
       "bo" 'my-overview-of-current-buffer ;; 移动会很卡
-      "bm" '((lambda () (interactive) (counsel-evil-marks t)) :which-key "counsel-evil-marks")
+      ;; "bm" '((lambda () (interactive) (counsel-evil-marks +1)) :which-key "counsel-evil-marks")
+      "bm" '(counsel-evil-marks :which-key "counsel-evil-marks")
 
       "e"  '(:ignore t :which-key "eshell")
       "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
@@ -77,6 +78,7 @@
       "wv" 'evil-window-vsplit
       "wu" 'winner-undo
       ;; "wr" 'winner-redo
+      "ww" 'narrow-or-widen-dwim
       )))
 
 (provide 'init-keybinds)
