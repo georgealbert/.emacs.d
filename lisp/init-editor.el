@@ -62,6 +62,10 @@
   (setq evil-flash-delay 30)
   )
 
+(use-package evil-matchit
+  :hook (prog-mode . turn-on-evil-matchit-mode)
+  )
+
 (use-package ediff
   :ensure nil
   :hook(;; show org ediffs unfolded
