@@ -115,7 +115,7 @@ they were loaded at startup."
   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
   (with-eval-after-load 'gcmh
     (setq gcmh-idle-delay 10
-          gcmh-verbose t)
+          gcmh-verbose nil)
     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
     
 ;; doom-emacs用的hook是 window-setup-hook
@@ -143,13 +143,13 @@ they were loaded at startup."
 (setq use-package-verbose t)
 (require 'use-package)
 
-(run-with-idle-timer
- 1 nil
- #'(lambda ()
-(use-package auto-compile
-  :config (auto-compile-on-load-mode))
-(setq load-prefer-newer t)
-))
+;; (run-with-idle-timer
+;;  1 nil
+;;  #'(lambda ()
+;; (use-package auto-compile
+;;   :config (auto-compile-on-load-mode))
+;; (setq load-prefer-newer t)
+;; ))
 #+end_src
 
 代理配置
@@ -157,6 +157,35 @@ they were loaded at startup."
 ;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
 ;     ("http" . "134.80.3.27:8080")
 ;     ("https" . "134.80.3.27:8080")))
+
+** auto tangle emacs-lisp in Albert.org [2020-01-04 周六 00:31:38]
+保存配置文件~/.emacs.d/Albert.org后，自动tangle emacs-lisp的block。
+
+参考 https://github.com/freetonik/emacs-dotfiles/blob/master/init.org
+#+BEGIN_SRC emacs-lisp
+(defun albert-tangle-init ()
+  "If the current buffer is 'Albert.org' the code-blocks are
+tangled, the tangled file is not compiled."
+  (when (and (eq major-mode 'org-mode)
+             (equal (buffer-file-name)
+                    (expand-file-name "~/.emacs.d/Albert.org")))
+    ;; Avoid running hooks when tangling.
+    (let ((prog-mode-hook nil))
+      (org-babel-tangle-file buffer-file-name "~/.emacs.d/Albert.el" "emacs-lisp")
+      )))
+
+(add-hook 'after-save-hook 'albert-tangle-init)
+
+;; use win key in windows
+(when IS-WINDOWS
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super)
+  (w32-register-hot-key [s-]))
+  
+;; *scratch* buffer改为fundamental mode，就不会一启动就加载display-numbers-mode和hl-todo了。
+;; 貌似Helm-lisp以前也没见到会加载，怎么也加载了呢?
+(setq initial-major-mode 'fundamental-mode)
+#+END_SRC
 
 ** HOME
 设置默认工作目录到HOME目录，不设置的话是 /emacs安装目录/bin/ 。
@@ -1513,9 +1542,10 @@ http://ergoemacs.org/emacs/elisp-xah-find-text.html
 1. evil mode下按tab和enter都不能跳转到文件对应的地方，只能用鼠标，除非是emacs mode下。
 2. 不知道是怎么找的扩展吗，如果打开一个 *.te的文件，默认扩展名就是 *.te，改改?
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
 (use-package xah-find
   :ensure t
+  :disabled t
   :defer t)
 #+END_SRC
 
