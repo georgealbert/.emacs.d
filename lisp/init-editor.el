@@ -21,17 +21,16 @@
   :defer 1
   :preface
   (setq evil-want-visual-char-semi-exclusive t
-        evil-echo-state t
-        evil-ex-search-vim-style-regexp t
-        ;; more vim-like behavior
-        ;; foo-bar 就是一个word，emacs会认为是2个
-        evil-symbol-word-search t
-        ;; cursor appearance
-        ;; evil-normal-state-cursor 'box
-        ;; evil-insert-state-cursor 'bar
-        ;; 不习惯空心的光标
-        ;; evil-visual-state-cursor 'hollow
-        )
+	evil-echo-state t
+	evil-ex-search-vim-style-regexp t
+	;; foo-bar vim认为就是一个word，emacs会认为是2个
+	evil-symbol-word-search t
+	;; cursor appearance
+	;; evil-normal-state-cursor 'box
+	;; evil-insert-state-cursor 'bar
+	;; 不习惯空心的光标
+	;; evil-visual-state-cursor 'hollow
+	)
 
   :config 
   (evil-mode 1)
