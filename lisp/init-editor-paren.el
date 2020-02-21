@@ -4,7 +4,7 @@
 ;; 显示匹配的括号
 
 ;; [2020-02-16 周日 14:13:27] 不知道为什么用use-package后，在右括号处匹配左括号不正常。
-;; emacs自带的paren.el
+;; doc: emacs自带的paren.el
 (use-package paren
   :ensure nil
   :defer 2

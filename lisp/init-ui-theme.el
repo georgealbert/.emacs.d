@@ -4,7 +4,7 @@
 ;; (load-theme 'deeper-blue t)
 
 (use-package doom-themes
-  :demand t
+  ;; :demand t
   :config
   ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
   (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
@@ -16,7 +16,6 @@
   ;; 在load-theme之前设置，让modeline更亮一点，
   ;; (setq doom-deeper-blue-brighter-modeline nil)
 
-  ;; 我自己的theme
   (load-theme 'doom-deeper-blue t)
   
   ;; org-mode的序号带颜色显示
@@ -47,31 +46,18 @@
   (setq doom-modeline-bar-width 3)
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-  (setq doom-modeline-icon t)
+  (setq doom-modeline-icon nil)
   
   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
   (setq doom-modeline-major-mode-icon t)
-  
-  ;; Display color icons for `major-mode'. It respects `all-the-icons-color-icons'.
   (setq doom-modeline-major-mode-color-icon t)
-  
-  ;; Whether display minor modes or not. Non-nil to display in mode-line.
   (setq doom-modeline-minor-modes nil)
   
-  ;; Slow Rendering. If you experience a slow down in performace when rendering multiple icons simultaneously, you can try setting the following variable
-  ;; (setq inhibit-compacting-font-caches t)
-  
-  ;; Whether display `lsp' state or not. Non-nil to display in mode-line.
   (setq doom-modeline-lsp nil)
   
-  ;; Whether display mu4e notifications or not. Requires `mu4e-alert' package.
   (setq doom-modeline-mu4e nil)
-
   (setq doom-modeline-github nil)
-  
   (setq doom-modeline-persp-name nil)
-
-  ;; Whether display irc notifications or not. Requires `circe' package.
   (setq doom-modeline-irc nil)
   
   ;; 2019.11.06修改为图标的了，不好看

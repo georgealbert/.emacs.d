@@ -44,26 +44,25 @@
        ;; force update evil keymaps after ggtags-mode loaded
        (add-hook 'ggtags-mode-hook #'evil-normalize-keymaps)))
   
-  ;; Lazy load evil ex commands. From doom-emacs，好像看着还是load了evil-ex，不知道为什么
-  ;; (delq! 'evil-ex features)
-  ;; (add-transient-hook! 'evil-ex (provide 'evil-ex))
-
-  ;; (setq evil-want-visual-char-semi-exclusive t)
-  ;; (evil-select-search-module 'evil-search-module 'evil-search)
-  ;;(setq isearch-hide-immediately nil)
-  ;; (add-hook 'doom-escape-hook
-  ;;   (defun +evil-disable-ex-highlights-h ()
-  ;;     "Disable ex search buffer highlights."
-  ;;     (when (evil-ex-hl-active-p 'evil-ex-search)
-  ;;       (evil-ex-nohighlight)
-  ;;       t)))
-
   ;; 使用isearch时，增加search结束后的，高亮时间到30s
   (setq evil-flash-delay 30)
+  ;; evil keymap
+  (define-key evil-normal-state-map "go" 'goto-char)
+  ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
+  ;; (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
   )
 
+;; homepage: https://github.com/redguardtoo/evil-matchit
 (use-package evil-matchit
   :hook (prog-mode . turn-on-evil-matchit-mode)
+  )
+
+;; doc: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim
+;; homepage: https://github.com/redguardtoo/evil-nerd-commenter
+(use-package evil-nerd-commenter
+  :defer 2
+  :config
+  (evilnc-default-hotkeys t)
   )
 
 (use-package ediff
@@ -104,9 +103,8 @@
 ;;       (apply orig-fn args)))
 ;;   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
 
-;; Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
+;; doc: Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
-  ;; :config (diredfl-global-mode 1)
   :defer t
   :hook (dired-initial-position . diredfl-mode)
         ;; (dired-after-readin . diredfl-mode)
@@ -120,7 +118,6 @@
 
   (defface my-diredfl-write-priv
     '((((background dark)) (:background "bg"))
-    ;; '((((background dark)) (:foreground "pink"))
       (t                   (:background "Orchid")))
     "*Face used for write privilege indicator (w) in Dired buffers."
     :group 'diredfl)
@@ -147,43 +144,9 @@
 
 (use-package awesome-pair
   :ensure nil
-  ;; :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/awesome-pair"
   :defer t
   :hook (prog-mode . awesome-pair-mode)
-  ;; :init
-  ;; (dolist (hook (list
-  ;;                'c-mode-common-hook
-  ;;                'c-mode-hook
-  ;;                'c++-mode-hook
-  ;;                'java-mode-hook
-  ;;                'haskell-mode-hook
-  ;;                'emacs-lisp-mode-hook
-  ;;                'lisp-interaction-mode-hook
-  ;;                'lisp-mode-hook
-  ;;                'maxima-mode-hook
-  ;;                'ielm-mode-hook
-  ;;                'sh-mode-hook
-  ;;                'makefile-gmake-mode-hook
-  ;;                'php-mode-hook
-  ;;                'python-mode-hook
-  ;;                'js-mode-hook
-  ;;                'go-mode-hook
-  ;;                'qml-mode-hook
-  ;;                'jade-mode-hook
-  ;;                'css-mode-hook
-  ;;                'ruby-mode-hook
-  ;;                'coffee-mode-hook
-  ;;                'rust-mode-hook
-  ;;                'qmake-mode-hook
-  ;;                'lua-mode-hook
-  ;;                'swift-mode-hook
-  ;;                'web-mode-hook
-  ;;                'markdown-mode-hook
-  ;;                'llvm-mode-hook
-  ;;                'conf-toml-mode-hook
-  ;;                ))
-  ;;   (add-hook hook '(lambda () (awesome-pair-mode 1))))
   :config
   (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
   (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
@@ -206,7 +169,7 @@
   )
 
 ;; from seagle0128/.emacs.d/lisp/init-edit.el
-;; Jump to things in Emacs tree-style
+;; doc: Jump to things in Emacs tree-style
 (use-package avy
   :defer t
   :bind (("C-:" . avy-goto-char)
@@ -215,15 +178,14 @@
          ("M-g f" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)
          ("M-g e" . avy-goto-word-0))
-  ;; :hook (after-init . avy-setup-default)
   :config (setq avy-all-windows nil
                 avy-all-windows-alt t
                 avy-background t
                 avy-style 'pre))
 
-;; https://github.com/Wilfred/helpful
+;; doc: a better *help* buffer
+;; homepage: https://github.com/Wilfred/helpful
 (use-package helpful
-  ;; a better *help* buffer
   :defer t
   :commands helpful--read-symbol
   :init
@@ -319,6 +281,5 @@ If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen conte
                                             use-indirect-buffer))
    (t (error "Please select a region to narrow to"))))
 ;; }}
-
 
 (provide 'init-editor)

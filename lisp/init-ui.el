@@ -111,7 +111,7 @@
 
   ;; Show absolute line numbers for narrowed regions makes it easier to tell the
   ;; buffer is narrowed, and where you are, exactly.
-  (setq-default display-line-numbers-widen t)
+  ;; (setq-default display-line-numbers-widen t)
 
   (defun albert-display-line-numbers ()
     "org-mode的文件，如果行数<10000行就显示行号."
@@ -200,8 +200,7 @@
   :init
   (setq winum-keymap
         (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "C-`") 'winum-select-window-by-number)
-          ;; (define-key map (kbd "C-²") 'winum-select-window-by-number)
+          ;; (define-key map (kbd "C-`") 'winum-select-window-by-number)
           ;; (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
           (define-key map (kbd "M-1") 'winum-select-window-1)
           (define-key map (kbd "M-2") 'winum-select-window-2)

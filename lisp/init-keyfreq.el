@@ -189,16 +189,16 @@
           save-buffers-kill-terminal
           scroll-down-command
           scroll-up-command
-          winum-select-window-0
-          winum-select-window-1
-          winum-select-window-2
-          winum-select-window-3
-          winum-select-window-4
-          winum-select-window-5
-          winum-select-window-6
-          winum-select-window-7
-          winum-select-window-8
-          winum-select-window-9
+          ;; winum-select-window-0
+          ;; winum-select-window-1
+          ;; winum-select-window-2
+          ;; winum-select-window-3
+          ;; winum-select-window-4
+          ;; winum-select-window-5
+          ;; winum-select-window-6
+          ;; winum-select-window-7
+          ;; winum-select-window-8
+          ;; winum-select-window-9
           self-insert-command
           smarter-move-beginning-of-line
           suspend-frame
