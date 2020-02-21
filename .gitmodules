@@ -1,6 +1,3 @@
-[submodule "aweshell"]
-	path = site-lisp/extensions/aweshell
-	url = https://github.com/manateelazycat/aweshell.git
 [submodule "lazy-load"]
 	path = site-lisp/extensions/lazy-load
 	url = https://github.com/manateelazycat/lazy-load.git
