@@ -72,7 +72,7 @@
   ;; require this.
   (require 'counsel nil t)
 
-  (setq ivy-height 12
+  (setq ivy-height 11
         ;; 不循环，否则不知道是否到底了。
         ;; ivy-wrap t
         ivy-count-format "(%d/%d) "

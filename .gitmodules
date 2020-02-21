@@ -13,3 +13,6 @@
 [submodule "pinyinlib"]
 	path = site-lisp/extensions/pinyinlib
 	url = https://github.com/georgealbert/pinyinlib.el
+[submodule "aweshell"]
+	path = site-lisp/extensions/aweshell
+	url = https://github.com/georgealbert/aweshell
