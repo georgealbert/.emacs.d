@@ -32,12 +32,8 @@
   
 ;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
-  ;; :hook (after-init . doom-modeline-mode)
-  ;; 在evil启动后再启动，否则advice-add undo-tree-undo-1时有问题
-  ;; :after evil undo-tree
+  ;; 使用native-comp的undo-tree和doom-modeline时，在undo-tree必须在doom-modeline之前启动，否则advice-add undo-tree-undo-1时有问题
   :after undo-tree
-  ;; :defer 1
-  ;; :disabled t
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
@@ -69,22 +65,21 @@
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
   (setq doom-modeline-persp-name nil)
   :config
-;; [2014-11-21 周五 10:35:59] modeline中的时间格式设置
-(setq display-time-day-and-date t)
-(setq display-time-format "%Y-%m-%d %a %H:%M")
-(setq display-time-default-load-average nil)
 
-;; 在modeline显示时间
-(display-time)
-
-;; 列号是从0开始的。
-(column-number-mode +1)
-
-;; 在modeline显示buffer或文件的大小
-(size-indication-mode +1) 
+  (setq display-time-day-and-date t)
+  (setq display-time-format "%Y-%m-%d %a %H:%M")
+  (setq display-time-default-load-average nil)
+  
+  ;; 在modeline显示时间
+  (display-time)
+  
+  ;; 列号是从0开始的。
+  (column-number-mode +1)
+  
+  ;; 在modeline显示buffer或文件的大小
+  (size-indication-mode +1) 
 
   (doom-modeline-mode +1)
   )
-
 
 (provide 'init-ui-theme)
