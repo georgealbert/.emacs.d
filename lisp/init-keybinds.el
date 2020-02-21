@@ -16,6 +16,40 @@
 (run-with-idle-timer
  1 nil
  #'(lambda ()
+     (general-create-definer my-comma-leader-def
+       :prefix ","
+       :states '(normal visual))
+
+     (my-comma-leader-def
+       "c"  '(:ignore t :which-key "code")
+       "ci" '(evilnc-comment-or-uncomment-lines :which-key "comment lines")
+       "cl" '(evilnc-quick-comment-or-uncomment-to-the-line :which-key "quick comment lines")
+       "cc" '(evilnc-copy-and-comment-lines :which-key "copy comment lines")
+       ;; "cp" 'my-evilnc-comment-or-uncomment-paragraphs
+       "ct" '(evilnc-comment-or-uncomment-html-tag :which-key "comment html tag") ; evil-nerd-commenter v3.3.0 required
+
+
+       "bf" 'beginning-of-defun
+       "bu" 'backward-up-list
+       ;; "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
+       "ef" 'end-of-defun
+       ;; "sc" 'scratch
+
+       "t"  '(:ignore t :which-key "tags")
+       "tr" 'counsel-etags-recent-tag
+       "tf" 'counsel-etags-find-tag
+
+       ;; "yy" 'counsel-browse-kill-ring
+       ;; "cf" 'counsel-grep ; grep current buffer
+       ;; "gf" 'counsel-git ; find file
+       ;; "gg" 'my-counsel-git-grep ; quickest grep should be easy to press
+       ;; "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
+       ;; "gl" 'my-git-log-trace-definition ; find history of a function or range
+       ;; "sh" 'my-select-from-search-text-history
+
+       "ir" 'ivy-resume
+       )
+
      (general-create-definer my-spc-leader-def
        :prefix "SPC"
        :states '(normal visual))
@@ -35,14 +69,20 @@
       ;; "bm" '((lambda () (interactive) (counsel-evil-marks +1)) :which-key "counsel-evil-marks")
       "bm" '(counsel-evil-marks :which-key "counsel-evil-marks")
 
-      "e"  '(:ignore t :which-key "eshell")
-      "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
+      ;; "e"  '(:ignore t :which-key "eshell")
+      ;; "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
 
       "f"  '(:ignore t :which-key "file")
-      "ff" '(counsel-buffer-or-recentf :which-key "Recent files")
-      "fr" '(counsel-buffer-or-recentf :which-key "Recent files")
+      "ff" '(counsel-recentf :which-key "Recent files")
+      "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
       "fc" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
-      "fd" '(dired :which-key "dired") ;; open the dired from current file
+      ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
+      "fp" '(find-file-in-project :which-key "ff in project")
+      "ft" '(find-file-in-current-directory :which-key "ff in current dir")
+      "fn" '(find-file-in-project-at-point :which-key "ff at point")
+      "fs" '(find-file-in-project-by-selected :which-key "ff selected")
+      "fn" '(find-file-with-similar-name :which-key "ff similar-name") ; ffip v5.3.1
+      "fd" '(find-directory-in-project-by-selected :which-key "fdip selected")
       ;; "fs" 'scratch
 
       "g"  '(:ignore t :which-key "git")
@@ -52,22 +92,23 @@
       "h'" 'describe-char
       "hC" 'describe-coding-system
       "hF" 'describe-face
-      "ha" 'helm-apropos
-      "hd" 'describe-function
+      ;; "ha" 'helm-apropos
+      ;; "hd" 'describe-function
       "he" 'view-echo-area-messages
-      "hf" 'find-function
-      "hk" 'describe-key
+      ;; "hf" 'find-function
+      ;; "hk" 'describe-key
       "hr" 'helm-resume
-      "hv" 'describe-variable
+      ;; "hv" 'describe-variable
 
       "t"  '(:ignore t :which-key "toggle")
       "tn" '(display-line-numbers-mode :which-key "Line numbers")
       "tl" '(toggle-truncate-lines :which-key "truncate line")
 
       "s"  '(:ignore t :which-key "search")
-      "sf" '(helm-ag :which-key "Search current directory")
+      "si" 'evilmi-select-items
+      ;; "sf" '(helm-ag :which-key "Search current directory")
       "ss" 'counsel-grep-or-swiper
-      "sr" '(helm-ag-project-root  :which-key "Search project root")
+      ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
       "w"  '(:ignore t :which-key "window")
       ;; "wh" 'evil-window-left
@@ -75,7 +116,7 @@
       ;; "wk" 'evil-window-up
       ;; "wj" 'evil-window-down
       "wr" 'evil-window-rotate-upwards
-      "wv" 'evil-window-vsplit
+      ;; "wv" 'evil-window-vsplit
       "wu" 'winner-undo
       ;; "wr" 'winner-redo
       "ww" 'narrow-or-widen-dwim

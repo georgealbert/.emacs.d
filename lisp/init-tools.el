@@ -178,4 +178,11 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (interactive)
   (set-selective-display (if selective-display nil 1)))
 
+;; homepage: https://github.com/technomancy/find-file-in-project
+(use-package find-file-in-project
+  :defer t
+  :config
+  (when IS-WINDOWS
+    (setq ffip-find-executable "c:/msys64/usr/bin/find")))
+
 (provide 'init-tools)

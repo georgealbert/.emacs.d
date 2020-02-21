@@ -1,10 +1,21 @@
 ;;; init-ivy.el -*- lexical-binding: t; -*-
 
+(defun albert-ivy-done()
+  "ivy的tab键优化. 只按一次<tab>就补全目录，和helm一样."
+  (interactive)
+  (let ((dir ivy--directory))
+    (ivy-partial-or-done)
+    (when (string= dir ivy--directory)
+      (ivy-insert-current)
+      (when (and (eq (ivy-state-collection ivy-last) #'read-file-name-internal)
+                 (setq dir (ivy-expand-file-if-directory (ivy-state-current ivy-last))))
+        (ivy--cd dir)
+        (setq this-command 'ivy-cd)))))
+
 ;; {{  C-o f to toggle case sensitive, @see https://github.com/abo-abo/swiper/issues/1104
 (defun re-builder-extended-pattern (str)
   (let* ((len (length str)))
     (cond
-     ;; do nothing
      ((<= (length str) 0)
       (ivy--regex-plus str)
       )

@@ -79,11 +79,12 @@
 
 (require 'init-core)
 (require 'init-editor)
-;; (require 'init-ivy)
 (require 'init-completion)
+(require 'init-ivy)
 (require 'init-ui-theme)
 (require 'init-ui)
 (require 'init-keybinds)
+(require 'init-hydra)
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
@@ -105,7 +106,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(ivy-hydra ivy-prescient prescient amx smartparens cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit benchmark-init))
+   '(find-file-in-project pinyinlib ivy-hydra ivy-prescient prescient amx smartparens cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
