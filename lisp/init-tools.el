@@ -185,4 +185,63 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (when IS-WINDOWS
     (setq ffip-find-executable "c:/msys64/usr/bin/find")))
 
+(use-package pyim
+  ;; :disabled t
+  :config
+  (use-package pyim-basedict
+    :ensure nil
+    :config (pyim-basedict-enable))
+
+  (use-package liberime-config
+  :load-path "~/.emacs.d/site-lisp/extensions/liberime"
+  :init
+  ;; 不能和小狼毫用同一个目录进行配置，否则会互相覆盖。 
+  ;; (setq liberime-user-data-dir "~/weasel")
+
+  (add-hook 'after-liberime-load-hook
+            (lambda ()
+              (liberime-select-schema "luna_pinyin_simp"))))
+
+  (setq pyim-default-scheme 'rime-quanpin)
+
+  (progn
+    (setq default-input-method "pyim")
+
+    ;; (setq pyim-default-scheme 'quanpin)
+    ;; 应该是不能用vc编译的librime.dll，必须用mingw64编译。
+
+
+    (setq-default pyim-english-input-switch-functions
+                  '(pyim-probe-dynamic-english
+                    pyim-probe-isearch-mode
+                    pyim-probe-program-mode
+                    pyim-probe-org-structure-template))
+
+    (setq-default pyim-punctuation-half-width-functions
+                  '(pyim-probe-punctuation-line-beginning
+                    pyim-probe-punctuation-after-punctuation))
+
+    (pyim-isearch-mode 1)
+
+    (setq pyim-page-tooltip 'posframe)
+
+    (setq pyim-page-length 9)
+
+    (setq pyim-fuzzy-pinyin-alist
+      '(("eng" "en")
+        ("ing" "in")
+        ("ch" "c")
+        ("sh" "s")
+        ("zh" "z")))
+    ;; 使用thread，不用subprocess 的方式
+    (setq pyim-prefer-emacs-thread t)
+  )
+  :bind
+  (("M-j" . pyim-convert-code-at-point)
+   ;; ("C-;" . pyim-delete-word-from-personal-buffer)
+   ;; ("," . pyim-page-previous-page)
+   ;; ("." . pyim-page-next-page)
+  )
+)
+
 (provide 'init-tools)
