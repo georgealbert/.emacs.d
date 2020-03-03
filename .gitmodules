@@ -16,3 +16,6 @@
 [submodule "aweshell"]
 	path = site-lisp/extensions/aweshell
 	url = https://github.com/georgealbert/aweshell
+[submodule "pyim"]
+	path = site-lisp/extensions/pyim
+	url = https://github.com/georgealbert/pyim
