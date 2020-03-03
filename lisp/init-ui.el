@@ -29,17 +29,18 @@
 ;;
 ;;; Scrolling
 
-(setq hscroll-margin 2
-      hscroll-step 1
-      scroll-conservatively 10
-      scroll-margin 0
-      scroll-preserve-screen-position t
-      ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
-      ;; for tall lines.
-      auto-window-vscroll nil
-      ;; mouse
-      mouse-wheel-scroll-amount '(5 ((shift) . 2))
-      mouse-wheel-progressive-speed nil)  ; don't accelerate scrolling
+;; [2020-03-01 周日 14:44:10] 感觉3月1日编译后的emacs，移动光标时，屏幕刷新特别晃眼。先注释掉。
+;; (setq ;; hscroll-margin 2
+;;       ;; hscroll-step 1
+;;       ;; scroll-conservatively 10
+;;       ;; scroll-margin 0
+;;       ;; scroll-preserve-screen-position t
+;;       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
+;;       ;; for tall lines.
+;;       ;; auto-window-vscroll nil
+;;       ;; mouse
+;;       mouse-wheel-scroll-amount '(5 ((shift) . 2))
+;;       mouse-wheel-progressive-speed nil)  ; don't accelerate scrolling
 
 ;; Remove hscroll-margin in shells, otherwise it causes jumpiness
 ;; (setq-hook '(eshell-mode-hook term-mode-hook) hscroll-margin 0)
@@ -130,6 +131,13 @@
       (set-face-attribute 'default nil :font "Ubuntu Mono 11")
       ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 10")
       ;; (set-face-attribute 'default nil :font "Sarasa Term SC 10")
+
+      ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
+      ;; http://mix-mplus-ipa.osdn.jp/migu/
+      ;; (set-face-attribute 'default nil :font "Migu 1M 11")
+
+      ;; (set-face-attribute 'default nil :font "terminus 14")
+
       ;; Fixedsys在笔记本上字体有点发虚
       ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
       ;; Chinese Font
