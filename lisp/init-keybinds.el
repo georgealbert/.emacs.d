@@ -21,6 +21,7 @@
        :states '(normal visual))
 
      (my-comma-leader-def
+       "m" '(evil-switch-to-windows-last-buffer :which-key "Switch to last buffer")
        "c"  '(:ignore t :which-key "code")
        "ci" '(evilnc-comment-or-uncomment-lines :which-key "comment lines")
        "cl" '(evilnc-quick-comment-or-uncomment-to-the-line :which-key "quick comment lines")
@@ -55,7 +56,7 @@
        :states '(normal visual))
 
      (my-spc-leader-def
-      "`" '(evil-switch-to-windows-last-buffer :which-key "Switch to last buffer")
+      ;; "`" '(evil-switch-to-windows-last-buffer :which-key "Switch to last buffer")
       "." '(counsel-find-file :which-key "Find file")
       ";" '(counsel-M-x :which-key "counsel-M-x")
       "'" '(pp-eval-expression :which-key "Eval expression")
@@ -75,10 +76,10 @@
       "f"  '(:ignore t :which-key "file")
       "ff" '(counsel-recentf :which-key "Recent files")
       "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
-      "fc" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
+      "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
       ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
       "fp" '(find-file-in-project :which-key "ff in project")
-      "ft" '(find-file-in-current-directory :which-key "ff in current dir")
+      "fc" '(find-file-in-current-directory :which-key "ff in current dir")
       "fn" '(find-file-in-project-at-point :which-key "ff at point")
       "fs" '(find-file-in-project-by-selected :which-key "ff selected")
       "fn" '(find-file-with-similar-name :which-key "ff similar-name") ; ffip v5.3.1
@@ -107,7 +108,8 @@
       "s"  '(:ignore t :which-key "search")
       "si" 'evilmi-select-items
       ;; "sf" '(helm-ag :which-key "Search current directory")
-      "ss" 'counsel-grep-or-swiper
+      "sc" 'counsel-grep-or-swiper
+      "ss" 'helm-ag-this-file
       ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
       "w"  '(:ignore t :which-key "window")
