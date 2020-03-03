@@ -96,6 +96,7 @@
 ;; usage: 用不同颜色高亮显示每一级括号
 (use-package highlight-parentheses
   :hook (prog-mode . highlight-parentheses-mode)
+  ;; :disabled t
   :diminish
   :config
   (setq hl-paren-colors

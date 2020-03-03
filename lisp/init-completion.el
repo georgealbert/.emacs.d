@@ -62,7 +62,6 @@
 (use-package amx
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
-  ;; :defer t
   :bind ("M-x" . amx)
   :init
   (setq amx-history-length 50)
@@ -71,6 +70,11 @@
 ;; (use-package snails
 ;;   :ensure nil
 ;;   :load-path "~/.emacs.d/site-lisp/extensions/snails"
+;;   ;; :bind ("s-e". '(snails '(snails-backend-buffer snails-backend-recentf) t))
+;;   :config
+;;   (global-set-key (kbd "s-e") '(lambda ()
+;;                                  (interactive)
+;;                                  (snails '(snails-backend-buffer snails-backend-recentf) t)))
 ;;   )
 
 (provide 'init-completion)

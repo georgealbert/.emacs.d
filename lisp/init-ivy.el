@@ -96,13 +96,13 @@
   ;;      :zw !by
   ;; homepage: https://github.com/cute-jumper/pinyinlib.el
   (use-package pinyinlib
-      :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
+    :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
+
   (setq ivy-re-builders-alist '(
                                 ;; (counsel-evil-marks . ivy--regex-plus)
                                 (t . re-builder-extended-pattern)
                                 ))
-  (ivy-mode +1)
-  )
+  (ivy-mode +1))
 
 (use-package ivy-rich
   :defer 1
