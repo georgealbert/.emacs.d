@@ -51,22 +51,23 @@
        "ir" 'ivy-resume
        )
 
+     ;; [2020-03-28 周六 21:45:52] binding太多快捷键到evil的normal和visual mode中，在debug native-comp在visual block mode insert时的问题，从evil-insert-state的debug看，可能会慢。不用的快捷键都去掉。
      (general-create-definer my-spc-leader-def
        :prefix "SPC"
        :states '(normal visual))
 
      (my-spc-leader-def
       ;; "`" '(evil-switch-to-windows-last-buffer :which-key "Switch to last buffer")
-      "." '(counsel-find-file :which-key "Find file")
-      ";" '(counsel-M-x :which-key "counsel-M-x")
+      ;; "." '(counsel-find-file :which-key "Find file")
+      ;; ";" '(counsel-M-x :which-key "counsel-M-x")
       "'" '(pp-eval-expression :which-key "Eval expression")
       ;; "cd" 'counsel-recent-directory
 
       "b"  '(:ignore t :which-key "buffer")
-      "bb" '(counsel-ibuffer :which-key "Switch buffer")
+      ;; "bb" '(counsel-ibuffer :which-key "Switch buffer")
       "bk" '(kill-current-buffer :which-key "Kill buffer")
       "br" '(revert-buffer :which-key "Revert buffer")
-      "bo" 'my-overview-of-current-buffer ;; 移动会很卡
+      ;; "bo" 'my-overview-of-current-buffer ;; 移动会很卡
       ;; "bm" '((lambda () (interactive) (counsel-evil-marks +1)) :which-key "counsel-evil-marks")
       "bm" '(counsel-evil-marks :which-key "counsel-evil-marks")
 
@@ -74,9 +75,9 @@
       ;; "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
 
       "f"  '(:ignore t :which-key "file")
-      "ff" '(counsel-recentf :which-key "Recent files")
-      "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
-      "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
+      ;; "ff" '(counsel-recentf :which-key "Recent files")
+      ;; "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
+      ;; "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
       ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
       "fp" '(find-file-in-project :which-key "ff in project")
       "fc" '(find-file-in-current-directory :which-key "ff in current dir")
@@ -86,8 +87,8 @@
       "fd" '(find-directory-in-project-by-selected :which-key "fdip selected")
       ;; "fs" 'scratch
 
-      "g"  '(:ignore t :which-key "git")
-      "gg" 'magit-status
+      ;; "g"  '(:ignore t :which-key "git")
+      ;; "gg" 'magit-status
 
       "h" '(:ignore t :which-key "help")
       "h'" 'describe-char
@@ -102,13 +103,13 @@
       ;; "hv" 'describe-variable
 
       "t"  '(:ignore t :which-key "toggle")
-      "tn" '(display-line-numbers-mode :which-key "Line numbers")
+      ;; "tn" '(display-line-numbers-mode :which-key "Line numbers")
       "tl" '(toggle-truncate-lines :which-key "truncate line")
 
       "s"  '(:ignore t :which-key "search")
       "si" 'evilmi-select-items
       ;; "sf" '(helm-ag :which-key "Search current directory")
-      "sc" 'counsel-grep-or-swiper
+      ;; "sc" 'counsel-grep-or-swiper
       "ss" 'helm-ag-this-file
       ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
@@ -117,9 +118,9 @@
       ;; "wl" 'evil-window-right
       ;; "wk" 'evil-window-up
       ;; "wj" 'evil-window-down
-      "wr" 'evil-window-rotate-upwards
+      ;; "wr" 'evil-window-rotate-upwards
       ;; "wv" 'evil-window-vsplit
-      "wu" 'winner-undo
+      ;; "wu" 'winner-undo
       ;; "wr" 'winner-redo
       "ww" 'narrow-or-widen-dwim
       )))

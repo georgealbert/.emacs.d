@@ -215,9 +215,9 @@
           (define-key map (kbd "M-3") 'winum-select-window-3)
           (define-key map (kbd "M-4") 'winum-select-window-4)
           (define-key map (kbd "M-5") 'winum-select-window-5)
-          (define-key map (kbd "M-6") 'winum-select-window-6)
-          (define-key map (kbd "M-7") 'winum-select-window-7)
-          (define-key map (kbd "M-8") 'winum-select-window-8)
+          ;; (define-key map (kbd "M-6") 'winum-select-window-6)
+          ;; (define-key map (kbd "M-7") 'winum-select-window-7)
+          ;; (define-key map (kbd "M-8") 'winum-select-window-8)
           map)))
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
