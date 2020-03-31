@@ -21,3 +21,10 @@ backup/
 .cache/
 .cask/
 snippets/
+Albert.el
+emacs.pdmp
+org-clock-save.el
+projectile-bookmarks.eld
+bookmarks
+.lsp-session-v1
+.org-id-locations

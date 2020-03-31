@@ -63,6 +63,7 @@
 
 (use-package ivy
   :defer t
+  ;; :after ivy-rich
   :bind
   (:map ivy-minibuffer-map
         ("<tab>" . albert-ivy-done))
@@ -102,10 +103,13 @@
                                 ;; (counsel-evil-marks . ivy--regex-plus)
                                 (t . re-builder-extended-pattern)
                                 ))
-  (ivy-mode +1))
+  ;; (setq ivy-mode-map nil)
+  ;; enable ivy-mode后会把C-x b改为ivy-switch-buffer，非常不好。
+  ;; (ivy-mode +1)
+  )
 
 (use-package ivy-rich
-  :defer 1
+  :defer t
   :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
@@ -140,9 +144,10 @@ If N is not nil, only list directories in current project."
     (ivy-read "directories:" cands :action 'dired)))
 
 (use-package counsel
-  :defer t
-  :after (ivy)
-  ;; :bind ("s-x" . counsel-M-x)
+  ;; :defer t
+  ;; :after ivy-rich ivy
+  ;; :after ivy
+  :bind (("s-z" . counsel-M-x))
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
 
