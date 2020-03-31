@@ -235,8 +235,8 @@ determine the exact padding."
    (cursor :background "green")
 
    ;; counsel-M-x的match
-   ;; (ivy-current-match :background "DarkGreen" :distant-foreground nil)
-   ;; (ivy-current-match :background "coral2" :distant-foreground nil)
+   ;; (ivy-current-match :background blue :foreground base0 :distant-foreground nil :extend t)
+   ;; (ivy-current-match :background "DarkGreen" :distant-foreground nil :extend t)
 
    ;; (minibuffer-prompt :foreground "CadetBlue1")
    ;; (primary-selection :background "blue3")
