@@ -48,7 +48,17 @@
   :bind (("M-i" . helm-swoop)
          ("M-I" . helm-swoop-back-to-last-point)
          ("C-c M-i" . helm-multi-swoop)
-         ("C-x M-i" . helm-multi-swoop-all)))
+         ("C-x M-i" . helm-multi-swoop-all)
+         ;; Move up and down like isearch
+         (:map helm-swoop-map
+               ("C-r" . 'helm-previous-line)
+               ("C-s" . 'helm-next-line))
+         (:map helm-multi-swoop-map
+               ("C-r" . 'helm-previous-line)
+               ("C-s" . 'helm-next-line)))
+  :config
+  ;; Go to the opposite side of line from the end or beginning of line
+  (setq helm-swoop-move-to-line-cycle t))
 
 ;; desc: 用ag搜索当前目录或者project root
 ;; homepage: https://github.com/syohex/emacs-helm-ag

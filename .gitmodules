@@ -19,3 +19,9 @@
 [submodule "pyim"]
 	path = site-lisp/extensions/pyim
 	url = https://github.com/georgealbert/pyim
+[submodule "nox"]
+	path = site-lisp/extensions/nox
+	url = https://github.com/manateelazycat/nox
+[submodule "sdcv"]
+	path = site-lisp/extensions/sdcv
+	url = https://github.com/manateelazycat/sdcv
