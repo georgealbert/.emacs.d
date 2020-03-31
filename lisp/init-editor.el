@@ -59,7 +59,7 @@
 ;; doc: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim
 ;; homepage: https://github.com/redguardtoo/evil-nerd-commenter
 (use-package evil-nerd-commenter
-  :defer 2
+  :defer t
   :config
   (evilnc-default-hotkeys t)
   )

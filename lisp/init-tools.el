@@ -186,23 +186,34 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
     (setq ffip-find-executable "c:/msys64/usr/bin/find")))
 
 (use-package pyim
-  ;; :disabled t
+  :disabled t
+  :load-path "~/.emacs.d/site-lisp/extensions/pyim"
   :config
-  (use-package pyim-basedict
-    :ensure nil
-    :config (pyim-basedict-enable))
+  ;; (use-package pyim-basedict
+  ;;   :ensure nil
+  ;;   :config (pyim-basedict-enable))
 
-  (use-package liberime-config
-  :load-path "~/.emacs.d/site-lisp/extensions/liberime"
-  :init
-  ;; 不能和小狼毫用同一个目录进行配置，否则会互相覆盖。 
-  ;; (setq liberime-user-data-dir "~/weasel")
+  ;; homepage: https://github.com/merrickluo/liberime
+  (use-package liberime
+    :load-path "~/.emacs.d/site-lisp/extensions/liberime"
+    ;;  :init
+    ;;  ;; 不能和小狼毫用同一个目录进行配置，否则会互相覆盖。 
+    ;;  ;; (setq liberime-user-data-dir "~/weasel")
 
-  (add-hook 'after-liberime-load-hook
-            (lambda ()
-              (liberime-select-schema "luna_pinyin_simp"))))
+    ;;  (add-hook 'after-liberime-load-hook
+    ;;            (lambda ()
+    ;;              (run-with-timer
+    ;;               5 1
+    ;;               (message "use luna_pinyin_simp")
+    ;;               (liberime-select-schema "luna_pinyin_simp"))))
+    :config
+    (liberime-select-schema "luna_pinyin_simp"))
 
   (setq pyim-default-scheme 'rime-quanpin)
+
+  (setq pyim-dcache-backend 'pyim-sqlite)
+  (use-package sqlite3
+    :load-path "e:/workspace/emacs-sqlite3")
 
   (progn
     (setq default-input-method "pyim")
@@ -210,10 +221,9 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
     ;; (setq pyim-default-scheme 'quanpin)
     ;; 应该是不能用vc编译的librime.dll，必须用mingw64编译。
 
-
     (setq-default pyim-english-input-switch-functions
                   '(pyim-probe-dynamic-english
-                    pyim-probe-isearch-mode
+                    ;; pyim-probe-isearch-mode
                     pyim-probe-program-mode
                     pyim-probe-org-structure-template))
 
@@ -221,27 +231,67 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                   '(pyim-probe-punctuation-line-beginning
                     pyim-probe-punctuation-after-punctuation))
 
-    (pyim-isearch-mode 1)
+    ;; 不用isearch，用的是swiper。
+    ;; (pyim-isearch-mode 1)
 
     (setq pyim-page-tooltip 'posframe)
 
     (setq pyim-page-length 9)
 
     (setq pyim-fuzzy-pinyin-alist
-      '(("eng" "en")
-        ("ing" "in")
-        ("ch" "c")
-        ("sh" "s")
-        ("zh" "z")))
+          '(("eng" "en")
+            ("ing" "in")
+            ("ch" "c")
+            ("sh" "s")
+            ("zh" "z")))
     ;; 使用thread，不用subprocess 的方式
     (setq pyim-prefer-emacs-thread t)
-  )
+    )
   :bind
-  (("M-j" . pyim-convert-code-at-point)
+  (("M-j" . pyim-convert-string-at-point)
    ;; ("C-;" . pyim-delete-word-from-personal-buffer)
    ;; ("," . pyim-page-previous-page)
    ;; ("." . pyim-page-next-page)
+   )
   )
-)
+
+;; 自己写的就是爽啊，没办法就是爽
+(if (fboundp 'w32-set-ime-open-status)
+    (progn
+      (defun emacs-ime-disable ()
+        (w32-set-ime-open-status nil))
+
+      (defun emacs-ime-enable ()
+        (w32-set-ime-open-status t))
+
+      (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+      (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
+      ))
+
+(use-package sdcv
+  :defer t
+  :load-path "~/.emacs.d/site-lisp/extensions/sdcv"
+  :bind (("s-t p" . sdcv-search-pointer)  ;; 光标处的单词, buffer显示
+         ("s-t t" . sdcv-search-pointer+) ;; 光标处的单词, frame显示
+         ("s-t i" . sdcv-search-input)    ;; 输入的单词, buffer显示
+         ("s-t ;" . sdcv-search-input+))
+  :config
+  (setq sdcv-program "E:\\emacs\\bin\\sdcv.exe")
+
+  (setq sdcv-dictionary-data-dir "e:\\home\\albert\\stardict")   ;; set local sdcv dict to search word
+
+  (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
+        '(
+          "牛津现代英汉双解词典"
+          "朗道英汉字典5.0"
+          "懒虫简明英汉词典"
+          ;; "懒虫简明汉英词典"
+          ;; "KDic11万英汉词典"
+          ))
+
+  (setq sdcv-tooltip-timeout 0)
+
+  ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
+  )
 
 (provide 'init-tools)
