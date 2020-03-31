@@ -77,7 +77,7 @@
   (column-number-mode +1)
   
   ;; 在modeline显示buffer或文件的大小
-  (size-indication-mode +1) 
+  ;; (size-indication-mode +1) 
 
   (doom-modeline-mode +1)
   )
