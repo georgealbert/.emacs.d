@@ -144,7 +144,8 @@
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
               (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "Microsoft Yahei" :size 22))))))
+                            (font-spec :family "等距更纱黑体 T SC" :size 22))))))
+                            ;; (font-spec :family "Microsoft Yahei" :size 22))))))
 
 (defun albert-s2319-font()
   "Config font on dell s2319. 
