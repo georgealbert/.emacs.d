@@ -77,13 +77,7 @@
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
-;;
 ;; Make window splitting more useful
-;;
-
-;; I added these snippets to my .emacs so that when I split the screen with C-x 2 or C-x 3, 
-;; it opens the previous buffer instead of giving me two panes with the same buffer:
-
 ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
 (defun vsplit-last-buffer ()
   (interactive)
@@ -110,10 +104,6 @@
   ;; 文件超过10000行，不显示行号，只留4位吧
   (setq-default display-line-numbers-width-start 4)
 
-  ;; Show absolute line numbers for narrowed regions makes it easier to tell the
-  ;; buffer is narrowed, and where you are, exactly.
-  ;; (setq-default display-line-numbers-widen t)
-
   (defun albert-display-line-numbers ()
     "org-mode的文件，如果行数<10000行就显示行号."
     (let ((num (line-number-at-pos (point-max))))
@@ -126,25 +116,23 @@
   "Config font on HP zhan66."
   (interactive)
   (if (eq system-type 'windows-nt)
-    (progn
-      ;; Setting English Font
-      (set-face-attribute 'default nil :font "Ubuntu Mono 11")
-      ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 10")
-      ;; (set-face-attribute 'default nil :font "Sarasa Term SC 10")
+      (progn
+        (set-face-attribute 'default nil :font "Ubuntu Mono 11")
 
-      ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
-      ;; http://mix-mplus-ipa.osdn.jp/migu/
-      ;; (set-face-attribute 'default nil :font "Migu 1M 11")
+        ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
+        ;; http://mix-mplus-ipa.osdn.jp/migu/
+        ;; (set-face-attribute 'default nil :font "Migu 1M 11")
 
-      ;; (set-face-attribute 'default nil :font "terminus 14")
+        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
-      ;; Fixedsys在笔记本上字体有点发虚
-      ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
-      ;; Chinese Font
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-              (set-fontset-font (frame-parameter nil 'font)
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "等距更纱黑体 T SC" :size 22))))))
+                            (font-spec :family "等距更纱黑体 T SC"))))))
+
+              ;; (set-fontset-font (frame-parameter nil 'font)
+              ;;               charset
+              ;;               (font-spec :family "等距更纱黑体 T SC" :size 22))))))
                             ;; (font-spec :family "Microsoft Yahei" :size 22))))))
 
 (defun albert-s2319-font()
@@ -154,16 +142,23 @@
    "
   (interactive)
   (if (eq system-type 'windows-nt)
-    (progn
-      ;; Setting English Font
-      ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
-      ;; (set-face-attribute 'default nil :font "Fixedsys Excelsior 12")
-      (set-face-attribute 'default nil :font "Fixedsys 12")
-      ;; Chinese Font
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-              (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            (font-spec :family "Microsoft Yahei" :size 16))))))
+      (progn
+        ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
+        (set-face-attribute 'default nil :font "Fixedsys 12")
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+                (set-fontset-font (frame-parameter nil 'font)
+                              charset
+                              (font-spec :family "等距更纱黑体 T SC" :size 16))))))
+
+                              ;; (font-spec :family "Microsoft Yahei" :size 16))))))
+        ;; (set-frame-font "Ubuntu Mono-12" nil t)
+        ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
+        ;;   (set-fontset-font (frame-parameter nil 'font)
+        ;;                     charset (font-spec :family "Microsoft Yahei"))
+        ;;   (setq face-font-rescale-alist '(("Microsoft Yahei" . 1.24)))))))
+                               ;; 更纱黑字体发虚
+          ;;                   charset (font-spec :family "等距更纱黑体 T SC"))
+          ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))))))
 
 (defun albert-x240-font()
   "Config font on x240."
@@ -249,22 +244,6 @@
           ("HACK"       font-lock-constant-face bold)
           ("REVIEW"     font-lock-keyword-face bold)
           ("NOTE"       success bold)
-          ("DEPRECATED" font-lock-doc-face bold)))
-
-  ;; Use a more primitive todo-keyword detection method in major modes that
-  ;; don't use/have a valid syntax table entry for comments.
-  ;; (add-hook '(pug-mode-hook haml-mode-hook)
-  ;;   (defun +hl-todo--use-face-detection-h ()
-  ;;     "Use a different, more primitive method of locating todo keywords."
-  ;;     (set (make-local-variable 'hl-todo-keywords)
-  ;;          '(((lambda (limit)
-  ;;               (let (case-fold-search)
-  ;;                 (and (re-search-forward hl-todo-regexp limit t)
-  ;;                      (memq 'font-lock-comment-face (doom-enlist (get-text-property (point) 'face))))))
-  ;;             (1 (hl-todo-get-face) t t))))
-  ;;     (when hl-todo-mode
-  ;;       (hl-todo-mode -1)
-  ;;       (hl-todo-mode +1))))
-)
+          ("DEPRECATED" font-lock-doc-face bold))))
 
 (provide 'init-ui)
