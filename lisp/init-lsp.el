@@ -7,10 +7,11 @@
 ;; 从emacs27开始，可以修改read-process-output-max
 (setq read-process-output-max (* 1024 1024))
 
-;; Emacs client for the Language Server Protocol
+;; ;; Emacs client for the Language Server Protocol
 ;; https://github.com/emacs-lsp/lsp-mode#supported-languages
 (use-package lsp-mode
   ;; :diminish lsp-mode
+  ;; :disabled t
   :defer t
   ;; :hook (prog-mode . lsp)
   :hook (python-mode . lsp-deferred)
@@ -26,6 +27,7 @@
   (setq lsp-prefer-flymake nil)      ; Use lsp-ui and flycheck
   (setq flymake-fringe-indicator-position 'right-fringe)
 
+  ;; http://blog.binchen.org/posts/how-to-speed-up-lsp-mode.html
   ;; enable log only for debug
   (setq lsp-log-io nil)
   
@@ -36,11 +38,23 @@
   ;; Please note `company-lsp' is automatically enabled if installed
   ;; (setq lsp-enable-completion-at-point nil)
 
+  ;; no real time syntax check
+  (setq lsp-diagnostic-package :none)
+
   ;; turn off for better performance
   (setq lsp-enable-symbol-highlighting nil)
 
   ;; use ffip instead
   (setq lsp-enable-links nil)
+
+  ;; don't ping LSP lanaguage server too frequently
+  (defvar lsp-on-touch-time 0)
+  (defadvice lsp-on-change (around lsp-on-change-hack activate)
+    ;; don't run `lsp-on-change' too frequently
+    (when (> (- (float-time (current-time))
+                lsp-on-touch-time) 30) ;; 30 seconds
+      (setq lsp-on-touch-time (float-time (current-time)))
+      ad-do-it))
 )
 
 (use-package lsp-ui
@@ -98,6 +112,27 @@
   ;; for executable of language server, if it's not symlinked on your PATH
   (setq lsp-python-ms-executable
         "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
+
+;; (use-package nox
+;;   :ensure nil
+;;   :load-path "~/.emacs.d/site-lisp/extensions/nox"
+;;   :defer t
+;;   :config
+;;   (dolist (hook (list
+;;                  'js-mode-hook
+;;                  ;; 'rust-mode-hook
+;;                  'python-mode-hook
+;;                  ;; 'ruby-mode-hook
+;;                  'java-mode-hook
+;;                  ;; 'sh-mode-hook
+;;                  ;; 'php-mode-hook
+;;                  'c-mode-common-hook
+;;                  'c-mode-hook
+;;                  'c++-mode-hook
+;;                  ;; 'haskell-mode-hook
+;;                  ))
+;;     (add-hook hook '(lambda () (nox-ensure))))
+;;   )
 
 
 (provide 'init-lsp)
