@@ -33,7 +33,7 @@
 ;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
   ;; 使用native-comp的undo-tree和doom-modeline时，在undo-tree必须在doom-modeline之前启动，否则advice-add undo-tree-undo-1时有问题
-  :after undo-tree
+  ;; :after undo-tree
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
