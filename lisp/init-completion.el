@@ -74,7 +74,7 @@
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
   :bind ("M-x" . amx)
   :init
-  (setq amx-history-length 50)
+  (setq amx-history-length 30)
   (setq amx-backend 'helm))
 
 ;; (use-package snails
