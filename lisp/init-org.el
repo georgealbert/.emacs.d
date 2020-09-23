@@ -18,7 +18,7 @@
 ;; emacs 28 comes with org version 9.3
 ;; org-mode的<s <Tab> 补全不正常。
 ;; https://orgmode.org/Changes.html
-(when EMACS28+
+(when (> emacs-major-version 27)
   (defvar org-modules
     '(org-tempo
       )))
@@ -1069,6 +1069,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
   :after org
   :config
     (progn
+      ;; [2020-09-07 周一 19:44:16] 在native-comp分支2020.08.17的commit后，不 (require 'epa) 会报void function epa-passphrase-callback-function
+      (require 'epa)
       ; Encrypt all entries before saving
       (org-crypt-use-before-save-magic)
       (setq org-tags-exclude-from-inheritance (quote ("crypt")))
