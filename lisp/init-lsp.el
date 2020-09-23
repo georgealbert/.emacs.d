@@ -98,20 +98,20 @@
   :bind (:map lsp-mode-map
   ("M-9" . lsp-treemacs-errors-list)))
 
-(use-package lsp-python-ms
-  ;; :ensure nil
-  ;; :defer t
-  :demand
-  :after lsp-mode
-  :hook (python-mode . lsp)
-  :config
-  ;; :init
-  ;; for dev build of language server
-  (setq lsp-python-ms-dir
-        (expand-file-name "e:/workspace/python-language-server/output/bin/Release/"))
-  ;; for executable of language server, if it's not symlinked on your PATH
-  (setq lsp-python-ms-executable
-        "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
+;; (use-package lsp-python-ms
+;;   ;; :ensure nil
+;;   ;; :defer t
+;;   :demand
+;;   :after lsp-mode
+;;   :hook (python-mode . lsp)
+;;   :config
+;;   ;; :init
+;;   ;; for dev build of language server
+;;   (setq lsp-python-ms-dir
+;;         (expand-file-name "e:/workspace/python-language-server/output/bin/Release/"))
+;;   ;; for executable of language server, if it's not symlinked on your PATH
+;;   (setq lsp-python-ms-executable
+;;         "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
 
 ;; (use-package nox
 ;;   :ensure nil
@@ -134,5 +134,13 @@
 ;;     (add-hook hook '(lambda () (nox-ensure))))
 ;;   )
 
-
+;; homepage: https://github.com/emacs-lsp/lsp-pyright
+(use-package lsp-pyright
+  ;; :ensure t
+  :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
+  :demand
+  :after lsp-mode
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp))))  ; or lsp-deferred
 (provide 'init-lsp)
