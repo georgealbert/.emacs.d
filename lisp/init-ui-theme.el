@@ -1,4 +1,4 @@
-;;; init-ui-theme.el -*- lexical-binding: t; -*-
+;;; init-ui-theme.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
 ;; (load-theme 'deeper-blue t)

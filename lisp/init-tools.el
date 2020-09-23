@@ -1,4 +1,4 @@
-;;; init-tools.el -*- lexical-binding: t; -*-
+;;; init-tools.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; tools/flycheck/autoload.el
 (defun +flycheck|init-popups ()

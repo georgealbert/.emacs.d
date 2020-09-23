@@ -1,4 +1,4 @@
-;;; init-hydra.el -*- lexical-binding: t; -*-
+;;; init-hydra.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; find-file-in-project
 (eval-after-load 'find-file-in-project

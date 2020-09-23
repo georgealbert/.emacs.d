@@ -1,4 +1,4 @@
-;;; init-lang.el -*- lexical-binding: t; -*-
+;;; init-lang.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; linux的term
 (if (eq system-type 'gnu/linux)
