@@ -118,6 +118,7 @@
   (if (eq system-type 'windows-nt)
       (progn
         (set-face-attribute 'default nil :font "Ubuntu Mono 11")
+        ;; (set-face-attribute 'default nil :font "PragmataPro Mono 11")
 
         ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
         ;; http://mix-mplus-ipa.osdn.jp/migu/
@@ -134,6 +135,18 @@
               ;;               charset
               ;;               (font-spec :family "等距更纱黑体 T SC" :size 22))))))
                             ;; (font-spec :family "Microsoft Yahei" :size 22))))))
+
+;; [2020-09-07 周一 16:00:37] https://github.com/m8524769/Hybrid-fonts
+;; (defun albert-notebook-font()
+;;   "Config font on HP zhan66."
+;;   (interactive)
+;;   (if (eq system-type 'windows-nt)
+;;       (progn
+;;         (set-face-attribute 'default nil :font "InconsolataGo QiHei NF")
+;;         (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;           (set-fontset-font (frame-parameter nil 'font)
+;;                             charset
+;;                             (font-spec :family "InconsolataGo QiHei NF"))))))
 
 (defun albert-s2319-font()
   "Config font on dell s2319. 
