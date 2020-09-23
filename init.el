@@ -86,13 +86,13 @@
 (require 'init-ui-theme)
 (require 'init-ui)
 (require 'init-keybinds)
-(require 'init-hydra)
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
 (require 'init-keyfreq)
 (require 'init-editor-paren)
 (require 'init-ui-treemacs)
+(require 'init-hydra)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
