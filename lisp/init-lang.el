@@ -145,8 +145,8 @@
 
 ;; homepage: https://github.com/emacs-lsp/lsp-pyright
 (use-package lsp-pyright
-  ;; :ensure t
-  :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
+  :ensure t
+  ;; :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
   :after lsp-mode
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)

@@ -134,7 +134,8 @@ they were loaded at startup."
 (require 'package)
 
 (add-to-list 'package-archives
-             '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
+             '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+             ;; '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
