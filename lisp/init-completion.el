@@ -77,14 +77,4 @@
   (setq amx-history-length 30)
   (setq amx-backend 'helm))
 
-;; (use-package snails
-;;   :ensure nil
-;;   :load-path "~/.emacs.d/site-lisp/extensions/snails"
-;;   ;; :bind ("s-e". '(snails '(snails-backend-buffer snails-backend-recentf) t))
-;;   :config
-;;   (global-set-key (kbd "s-e") '(lambda ()
-;;                                  (interactive)
-;;                                  (snails '(snails-backend-buffer snails-backend-recentf) t)))
-;;   )
-
 (provide 'init-completion)
