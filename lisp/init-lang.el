@@ -146,6 +146,7 @@
 ;; homepage: https://github.com/emacs-lsp/lsp-pyright
 ;; 1. 先安装nodejs
 ;; 2. npm install -g pyright
+;; 3. npm update -g pyright
 (use-package lsp-pyright
   :ensure t
   ;; :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
@@ -153,30 +154,6 @@
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))  ; or lsp-deferred
-
-;; homepage: https://github.com/manateelazycat/nox
-;; (use-package nox
-;;   :ensure nil
-;;   :load-path "~/.emacs.d/site-lisp/extensions/nox"
-;;   :defer 2
-;;   :config
-;;   (dolist (hook (list
-;;                  'js-mode-hook
-;;                  ;; 'rust-mode-hook
-;;                  'python-mode-hook
-;;                  ;; 'ruby-mode-hook
-;;                  'java-mode-hook
-;;                  ;; 'sh-mode-hook
-;;                  ;; 'php-mode-hook
-;;                  'c-mode-common-hook
-;;                  'c-mode-hook
-;;                  'c++-mode-hook
-;;                  ;; 'haskell-mode-hook
-;;                  ))
-;;     (add-hook hook '(lambda () (nox-ensure))))
-
-;;   (setq nox-python-server-dir "e:/workspace/python-language-server/output/bin/Release/")
-;;   )
 
 (use-package markdown-mode
   ;; :ensure t
