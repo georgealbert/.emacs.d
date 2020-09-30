@@ -268,6 +268,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
 
+;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv
   :defer t
   :load-path "~/.emacs.d/site-lisp/extensions/sdcv"
