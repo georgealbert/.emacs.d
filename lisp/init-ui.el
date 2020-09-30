@@ -30,17 +30,17 @@
 ;;; Scrolling
 
 ;; [2020-03-01 周日 14:44:10] 感觉3月1日编译后的emacs，移动光标时，屏幕刷新特别晃眼。先注释掉。
-;; (setq ;; hscroll-margin 2
-;;       ;; hscroll-step 1
-;;       ;; scroll-conservatively 10
-;;       ;; scroll-margin 0
-;;       ;; scroll-preserve-screen-position t
-;;       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
-;;       ;; for tall lines.
-;;       ;; auto-window-vscroll nil
-;;       ;; mouse
-;;       mouse-wheel-scroll-amount '(5 ((shift) . 2))
-;;       mouse-wheel-progressive-speed nil)  ; don't accelerate scrolling
+(setq hscroll-margin 2
+      hscroll-step 1
+      scroll-conservatively 10
+      scroll-margin 0
+      scroll-preserve-screen-position t
+      ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
+      ;; for tall lines.
+      auto-window-vscroll nil
+      ;; mouse
+      mouse-wheel-scroll-amount '(5 ((shift) . 2))
+      mouse-wheel-progressive-speed nil)  ; don't accelerate scrolling
 
 ;; Remove hscroll-margin in shells, otherwise it causes jumpiness
 ;; (setq-hook '(eshell-mode-hook term-mode-hook) hscroll-margin 0)
