@@ -185,5 +185,4 @@ they were loaded at startup."
   ;; (general-evil-setup t)
   )
 
-
 (provide 'init-core)

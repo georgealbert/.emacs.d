@@ -82,26 +82,6 @@
   ;; 让diff能识别中文目录
   (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
 
-;; (use-package dired-k
-;;   ;; :unless (featurep! +ranger)
-;;   :defer t
-;;   :hook (dired-initial-position . dired-k)
-;;   :hook (dired-after-readin . dired-k-no-revert)
-;;   :config
-;;   (defun +dired*interrupt-process (orig-fn &rest args)
-;;     "Fixes dired-k killing git processes too abruptly, leaving behind disruptive
-;;      .git/index.lock files."
-;;     (cl-letf (((symbol-function #'kill-process)
-;;                (symbol-function #'interrupt-process)))
-;;       (apply orig-fn args)))
-;;   (advice-add #'dired-k--start-git-status :around #'+dired*interrupt-process)
-
-;;   (defun +dired*dired-k-highlight (orig-fn &rest args)
-;;     "Butt out if the requested directory is remote (i.e. through tramp)."
-;;     (unless (file-remote-p default-directory)
-;;       (apply orig-fn args)))
-;;   (advice-add #'dired-k--highlight :around #'+dired*dired-k-highlight))
-
 ;; doc: Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
   :defer t
