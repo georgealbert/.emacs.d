@@ -31,6 +31,7 @@
 (dolist (package '(use-package org ;; org-crypt
                     benchmark-init
                     ;; gcmh
+                    general
                     doom-themes doom-deeper-blue-theme
                     doom-modeline ;; all-the-icons
                     ;; elec-pair
@@ -43,6 +44,8 @@
                     ;; magit
                     ;; lsp-python-ms
                     ;; lsp-mode
+                    ivy counsel swiper pinyinlib find-file-in-project
+                    ;; awesome-pair
                     ))
   (require package))
 
