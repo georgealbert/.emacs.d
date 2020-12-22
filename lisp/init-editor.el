@@ -49,6 +49,10 @@
   (define-key evil-normal-state-map "go" 'goto-char)
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
   ;; (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
+
+  ;; ivy-occur
+  ;; after counsel-ag, c-c c-o, press w to edit buffer, c-x c-s when finished, c-c c-k discard changes.
+  (evil-set-initial-state 'ivy-occur-grep-mode 'normal)
   )
 
 ;; homepage: https://github.com/redguardtoo/evil-matchit
@@ -112,7 +116,7 @@
   :ensure nil
   ;; :hook (after-init . recentf-mode)
   :defer t
-  :init (setq recentf-max-saved-items 100
+  :init (setq recentf-max-saved-items 50
               recentf-exclude
               '("\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
                 "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"

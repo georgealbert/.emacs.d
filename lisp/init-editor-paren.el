@@ -1,4 +1,4 @@
-;;; init-editor-paren.el -*- lexical-binding: t; -*-
+;;; init-editor-paren.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;;###package paren
 ;; 显示匹配的括号

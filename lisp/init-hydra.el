@@ -15,8 +15,10 @@
        ("p" diff-file-prev)
        ("n" diff-file-next)
        ("q" nil))))
+
 (defun ffip-diff-mode-hook-hydra-setup ()
   (local-set-key (kbd "C-c C-y") 'hydra-ffip-diff-group/body))
+
 (add-hook 'ffip-diff-mode-hook 'ffip-diff-mode-hook-hydra-setup)
 
 

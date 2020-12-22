@@ -2,8 +2,8 @@
 
 ;; Display available keybindings in popup
 (use-package which-key
-  :diminish
-  :bind (:map help-map ("C-h" . which-key-C-h-dispatch))
+  ;; :diminish
+  ;; :bind (:map help-map ("C-h" . which-key-C-h-dispatch))
   :hook (after-init . which-key-mode)
   ;; :config
   ;; (setq which-key-allow-imprecise-window-fit t) ; performance 开了以后显示太小了，看着不舒服
@@ -65,6 +65,7 @@
 
       "b"  '(:ignore t :which-key "buffer")
       ;; "bb" '(counsel-ibuffer :which-key "Switch buffer")
+      "bb" '(counsel-switch-buffer :which-key "Switch buffer")
       "bk" '(kill-current-buffer :which-key "Kill buffer")
       "br" '(revert-buffer :which-key "Revert buffer")
       ;; "bo" 'my-overview-of-current-buffer ;; 移动会很卡
@@ -75,8 +76,8 @@
       ;; "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
 
       "f"  '(:ignore t :which-key "file")
-      ;; "ff" '(counsel-recentf :which-key "Recent files")
-      ;; "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
+      "ff" '(counsel-recentf :which-key "Recent files")
+      "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
       ;; "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
       ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
       "fp" '(find-file-in-project :which-key "ff in project")
