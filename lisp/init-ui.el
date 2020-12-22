@@ -208,8 +208,37 @@
 (if (display-graphic-p)
     (albert-adjust-font))
 
+;; [2020-11-25 Wed 18:40:26] macos
+;; (if (eq system-type 'darwin)
+;;     ;; on 1920x1080
+;;     ;; (set-face-attribute 'default nil :font "Ubuntu Mono 22"))
+;;     ;; (set-face-attribute 'default nil :font "Monaco 18"))
+;;     (set-face-attribute 'default nil :font "等距更纱黑体 T SC 20"))
+
+(defun albert-macos-notebook-font()
+  "Config font on HP zhan66 on macos with 1920x1080."
+  (interactive)
+  (if (eq system-type 'darwin)
+      (progn
+        (set-face-attribute 'default nil :font "Ubuntu Mono 22")
+
+        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "等距更纱黑体 T SC"))))))
+
+;; macos的字体配置
+(if (eq system-type 'darwin)
+    (albert-macos-notebook-font)
+  ;; disable anti-aliases
+  ;; https://stackoverflow.com/questions/1279906/turn-off-anti-alias-for-font-in-emacs-23
+  ;; (setq-default mac-allow-anti-aliasing nil)
+  )
+
 ;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(if (eq system-type 'windows-nt)
+(if (or (eq system-type 'windows-nt) (eq system-type 'darwin))
     (toggle-frame-maximized))
 
 (use-package winum
