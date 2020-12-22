@@ -2,22 +2,25 @@
 
 (use-package helm
   :diminish
+  :disabled t
   :config
   (helm-mode +1)
   :init
     ;; From https://gist.github.com/antifuchs/9238468
-    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+    (setq helm-idle-delay 2.0 ; update fast sources immediately (doesn't). 0.0 -> 2.0
           ;;
-          helm-candidate-number-limit 100
+          helm-candidate-number-limit 50
           ;; this actually updates things reeeelatively quickly.
-          helm-input-idle-delay 0.01
+          ;; 0.01 -> 0.1
+          ;; helm-input-idle-delay 0.1
           ;; Remove extraineous helm UI elements
           helm-display-header-line nil
           ;; Default helm window sizes, 太小了，看着不舒服，不设为nil了。
           ;; helm-display-buffer-default-width nil
           ;; helm-display-buffer-default-height 0.25
           helm-yas-display-key-on-candidate t
-          helm-quick-update t
+          ;; cpu usage is high [2020-12-09 Wed 21:20:42]
+          ;; helm-quick-update t
           helm-M-x-requires-pattern nil
           helm-ff-skip-boring-files t
           helm-ff-file-name-history-use-recentf t
@@ -27,7 +30,7 @@
   :bind (("C-c n" . helm-mini)
          ;; ("C-x b" . helm-buffers-list)
          ("M-y" . helm-show-kill-ring)
-         ;; ("M-x" . helm-M-x)
+         ("M-x" . helm-M-x)
          ("C-x C-f" . helm-find-files)
          ("C-h a" . helm-apropos)
          ("C-c b" . helm-bookmarks)
@@ -45,6 +48,7 @@
 (ido-mode -1)
 
 (use-package helm-swoop
+  :disabled t
   :bind (("M-i" . helm-swoop)
          ("M-I" . helm-swoop-back-to-last-point)
          ("C-c M-i" . helm-multi-swoop)
@@ -63,6 +67,7 @@
 ;; desc: 用ag搜索当前目录或者project root
 ;; homepage: https://github.com/syohex/emacs-helm-ag
 (use-package helm-ag
+  :disabled t
   :bind
   (("s-f" . helm-ag)
    ("s-r" . helm-ag-project-root)))
@@ -71,10 +76,13 @@
 ;; https://github.com/DarwinAwardWinner/amx/issues/23
 (use-package amx
   :ensure nil
+  :defer t
+  ;; :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
   :bind ("M-x" . amx)
   :init
   (setq amx-history-length 30)
-  (setq amx-backend 'helm))
+  ;; (setq amx-backend 'helm)
+  )
 
 (provide 'init-completion)

@@ -73,7 +73,7 @@
   ;; require this.
   (require 'counsel nil t)
 
-  (setq ivy-height 11
+  (setq ivy-height 15 ;; 11 -> 15
         ;; 不循环，否则不知道是否到底了。
         ;; ivy-wrap t
         ivy-count-format "(%d/%d) "
@@ -97,6 +97,7 @@
   ;;      :zw !by
   ;; homepage: https://github.com/cute-jumper/pinyinlib.el
   (use-package pinyinlib
+    :defer 2
     :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
 
   (setq ivy-re-builders-alist '(
@@ -109,7 +110,9 @@
   )
 
 (use-package ivy-rich
-  :defer t
+  ;; :defer t
+  ;; :hook
+  ;; (ivy-mode . ivy-rich-mode)
   :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
@@ -127,6 +130,13 @@
   (setq ivy-rich-path-style 'full)
   (ivy-rich-mode +1))
 
+;; (use-package ivy-rich
+;;   :hook
+;;   (ivy-mode . ivy-rich-mode)
+;;   (ivy-rich-mode . (lambda ()
+;;                      (setq ivy-virtual-abbreviate
+;;                            (or (and ivy-rich-mode 'abbreviate) 'name)))))
+
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
 If N is not nil, only list directories in current project."
@@ -143,11 +153,42 @@ If N is not nil, only list directories in current project."
       (setq cands (delq nil (mapcar (lambda (f) (path-in-directory-p f root-dir)) cands))))
     (ivy-read "directories:" cands :action 'dired)))
 
+(defun counsel-ag-current-dir ()
+  "Runs `counsel-ag' against the current buffer's directory."
+  (interactive)
+  (let (my-current-dir (file-name-directory (buffer-file-name)))
+    ;; (if (eq nil my-current-dir)
+    (if (stringp my-current-dir)
+        (counsel-ag "" (file-name-directory (buffer-file-name)))
+      (counsel-ag "" default-directory)
+      )))
+
+(defun counsel-ag--project-root ()
+  "Not documented."
+  (cl-loop for dir in '(".git/" ".git")
+           when (locate-dominating-file default-directory dir)
+           return it))
+
+;;;###autoload
+(defun counsel-ag-project-root (&optional query)
+  "Not documented, QUERY."
+  (interactive)
+  (let ((rootdir (counsel-ag--project-root)))
+    (unless rootdir
+      (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
+    (counsel-ag "" rootdir)))
+
 (use-package counsel
   ;; :defer t
   ;; :after ivy-rich ivy
   ;; :after ivy
-  :bind (("s-z" . counsel-M-x))
+  :bind (
+         ;; ("s-z" . counsel-M-x)
+         ("M-x" . counsel-M-x)
+         ("C-c n" . counsel-buffer-or-recentf)
+         ("s-r" . counsel-ag-project-root)
+         ("s-f" . counsel-ag-current-dir)
+         ("C-x C-f" . counsel-find-file))
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
 
@@ -171,5 +212,7 @@ If N is not nil, only list directories in current project."
      (t               . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
+
+
 
 (provide 'init-ivy)
