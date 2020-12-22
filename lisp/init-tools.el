@@ -155,19 +155,20 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 ;; (flycheck-mode 1)
                 (ggtags-mode 1)))))
 
-;; (use-package undo-tree
-;;   :ensure t
-;;   :defer t
-;;   ;; :diminish undo-tree-mode
-;;   :diminish
-;;   :config
-;;   (progn
-;;     (global-undo-tree-mode)
-;;     (setq undo-tree-visualizer-timestamps t)
-;;     (setq undo-tree-visualizer-diff t)))
+(use-package undo-tree
+  :ensure t
+  :defer 1
+  ;; :diminish undo-tree-mode
+  :diminish
+  :config
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
 
 (use-package aweshell
   :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
+  :disabled t
   :bind (("s-n" . aweshell-new)
          ("s-h" . aweshell-toggle)
          ("s-x s-x" . aweshell-dedicated-toggle)))
@@ -268,9 +269,27 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
 
+;; [2020-12-02 三 16:38:53] 折腾了半天，也改了代码，发现不稳定，一切换到rime，输入字符，就把emacs卡死了，还是
+;; 用外部输入法切换吧，比较稳定。舒服了
+(if (eq system-type 'darwin)
+    (progn
+      (defun emacs-ime-disable ()
+        (start-process "set-input-source" nil "/usr/local/bin/macism" "com.apple.keylayout.ABC"))
+      ;; (mac-select-input-source "com.apple.keylayout.ABC"))
+
+      (defun emacs-ime-enable ()
+        (start-process "set-input-source" nil "/usr/local/bin/macism" "im.rime.inputmethod.Squirrel.Rime"))
+      ;; (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime"))
+
+      (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+      (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
+      ))
+
+
 ;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv
   :defer t
+  :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/sdcv"
   :bind (("s-t p" . sdcv-search-pointer)  ;; 光标处的单词, buffer显示
          ("s-t t" . sdcv-search-pointer+) ;; 光标处的单词, frame显示
@@ -293,6 +312,45 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (setq sdcv-tooltip-timeout 0)
 
   ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
+  )
+
+;; [2020-11-23 Mon 00:00:33]
+(use-package exec-path-from-shell
+  :if (memq window-system '(ns mac))
+  :ensure t
+  :config
+  ;; (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
+
+(use-package sis
+  ;; :hook
+  ;; enable the /follow context/ and /inline region/ mode for specific buffers
+  ;; (((text-mode prog-mode) . sis-context-mode)
+  ;;  ((text-mode prog-mode) . sis-inline-mode))
+
+  :disabled t
+  :config
+  ;; For MacOS
+  (sis-ism-lazyman-config
+  
+   ;; English input source may be: "ABC", "US" or another one.
+   ;; "com.apple.keylayout.ABC"
+   "com.apple.keylayout.US"
+   ;; "im.rime.inputmethod.Squirrel.Rime"
+
+   ;; Other language input source: "rime", "sogou" or another one.
+   "im.rime.inputmethod.Squirrel.Rime"
+   ;;"com.sogou.inputmethod.sogou.pinyin"
+   )
+
+  ;; enable the /cursor color/ mode
+  (sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  (sis-global-inline-mode t)
   )
 
 (provide 'init-tools)
