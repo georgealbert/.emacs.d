@@ -4,7 +4,7 @@
 (if (eq system-type 'gnu/linux)
   (global-set-key [?\C-c ?\C-_] 'comment-or-uncomment-region))
 
-(when (or IS-WINDOWS (eq window-system 'x))
+(when (or IS-WINDOWS (eq window-system 'x) (eq system-type 'darwin))
   (global-set-key [?\C-c ?\C-/] 'comment-or-uncomment-region))
 
 (defun my-comment-or-uncomment-region (beg end &optional arg)  
