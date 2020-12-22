@@ -2,23 +2,24 @@
 
 ;; 4.2 Org-Mode Setup
 
-(if (< emacs-major-version 28)
-  (defvar org-modules
-    '(;; org-w3m
-      ;; org-bbdb
-      ;; org-bibtex
-      ;; org-docview
-      ;; org-gnus
-      ;; org-info
-      ;; org-irc
-      ;; org-mhe
-      ;; org-rmail
-      )))
+;; (if (< emacs-major-version 28)
+;;   (defvar org-modules
+;;     '(;; org-w3m
+;;       ;; org-bbdb
+;;       ;; org-bibtex
+;;       ;; org-docview
+;;       ;; org-gnus
+;;       ;; org-info
+;;       ;; org-irc
+;;       ;; org-mhe
+;;       ;; org-rmail
+;;       )))
     
 ;; emacs 28 comes with org version 9.3
 ;; org-mode的<s <Tab> 补全不正常。
 ;; https://orgmode.org/Changes.html
-(when (> emacs-major-version 27)
+(when (>= emacs-major-version 27)
+;; (when (equal org-version "9.3")
   (defvar org-modules
     '(org-tempo
       )))
@@ -1094,10 +1095,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
   '(
     ;; 把各部分的配置文件写到这里面来
     ("blog-notes"
-      :base-directory "~/org/notes"
+      :base-directory "/Volumes/Win10/home/albert/org/notes"
       :base-extension "org"
       ;:publishing-directory "~/org/public_html/"
-      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :publishing-directory "~/workspace/georgealbert.github.io/"
       :recursive t
       :publishing-function org-html-publish-to-html
       :headline-levels 4             ; Just the default for this project.
@@ -1120,10 +1121,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
       ;:html-link-home "https://www.albertzhou.net"
       )
     ("blog-static"
-      :base-directory "~/org/notes"
+      :base-directory "/Volumes/Win10/home/albert/org/notes"
       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
       ;:publishing-directory "~/org/public_html/"
-      :publishing-directory "e:/workspace/georgealbert.github.io/"
+      :publishing-directory "~/workspace/georgealbert.github.io/"
       :recursive t
       :publishing-function org-publish-attachment
       )
