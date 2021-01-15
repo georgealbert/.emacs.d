@@ -106,8 +106,7 @@
                                 ))
   ;; (setq ivy-mode-map nil)
   ;; enable ivy-mode后会把C-x b改为ivy-switch-buffer，非常不好。
-  ;; (ivy-mode +1)
-  )
+  (ivy-mode +1))
 
 (use-package ivy-rich
   ;; :defer t
