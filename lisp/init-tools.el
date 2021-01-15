@@ -289,30 +289,41 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv
   :defer t
-  :disabled t
+  ;; :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/sdcv"
   :bind (("s-t p" . sdcv-search-pointer)  ;; 光标处的单词, buffer显示
          ("s-t t" . sdcv-search-pointer+) ;; 光标处的单词, frame显示
          ("s-t i" . sdcv-search-input)    ;; 输入的单词, buffer显示
          ("s-t ;" . sdcv-search-input+))
-  :config
-  (setq sdcv-program "E:\\emacs\\bin\\sdcv.exe")
+  :init
+  ;; fix non-prefix "s-t" key error.
+  (define-key global-map (kbd "s-t") (make-sparse-keymap))
+  ;; (global-set-key (kbd "s-t p") 'sdcv-search-pointer)
+  ;; (global-set-key (kbd "s-t t") 'sdcv-search-pointer+)
+  ;; (global-set-key (kbd "s-t i") 'sdcv-search-input)
+  ;; (global-set-key (kbd "s-t ;") 'sdcv-search-input+)
 
-  (setq sdcv-dictionary-data-dir "e:\\home\\albert\\stardict")   ;; set local sdcv dict to search word
+  :config
+  (when IS-WINDOWS
+    (progn
+      (setq sdcv-program "D:\\emacs\\bin\\sdcv.exe")
+      ;; set local sdcv dict to search word
+      (setq sdcv-dictionary-data-dir "c:\\home\\albert\\stardict")))
+
+  (when (eq system-type 'darwin)
+    (progn
+      ;; (bind-key* "s-t" sdcv-search-pointer+)
+      (setq sdcv-dictionary-data-dir "/Volumes/Win10/home/albert/stardict")))
 
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
-        '(
+        '(;; "懒虫简明汉英词典"
+          ;; "KDic11万英汉词典"
           "牛津现代英汉双解词典"
           "朗道英汉字典5.0"
-          "懒虫简明英汉词典"
-          ;; "懒虫简明汉英词典"
-          ;; "KDic11万英汉词典"
-          ))
-
-  (setq sdcv-tooltip-timeout 0)
+          "懒虫简明英汉词典"))
 
   ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
-  )
+  (setq sdcv-tooltip-timeout 0))
 
 ;; [2020-11-23 Mon 00:00:33]
 (use-package exec-path-from-shell
