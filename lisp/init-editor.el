@@ -71,7 +71,7 @@
 (use-package ediff
   :ensure nil
   :hook(;; show org ediffs unfolded
-        (ediff-prepare-buffer . outline-show-all)
+        ;; (ediff-prepare-buffer . outline-show-all)
         ;; restore window layout when done
         (ediff-quit . winner-undo))
   :config
@@ -84,7 +84,27 @@
   (setq-default ediff-forward-word-function 'forward-char)
 
   ;; 让diff能识别中文目录
-  (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
+
+  (when IS-WINDOWS
+    (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
+
+  ;; https://oremacs.com/2015/01/17/setting-up-ediff/
+  ;; https://github.com/abo-abo/oremacs/blob/github/modes/ora-ediff.el
+  (defun ora-ediff-jk ()
+    (define-key ediff-mode-map "j" 'ediff-next-difference)
+    (define-key ediff-mode-map "k" 'ediff-previous-difference))
+
+  (add-hook 'ediff-keymap-setup-hook #'ora-ediff-jk)
+
+  (defun ora-ediff-prepare-buffer ()
+    (when (memq major-mode '(org-mode emacs-lisp-mode))
+      (outline-show-all))
+    ;; (when (> (max-line-width) 150)
+    ;;   (visual-line-mode))
+    )
+
+  (add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
+  )
 
 ;; doc: Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
