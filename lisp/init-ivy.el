@@ -162,17 +162,18 @@ If N is not nil, only list directories in current project."
       (counsel-ag "" default-directory)
       )))
 
-(defun counsel-ag--project-root ()
-  "Not documented."
-  (cl-loop for dir in '(".git/" ".git")
-           when (locate-dominating-file default-directory dir)
-           return it))
+;; (defun counsel-ag--project-root ()
+;;   "Not documented."
+;;   (cl-loop for dir in '(".git/" ".git")
+;;            when (locate-dominating-file default-directory dir)
+;;            return it))
 
 ;;;###autoload
 (defun counsel-ag-project-root (&optional query)
   "Not documented, QUERY."
   (interactive)
-  (let ((rootdir (counsel-ag--project-root)))
+  ;; (let ((rootdir (counsel-ag--project-root)))
+  (let ((rootdir (counsel--git-root)))
     (unless rootdir
       (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
     (counsel-ag "" rootdir)))
@@ -211,7 +212,5 @@ If N is not nil, only list directories in current project."
      (t               . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
-
-
 
 (provide 'init-ivy)
