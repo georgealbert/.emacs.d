@@ -1081,6 +1081,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
       ;; (setq org-crypt-key nil)
       ;; keyid可以用key的username/email or pub的指纹的后8个字符
       (setq org-crypt-key "georgealbert@qq.com")
+
+      ;; [2021-07-12 Mon 09:23:25] 解决macos中gpg不提示输入密码问题
+      ;; https://qastack.cn/emacs/27841/unable-to-decrypt-gpg-file-using-emacs-but-command-line-gpg-works
+      (setf epa-pinentry-mode 'loopback)
     ))
 
 ;; (setq org-crypt-disable-auto-save nil)
@@ -1095,7 +1099,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   '(
     ;; 把各部分的配置文件写到这里面来
     ("blog-notes"
-      :base-directory "/Volumes/Win10/home/albert/org/notes"
+      :base-directory "~/org/notes"
       :base-extension "org"
       ;:publishing-directory "~/org/public_html/"
       :publishing-directory "~/workspace/georgealbert.github.io/"
