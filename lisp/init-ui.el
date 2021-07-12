@@ -220,14 +220,17 @@
   (interactive)
   (if (eq system-type 'darwin)
       (progn
-        (set-face-attribute 'default nil :font "Ubuntu Mono 22")
+        (set-face-attribute 'default nil :font "Ubuntu Mono 20")
+        ;; (set-face-attribute 'default nil :font "Spot Mono 18")
+        ;; (set-face-attribute 'default nil :font "Ubuntu Mono 18")
 
-        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+        ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
-        (dolist (charset '(kana han symbol cjk-misc bopomofo))
-          (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            (font-spec :family "等距更纱黑体 T SC"))))))
+        ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
+        ;;   (set-fontset-font (frame-parameter nil 'font)
+        ;;                     charset
+        ;;                     (font-spec :family "等距更纱黑体 T SC")))
+        )))
 
 ;; macos的字体配置
 (if (eq system-type 'darwin)
