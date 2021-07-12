@@ -15,12 +15,14 @@
   :defer t
   ;; :hook (prog-mode . lsp)
   :hook (python-mode . lsp-deferred)
-        ;; (go-mode . lsp-deferred)
+  ;; (go-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
+  ;; :custom
+  ;; (lsp-headerline-breadcrumb-enable nil)
   :init
   (setq lsp-auto-guess-root nil)       ; Detect project root 貌似设置为t后，go总是找不到对应的package
-  ; Auto-kill LSP server
+                                        ; Auto-kill LSP server
   (setq lsp-keep-workspace-alive nil)
   ;; disable Yasnippet
   (setq lsp-enable-snippet nil)
@@ -55,6 +57,12 @@
                 lsp-on-touch-time) 30) ;; 30 seconds
       (setq lsp-on-touch-time (float-time (current-time)))
       ad-do-it))
+
+  ;; (setq lsp-headerline-breadcrumb-enable nil)
+  ;; (setq lsp-headerline-breadcrumb-mode nil)
+  ;; (add-hook 'lsp-mode-hook (lambda ()
+  ;;                            ((lsp-headerline-breadcrumb-mode nil))
+  ;;                            ))
 )
 
 (use-package lsp-ui
@@ -143,4 +151,10 @@
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))  ; or lsp-deferred
+
+(use-package pyvenv
+  :ensure t
+  :init
+  (setenv "WORKON_HOME" "~/.pyenv/versions"))
+
 (provide 'init-lsp)

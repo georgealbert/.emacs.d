@@ -188,7 +188,8 @@ If N is not nil, only list directories in current project."
          ("C-c n" . counsel-buffer-or-recentf)
          ("s-r" . counsel-ag-project-root)
          ("s-f" . counsel-ag-current-dir)
-         ("C-x C-f" . counsel-find-file))
+         ("C-x C-f" . counsel-find-file)
+  )
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
 
