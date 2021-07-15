@@ -76,14 +76,6 @@
   ;; Configure LSP clients
 )
 
-;; (use-package lsp-clients
-;;   :defer t
-;;   :ensure nil
-;;   )
-
-    ;; :init
-    ;; (setq lsp-clients-python-library-directories '("/usr/local/" "/usr/"))))
-
 (use-package lsp-ui
   :defer t
   :custom-face
