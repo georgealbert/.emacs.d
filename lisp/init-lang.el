@@ -125,24 +125,6 @@
   :bind (:map lsp-mode-map
   ("M-9" . lsp-treemacs-errors-list)))
 
-(use-package lsp-python-ms
-  ;; :ensure nil
-  ;; :defer t
-  :disabled t
-  :demand
-  :after lsp-mode
-  :hook (python-mode . lsp)
-  :config
-  ;; :init
-  ;; for ali rds
-  ;; (setq lsp-python-ms-extra-paths "E:/CU/ali/3.5.2/RDS/usr/local/rds/agent-node-mysql/0.0.13/lib/python2.7")
-  ;; for dev build of language server
-  (setq lsp-python-ms-dir
-        (expand-file-name "e:/workspace/python-language-server/output/bin/Release/"))
-  ;; for executable of language server, if it's not symlinked on your PATH
-  (setq lsp-python-ms-executable
-        "e:/workspace/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.exe"))
-
 ;; homepage: https://github.com/emacs-lsp/lsp-pyright
 ;; 1. 先安装nodejs
 ;; 2. npm install -g pyright
