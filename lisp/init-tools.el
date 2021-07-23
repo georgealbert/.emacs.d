@@ -313,7 +313,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (when (eq system-type 'darwin)
     (progn
       ;; (bind-key* "s-t" sdcv-search-pointer+)
-      (setq sdcv-dictionary-data-dir "/Volumes/Win10/home/albert/stardict")))
+      ;; (setq sdcv-dictionary-data-dir "/Volumes/Win10/home/albert/stardict")))
+      (setq sdcv-dictionary-data-dir "/Users/albert/stardict")))
 
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
         '(;; "懒虫简明汉英词典"
