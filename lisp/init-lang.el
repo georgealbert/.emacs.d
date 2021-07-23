@@ -257,8 +257,16 @@
   :defer t
   :init (global-paren-face-mode 1))
 
+;; homepage: https://web-mode.org/
 (use-package web-mode
   :ensure t
-  :defer t)
+  :defer t
+  :mode (("\\.html" . web-mode)
+         ("\\.htm" . web-mode))
+  :config
+  ;; [2021-07-16 Fri 11:10:54]
+  ;; d/ -> <div></div>
+  ;; s/ -> <span></span>
+  (setq web-mode-enable-auto-expanding t))
 
 (provide 'init-lang)
