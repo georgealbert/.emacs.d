@@ -216,7 +216,7 @@
 ;;     (set-face-attribute 'default nil :font "等距更纱黑体 T SC 20"))
 
 (defun albert-macos-notebook-font()
-  "Config font on HP zhan66 on macos with 1920x1080."
+  "macbook air on 1680x1050."
   (interactive)
   (if (eq system-type 'darwin)
       (progn
