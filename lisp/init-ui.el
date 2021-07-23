@@ -224,12 +224,12 @@
         ;; (set-face-attribute 'default nil :font "Spot Mono 18")
         ;; (set-face-attribute 'default nil :font "Ubuntu Mono 18")
 
-        ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
-        ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-        ;;   (set-fontset-font (frame-parameter nil 'font)
-        ;;                     charset
-        ;;                     (font-spec :family "等距更纱黑体 T SC")))
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "等距更纱黑体 T SC")))
         )))
 
 ;; macos的字体配置
@@ -248,18 +248,23 @@
   :hook (after-init . winum-mode)
   :init
   (setq winum-keymap
-        (let ((map (make-sparse-keymap)))
-          ;; (define-key map (kbd "C-`") 'winum-select-window-by-number)
-          ;; (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-          (define-key map (kbd "M-1") 'winum-select-window-1)
-          (define-key map (kbd "M-2") 'winum-select-window-2)
-          (define-key map (kbd "M-3") 'winum-select-window-3)
-          (define-key map (kbd "M-4") 'winum-select-window-4)
-          (define-key map (kbd "M-5") 'winum-select-window-5)
-          ;; (define-key map (kbd "M-6") 'winum-select-window-6)
-          ;; (define-key map (kbd "M-7") 'winum-select-window-7)
-          ;; (define-key map (kbd "M-8") 'winum-select-window-8)
-          map)))
+        (if IS-WINDOWS
+            (let ((map (make-sparse-keymap)))
+              ;; (define-key map (kbd "C-`") 'winum-select-window-by-number)
+              ;; (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+              (define-key map (kbd "M-1") 'winum-select-window-1)
+              (define-key map (kbd "M-2") 'winum-select-window-2)
+              (define-key map (kbd "M-3") 'winum-select-window-3)
+              (define-key map (kbd "M-4") 'winum-select-window-4)
+              (define-key map (kbd "M-5") 'winum-select-window-5)
+              map)
+          (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "s-1") 'winum-select-window-1)
+            (define-key map (kbd "s-2") 'winum-select-window-2)
+            (define-key map (kbd "s-3") 'winum-select-window-3)
+            (define-key map (kbd "s-4") 'winum-select-window-4)
+            (define-key map (kbd "s-5") 'winum-select-window-5)
+            map))))
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
 ;; Restore old window configurations
