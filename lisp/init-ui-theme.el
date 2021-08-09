@@ -33,6 +33,7 @@
 ;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
   ;; 使用native-comp的undo-tree和doom-modeline时，在undo-tree必须在doom-modeline之前启动，否则advice-add undo-tree-undo-1时有问题
+  ;; :disabled t
   ;; :after undo-tree
   :init
   (unless after-init-time
@@ -50,24 +51,22 @@
   (setq doom-modeline-minor-modes nil)
   
   (setq doom-modeline-lsp nil)
-  
   (setq doom-modeline-mu4e nil)
   (setq doom-modeline-github nil)
   (setq doom-modeline-persp-name nil)
   (setq doom-modeline-irc nil)
-  
-  ;; 2019.11.06修改为图标的了，不好看
-  (setq doom-modeline-evil-state-icon nil)
   
   ;; 2019.11.22又改成下面这个变量了
   (setq doom-modeline-modal-icon nil)
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
   (setq doom-modeline-persp-name nil)
-  :config
 
+  (setq doom-modeline-buffer-file-name-style 'file-name)
+  :config
   (setq display-time-day-and-date t)
-  (setq display-time-format "%Y-%m-%d %a %H:%M")
+  ;; (setq display-time-format "%Y-%m-%d %a %H:%M")
+  (setq display-time-format "%-m月%-d日 %a %H:%M")
   (setq display-time-default-load-average nil)
   
   ;; 在modeline显示时间
