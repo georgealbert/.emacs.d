@@ -162,6 +162,16 @@ If N is not nil, only list directories in current project."
       (counsel-ag "" default-directory)
       )))
 
+(defun counsel-rg-current-dir ()
+  "Runs `counsel-rg' against the current buffer's directory."
+  (interactive)
+  (let (my-current-dir (file-name-directory (buffer-file-name)))
+    ;; (if (eq nil my-current-dir)
+    (if (stringp my-current-dir)
+        (counsel-rg "" (file-name-directory (buffer-file-name)))
+      (counsel-rg "" default-directory)
+      )))
+
 ;; (defun counsel-ag--project-root ()
 ;;   "Not documented."
 ;;   (cl-loop for dir in '(".git/" ".git")
@@ -178,6 +188,15 @@ If N is not nil, only list directories in current project."
       (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
     (counsel-ag "" rootdir)))
 
+(defun counsel-rg-project-root (&optional query)
+  "Not documented, QUERY."
+  (interactive)
+  ;; (let ((rootdir (counsel-ag--project-root)))
+  (let ((rootdir (counsel--git-root)))
+    (unless rootdir
+      (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
+    (counsel-rg "" rootdir)))
+
 (use-package counsel
   ;; :defer t
   ;; :after ivy-rich ivy
@@ -186,8 +205,10 @@ If N is not nil, only list directories in current project."
          ;; ("s-z" . counsel-M-x)
          ("M-x" . counsel-M-x)
          ("C-c n" . counsel-buffer-or-recentf)
-         ("s-r" . counsel-ag-project-root)
-         ("s-f" . counsel-ag-current-dir)
+         ("s-r" . counsel-rg-project-root)
+         ;; ("s-r" . counsel-ag-project-root)
+         ("s-f" . counsel-rg-current-dir)
+         ;; ("s-f" . counsel-ag-current-dir)
          ("C-x C-f" . counsel-find-file)
   )
   :init
