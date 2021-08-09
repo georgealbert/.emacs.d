@@ -1055,6 +1055,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; Use sticky agenda's so they persist
 (setq org-agenda-sticky t)
 
+;; v9.4.4 changed org-startup-folded from t to showeverything
+(setq org-startup-folded t)
+
 (setq org-startup-indented t)
 
 (setq org-log-done (quote time))
