@@ -38,8 +38,13 @@ advised)."
 ;; doom-emacs/core/core.el
 (defconst EMACS27+   (> emacs-major-version 26))
 (defconst EMACS28+   (> emacs-major-version 27))
+(defconst IS-MAC     (eq system-type 'darwin))
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
+;; Contrary to what many Emacs users have in their configs, you don't need more
+;; than this to make UTF-8 the default coding system:
+(set-language-environment "UTF-8")
 
 (defvar doom-interactive-mode (not noninteractive)
   "If non-nil, Emacs is in interactive mode.")
@@ -77,6 +82,10 @@ they were loaded at startup."
 ;;
 ;;; Optimizations
 
+;; A second, case-insensitive pass over `auto-mode-alist' is time wasted, and
+;; indicates misconfiguration (don't rely on case insensitivity for file names).
+(setq auto-mode-case-fold nil)
+
 ;; Disable bidirectional text rendering for a modest performance boost. Of
 ;; course, this renders Emacs unable to detect/display right-to-left languages
 ;; (sorry!), but for us left-to-right language speakers/writers, it's a boon.
@@ -109,11 +118,19 @@ they were loaded at startup."
   ;; Font compacting can be terribly expensive, especially for rendering icon
   ;; fonts on Windows. Whether it has a noteable affect on Linux and Mac hasn't
   ;; been determined.
-  (setq inhibit-compacting-font-caches t))
+  (setq inhibit-compacting-font-caches t)
+  ; faster IPC
+  (setq w32-pipe-read-delay 0)
+  ; read more at a time (was 4K)
+  (setq w32-pipe-buffer-size (* 64 1024)))
+
+;; Introduced in Emacs HEAD (b2f8c9f), this inhibits fontification while
+;; receiving input, which should help a little with scrolling performance.
+(setq redisplay-skip-fontification-on-input t)
   
 ;; Remove command line options that aren't relevant to our current OS; means
 ;; slightly less to process at startup.
-;; (unless IS-MAC   (setq command-line-ns-option-alist nil))
+(unless IS-MAC   (setq command-line-ns-option-alist nil))
 (unless IS-LINUX (setq command-line-x-option-alist nil))
   
 ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
@@ -124,6 +141,13 @@ they were loaded at startup."
     (setq gcmh-idle-delay 10
           gcmh-verbose nil)
     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
+
+;; The GC introduces annoying pauses and stuttering into our Emacs experience,
+;; so we use `gcmh' to stave off the GC while we're using Emacs, and provoke it
+;; when it's idle.
+;; (setq gcmh-idle-delay 5  ; default is 15s
+;;       gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+;;       gcmh-verbose t)
     
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
