@@ -30,6 +30,9 @@
 	;; evil-insert-state-cursor 'bar
 	;; 不习惯空心的光标
 	;; evil-visual-state-cursor 'hollow
+
+    evil-undo-system
+        (cond (EMACS28+ 'undo-redo))
 	)
 
   :config 

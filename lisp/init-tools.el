@@ -157,6 +157,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 
 (use-package undo-tree
   :ensure t
+  :disabled t
   :defer 1
   ;; :diminish undo-tree-mode
   :diminish
@@ -274,12 +275,12 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 (if (eq system-type 'darwin)
     (progn
       (defun emacs-ime-disable ()
-        (start-process "set-input-source" nil "/usr/local/bin/macism" "com.apple.keylayout.ABC"))
-      ;; (mac-select-input-source "com.apple.keylayout.ABC"))
+        ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "com.apple.keylayout.ABC"))
+      (mac-select-input-source "com.apple.keylayout.ABC"))
 
       (defun emacs-ime-enable ()
-        (start-process "set-input-source" nil "/usr/local/bin/macism" "im.rime.inputmethod.Squirrel.Rime"))
-      ;; (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime"))
+        ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "im.rime.inputmethod.Squirrel.Rime"))
+      (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime"))
 
       (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
