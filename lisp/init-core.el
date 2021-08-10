@@ -109,45 +109,57 @@ they were loaded at startup."
 ;; Don't ping things that look like domain names.
 (setq ffap-machine-p-known 'reject)
 
+;; Font compacting can be terribly expensive, especially for rendering icon
+;; fonts on Windows. Whether disabling it has a notable affect on Linux and Mac
+;; hasn't been determined, but do it there anyway, just in case. This increases
+;; memory usage, however!
+(setq inhibit-compacting-font-caches t)
+
+;; [2020-02-03 周一 22:22:16]
+;; emacs 字符串连接对数据越大越慢，lsp的completion一次接收大量的数据需要进行字符串连接，
+;; emacs的process-filter 一次默认只传输4096个字节，如果数据量
+;; 过大就要对数据合并之后再进行json decode 这就会慢到爆炸。
+;; 从emacs27开始，可以修改read-process-output-max
+;; 
+;; Increase how much is read from processes in a single chunk (default is 4kb).
+;; This is further increased elsewhere, where needed (like our LSP module).
+(setq read-process-output-max (* 1024 1024))
+
+;; Introduced in Emacs HEAD (b2f8c9f), this inhibits fontification while
+;; receiving input, which should help a little with scrolling performance.
+(setq redisplay-skip-fontification-on-input t)
+
 ;; Performance on Windows is considerably worse than elsewhere, especially if
 ;; WSL is involved. We'll need everything we can get.
 (when IS-WINDOWS
   ;; Reduce the workload when doing file IO
   (setq w32-get-true-file-attributes nil)
-
-  ;; Font compacting can be terribly expensive, especially for rendering icon
-  ;; fonts on Windows. Whether it has a noteable affect on Linux and Mac hasn't
-  ;; been determined.
-  (setq inhibit-compacting-font-caches t)
   ; faster IPC
   (setq w32-pipe-read-delay 0)
   ; read more at a time (was 4K)
   (setq w32-pipe-buffer-size (* 64 1024)))
 
-;; Introduced in Emacs HEAD (b2f8c9f), this inhibits fontification while
-;; receiving input, which should help a little with scrolling performance.
-(setq redisplay-skip-fontification-on-input t)
-  
 ;; Remove command line options that aren't relevant to our current OS; means
 ;; slightly less to process at startup.
 (unless IS-MAC   (setq command-line-ns-option-alist nil))
 (unless IS-LINUX (setq command-line-x-option-alist nil))
   
-;; Adopt a sneaky garbage collection strategy of waiting until idle time to
-;; collect; staving off the collector while the user is working.
-(when doom-interactive-mode
-  (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
-  (with-eval-after-load 'gcmh
-    (setq gcmh-idle-delay 10
-          gcmh-verbose nil)
-    (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
+;; ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
+;; ;; collect; staving off the collector while the user is working.
+;; (when doom-interactive-mode
+;;   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
+;;   (with-eval-after-load 'gcmh
+;;     (setq gcmh-idle-delay 2
+;;           gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+;;           gcmh-verbose nil)
+;;     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
 
 ;; The GC introduces annoying pauses and stuttering into our Emacs experience,
 ;; so we use `gcmh' to stave off the GC while we're using Emacs, and provoke it
 ;; when it's idle.
-;; (setq gcmh-idle-delay 5  ; default is 15s
-;;       gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-;;       gcmh-verbose t)
+(setq gcmh-idle-delay 2  ; default is 15s
+      gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+      gcmh-verbose nil)
     
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
@@ -198,6 +210,9 @@ they were loaded at startup."
 
 (use-package gcmh
   :diminish
+  :defer 10
+  :config
+  (gcmh-mode +1)
   )
 
 (use-package general
