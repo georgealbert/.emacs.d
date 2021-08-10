@@ -1,12 +1,5 @@
 ;;; init-core.el -*- lexical-binding: t; -*-
 
-;; [2020-02-03 周一 22:22:16]
-;; emacs 字符串连接对数据越大越慢，lsp的completion一次接收大量的数据需要进行字符串连接，
-;; emacs的process-filter 一次默认只传输4096个字节，如果数据量
-;; 过大就要对数据合并之后再进行json decode 这就会慢到爆炸。
-;; 从emacs27开始，可以修改read-process-output-max
-(setq read-process-output-max (* 1024 1024))
-
 ;; ;; Emacs client for the Language Server Protocol
 ;; https://github.com/emacs-lsp/lsp-mode#supported-languages
 (use-package lsp-mode
