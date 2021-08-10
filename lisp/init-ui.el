@@ -107,7 +107,14 @@
         (org-mode . albert-display-line-numbers)
   :init
   ;; 文件超过10000行，不显示行号，只留4位吧
-  (setq-default display-line-numbers-width-start 4)
+  ;; (setq-default display-line-numbers-width-start 4)
+
+  ;; Explicitly define a width to reduce the cost of on-the-fly computation
+  (setq-default display-line-numbers-width 4)
+
+  ;; Show absolute line numbers for narrowed regions to make it easier to tell the
+  ;; buffer is narrowed, and where you are, exactly.
+  (setq-default display-line-numbers-widen t)
 
   (defun albert-display-line-numbers ()
     "org-mode的文件，如果行数<10000行就显示行号."
