@@ -146,20 +146,20 @@ they were loaded at startup."
   
 ;; ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
 ;; ;; collect; staving off the collector while the user is working.
-;; (when doom-interactive-mode
-;;   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
-;;   (with-eval-after-load 'gcmh
-;;     (setq gcmh-idle-delay 2
-;;           gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-;;           gcmh-verbose nil)
-;;     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
+(when doom-interactive-mode
+  (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
+  (with-eval-after-load 'gcmh
+    (setq gcmh-idle-delay 5
+          gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+          gcmh-verbose nil)
+    (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
 
 ;; The GC introduces annoying pauses and stuttering into our Emacs experience,
 ;; so we use `gcmh' to stave off the GC while we're using Emacs, and provoke it
 ;; when it's idle.
-(setq gcmh-idle-delay 2  ; default is 15s
-      gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-      gcmh-verbose nil)
+;; (setq gcmh-idle-delay 2  ; default is 15s
+;;       gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+;;       gcmh-verbose nil)
     
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
@@ -210,9 +210,9 @@ they were loaded at startup."
 
 (use-package gcmh
   :diminish
-  :defer 10
-  :config
-  (gcmh-mode +1)
+  ;; :defer 10
+  ;; :config
+  ;; (gcmh-mode +1)
   )
 
 (use-package general
