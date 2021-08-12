@@ -106,11 +106,8 @@
   :hook (prog-mode . display-line-numbers-mode)
         (org-mode . albert-display-line-numbers)
   :init
-  ;; 文件超过10000行，不显示行号，只留4位吧
-  ;; (setq-default display-line-numbers-width-start 4)
-
   ;; Explicitly define a width to reduce the cost of on-the-fly computation
-  (setq-default display-line-numbers-width 4)
+  (setq-default display-line-numbers-width 3)
 
   ;; Show absolute line numbers for narrowed regions to make it easier to tell the
   ;; buffer is narrowed, and where you are, exactly.
@@ -129,7 +126,6 @@
   (interactive)
   (if (eq system-type 'windows-nt)
       (progn
-        ;; (set-face-attribute 'default nil :font "Ubuntu Mono 11")
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
         ;; (set-face-attribute 'default nil :font "PragmataPro Mono 11")
 
@@ -143,23 +139,6 @@
           (set-fontset-font (frame-parameter nil 'font)
                             charset
                             (font-spec :family "等距更纱黑体 T SC"))))))
-
-              ;; (set-fontset-font (frame-parameter nil 'font)
-              ;;               charset
-              ;;               (font-spec :family "等距更纱黑体 T SC" :size 22))))))
-                            ;; (font-spec :family "Microsoft Yahei" :size 22))))))
-
-;; [2020-09-07 周一 16:00:37] https://github.com/m8524769/Hybrid-fonts
-;; (defun albert-notebook-font()
-;;   "Config font on HP zhan66."
-;;   (interactive)
-;;   (if (eq system-type 'windows-nt)
-;;       (progn
-;;         (set-face-attribute 'default nil :font "InconsolataGo QiHei NF")
-;;         (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;;           (set-fontset-font (frame-parameter nil 'font)
-;;                             charset
-;;                             (font-spec :family "InconsolataGo QiHei NF"))))))
 
 (defun albert-s2319-font()
   "Config font on dell s2319. 
@@ -176,16 +155,6 @@
                               charset
                               (font-spec :family "等距更纱黑体 T SC" :size 16))))))
 
-                              ;; (font-spec :family "Microsoft Yahei" :size 16))))))
-        ;; (set-frame-font "Ubuntu Mono-12" nil t)
-        ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-        ;;   (set-fontset-font (frame-parameter nil 'font)
-        ;;                     charset (font-spec :family "Microsoft Yahei"))
-        ;;   (setq face-font-rescale-alist '(("Microsoft Yahei" . 1.24)))))))
-                               ;; 更纱黑字体发虚
-          ;;                   charset (font-spec :family "等距更纱黑体 T SC"))
-          ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))))))
-
 (defun albert-x240-font()
   "Config font on x240."
   (interactive)
@@ -199,7 +168,6 @@
 
 (defun albert-adjust-font()
   (interactive)
-  ;;(if (eq window-system 'w32)
   (when IS-WINDOWS
     (progn
       ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
@@ -221,13 +189,6 @@
 (if (display-graphic-p)
     (albert-adjust-font))
 
-;; [2020-11-25 Wed 18:40:26] macos
-;; (if (eq system-type 'darwin)
-;;     ;; on 1920x1080
-;;     ;; (set-face-attribute 'default nil :font "Ubuntu Mono 22"))
-;;     ;; (set-face-attribute 'default nil :font "Monaco 18"))
-;;     (set-face-attribute 'default nil :font "等距更纱黑体 T SC 20"))
-
 (defun albert-macos-notebook-font()
   "macbook air on 1680x1050."
   (interactive)
@@ -235,11 +196,7 @@
       (progn
         ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
-
         ;; (set-face-attribute 'default nil :font "Ubuntu Mono 20")
-
-        ;; (set-face-attribute 'default nil :font "Spot Mono 18")
-        ;; (set-face-attribute 'default nil :font "Ubuntu Mono 18")
 
         ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
         (setq face-font-rescale-alist '(("苹方-简" . 1)))

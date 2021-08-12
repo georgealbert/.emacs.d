@@ -191,7 +191,6 @@ If N is not nil, only list directories in current project."
 (defun counsel-rg-project-root (&optional query)
   "Not documented, QUERY."
   (interactive)
-  ;; (let ((rootdir (counsel-ag--project-root)))
   (let ((rootdir (counsel--git-root)))
     (unless rootdir
       (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
