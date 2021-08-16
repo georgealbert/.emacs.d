@@ -208,8 +208,10 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
         '(;; "懒虫简明汉英词典"
           ;; "KDic11万英汉词典"
+          "新华字典"
           "牛津现代英汉双解词典"
           "朗道英汉字典5.0"
+          "朗道汉英字典5.0"
           "懒虫简明英汉词典"))
 
   ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
