@@ -80,11 +80,11 @@
 ;; (setq comp-deferred-compilation t)
 
 (require 'init-core)
+;; (require 'init-modeline)
 (require 'init-editor)
-(require 'init-completion)
 (require 'init-ivy)
-(require 'init-ui-theme)
 (require 'init-ui)
+(require 'init-ui-theme)
 (require 'init-keybinds)
 (require 'init-lang)
 (require 'init-tools)
