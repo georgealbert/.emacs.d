@@ -129,13 +129,6 @@
   (setq ivy-rich-path-style 'full)
   (ivy-rich-mode +1))
 
-;; (use-package ivy-rich
-;;   :hook
-;;   (ivy-mode . ivy-rich-mode)
-;;   (ivy-rich-mode . (lambda ()
-;;                      (setq ivy-virtual-abbreviate
-;;                            (or (and ivy-rich-mode 'abbreviate) 'name)))))
-
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
 If N is not nil, only list directories in current project."
