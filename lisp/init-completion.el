@@ -72,17 +72,4 @@
   (("s-f" . helm-ag)
    ("s-r" . helm-ag-project-root)))
 
-;; helm可以使用amx作为后端了，branch: helm-amx
-;; https://github.com/DarwinAwardWinner/amx/issues/23
-(use-package amx
-  :ensure nil
-  :defer t
-  ;; :disabled t
-  :load-path "~/.emacs.d/site-lisp/extensions/amx"
-  :bind ("M-x" . amx)
-  :init
-  (setq amx-history-length 30)
-  ;; (setq amx-backend 'helm)
-  )
-
 (provide 'init-completion)

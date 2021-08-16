@@ -335,35 +335,17 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   ;; (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
 
-(use-package sis
-  ;; :hook
-  ;; enable the /follow context/ and /inline region/ mode for specific buffers
-  ;; (((text-mode prog-mode) . sis-context-mode)
-  ;;  ((text-mode prog-mode) . sis-inline-mode))
-
-  :disabled t
-  :config
-  ;; For MacOS
-  (sis-ism-lazyman-config
-  
-   ;; English input source may be: "ABC", "US" or another one.
-   ;; "com.apple.keylayout.ABC"
-   "com.apple.keylayout.US"
-   ;; "im.rime.inputmethod.Squirrel.Rime"
-
-   ;; Other language input source: "rime", "sogou" or another one.
-   "im.rime.inputmethod.Squirrel.Rime"
-   ;;"com.sogou.inputmethod.sogou.pinyin"
-   )
-
-  ;; enable the /cursor color/ mode
-  (sis-global-cursor-color-mode t)
-  ;; enable the /respect/ mode
-  (sis-global-respect-mode t)
-  ;; enable the /context/ mode for all buffers
-  (sis-global-context-mode t)
-  ;; enable the /inline english/ mode for all buffers
-  (sis-global-inline-mode t)
+;; helm可以使用amx作为后端了，branch: helm-amx
+;; https://github.com/DarwinAwardWinner/amx/issues/23
+(use-package amx
+  :ensure nil
+  :defer t
+  ;; :disabled t
+  :load-path "~/.emacs.d/site-lisp/extensions/amx"
+  :bind ("M-x" . amx)
+  :init
+  (setq amx-history-length 30)
+  ;; (setq amx-backend 'helm)
   )
 
 (provide 'init-tools)
