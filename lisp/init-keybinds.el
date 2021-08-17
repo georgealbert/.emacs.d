@@ -76,12 +76,12 @@
       ;; "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")
 
       "f"  '(:ignore t :which-key "file")
-      "ff" '(counsel-recentf :which-key "Recent files")
-      "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
+      ;; "ff" '(counsel-recentf :which-key "Recent files")
+      ;; "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
       ;; "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
       ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
       "fp" '(find-file-in-project :which-key "ff in project")
-      "fc" '(find-file-in-current-directory :which-key "ff in current dir")
+      "ff" '(find-file-in-current-directory :which-key "ff in current dir")
       "fn" '(find-file-in-project-at-point :which-key "ff at point")
       "fs" '(find-file-in-project-by-selected :which-key "ff selected")
       "fn" '(find-file-with-similar-name :which-key "ff similar-name") ; ffip v5.3.1
