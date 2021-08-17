@@ -220,11 +220,26 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; [2020-11-23 Mon 00:00:33]
 (use-package exec-path-from-shell
   :if (memq window-system '(ns mac x))
-  ;; :disabled t
+  :disabled t
   :ensure t
   :config
   ;; (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
+
+;;
+;; https://emacs-china.org/t/topic/5507
+;; 1. 导出 PATH 到 ~/.path
+;; /bin/zsh -c -l -i 'printf "%s" "$PATH"' > ~/.path
+;;
+;; 2. 给 Emacs 设置 PATH 和 exec-path
+;; (getenv "PATH")
+(condition-case err
+    (let ((path (with-temp-buffer
+                  (insert-file-contents-literally "~/.path")
+                  (buffer-string))))
+      (setenv "PATH" path)
+      (setq exec-path (append (parse-colon-path path) (list exec-directory))))
+  (error (warn "%s" (error-message-string err))))
 
 ;; helm可以使用amx作为后端了，branch: helm-amx
 ;; https://github.com/DarwinAwardWinner/amx/issues/23
