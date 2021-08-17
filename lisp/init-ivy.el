@@ -12,7 +12,7 @@
         (ivy--cd dir)
         (setq this-command 'ivy-cd)))))
 
-;; {{  C-o f to toggle case sensitive, @see https://github.com/abo-abo/swiper/issues/1104
+;; C-o f to toggle case sensitive, @see https://github.com/abo-abo/swiper/issues/1104
 (defun re-builder-extended-pattern (str)
   (let* ((len (length str)))
     (cond
@@ -57,9 +57,7 @@
      (t
       ;; 不能用ivy--regex-ignore-order，否则英文用空格分隔时的结果，match的高亮不对。
       (ivy--regex-plus str)))))
-
     ;; (ivy--regex-ignore-order str)))
-;; }}
 
 (use-package ivy
   :defer t
@@ -191,18 +189,14 @@ If N is not nil, only list directories in current project."
 
 (use-package counsel
   ;; :defer t
-  ;; :after ivy-rich ivy
-  ;; :after ivy
   :bind (
-         ;; ("s-z" . counsel-M-x)
          ("M-x" . counsel-M-x)
          ("C-c n" . counsel-buffer-or-recentf)
          ("s-r" . counsel-rg-project-root)
          ;; ("s-r" . counsel-ag-project-root)
          ("s-f" . counsel-rg-current-dir)
          ;; ("s-f" . counsel-ag-current-dir)
-         ("C-x C-f" . counsel-find-file)
-  )
+         ("C-x C-f" . counsel-find-file))
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
 
