@@ -108,7 +108,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(lsp-pyright hydra wgrep pyim find-file-in-project pinyinlib ivy-hydra ivy-prescient prescient amx smartparens cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download lsp-python-ms winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 helm-ag ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses helm-swoop evil-paredit benchmark-init))
+   '(vue-mode add-node-modules-path lsp-pyright hydra wgrep find-file-in-project pinyinlib ivy-hydra ivy-prescient prescient amx cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download winum treemacs-evil flycheck-posframe dired-k all-the-icons doom-modeline doom-themes py-autopep8 ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info paren-face markdown-mode magit highlight-parentheses evil-paredit benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
@@ -140,4 +140,4 @@
  ;; If there is more than one, they won't work right.
  '(ivy-minibuffer-match-face-1 ((t (:inherit font-lock-doc-face :foreground nil))))
  '(lsp-ui-doc-background ((t (:background nil))))
- '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button)))) t))
+ '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button))))))
