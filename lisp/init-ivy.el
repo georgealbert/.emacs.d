@@ -119,9 +119,9 @@
 
   ;; 下面的配置是seagle0128的
   ;; Setting tab size to 1, to insert tabs as delimiters
-  (add-hook 'minibuffer-setup-hook
-            (lambda ()
-              (setq tab-width 1)))
+  ;; (add-hook 'minibuffer-setup-hook
+  ;;           (lambda ()
+  ;;             (setq tab-width 1)))
 
   ;; 'full or 'absolute 'abbrev
   (setq ivy-rich-path-style 'full)
