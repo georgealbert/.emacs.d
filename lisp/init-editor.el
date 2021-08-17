@@ -112,6 +112,7 @@
 ;; doc: Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
   :defer t
+  :ensure t
   :hook (dired-initial-position . diredfl-mode)
         ;; (dired-after-readin . diredfl-mode)
   :config

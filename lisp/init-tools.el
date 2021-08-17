@@ -46,7 +46,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 (ggtags-mode 1)))))
 
 (use-package undo-tree
-  :ensure t
+  ;; :ensure t
   :disabled t
   :defer 1
   :diminish
@@ -221,7 +221,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 (use-package exec-path-from-shell
   :if (memq window-system '(ns mac x))
   :disabled t
-  :ensure t
+  ;; :ensure t
   :config
   ;; (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))

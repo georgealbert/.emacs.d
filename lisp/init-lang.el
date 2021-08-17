@@ -245,7 +245,7 @@
     (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
 
 (use-package paren-face
-  :ensure t
+  ;; :ensure t
   :disabled t
   :defer t
   :init (global-paren-face-mode 1))
