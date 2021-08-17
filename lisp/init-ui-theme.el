@@ -6,7 +6,7 @@
 (use-package doom-themes
   :config
   ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
-  (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
+  (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/theme"))
 
   (setq ;; 禁用粗体，否则org-mode的outline字体太难看
         doom-themes-enable-bold nil
