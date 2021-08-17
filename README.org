@@ -1,23 +1,33 @@
 * 我的emacs配置
 
 ** 特点
-+ 使用evil
-+ 参考doom-emacs配置，优化启动和使用速度
-+ 使用which-key
-+ 使用general
-+ 使用ivy + counsel + swiper + ivy-rich
-+ 参考原生的deep-blue主题，定制的doom-theme
-+ 使用doom-modeline
++ 使用 =evil=
++ 参考 =doom-emacs= 配置，优化启动和使用速度
++ 使用 =which-key=
++ 使用 =general=
++ 使用 =ivy + counsel + swiper + ivy-rich=
++ 参考原生的 =deeper-blue= 主题，定制的doom-theme
++ 使用 =doom-modeline=
 
 ** evil
 *** 使用emacs原生undo-redo
 emacs在28.0以后加入了 =undo-redo= , 替换掉 =undo-tree= ，优化速度。
 
 ** diredfl
-diredfl比较轻量化，如果直接用dired，文件的不同属组的读写属性只有一个颜色，看着不够美观。
+=diredfl= 比较轻量化，如果直接用 =dired= ，文件的不同属组的读写属性只有一个颜色，看着不够美观。
+
+用过 =dired-k= ，在和git一起用的时候，windows上速度有点慢。
+
+** 性能优化
+
+*** gcmh
+
+*** 显示优化
 
 ** amx
 修改了快捷键的高亮。不知道最新的amx是否有优化。
+
+https://github.com/georgealbert/amx
 
 + 参考
   https://github.com/DarwinAwardWinner/amx
@@ -28,7 +38,13 @@ diredfl比较轻量化，如果直接用dired，文件的不同属组的读写�
 + 参考
   http://doc.norang.ca/org-mode.html
 
-** theme
+** UI
+*** theme
 theme/doom-deeper-blue.el
 
 emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不好看，大改了一番。
+
+** ivy
+
+*** 可以使用拼音字母缩写查询
+=C-s= 后，输入 =:cs=
