@@ -18,7 +18,13 @@
 ;;     (normal-top-level-add-subdirs-to-load-path)))
 
 ;; (push (expand-file-name "/Users/albert/.emacs.d/elpa" user-emacs-directory) load-path)
+
 (push (expand-file-name "/Users/albert/.emacs.d/elpa/evil-20210628.1913" user-emacs-directory) load-path)
+(push (expand-file-name "/Users/albert/.emacs.d/elpa/benchmark-init-20150905.938/" user-emacs-directory) load-path)
+
+(require 'benchmark-init-modes)
+(require 'benchmark-init)
+(benchmark-init/activate)
 
 ;; (add-subdirs-to-load-path)
 

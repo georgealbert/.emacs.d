@@ -219,7 +219,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 
 ;; [2020-11-23 Mon 00:00:33]
 (use-package exec-path-from-shell
-  :if (memq window-system '(ns mac))
+  :if (memq window-system '(ns mac x))
+  ;; :disabled t
   :ensure t
   :config
   ;; (setq exec-path-from-shell-arguments '("-l"))

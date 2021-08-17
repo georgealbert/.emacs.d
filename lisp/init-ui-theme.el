@@ -4,7 +4,6 @@
 ;; (load-theme 'deeper-blue t)
 
 (use-package doom-themes
-  ;; :demand t
   :config
   ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
   (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
@@ -33,7 +32,6 @@
 ;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
   ;; 使用native-comp的undo-tree和doom-modeline时，在undo-tree必须在doom-modeline之前启动，否则advice-add undo-tree-undo-1时有问题
-  ;; :disabled t
   ;; :after undo-tree
   :init
   (unless after-init-time
@@ -56,7 +54,6 @@
   (setq doom-modeline-persp-name nil)
   (setq doom-modeline-irc nil)
   
-  ;; 2019.11.22又改成下面这个变量了
   (setq doom-modeline-modal-icon nil)
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
