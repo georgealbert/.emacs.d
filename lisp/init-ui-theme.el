@@ -1,8 +1,5 @@
 ;;; init-ui-theme.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/my_elisp"))
-;; (load-theme 'deeper-blue t)
-
 (use-package doom-themes
   :config
   ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
@@ -41,7 +38,7 @@
   (setq doom-modeline-bar-width 3)
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-  (setq doom-modeline-icon t)
+  (setq doom-modeline-icon nil)
   
   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
   (setq doom-modeline-major-mode-icon t)
