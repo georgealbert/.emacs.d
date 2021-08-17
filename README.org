@@ -1,1 +1,34 @@
 * 我的emacs配置
+
+** 特点
++ 使用evil
++ 参考doom-emacs配置，优化启动和使用速度
++ 使用which-key
++ 使用general
++ 使用ivy + counsel + swiper + ivy-rich
++ 参考原生的deep-blue主题，定制的doom-theme
++ 使用doom-modeline
+
+** evil
+*** 使用emacs原生undo-redo
+emacs在28.0以后加入了 =undo-redo= , 替换掉 =undo-tree= ，优化速度。
+
+** diredfl
+diredfl比较轻量化，如果直接用dired，文件的不同属组的读写属性只有一个颜色，看着不够美观。
+
+** amx
+修改了快捷键的高亮。不知道最新的amx是否有优化。
+
++ 参考
+  https://github.com/DarwinAwardWinner/amx
+
+** org
+配置在 =init-org.el= 中。org的配置是很久以前学习的，太多了，实在是不想也不敢改，工作量太大，现在能用，不优化了。
+
++ 参考
+  http://doc.norang.ca/org-mode.html
+
+** theme
+theme/doom-deeper-blue.el
+
+emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不好看，大改了一番。
