@@ -762,7 +762,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (widen)))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
+          #'(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
           'append)
 
 (defun bh/restrict-to-file-or-follow (arg)
@@ -778,7 +778,7 @@ so change the default 'F' binding in the agenda to allow both"
     (beginning-of-buffer)))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
+          #'(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
           'append)
 
 (defun bh/narrow-to-org-subtree ()
@@ -798,7 +798,7 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-to-org-subtree)))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
+          #'(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
           'append)
 
 (defun bh/narrow-up-one-org-level ()
@@ -821,7 +821,7 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-up-one-org-level)))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
+          #'(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
           'append)
 
 (defun bh/narrow-to-org-project ()
@@ -846,7 +846,7 @@ so change the default 'F' binding in the agenda to allow both"
       (org-agenda-set-restriction-lock))))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
+          #'(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
           'append)
 
 (defvar bh/project-list nil)
@@ -893,13 +893,13 @@ so change the default 'F' binding in the agenda to allow both"
         (error "All projects viewed.")))))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
+          #'(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
           'append)
 
 (setq org-show-entry-below (quote ((default))))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (hl-line-mode 1))
+          #'(lambda () (hl-line-mode 1))
           'append)
 
 ;; [2019-06-10 周一 12:36:03] 去掉mode-line中的clock高亮设置的背景色。

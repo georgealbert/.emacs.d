@@ -13,7 +13,7 @@
 ;; F5插入当前时间  
 ;; e.g.
 ;; M-: (insert (format-time-string "[%Y-%m-%d %a %T]"))
-(global-set-key [(f5)] '(lambda () (interactive) 
+(global-set-key [(f5)] #'(lambda () (interactive) 
                           (insert (format-time-string "[%Y-%m-%d %a %T]"))))
 
 (use-package evil
