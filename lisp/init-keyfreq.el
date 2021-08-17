@@ -1,6 +1,7 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 (use-package keyfreq
+  :disabled t
   :defer 1
   :config
   (defun turnon-keyfreq-mode ()
