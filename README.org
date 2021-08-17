@@ -45,6 +45,20 @@ theme/doom-deeper-blue.el
 emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不好看，大改了一番。
 
 ** ivy
-
 *** 可以使用拼音字母缩写查询
 =C-s= 后，输入 =:cs=
+
+
+** ime自动切换
+
+*** windows
+在windows上写了2个函数，已commit到emacs master分支，在最新的pretest中已经可以体验，在使用微软拼音时效果很不错。
+
+*** macos
+没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到normal mode时切换到英文输入法，按i或a切换到insert mode时，会切换到rime。
+
++ 使用macism进程调用时，不太正常。
+
++ lsp-mode时，用的时间长了，可能会有乱码，只能关闭emacs，重新打开。
+
+
