@@ -3,28 +3,67 @@
 ** 特点
 + 使用 =evil=
 + 参考 =doom-emacs= 配置，优化启动和使用速度
-+ 使用 =which-key=
-+ 使用 =general=
++ 使用 =which-key= 和 =general=
 + 使用 =ivy + counsel + swiper + ivy-rich=
 + 参考原生的 =deeper-blue= 主题，定制的doom-theme
 + 使用 =doom-modeline=
 
-** evil
-*** 使用emacs原生undo-redo
-emacs在28.0以后加入了 =undo-redo= , 替换掉 =undo-tree= ，优化速度。
+** editor - lisp/init-editor.el
+*** evil
+**** 使用emacs原生undo-redo
+emacs在28.0以后加入了 =undo-redo= , 替换掉原来使用的 =undo-tree= ，优化速度。
 
-** diredfl
+*** diredfl
 =diredfl= 比较轻量化，如果直接用 =dired= ，文件的不同属组的读写属性只有一个颜色，看着不够美观。
 
 用过 =dired-k= ，在和git一起用的时候，windows上速度有点慢。
 
-** 性能优化
-
+** 性能优化 - lisp/init-core.el
 *** gcmh
+参考老的doom-emacs配置，在 =early-init.el= 将 =gc-cons-threshold= 设置为最大值。启动完成后， =gc-cons-threshold= 恢复为 =16MB= ，每次focus离开emacs时，定时进行gc。
 
-*** 显示优化
+** UI
+*** theme - lisp/init-ui-theme.el
+theme在 =theme/doom-deeper-blue.el= 。
 
-** amx
+emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不好看，大改了一番。
+
+** ivy - lisp/init-ivy.el
+*** 可以使用拼音字母缩写查询
+
++ 查询中文“测试”
+
+  =C-s= 后，输入 =:cs=
+
++ 查询中文“操作系统”，不包括中文“系统”
+
+  =C-s= 后，输入 =:czxt !xt=
+
+** ime自动切换 - lisp/init-tools.el
+*** windows
+在windows上写了2个函数，已commit到emacs master分支，在最新的pretest版本中已经可以体验，在使用微软拼音时效果很不错。
+
+#+begin_src lisp
+(if (fboundp 'w32-set-ime-open-status)
+    (progn
+      (defun emacs-ime-disable ()
+        (w32-set-ime-open-status nil))
+
+      (defun emacs-ime-enable ()
+        (w32-set-ime-open-status t))
+
+      (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+      (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)))
+#+end_src
+
+*** macos
+没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到 =normal mode= 时切换到英文输入法，按 =i= 或 =a= 切换到 =insert mode= 时，会切换到rime。
+
++ 使用 =macism= 进程调用时，不太正常。
+
++ lsp-mode时，用的时间长了，可能会有乱码，只能关闭emacs，重新打开。
+
+** amx - lisp/init-tools.el
 修改了快捷键的高亮。不知道最新的amx是否有优化。
 
 https://github.com/georgealbert/amx
@@ -32,33 +71,8 @@ https://github.com/georgealbert/amx
 + 参考
   https://github.com/DarwinAwardWinner/amx
 
-** org
-配置在 =init-org.el= 中。org的配置是很久以前学习的，太多了，实在是不想也不敢改，工作量太大，现在能用，不优化了。
+** org - lisp/init-org.el
+org的配置是很久以前学习的，太多了，实在是不想也不敢改，工作量太大，现在能用，不优化了。
 
 + 参考
   http://doc.norang.ca/org-mode.html
-
-** UI
-*** theme
-theme/doom-deeper-blue.el
-
-emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不好看，大改了一番。
-
-** ivy
-*** 可以使用拼音字母缩写查询
-=C-s= 后，输入 =:cs=
-
-
-** ime自动切换
-
-*** windows
-在windows上写了2个函数，已commit到emacs master分支，在最新的pretest中已经可以体验，在使用微软拼音时效果很不错。
-
-*** macos
-没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到normal mode时切换到英文输入法，按i或a切换到insert mode时，会切换到rime。
-
-+ 使用macism进程调用时，不太正常。
-
-+ lsp-mode时，用的时间长了，可能会有乱码，只能关闭emacs，重新打开。
-
-
