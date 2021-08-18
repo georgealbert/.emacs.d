@@ -38,10 +38,12 @@ emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不�
 + 查询中文“操作系统”，不包括中文“系统”
 
   =C-s= 后，输入 =:czxt !xt=
-
-** ime自动切换 - lisp/init-tools.el
-*** windows
+** 工具类 - lisp/init-tools.el
+*** ime自动切换 
+**** windows
 在windows上写了2个函数，已commit到emacs master分支，在最新的pretest版本中已经可以体验，在使用微软拼音时效果很不错。
+
+在 =normal mode= 和 =insert mode= 切换时可以记住当前输入法的中英文状态，如果在 =insert mode= 中是中文的，从 =normal mode= 切换回来时仍然是中文状态。当然这是微软拼音的功劳。
 
 #+begin_src lisp
 (if (fboundp 'w32-set-ime-open-status)
@@ -56,15 +58,20 @@ emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不�
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)))
 #+end_src
 
-*** macos
-没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到 =normal mode= 时切换到英文输入法，按 =i= 或 =a= 切换到 =insert mode= 时，会切换到rime。
+**** macos
+中文输入法是 =rime= 。没用系统自带的中文输入法，因为和其他输入法的使用习惯不一样，没法配置用 =,= 进行候选词翻页，和 =shift= 切换中英文状态(按 =left shift= 上面的“中/英”按键可以)。
 
-+ 使用 =macism= 进程调用时，不太正常。
+代码没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到 =normal mode= 时切换到英文输入法，按 =i= 或 =a= 切换到 =insert mode= 时，会切换到rime。
+
+这里要对水果吐槽一下，对程序员非常不友好，输入法相关的系统api很难查到，原来在水果的开发者论坛上有输入法的api文档，但是居然又取消了。这究竟是什么神操作？能不能像微软学习一下？
+
+***** 问题
++ 使用 =macism= 外部进程切换输入法时，不太文档，有时候无法切换。
 
 + lsp-mode时，用的时间长了，可能会有乱码，只能关闭emacs，重新打开。
 
-** amx - lisp/init-tools.el
-修改了快捷键的高亮。不知道最新的amx是否有优化。
+*** amx
+fork了amx的代码，修改了快捷键的高亮。不知道最新的amx是否有优化。如果改了，考虑使用原版的amx。github访问有点慢，fetch代码时间太长。
 
 https://github.com/georgealbert/amx
 
