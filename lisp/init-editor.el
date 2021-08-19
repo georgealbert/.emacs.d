@@ -25,11 +25,6 @@
         evil-ex-search-vim-style-regexp t
         ;; foo-bar vim认为就是一个word，emacs会认为是2个
         evil-symbol-word-search t
-        ;; cursor appearance
-        ;; evil-normal-state-cursor 'box
-        ;; evil-insert-state-cursor 'bar
-        ;; 不习惯空心的光标
-        ;; evil-visual-state-cursor 'hollow
 
         evil-undo-system
         (cond (EMACS28+ 'undo-redo))
@@ -52,6 +47,7 @@
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
   ;; (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
+  ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.
   (dolist (p '((minibuffer-inactive-mode . emacs)
@@ -146,7 +142,7 @@
   (add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
   )
 
-;; doc: Colourful dired from seagle0128，比较轻量，dired-k的git用得太多了，有点慢
+;; doc: Colourful dired from seagle0128/.emacs.d/lisp/init-dired.el，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
   :defer t
   :ensure t
@@ -156,7 +152,7 @@
   (defface my-diredfl-read-priv
   '((((background dark)) (:background "bg"))
     (t                   (:background "LightGray")))
-    "*Face used for read privilege indicator (w) in Dired buffers."
+    "*Face used for read privilege indicator (r) in Dired buffers."
     :group 'diredfl)
   (setq diredfl-read-priv 'my-diredfl-read-priv)
 
@@ -216,7 +212,7 @@
 ;; doc: Jump to things in Emacs tree-style
 (use-package avy
   :defer t
-  :bind (("C-:" . avy-goto-char)
+  :bind (;; ("C-:" . avy-goto-char)
          ("C-;" . avy-goto-char)
          ("C-'" . avy-goto-char-2)
          ("M-g f" . avy-goto-line)
@@ -227,8 +223,8 @@
                 avy-background t
                 avy-style 'pre))
 
-;; doc: a better *help* buffer
 ;; homepage: https://github.com/Wilfred/helpful
+;; doc: a better *help* buffer
 (use-package helpful
   :defer t
   :commands helpful--read-symbol
@@ -259,7 +255,7 @@
   ;;        (helpful-variable (button-get button 'apropos-symbol))))))
   )
 
-;; from redguardtoo, 快捷键 SPC ww
+;; from github.com/redguardtoo/.emacs.d/lisp/init-essential.el, 快捷键 SPC ww
 ;; {{ narrow region
 (defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
   "Indirect buffer could multiple widen on same file."
