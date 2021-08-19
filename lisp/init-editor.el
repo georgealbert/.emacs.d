@@ -21,20 +21,19 @@
   :defer 1
   :preface
   (setq evil-want-visual-char-semi-exclusive t
-	evil-echo-state t
-	evil-ex-search-vim-style-regexp t
-	;; foo-bar vim认为就是一个word，emacs会认为是2个
-	evil-symbol-word-search t
-	;; cursor appearance
-	;; evil-normal-state-cursor 'box
-	;; evil-insert-state-cursor 'bar
-	;; 不习惯空心的光标
-	;; evil-visual-state-cursor 'hollow
+        evil-echo-state t
+        evil-ex-search-vim-style-regexp t
+        ;; foo-bar vim认为就是一个word，emacs会认为是2个
+        evil-symbol-word-search t
+        ;; cursor appearance
+        ;; evil-normal-state-cursor 'box
+        ;; evil-insert-state-cursor 'bar
+        ;; 不习惯空心的光标
+        ;; evil-visual-state-cursor 'hollow
 
-    evil-undo-system
+        evil-undo-system
         (cond (EMACS28+ 'undo-redo))
-	)
-
+        )
   :config 
   (evil-mode 1)
   ;; (eval-after-load 'helm-gtags
@@ -53,9 +52,47 @@
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
   ;; (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
-  ;; ivy-occur
-  ;; after counsel-ag, c-c c-o, press w to edit buffer, c-x c-s when finished, c-c c-k discard changes.
-  (evil-set-initial-state 'ivy-occur-grep-mode 'normal)
+  ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
+  ;; You may delete this setup to use Evil NORMAL state always.
+  (dolist (p '((minibuffer-inactive-mode . emacs)
+               (calendar-mode . emacs)
+               (special-mode . emacs)
+               ;; (grep-mode . emacs)
+               (Info-mode . emacs)
+               ;; (term-mode . emacs)
+               (sdcv-mode . emacs)
+               ;; (anaconda-nav-mode . emacs)
+               (log-edit-mode . emacs)
+               (vc-log-edit-mode . emacs)
+               ;; (magit-log-edit-mode . emacs)
+               (w3m-mode . emacs)
+               (gud-mode . emacs)
+               (help-mode . emacs)
+               ;; (eshell-mode . emacs)
+               ;; (shell-mode . emacs)
+               (xref--xref-buffer-mode . emacs)
+               ;;(message-mode . emacs)
+               ;; (epa-key-list-mode . emacs)
+               ;; (fundamental-mode . emacs)
+               (woman-mode . emacs)
+               ;; (sr-mode . emacs)
+               (profiler-report-mode . emacs)
+               ;; (dired-mode . emacs)
+               (compilation-mode . emacs)
+               ;; (speedbar-mode . emacs)
+               ;; (ivy-occur-mode . emacs)
+               ;; (ffip-file-mode . emacs)
+
+               ;;
+               ;; ivy-occur-grep-mode
+               ;;
+               ;; after counsel-rg, c-c c-o, press w to edit buffer, c-x c-s when finished, c-c c-k discard changes.
+               (ivy-occur-grep-mode . normal)
+
+               (messages-buffer-mode . normal)
+               (js2-error-buffer-mode . emacs)))
+    (evil-set-initial-state (car p) (cdr p)))
+  ;; }}
   )
 
 ;; homepage: https://github.com/redguardtoo/evil-matchit

@@ -13,6 +13,9 @@
 ;; https://pengpengxp.github.io/emacs/emacs_isearch_summary.html
 (global-set-key (kbd "C-s") 'swiper-isearch)
 
+;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
+(define-key evil-normal-state-map "gh" 'beginning-of-defun)
+
 (run-with-idle-timer
  1 nil
  #'(lambda ()
@@ -111,7 +114,7 @@
       "si" 'evilmi-select-items
       ;; "sf" '(helm-ag :which-key "Search current directory")
       ;; "sc" 'counsel-grep-or-swiper
-      "ss" 'helm-ag-this-file
+      ;; "ss" 'helm-ag-this-file
       ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
       "w"  '(:ignore t :which-key "window")

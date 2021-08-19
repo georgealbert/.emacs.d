@@ -59,7 +59,7 @@ emacs原生 =deeper-blue= theme 在doom-theme中，org-mode、helm的显示不�
 #+end_src
 
 **** macos
-中文输入法是 =rime= 。没用系统自带的中文输入法，因为和其他输入法的使用习惯不一样，没法配置用 =,= 进行候选词翻页，和 =shift= 切换中英文状态(按 =left shift= 上面的“中/英”按键可以)。
+中文输入法是 =rime= 。没用系统自带的中文输入法，因为和其他输入法的使用习惯不一样，没法配置用 =逗号= 进行候选词翻页，和 =shift= 切换中英文状态(按 =left shift= 上面的“中/英”按键可以)。
 
 代码没commit到emacs。参考了 =emacs mac port= 的代码。不能在输入法内切换中英文，只能在切换到 =normal mode= 时切换到英文输入法，按 =i= 或 =a= 切换到 =insert mode= 时，会切换到rime。
 
