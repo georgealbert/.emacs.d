@@ -78,7 +78,7 @@
       "f"  '(:ignore t :which-key "file")
       ;; "ff" '(counsel-recentf :which-key "Recent files")
       ;; "fr" '(counsel-buffer-or-recentf :which-key "Buffer or Recent files")
-      ;; "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
+      "fo" '(dired-jump :which-key "Open current dir") ;; open the dired from current file
       ;; "fd" '(dired :which-key "dired") ;; open the dired from current file
       "fp" '(find-file-in-project :which-key "ff in project")
       "ff" '(find-file-in-current-directory :which-key "ff in current dir")
@@ -86,7 +86,6 @@
       "fs" '(find-file-in-project-by-selected :which-key "ff selected")
       "fn" '(find-file-with-similar-name :which-key "ff similar-name") ; ffip v5.3.1
       "fd" '(find-directory-in-project-by-selected :which-key "fdip selected")
-      ;; "fs" 'scratch
 
       ;; "g"  '(:ignore t :which-key "git")
       ;; "gg" 'magit-status
@@ -94,23 +93,23 @@
       "h" '(:ignore t :which-key "help")
       "h'" 'describe-char
       "hC" 'describe-coding-system
-      "hF" 'describe-face
+      ;; "hF" 'describe-face
       ;; "ha" 'helm-apropos
       ;; "hd" 'describe-function
       "he" 'view-echo-area-messages
       ;; "hf" 'find-function
       ;; "hk" 'describe-key
-      "hr" 'helm-resume
+      ;; "hr" 'helm-resume
       ;; "hv" 'describe-variable
 
       "t"  '(:ignore t :which-key "toggle")
-      ;; "tn" '(display-line-numbers-mode :which-key "Line numbers")
+      "tn" '(display-line-numbers-mode :which-key "Line numbers")
       "tl" '(toggle-truncate-lines :which-key "truncate line")
 
       "s"  '(:ignore t :which-key "search")
       "si" 'evilmi-select-items
       ;; "sf" '(helm-ag :which-key "Search current directory")
-      ;; "sc" 'counsel-grep-or-swiper
+      "sc" 'counsel-grep-or-swiper
       ;; "ss" 'helm-ag-this-file
       ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
