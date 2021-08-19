@@ -13,9 +13,6 @@
 ;; https://pengpengxp.github.io/emacs/emacs_isearch_summary.html
 (global-set-key (kbd "C-s") 'swiper-isearch)
 
-;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
-(define-key evil-normal-state-map "gh" 'beginning-of-defun)
-
 (run-with-idle-timer
  1 nil
  #'(lambda ()

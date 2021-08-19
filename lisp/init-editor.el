@@ -47,6 +47,9 @@
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
   ;; (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
+  ;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
+  (define-key evil-normal-state-map "gh" 'beginning-of-defun)
+
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.
@@ -120,7 +123,6 @@
   (setq-default ediff-forward-word-function 'forward-char)
 
   ;; 让diff能识别中文目录
-
   (when IS-WINDOWS
     (setq process-coding-system-alist (cons '("diff" . (cp936 . cp936)) process-coding-system-alist)))
 
