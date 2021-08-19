@@ -196,16 +196,16 @@
       (progn
         ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
-        ;; (set-face-attribute 'default nil :font "Ubuntu Mono 20")
+        ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 18")
 
-        ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
-        (setq face-font-rescale-alist '(("苹方-简" . 1)))
+        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+        ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
 
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "苹方-简")))
-        ;;                     (font-spec :family "等距更纱黑体 T SC")))
+                            ;; (font-spec :family "苹方-简")))
+                            (font-spec :family "等距更纱黑体 T SC")))
         ))
   )
 
