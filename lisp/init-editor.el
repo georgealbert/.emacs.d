@@ -19,6 +19,7 @@
 (use-package evil
   :ensure t
   :defer 1
+  ;; :hook (after-init . evil-mode)
   :preface
   (setq evil-want-visual-char-semi-exclusive t
         evil-echo-state t
@@ -27,10 +28,10 @@
         evil-symbol-word-search t
 
         evil-undo-system
-        (cond (EMACS28+ 'undo-redo))
-        )
+        (cond (EMACS28+ 'undo-redo)))
   :config 
   (evil-mode 1)
+
   ;; (eval-after-load 'helm-gtags
   ;;    '(progn
   ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
@@ -42,6 +43,7 @@
   
   ;; 使用isearch时，增加search结束后的，高亮时间到30s
   (setq evil-flash-delay 30)
+
   ;; evil keymap
   (define-key evil-normal-state-map "go" 'goto-char)
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
@@ -257,7 +259,7 @@
   ;;        (helpful-variable (button-get button 'apropos-symbol))))))
   )
 
-;; from github.com/redguardtoo/.emacs.d/lisp/init-essential.el, 快捷键 SPC ww
+;; from github.com/redguardtoo/.emacs.d/lisp/init-essential.el, 快捷键 `SPC ww'
 ;; {{ narrow region
 (defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
   "Indirect buffer could multiple widen on same file."
