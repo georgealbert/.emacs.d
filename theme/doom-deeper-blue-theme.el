@@ -1,4 +1,4 @@
-;;; doom-deeper-blue-theme.el --- inspired by Emacs built-in theme deeper-blue -*- no-byte-compile: t; -*-
+;;; doom-deeper-blue-theme.el --- inspired by Emacs built-in theme deeper-blue -*- lexical-binding: t; no-byte-compile: t; -*-
 (require 'doom-themes)
 
 ;; [2019-05-21 周二 16:21:10]
