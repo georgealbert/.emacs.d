@@ -39,23 +39,6 @@
 (require 'benchmark-init)
 (benchmark-init/activate)
 
-;; (defvar org-modules
-;;   '(;; org-w3m
-;;     ;; org-bbdb
-;;     ;; org-bibtex
-;;     ;; org-docview
-;;     ;; org-gnus
-;;     ;; org-info
-;;     ;; org-irc
-;;     ;; org-mhe
-;;     ;; org-rmail
-;;     ))
-
-;; (require 'ob-tangle)
-;; (org-babel-load-file (expand-file-name "~/.emacs.d/Albert.org"))
-
-;; (load (expand-file-name "~/.emacs.d/Albert.el"))
-
 ;; Load path
 ;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
 (defun update-load-path (&rest _)
