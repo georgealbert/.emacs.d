@@ -159,9 +159,10 @@
 
 ;; (setq process-coding-system-alist (cons '("ipython" . (cp936 . cp936)) process-coding-system-alist))
 
-(dolist (cmd '("ipython" "python" "ping"))
-  (setq process-coding-system-alist (cons (cons cmd '(cp936 . cp936))
-                                          process-coding-system-alist)))
+(when IS-WINDOWS
+  (dolist (cmd '("ipython" "python" "ping"))
+    (setq process-coding-system-alist (cons (cons cmd '(cp936 . cp936))
+                                            process-coding-system-alist))))
 
 ;; (use-package python-mode
 ;;   :mode (("SConstruct\\'" . python-mode)

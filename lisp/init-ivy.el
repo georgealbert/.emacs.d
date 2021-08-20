@@ -61,7 +61,6 @@
 
 (use-package ivy
   :defer t
-  ;; :after ivy-rich
   :bind
   (:map ivy-minibuffer-map
         ("<tab>" . albert-ivy-done))
@@ -107,9 +106,8 @@
   (ivy-mode +1))
 
 (use-package ivy-rich
-  ;; :defer t
-  ;; :hook
-  ;; (ivy-mode . ivy-rich-mode)
+  :defer 1
+  ;; :hook (after-init . ivy-rich-mode)
   :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
@@ -125,7 +123,8 @@
 
   ;; 'full or 'absolute 'abbrev
   (setq ivy-rich-path-style 'full)
-  (ivy-rich-mode +1))
+  (ivy-rich-mode +1)
+  )
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
@@ -188,7 +187,6 @@ If N is not nil, only list directories in current project."
     (counsel-rg "" rootdir)))
 
 (use-package counsel
-  ;; :defer t
   :bind (
          ("M-x" . counsel-M-x)
          ("C-c n" . counsel-buffer-or-recentf)
