@@ -709,6 +709,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 ; Make babel results blocks lowercase
 (setq org-babel-results-keyword "results")
 
+;; 默认从2改为0，在src block中不缩进
+(setq org-edit-src-content-indentation 0)
+
 (defun bh/display-inline-images ()
   (condition-case nil
       (org-display-inline-images)
