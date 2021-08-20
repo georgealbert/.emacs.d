@@ -35,12 +35,9 @@
   (albert-if-dump
       (enable-theme 'doom-deeper-blue)))
 
-;; [2019-10-30 周三 17:37:50] emacs 27.0不需要了
-;; (setq package-enable-at-startup nil)
-
-;; (require 'benchmark-init-modes)
-;; (require 'benchmark-init)
-;; (benchmark-init/activate)
+(require 'benchmark-init-modes)
+(require 'benchmark-init)
+(benchmark-init/activate)
 
 ;; (defvar org-modules
 ;;   '(;; org-w3m
@@ -80,19 +77,22 @@
 ;; (setq comp-deferred-compilation t)
 
 (require 'init-core)
-;; (require 'init-modeline)
 (require 'init-editor)
 (require 'init-ivy)
-(require 'init-ui-theme)
-(require 'init-ui)
 (require 'init-keybinds)
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
 (require 'init-keyfreq)
 (require 'init-editor-paren)
-(require 'init-ui-treemacs)
+;; (require 'init-ui-treemacs)
 (require 'init-hydra)
+(require 'init-ui)
+(require 'init-ui-theme)
+
+;; maximize window
+(if (or (eq system-type 'windows-nt) (eq system-type 'darwin))
+    (toggle-frame-maximized))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

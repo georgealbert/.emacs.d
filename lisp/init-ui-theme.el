@@ -2,7 +2,6 @@
 
 (use-package doom-themes
   :config
-  ;; 我的doom-deeper-blue-theme.el在 ~/.emacs.d/my_elisp 目录中
   (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/theme"))
 
   (setq ;; 禁用粗体，否则org-mode的outline字体太难看
@@ -26,10 +25,8 @@
   ;;     (set-face-attribute f nil :extend t)))
   )
   
-;; doom-modeline要在 package winum 之前初始化，不然winum的frame编号显示有问题.
 (use-package doom-modeline
-  ;; 使用native-comp的undo-tree和doom-modeline时，在undo-tree必须在doom-modeline之前启动，否则advice-add undo-tree-undo-1时有问题
-  ;; :after undo-tree
+  :hook (after-init . doom-modeline-mode)
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
@@ -51,6 +48,7 @@
   (setq doom-modeline-persp-name nil)
   (setq doom-modeline-irc nil)
   
+  ;; evil state icon
   (setq doom-modeline-modal-icon nil)
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
@@ -72,7 +70,7 @@
   ;; 在modeline显示buffer或文件的大小
   ;; (size-indication-mode +1) 
 
-  (doom-modeline-mode +1)
+  ;; (doom-modeline-mode +1)
   )
 
 (provide 'init-ui-theme)

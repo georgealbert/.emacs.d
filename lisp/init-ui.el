@@ -37,7 +37,7 @@
       ;; `scroll-conservatively'). This is especially slow in larger files
       ;; during large-scale scrolling commands. If kept over 100, the window is
       ;; never automatically recentered.
-      scroll-conservatively 101
+      scroll-conservatively 1001
       scroll-margin 0
       scroll-preserve-screen-position t
       ;; Reduce cursor lag by a tiny bit by not auto-adjusting `window-vscroll'
@@ -99,13 +99,13 @@
 (global-set-key (kbd "C-x 3") 'vsplit-last-buffer)
 (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
 
-;; 显示行号
 ;; [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 (use-package display-line-numbers
   :ensure nil
   :hook (prog-mode . display-line-numbers-mode)
         (org-mode . albert-display-line-numbers)
-  :init
+  ;; :init
+  :config
   ;; Explicitly define a width to reduce the cost of on-the-fly computation
   (setq-default display-line-numbers-width 3)
 
@@ -123,7 +123,6 @@
 ;;; font setting
 (defun albert-notebook-font()
   "Config font on HP zhan66."
-  (interactive)
   (if (eq system-type 'windows-nt)
       (progn
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
@@ -145,7 +144,6 @@
    Ubuntu Mono 10 + Yahei 14 太小了
    Ubuntu Mono 12 + Yahei 16 比较合适
    "
-  (interactive)
   (if (eq system-type 'windows-nt)
       (progn
         ;; (set-face-attribute 'default nil :font "Ubuntu Mono 12")
@@ -157,7 +155,6 @@
 
 (defun albert-x240-font()
   "Config font on x240."
-  (interactive)
   (if (eq system-type 'windows-nt)
     (progn
       (set-face-attribute 'default nil :font "Ubuntu Mono 12")
@@ -167,7 +164,6 @@
                             (font-spec :family "Microsoft Yahei" :size 16))))))
 
 (defun albert-adjust-font()
-  (interactive)
   (when IS-WINDOWS
     (progn
       ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
@@ -186,40 +182,44 @@
       (if (eq (display-mm-width) 309)
         (albert-notebook-font)))))
         
-(if (display-graphic-p)
+(if (and (display-graphic-p) IS-WINDOWS)
     (albert-adjust-font))
 
+;; Font download from https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
 (defun albert-macos-notebook-font()
   "macbook air on 1680x1050."
-  (interactive)
-  (if (eq system-type 'darwin)
-      (progn
-        ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
-        (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
-        ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 18")
+  (progn
+    ;; 显示46行
+    (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
 
-        (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
-        ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
+    ;; 显示52行，但是字体小了点，不舒服 
+    ;; (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 18")
 
-        (dolist (charset '(kana han symbol cjk-misc bopomofo))
-          (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            ;; (font-spec :family "苹方-简")))
-                            (font-spec :family "等距更纱黑体 T SC")))
-        ))
-  )
+    ;; 19px不知道缩放会不会有问题，20px算了，大一点看着轻松些
+    ;; (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 19")
 
-;; macos的字体配置
-(if (eq system-type 'darwin)
-    (albert-macos-notebook-font)
+    ;; 显示41行
+    ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 18")
+
+    (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+
+    ;; 系统自带的`苹方-简'比`更纱黑'的字体稍微大了一点
+    ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
+
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset
+                        ;; (font-spec :family "苹方-简")))
+                        (font-spec :family "等距更纱黑体 T SC"))
+      )))
+
+(when IS-MAC
+  (albert-macos-notebook-font)
+
   ;; disable anti-aliases
   ;; https://stackoverflow.com/questions/1279906/turn-off-anti-alias-for-font-in-emacs-23
   ;; (setq-default mac-allow-anti-aliasing nil)
   )
-
-;; adjust the size of Emacs window for org mode agenda/todo list to display herizontal
-(if (or (eq system-type 'windows-nt) (eq system-type 'darwin))
-    (toggle-frame-maximized))
 
 (use-package winum
   :hook (after-init . winum-mode)
