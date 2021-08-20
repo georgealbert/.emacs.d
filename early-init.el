@@ -11,6 +11,8 @@
 ;; we must prevent Emacs from doing it early!
 (setq package-enable-at-startup nil)
 
+(setq package-quickstart t)
+
 (advice-add #'package--ensure-init-file :override #'ignore)
 
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
