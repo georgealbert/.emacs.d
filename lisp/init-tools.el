@@ -46,7 +46,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 (ggtags-mode 1)))))
 
 (use-package undo-tree
-  ;; :ensure t
   :disabled t
   :defer 1
   :diminish
@@ -178,7 +177,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv
   :defer t
-  ;; :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/sdcv"
   :bind (("s-t p" . sdcv-search-pointer)  ;; 光标处的单词, buffer显示
          ("s-t t" . sdcv-search-pointer+) ;; 光标处的单词, frame显示
@@ -202,7 +200,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (when (eq system-type 'darwin)
     (progn
       ;; (bind-key* "s-t" sdcv-search-pointer+)
-      ;; (setq sdcv-dictionary-data-dir "/Volumes/Win10/home/albert/stardict")))
       (setq sdcv-dictionary-data-dir "/Users/albert/stardict")))
 
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
@@ -216,15 +213,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 
   ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
   (setq sdcv-tooltip-timeout 0))
-
-;; [2020-11-23 Mon 00:00:33]
-(use-package exec-path-from-shell
-  :if (memq window-system '(ns mac x))
-  :disabled t
-  ;; :ensure t
-  :config
-  ;; (setq exec-path-from-shell-arguments '("-l"))
-  (exec-path-from-shell-initialize))
 
 ;;
 ;; https://emacs-china.org/t/topic/5507
@@ -247,7 +235,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 (use-package amx
   :ensure nil
   :defer t
-  ;; :disabled t
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
   ;; :bind ("M-x" . amx)
   :init
