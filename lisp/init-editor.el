@@ -151,20 +151,20 @@
 ;; doc: Colourful dired from seagle0128/.emacs.d/lisp/init-dired.el，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
   :defer t
-  :ensure t
-  :hook (dired-initial-position . diredfl-mode)
+  :hook (dired-mode . diredfl-mode)
+  ;; :hook (dired-initial-position . diredfl-mode)
         ;; (dired-after-readin . diredfl-mode)
   :config
   (defface my-diredfl-read-priv
-  '((((background dark)) (:background "bg"))
+  '((((background dark)) (:background "#181a26"))
     (t                   (:background "LightGray")))
     "*Face used for read privilege indicator (r) in Dired buffers."
     :group 'diredfl)
   (setq diredfl-read-priv 'my-diredfl-read-priv)
 
   (defface my-diredfl-write-priv
-    '((((background dark)) (:background "bg"))
-      (t                   (:background "Orchid")))
+    '((((background dark)) (:background "#181a26"))
+      (t                   (:background "orchid")))
     "*Face used for write privilege indicator (w) in Dired buffers."
     :group 'diredfl)
   (setq diredfl-write-priv 'my-diredfl-write-priv)
