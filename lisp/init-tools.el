@@ -233,13 +233,14 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;;
 ;; 2. 给 Emacs 设置 PATH 和 exec-path
 ;; (getenv "PATH")
-(condition-case err
-    (let ((path (with-temp-buffer
-                  (insert-file-contents-literally "~/.path")
-                  (buffer-string))))
-      (setenv "PATH" path)
-      (setq exec-path (append (parse-colon-path path) (list exec-directory))))
-  (error (warn "%s" (error-message-string err))))
+(when IS-MAC
+  (condition-case err
+      (let ((path (with-temp-buffer
+                    (insert-file-contents-literally "~/.path")
+                    (buffer-string))))
+        (setenv "PATH" path)
+        (setq exec-path (append (parse-colon-path path) (list exec-directory))))
+    (error (warn "%s" (error-message-string err)))))
 
 ;; helm可以使用amx作为后端了，branch: helm-amx
 ;; https://github.com/DarwinAwardWinner/amx/issues/23

@@ -35,9 +35,9 @@
   (albert-if-dump
       (enable-theme 'doom-deeper-blue)))
 
-(require 'benchmark-init-modes)
-(require 'benchmark-init)
-(benchmark-init/activate)
+;; (require 'benchmark-init-modes)
+;; (require 'benchmark-init)
+;; (benchmark-init/activate)
 
 ;; Load path
 ;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
@@ -52,8 +52,8 @@
           (expand-file-name "site-lisp" user-emacs-directory)))
     (normal-top-level-add-subdirs-to-load-path)))
 
-(advice-add #'package-initialize :after #'update-load-path)
-(advice-add #'package-initialize :after #'add-subdirs-to-load-path)
+;; (advice-add #'package-initialize :after #'update-load-path)
+;; (advice-add #'package-initialize :after #'add-subdirs-to-load-path)
 
 (update-load-path)
 
@@ -74,7 +74,7 @@
 (require 'init-ui-theme)
 
 ;; maximize window
-(if (or (eq system-type 'windows-nt) (eq system-type 'darwin))
+(if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
     (toggle-frame-maximized))
 
 (custom-set-variables
