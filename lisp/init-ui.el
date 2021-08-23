@@ -102,6 +102,7 @@
 ;; [2019-05-15 周三 15:33:55] emacs 26.2+可以用，显示速度比linum快很多。
 (use-package display-line-numbers
   :ensure nil
+  :defer t
   :hook (prog-mode . display-line-numbers-mode)
         (org-mode . albert-display-line-numbers)
   ;; :init
@@ -225,7 +226,7 @@
   :hook (after-init . winum-mode)
   :init
   (setq winum-keymap
-        (if IS-WINDOWS
+        (if (or IS-WINDOWS IS-LINUX)
             (let ((map (make-sparse-keymap)))
               ;; (define-key map (kbd "C-`") 'winum-select-window-by-number)
               ;; (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
