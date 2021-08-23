@@ -98,6 +98,7 @@
 
 ;; homepage: https://github.com/redguardtoo/evil-matchit
 (use-package evil-matchit
+  :defer t
   :hook (prog-mode . turn-on-evil-matchit-mode)
   )
 
@@ -111,6 +112,7 @@
 
 (use-package ediff
   :ensure nil
+  :defer t
   :hook(;; show org ediffs unfolded
         ;; (ediff-prepare-buffer . outline-show-all)
         ;; restore window layout when done

@@ -23,6 +23,7 @@
 ;; url: http://www.emacswiki.org/emacs/HighlightParentheses
 ;; usage: 用不同颜色高亮显示每一级括号
 (use-package highlight-parentheses
+  :defer t
   :hook (prog-mode . highlight-parentheses-mode)
   :diminish
   :config
