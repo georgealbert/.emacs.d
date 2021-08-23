@@ -177,7 +177,7 @@ they were loaded at startup."
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
-(setq use-package-verbose t)
+(setq use-package-verbose nil)
 (require 'use-package)
 
 ;; use win key in windows
@@ -209,13 +209,15 @@ they were loaded at startup."
     (set-selection-coding-system 'utf-8)))
 
 (use-package gcmh
-  :diminish
+  :defer t
+  ;; :diminish
   ;; :defer 10
   ;; :config
   ;; (gcmh-mode +1)
   )
 
 (use-package general
+  :defer t
   ;; :init
   ;; Convenience aliases
   ;; (defalias 'define-key! #'general-def)
