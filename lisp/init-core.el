@@ -177,7 +177,7 @@ they were loaded at startup."
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
-(setq use-package-verbose nil)
+(setq use-package-verbose t)
 (require 'use-package)
 
 ;; use win key in windows
