@@ -1,21 +1,21 @@
 [submodule "lazy-load"]
 	path = site-lisp/extensions/lazy-load
-	url = https://github.com/manateelazycat/lazy-load.git
+	url = git@github.com:manateelazycat/lazy-load.git
 [submodule "awesome-pair"]
 	path = site-lisp/extensions/awesome-pair
-	url = https://github.com/manateelazycat/awesome-pair
+	url = git@github.com:manateelazycat/awesome-pair
 [submodule "pinyinlib"]
 	path = site-lisp/extensions/pinyinlib
-	url = https://github.com/georgealbert/pinyinlib.el
+	url = git@github.com:georgealbert/pinyinlib.el
 [submodule "aweshell"]
 	path = site-lisp/extensions/aweshell
-	url = https://github.com/georgealbert/aweshell
+	url = git@github.com:georgealbert/aweshell
 [submodule "pyim"]
 	path = site-lisp/extensions/pyim
-	url = https://github.com/georgealbert/pyim
+	url = git@github.com:georgealbert/pyim
 [submodule "sdcv"]
 	path = site-lisp/extensions/sdcv
-	url = https://github.com/manateelazycat/sdcv
+	url = git@github.com:manateelazycat/sdcv
 [submodule "amx"]
 	path = site-lisp/extensions/amx
-	url = https://github.com/georgealbert/amx
+	url = git@github.com:georgealbert/amx
