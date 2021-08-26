@@ -1,5 +1,9 @@
 ;;; init-org.el -*- lexical-binding: t; -*-
 
+;;
+;; http://doc.norang.ca/org-mode.html
+;;
+
 ;; 4.2 Org-Mode Setup
 
 ;; (if (< emacs-major-version 28)
