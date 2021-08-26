@@ -222,6 +222,10 @@
   ;; (setq-default mac-allow-anti-aliasing nil)
   )
 
+;; https://idiocy.org/emacs-fonts-and-fontsets.html
+;; http://users.teilar.gr/~g1951d/Symbola.zip
+(set-fontset-font t nil "Symbola" nil 'append)
+
 (use-package winum
   :hook (after-init . winum-mode)
   :init
