@@ -234,7 +234,8 @@
   (global-set-key [remap describe-function] #'helpful-callable)
   (global-set-key [remap describe-command]  #'helpful-command)
   (global-set-key [remap describe-variable] #'helpful-variable)
-  (global-set-key [remap describe-key]      #'helpful-key))
+  (global-set-key [remap describe-key]      #'helpful-key)
+  (global-set-key [remap describe-symbol]   #'helpful-symbol))
 
 ;; from github.com/redguardtoo/.emacs.d/lisp/init-essential.el, 快捷键 `SPC ww'
 ;; {{ narrow region
