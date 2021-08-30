@@ -62,7 +62,7 @@
   (setq display-time-default-load-average nil)
   
   ;; 在modeline显示时间
-  (display-time)
+  ;; (display-time)
   
   ;; 列号是从0开始的。
   (column-number-mode +1)
