@@ -1307,6 +1307,8 @@ holding contextual information."
 	(format "\n%s\n" (or contents ""))))))
 
 (use-package org-static-blog
+  :ensure nil
+  :load-path "~/.emacs.d/site-lisp/extensions/org-static-blog"
   :defer t)
 
 (setq org-static-blog-langcode "zh")
@@ -1337,8 +1339,8 @@ holding contextual information."
 <link href= \"/main.css\" rel=\"stylesheet\" type=\"text/css\" />
 <link rel=\"icon\" href=\"favicon.ico\">")
 
-This preamble is inserted at the beginning of the <body> of every page:
-  This particular HTML creates a <div> with a simple linked headline
+;; This preamble is inserted at the beginning of the <body> of every page:
+;;  This particular HTML creates a <div> with a simple linked headline
 ;; (setq org-static-blog-page-preamble
 ;; "<div class=\"header\">
 ;;   <a href=\"#\">Albert Zhou's Blog</a>
