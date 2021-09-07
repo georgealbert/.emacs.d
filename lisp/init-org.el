@@ -1105,6 +1105,55 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; (use-package ox-publish
 ;;   :defer t)
 
+;; https://www.taingram.org/blog/org-mode-blog.html
+;; output:
+;;<div class="post-date">
+;; 03 Sep 2021</div>
+(setq org-export-global-macros
+      '(("timestamp" . "@@html:<div class=\"post-date\">$1</div>@@")))
+      ;; '(("timestamp" . "@@html:<li><div class=\"post-date\">$1<a href=\"\$2\">$3</a></div></li>@@")))
+
+(defun my/org-sitemap-date-entry-format (entry style project)
+  "Format ENTRY in org-publish PROJECT Sitemap format ENTRY ENTRY STYLE format that includes date."
+  (let ((filename (org-publish-find-title entry project)))
+    (if (= (length filename) 0)
+        (format "*%s*" entry)
+      ;; (format "{{{timestamp(%s %s %s)}}} [[file:%s][%s]]"
+      (format "{{{timestamp(%s)}}} [[file:%s][%s]]"
+              (format-time-string "%Y-%m-%d"
+                                  (org-publish-find-date entry project))
+              ;; entry
+              ;; filename
+              entry
+              filename))))
+
+(defun format-sitemap-entry (entry _style project)
+  "Format ENTRY in PROJECT.
+Leaves the rss page out of the main sitemap list."
+  (if (equal "rss.org" entry) ""
+    (format "[[file:%s][%s]] =%s="
+            entry
+            (org-publish-find-title entry project)
+            (format-time-string "%m/%d/%Y" (org-publish-find-date entry project)))))
+
+(defun generate-posts-sitemap(title list)
+  "Default site map, as a string.
+TITLE is the title of the site map.  LIST is an internal
+representation for the files to include, as returned by
+`org-list-to-lisp'.  PROJECT is the current project.  This is
+almost identical to the version in the org publish source code.
+The only change I made is wrapping it in the .sitemap div."
+  (concat
+   "#+HTML: <link rel=\"stylesheet\" type=\"text/css\" href=\"/home.css\" />\n"
+   "#+TITLE: " title
+   "\n\n"
+   "#+begin_sitemap\n"
+   ;; "#+attr_html: :class list-group-item title\n"
+   (org-list-to-org list)
+   "\n#+end_sitemap"))
+
+(defconst html-main-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"/home.css\" >")
+
 (setq org-publish-project-alist
   '(
     ;; 把各部分的配置文件写到这里面来
@@ -1118,15 +1167,22 @@ Late deadlines first, then scheduled, then non-late deadlines"
       :headline-levels 4             ; Just the default for this project.
       :auto-preamble t
       :section-numbers nil
+
+      ;; :html-head ,html-main-head
+
       ;:with-date nil
       ;:author "Albert"
       ;:email "georgealbert@qq.com"
-      ;;:auto-sitemap t                ; Generate sitemap.org automagically...
+      :auto-sitemap t                ; Generate sitemap.org automagically...
       :sitemap-filename "index.org"            ; ... call it sitemap.org (it's the default)...
       ;;:sitemap-title "Albert's blog"         ; ... with title 'Sitemap'.
       :with-toc nil                            ; 不要toc，否则太难看
       :sitemap-sort-files anti-chronologically
-      :sitemap-file-entry-format "%d %t"
+      ;; :sitemap-file-entry-format "%d %t"
+      :sitemap-function generate-posts-sitemap
+      :sitemap-style list
+      ;; :sitemap-format-entry format-sitemap-entry
+      :sitemap-format-entry my/org-sitemap-date-entry-format
       :html-head-include-scripts nil           ; 不输出<head>中的javascript脚本
       :html-postamble nil                      ; 不输出creator、date和validation
       :html-validation-link nil
@@ -1249,6 +1305,58 @@ holding contextual information."
 		    (org-export-get-headline-number parent info) "-"))))
         ;; Build return value.
 	(format "\n%s\n" (or contents ""))))))
+
+(use-package org-static-blog
+  :defer t)
+
+(setq org-static-blog-langcode "zh")
+(setq org-static-blog-publish-title "Albert Zhou's Blog")
+;; (setq org-static-blog-publish-url "http://www.albertzhou.net/")
+(setq org-static-blog-publish-url "")
+(setq org-static-blog-publish-directory "~/workspace/blog/")
+(setq org-static-blog-posts-directory "~/org/notes")
+(setq org-static-blog-drafts-directory "~/org/notes/drafts/")
+(setq org-static-blog-enable-tags nil)
+(setq org-export-with-toc nil)
+(setq org-export-with-section-numbers nil)
+
+;; This header is inserted into the <head> section of every page:
+;;   (you will need to create the style sheet at
+;;    ~/projects/blog/static/style.css
+;;    and the favicon at
+;;    ~/projects/blog/static/favicon.ico)
+
+;; <link rel=\"stylesheet\" href=\"https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css\">
+;; <link rel=\"stylesheet\" href=\"https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css\">
+;; <link href= \"/home.css\" rel=\"stylesheet\" type=\"text/css\" />
+(setq org-static-blog-page-header
+"<meta name=\"author\" content=\"Albert Zhou\">
+<meta name=\"referrer\" content=\"no-referrer\">
+<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=0.5\">
+<link href= \"/main.css\" rel=\"stylesheet\" type=\"text/css\" />
+<link rel=\"icon\" href=\"favicon.ico\">")
+
+This preamble is inserted at the beginning of the <body> of every page:
+  This particular HTML creates a <div> with a simple linked headline
+;; (setq org-static-blog-page-preamble
+;; "<div class=\"header\">
+;;   <a href=\"#\">Albert Zhou's Blog</a>
+;; </div>")
+
+;; This postamble is inserted at the end of the <body> of every page:
+;;   This particular HTML creates a <div> with a link to the archive page
+;;   and a licensing stub.
+;; (setq org-static-blog-page-postamble
+;; "<div id=\"archive\">
+;;   <a href=\"https://staticblog.org/archive.html\">Other posts</a>
+;; </div>
+;; <center><a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/3.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-sa/3.0/88x31.png\" /></a><br /><span xmlns:dct=\"https://purl.org/dc/terms/\" href=\"https://purl.org/dc/dcmitype/Text\" property=\"dct:title\" rel=\"dct:type\">bastibe.de</span> by <a xmlns:cc=\"https://creativecommons.org/ns#\" href=\"https://bastibe.de\" property=\"cc:attributionName\" rel=\"cc:attributionURL\">Bastian Bechtold</a> is licensed under a <a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.</center>")
+
+;; This HTML code is inserted into the index page between the preamble and
+;;   the blog posts
+(setq org-static-blog-index-front-matter
+"<h1> Welcome to my blog </h1>\n")
 
 (use-package org-download
   :after org

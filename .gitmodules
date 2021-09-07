@@ -19,3 +19,6 @@
 [submodule "amx"]
 	path = site-lisp/extensions/amx
 	url = git@github.com:georgealbert/amx
+[submodule "org-static-blog"]
+	path = site-lisp/extensions/org-static-blog
+	url = git@github.com:georgealbert/org-static-blog
