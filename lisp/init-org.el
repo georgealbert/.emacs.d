@@ -1102,9 +1102,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-src-fontify-natively t)
 
-;; (use-package ox-publish
-;;   :defer t)
-
 ;; https://www.taingram.org/blog/org-mode-blog.html
 ;; output:
 ;;<div class="post-date">
@@ -1255,9 +1252,10 @@ holding contextual information."
           ;; This is a deep sub-tree: export it as a list item.
           (let* ((html-type (if numberedp "ol" "ul")))
 	    (concat
-	     (and (org-export-first-sibling-p headline info)
-		  (apply #'format "<%s class=\"org-%s\">\n"
-			 (make-list 2 html-type)))
+         (and (org-export-first-sibling-p headline info)
+              ;; (apply #'format "<%s class=\"org-%s\">\n"
+              ;;        (make-list 2 html-type)))
+              (format "<%s>\n" html-type))
 	     (org-html-format-list-item
                    contents (if numberedp 'ordered 'unordered)
 		   nil info nil
@@ -1306,6 +1304,33 @@ holding contextual information."
         ;; Build return value.
 	(format "\n%s\n" (or contents ""))))))
 
+;; 去掉 ol/ul/dl 标签里面的class
+(advice-add #'org-html-plain-list :override #'albert|org-html-plain-list)
+
+(defun albert|org-html-plain-list (plain-list contents _info)
+  "Transcode a PLAIN-LIST element from Org to HTML.
+CONTENTS is the contents of the list.  INFO is a plist holding
+contextual information."
+  (let* ((type (pcase (org-element-property :type plain-list)
+		 (`ordered "ol")
+		 (`unordered "ul")
+		 (`descriptive "dl")
+		 (other (error "Unknown HTML list type: %s" other))))
+	 (class (format "org-%s" type))
+	 (attributes (org-export-read-attribute :attr_html plain-list)))
+    ;; (format "<%s %s>\n%s</%s>"
+    (format "<%s>\n%s</%s>"
+	    type
+        ;; (org-html--make-attribute-string
+        ;;  (plist-put attributes :class
+        ;;             (org-trim
+        ;;              (mapconcat #'identity
+        ;;                         (list class (plist-get attributes :class))
+		;;    	                    " "))))
+	    contents
+	    type)))
+
+
 (use-package org-static-blog
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/org-static-blog"
@@ -1315,9 +1340,10 @@ holding contextual information."
 (setq org-static-blog-publish-title "Albert Zhou's Blog")
 ;; (setq org-static-blog-publish-url "http://www.albertzhou.net/")
 (setq org-static-blog-publish-url "")
-(setq org-static-blog-publish-directory "~/workspace/blog/")
-(setq org-static-blog-posts-directory "~/org/notes")
-(setq org-static-blog-drafts-directory "~/org/notes/drafts/")
+;; (setq org-static-blog-publish-directory "~/workspace/blog/")
+(setq org-static-blog-publish-directory "~/workspace/georgealbert.github.io/")
+(setq org-static-blog-posts-directory "~/org/notes/")
+(setq org-static-blog-drafts-directory "~/org/drafts/")
 (setq org-static-blog-enable-tags nil)
 (setq org-export-with-toc nil)
 (setq org-export-with-section-numbers nil)
@@ -1327,17 +1353,13 @@ holding contextual information."
 ;;    ~/projects/blog/static/style.css
 ;;    and the favicon at
 ;;    ~/projects/blog/static/favicon.ico)
-
-;; <link rel=\"stylesheet\" href=\"https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css\">
-;; <link rel=\"stylesheet\" href=\"https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css\">
-;; <link href= \"/home.css\" rel=\"stylesheet\" type=\"text/css\" />
 (setq org-static-blog-page-header
 "<meta name=\"author\" content=\"Albert Zhou\">
 <meta name=\"referrer\" content=\"no-referrer\">
 <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=0.5\">
 <link href= \"/main.css\" rel=\"stylesheet\" type=\"text/css\" />
-<link rel=\"icon\" href=\"favicon.ico\">")
+<link rel=\"icon\" href=\"/favicon.ico\">")
 
 ;; This preamble is inserted at the beginning of the <body> of every page:
 ;;  This particular HTML creates a <div> with a simple linked headline
