@@ -27,6 +27,10 @@
         ;; foo-bar vim认为就是一个word，emacs会认为是2个
         evil-symbol-word-search t
 
+        ;; emacs 29.0.50, org mode TAB
+        ;; org-cycle broken while using evil https://github.com/emacs-evil/evil/issues/1505
+        evil-want-C-i-jump nil
+
         evil-undo-system
         (cond (EMACS28+ 'undo-redo)))
   :config 
@@ -229,6 +233,7 @@
 ;; doc: a better *help* buffer
 (use-package helpful
   :defer t
+  ;; :disabled t
   :commands helpful--read-symbol
   :init
   (global-set-key [remap describe-function] #'helpful-callable)
