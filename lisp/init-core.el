@@ -187,6 +187,23 @@ they were loaded at startup."
   ;; (w32-register-hot-key [s-s])
   )
   
+;;
+;;; Reasonable defaults for interactive sessions
+
+;; Disable warnings from legacy advice system. They aren't useful, and what can
+;; we do about them, besides changing packages upstream?
+(setq ad-redefinition-action 'accept)
+
+;; Reduce debug output, well, unless we've asked for it.
+(setq debug-on-error init-file-debug
+      jka-compr-verbose init-file-debug)
+
+;; Get rid of "For information about GNU Emacs..." message at startup, unless
+;; we're in a daemon session where it'll say "Starting Emacs daemon." instead,
+;; which isn't so bad.
+(unless (daemonp)
+  (advice-add #'display-startup-echo-area-message :override #'ignore))
+
 ;; *scratch* buffer改为fundamental mode，就不会在emacs启动后显示*scratch* buffer
 ;; 时就加载display-numbers-mode和hl-todo了。
 ;; 貌似Helm-lisp以前也没见到会加载，怎么也加载了呢?
