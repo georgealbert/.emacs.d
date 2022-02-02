@@ -212,6 +212,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
           "懒虫简明英汉词典"))
 
   ;; (shell-command-to-string "E:\\emacs\\bin\\sdcv.exe -n --data-dir=\"e:\\home\\albert\\stardict\" \"test\"")
+  ;; (shell-command-to-string "env LANG=zh_CN.UTF-8 sdcv -n --data-dir ~/stardict test")
   (setq sdcv-tooltip-timeout 0))
 
 ;;
