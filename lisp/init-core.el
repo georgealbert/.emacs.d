@@ -43,24 +43,20 @@ advised)."
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
-;; Contrary to what many Emacs users have in their configs, you don't need more
-;; than this to make UTF-8 the default coding system:
-(set-language-environment "UTF-8")
-
 (defvar doom-interactive-mode (not noninteractive)
   "If non-nil, Emacs is in interactive mode.")
   
-(defvar doom--initial-file-name-handler-alist file-name-handler-alist)
+;; (defvar doom--initial-file-name-handler-alist file-name-handler-alist)
 
-;; This is consulted on every `require', `load' and various path/io functions.
-;; You get a minor speed up by nooping this.
-(setq file-name-handler-alist nil)
+;; ;; This is consulted on every `require', `load' and various path/io functions.
+;; ;; You get a minor speed up by nooping this.
+;; (setq file-name-handler-alist nil)
 
-;; Restore `file-name-handler-alist', because it is needed for handling
-;; encrypted or compressed files, among other things.
-(defun doom-reset-file-handler-alist-h ()
-  (setq file-name-handler-alist doom--initial-file-name-handler-alist))
-(add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
+;; ;; Restore `file-name-handler-alist', because it is needed for handling
+;; ;; encrypted or compressed files, among other things.
+;; (defun doom-reset-file-handler-alist-h ()
+;;   (setq file-name-handler-alist doom--initial-file-name-handler-alist))
+;; (add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
 
 ;; 显示加载时间
 (defvar doom-init-time 'nil
@@ -171,8 +167,8 @@ they were loaded at startup."
 (require 'package)
 
 (add-to-list 'package-archives
-             ;;'("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
-             '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
+             '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+             ;; '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
