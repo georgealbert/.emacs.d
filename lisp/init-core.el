@@ -143,21 +143,23 @@ they were loaded at startup."
   
 ;; ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
 ;; ;; collect; staving off the collector while the user is working.
-(when doom-interactive-mode
-  (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
-  (with-eval-after-load 'gcmh
-    (setq gcmh-idle-delay 5
-          gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-          gcmh-verbose nil)
-    (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
+;; (when doom-interactive-mode
+;;   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
+;;   (with-eval-after-load 'gcmh
+;;     (setq gcmh-idle-delay 5
+;;           gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
+;;           gcmh-verbose nil)
+;;     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
 
 ;; The GC introduces annoying pauses and stuttering into our Emacs experience,
 ;; so we use `gcmh' to stave off the GC while we're using Emacs, and provoke it
-;; when it's idle.
-;; (setq gcmh-idle-delay 2  ; default is 15s
-;;       gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-;;       gcmh-verbose nil)
-    
+;; when it's idle. However, if the idle delay is too long, we run the risk of
+;; runaway memory usage in busy sessions. If it's too low, then we may as well
+;; not be using gcmh at all.
+(setq gcmh-idle-delay 'auto  ; default is 15s
+      gcmh-auto-idle-delay-factor 10
+      gcmh-high-cons-threshold (* 16 1024 1024))  ; 16mb
+
 ;; doom-emacs用的hook是 window-setup-hook
 (when doom-interactive-mode
   (add-hook 'window-setup-hook #'doom-display-benchmark-h 'append))
