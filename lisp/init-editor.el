@@ -236,6 +236,12 @@
   ;; :disabled t
   :commands helpful--read-symbol
   :init
+  ;; https://github.com/hlissner/doom-emacs/commit/c6d3ceef7e8f3abdfce3cd3e51f1e570603bd230
+  ;; fix: void-variable read-symbol-positions-list w/ helpful
+  (when EMACS29+
+    ;; REVIEW See Wilfred/elisp-refs#35. Remove once fixed upstream.
+    (defvar read-symbol-positions-list nil))
+
   (global-set-key [remap describe-function] #'helpful-callable)
   (global-set-key [remap describe-command]  #'helpful-command)
   (global-set-key [remap describe-variable] #'helpful-variable)

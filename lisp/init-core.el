@@ -38,6 +38,7 @@ advised)."
 ;; doom-emacs/core/core.el
 (defconst EMACS27+   (> emacs-major-version 26))
 (defconst EMACS28+   (> emacs-major-version 27))
+(defconst EMACS29+   (> emacs-major-version 28))
 (defconst IS-MAC     (eq system-type 'darwin))
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
