@@ -161,13 +161,19 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; 用外部输入法切换吧，比较稳定。舒服了
 (if (eq system-type 'darwin)
     (progn
+      ;; (defvar asc-ime (mac-input-source))
+      (defvar last-ime (mac-input-source))
       (defun emacs-ime-disable ()
         ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "com.apple.keylayout.ABC"))
-      (mac-select-input-source "com.apple.keylayout.ABC"))
+        (setq last-ime (mac-input-source))
+        (mac-select-input-source "com.apple.keylayout.ABC")
+        )
 
       (defun emacs-ime-enable ()
         ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "im.rime.inputmethod.Squirrel.Rime"))
-      (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime"))
+        ;; (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime")
+        (mac-select-input-source last-ime)
+        )
 
       (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
