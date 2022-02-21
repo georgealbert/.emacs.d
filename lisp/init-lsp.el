@@ -42,6 +42,9 @@
   ;; use ffip instead
   (setq lsp-enable-links nil)
 
+  ;; https://emacs-china.org/t/lsp-mode-codeaction/20018
+  (setq lsp-modeline-code-actions-enable nil)
+
   ;; don't ping LSP lanaguage server too frequently
   (defvar lsp-on-touch-time 0)
   (defadvice lsp-on-change (around lsp-on-change-hack activate)
