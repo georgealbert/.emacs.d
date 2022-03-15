@@ -127,7 +127,6 @@
   (if (eq system-type 'windows-nt)
       (progn
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
-        ;; (set-face-attribute 'default nil :font "PragmataPro Mono 11")
 
         ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
         ;; http://mix-mplus-ipa.osdn.jp/migu/
@@ -186,23 +185,28 @@
 (if (and (display-graphic-p) IS-WINDOWS)
     (albert-adjust-font))
 
-;; Font download from https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
 (defun albert-macos-notebook-font()
-  "macbook air on 1680x1050."
+  "macbook air on 1680x1050 or 1440x900."
   (progn
-    ;; 显示46行
-    (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
+    ;; mba 1680x1050 用20
+    ;; mba 1440x900 用18
 
-    ;; 显示52行，但是字体小了点，不舒服 
-    ;; (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 18")
+    ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/UbuntuMono/Regular
+    ;; (set-face-attribute 'default nil :font "UbuntuMono Nerd Font 18")
 
-    ;; 19px不知道缩放会不会有问题，20px算了，大一点看着轻松些
-    ;; (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 19")
+    ;; https://github.com/belluzj/fantasque-sans
+    ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
+    (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
+    
+    ;; (set-face-attribute 'default nil :font "MesloLGS NF 18")
 
-    ;; 显示41行
-    ;; (set-face-attribute 'default nil :font "等距更纱黑体 T SC 18")
+    ;; 设置中文字体和英文字体的缩放比例，用1:1即可。
 
-    (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
+    ;; 鸿蒙字体比更纱黑体显示更清晰
+    ;; https://developer.harmonyos.com/cn/docs/design/des-guides/font-0000001157868583
+    (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1)))
+
+    ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
     ;; 系统自带的`苹方-简'比`更纱黑'的字体稍微大了一点
     ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
