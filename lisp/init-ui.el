@@ -215,11 +215,17 @@
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         ;; (font-spec :family "苹方-简")))
-                        (font-spec :family "等距更纱黑体 T SC"))
+                        ;; (font-spec :family "等距更纱黑体 T SC"))
+                        (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
       )))
 
 (when IS-MAC
   (albert-macos-notebook-font)
+
+  ;; 让emacs左右分屏，mba在默认分辨率下是157
+  ;; (list split-height-threshold split-width-threshold)
+  ;; (list (window-height) (window-width))
+  (setq split-width-threshold 156)
 
   ;; disable anti-aliases
   ;; https://stackoverflow.com/questions/1279906/turn-off-anti-alias-for-font-in-emacs-23
