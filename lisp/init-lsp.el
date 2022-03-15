@@ -9,6 +9,7 @@
   ;; :hook (prog-mode . lsp)
   :hook (python-mode . lsp-deferred)
   ;; (go-mode . lsp-deferred)
+  (sh-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
   ;; :custom
@@ -43,7 +44,8 @@
   (setq lsp-enable-links nil)
 
   ;; https://emacs-china.org/t/lsp-mode-codeaction/20018
-  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-modeline-code-actions-enable nil
+        lsp-headerline-breadcrumb-enable nil)
 
   ;; don't ping LSP lanaguage server too frequently
   (defvar lsp-on-touch-time 0)
