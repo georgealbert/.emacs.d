@@ -172,6 +172,33 @@
   (setq diredfl-write-priv 'my-diredfl-write-priv)
   )
 
+(use-package dirvirsh
+  :ensure nil
+  :defer t
+  :custom
+  (dirvish-bookmarks-alist
+   '(("h" "~/"                          "Home")
+     ("d" "~/Downloads/"                "Downloads")
+     ;; ("m" "/mnt/"                       "Drives")
+     ;; ("t" "~/.local/share/Trash/files/" "TrashCan")
+     ))
+  :config
+  (dirvish-override-dired-mode)
+  (dirvish-peek-mode)
+  :bind
+  (("C-x d" . dirvish)
+   :map dired-mode-map
+        ("SPC" . dirvish-show-history)
+        ("r"   . dirvish-roam)
+        ("b"   . dirvish-goto-bookmark)
+        ("f"   . dirvish-file-info-menu)
+        ("M-a" . dirvish-mark-actions-menu)
+        ("M-s" . dirvish-setup-menu)
+        ("M-f" . dirvish-toggle-fullscreen)
+        ([remap dired-summary] . dirvish-dispatch)
+        ([remap dired-do-copy] . dirvish-yank)
+        ([remap mode-line-other-buffer] . dirvish-other-buffer)))
+
 ;; History
 (use-package saveplace
   :ensure nil
