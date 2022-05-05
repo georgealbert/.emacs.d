@@ -36,7 +36,7 @@
       (enable-theme 'doom-deeper-blue)))
 
 ;; (require 'benchmark-init-modes)
-;; (require 'benchmark-init)
+(require 'benchmark-init)
 ;; (benchmark-init/activate)
 
 ;; Load path
@@ -72,6 +72,9 @@
 (require 'init-hydra)
 (require 'init-ui)
 (require 'init-ui-theme)
+(require 'init-tree-sitter)
+;; (require 'sniper-modeline)
+;; (sniper-modeline-mode)
 
 ;; maximize window
 (if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
@@ -91,7 +94,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#100e23" "#7f7f7f"))
  '(objed-cursor-color "#FF0000")
  '(package-selected-packages
-   '(vue-mode add-node-modules-path lsp-pyright hydra wgrep find-file-in-project pinyinlib ivy-hydra ivy-prescient prescient amx cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download winum treemacs-evil flycheck-posframe all-the-icons doom-modeline doom-themes py-autopep8 ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info markdown-mode magit highlight-parentheses evil-paredit benchmark-init))
+   '(tree-sitter-langs dirvish all-the-icons-ivy-rich swift-mode org-static-blog yaml-mode vue-mode add-node-modules-path lsp-pyright hydra wgrep find-file-in-project pinyinlib ivy-hydra ivy-prescient prescient amx cmuscheme hl-todo gcmh vimrc-mode lua-mode org-download winum treemacs-evil flycheck-posframe all-the-icons doom-modeline doom-themes py-autopep8 ggtags go-mode web-mode use-package spinner sesman seq queue pkg-info markdown-mode magit highlight-parentheses evil-paredit benchmark-init))
  '(safe-local-variable-values '((encoding . UTF-8)))
  '(send-mail-function 'mailclient-send-it)
  '(vc-annotate-background "#181a26")
@@ -123,4 +126,4 @@
  ;; If there is more than one, they won't work right.
  '(ivy-minibuffer-match-face-1 ((t (:inherit font-lock-doc-face :foreground nil))))
  '(lsp-ui-doc-background ((t (:background nil))))
- '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button))))))
+ '(org-mode-line-clock ((t (:background nil :foreground "red" :box (:line-width -1 :style released-button)))) t))

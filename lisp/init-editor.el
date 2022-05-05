@@ -174,6 +174,7 @@
 
 (use-package dirvirsh
   :ensure nil
+  :disabled t
   :defer t
   :custom
   (dirvish-bookmarks-alist
