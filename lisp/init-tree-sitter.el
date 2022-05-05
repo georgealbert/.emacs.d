@@ -2,7 +2,7 @@
 ;;; --- Configure for tree sitter
 
 (use-package tree-sitter
-  :defer 1
+  :defer 3
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
@@ -20,11 +20,11 @@
 
   ;; Add Vue for tree-sitter:
   ;;
-  ;; 1. git clone https://github.com/ikatyang/tree-sitter-vue.git
-  ;; 2. gcc ./src/parser.c ./src/scanner.cc -fPIC -I./ --shared -o vue.so
-  ;; 3. cp ./vue.so ~/.tree-sitter-langs/bin (~/.tree-sitter-langs/bin is path of your tree-sitter-langs repo)
-  ;; (tree-sitter-load 'vue)
-  ;; (add-to-list 'tree-sitter-major-mode-language-alist '(web-mode . vue))
+  ;; 1. git clone git@github.com:ikatyang/tree-sitter-vue.git
+  ;; 2. g++ ./src/parser.c ./src/scanner.cc -fPIC -I /Users/albert/workspace/tree-sitter-vue/ -I /Users/albert/workspace/tree-sitter-vue/src -v --shared -o vue.dylib
+  ;; 3. cp -p ./vue.dylib ~/.emacs.d/elpa/tree-sitter-langs-*/bin (~/.tree-sitter-langs/bin is path of your tree-sitter-langs repo)
+  (tree-sitter-load 'vue)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(web-mode . vue))
 
   ;; Add Typescript for tree-sitter.
   ;;
