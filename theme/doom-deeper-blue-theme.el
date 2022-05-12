@@ -262,6 +262,14 @@ determine the exact padding."
 
    (magit-diff-context-highlight :foreground fg :background "gray30")
 
+   ;; orderless & corfu
+   (orderless-match-face-0 :weight 'bold :foreground (doom-blend blue fg 0.6) :background (doom-blend orange bg 0.1))
+   (orderless-match-face-1 :weight 'bold :foreground (doom-blend yellow fg 0.6) :background (doom-blend orange bg 0.1))
+   (orderless-match-face-2 :weight 'bold :foreground (doom-blend teal fg 0.6) :background (doom-blend orange bg 0.1))
+   (orderless-match-face-3 :weight 'bold :foreground (doom-blend magenta fg 0.6) :background (doom-blend orange bg 0.1))
+
+   (corfu-current :background "gray30" :foreground fg)
+
    ;; ediff
 
    ;; 设置整行不同的背景色
