@@ -22,3 +22,6 @@
 [submodule "org-static-blog"]
 	path = site-lisp/extensions/org-static-blog
 	url = git@github.com:georgealbert/org-static-blog
+[submodule "lsp-bridge"]
+	path = site-lisp/extensions/lsp-bridge
+	url = git@github.com:manateelazycat/lsp-bridge.git
