@@ -56,6 +56,11 @@
   ;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
   (define-key evil-normal-state-map "gh" 'beginning-of-defun)
 
+  ;; (evil-define-minor-mode-key 'normal 'lsp-bridge-mode "C-t" 'lsp-bridge-return-from-def)
+  ;; (evil-define-minor-mode-key 'motion 'lsp-bridge-mode "C-]" 'lsp-bridge-find-define)
+  (evil-define-key 'motion 'lsp-bridge-mode (kbd "C-]") 'lsp-bridge-find-define)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "C-t") 'lsp-bridge-return-from-def)
+
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.
