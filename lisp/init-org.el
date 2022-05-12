@@ -28,10 +28,10 @@
     '(org-tempo
       )))
       
-(setq org-fontify-whole-heading-line t
+(setq org-fontify-whole-heading-line nil
       ;; org-eldoc-breadcrumb-separator " → "
       org-hide-leading-stars t
-      org-hide-leading-stars-before-indent-mode t
+      ;; org-hide-leading-stars-before-indent-mode t
       ;; org-image-actual-width nil
       ;; org-tags-column 0
       ;; org-list-description-max-indent 4
