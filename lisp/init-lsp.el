@@ -12,8 +12,6 @@
   (sh-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
-  ;; :custom
-  ;; (lsp-headerline-breadcrumb-enable nil)
   :init
   (setq lsp-auto-guess-root nil)       ; Detect project root 貌似设置为t后，go总是找不到对应的package
                                         ; Auto-kill LSP server
@@ -55,12 +53,6 @@
                 lsp-on-touch-time) 30) ;; 30 seconds
       (setq lsp-on-touch-time (float-time (current-time)))
       ad-do-it))
-
-  ;; (setq lsp-headerline-breadcrumb-enable nil)
-  ;; (setq lsp-headerline-breadcrumb-mode nil)
-  ;; (add-hook 'lsp-mode-hook (lambda ()
-  ;;                            ((lsp-headerline-breadcrumb-mode nil))
-  ;;                            ))
 )
 
 (use-package lsp-ui
@@ -80,9 +72,6 @@
               ;; lsp-enable-snippet nil
               lsp-ui-sideline-enable nil
 
-              ;; emacs26.2 经常陷入卡顿, set it to nil.
-              ;; lsp-use-native-json nil
-
               ;; emacs 27.0.50, https://emacs-lsp.github.io/lsp-mode/lsp-mode.html
               lsp-use-native-json t
 
@@ -101,6 +90,7 @@
   
 (use-package lsp-treemacs
   :defer t
+  :disabled t
   :bind (:map lsp-mode-map
   ("M-9" . lsp-treemacs-errors-list)))
 

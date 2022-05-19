@@ -33,9 +33,10 @@
 (use-package lsp-mode
   ;; :diminish lsp-mode
   :defer t
+  :disabled t
   ;; :hook (prog-mode . lsp)
   :hook (python-mode . lsp-deferred)
-        ;; (go-mode . lsp-deferred)
+        (go-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-c C-d" . lsp-describe-thing-at-point))
   :init
@@ -63,6 +64,19 @@
   ;; use ffip instead
   (setq lsp-enable-links nil)
 
+  ;; https://emacs-china.org/t/lsp-mode-codeaction/20018
+  (setq lsp-modeline-code-actions-enable nil
+        lsp-headerline-breadcrumb-enable nil)
+
+  ;; don't ping LSP lanaguage server too frequently
+  (defvar lsp-on-touch-time 0)
+  (defadvice lsp-on-change (around lsp-on-change-hack activate)
+    ;; don't run `lsp-on-change' too frequently
+    (when (> (- (float-time (current-time))
+                lsp-on-touch-time) 30) ;; 30 seconds
+      (setq lsp-on-touch-time (float-time (current-time)))
+      ad-do-it))
+
   ;; 在lsp-clients.el里面直接require的，无效，照样加载
   ;; (setq lsp-disabled-clients '(ruby java dart clojure metals go xml vetur rust solargraph elm))
   ;; :config
@@ -71,6 +85,7 @@
 
 (use-package lsp-ui
   :defer t
+  :disabled t
   :custom-face
   (lsp-ui-doc-background ((t (:background nil))))
   :bind (:map lsp-ui-mode-map
@@ -103,10 +118,12 @@
 
 (use-package company-lsp
   :defer t
+  :disabled t
   :init (setq company-lsp-cache-candidates 'auto))
   
 (use-package lsp-treemacs
   :defer t
+  :disabled t
   :bind (:map lsp-mode-map
   ("M-9" . lsp-treemacs-errors-list)))
 
@@ -116,6 +133,7 @@
 ;; 3. npm update -g pyright
 (use-package lsp-pyright
   :ensure t
+  :disabled t
   ;; :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
   :after lsp-mode
   :hook (python-mode . (lambda ()
