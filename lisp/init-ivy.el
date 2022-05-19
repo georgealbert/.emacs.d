@@ -221,4 +221,11 @@ If N is not nil, only list directories in current project."
   :config
   (ivy-posframe-mode 1))
 
+(use-package color-rg
+  :ensure nil
+  :load-path "~/.emacs.d/site-lisp/extensions/color-rg"
+  :init
+  (setq color-rg-mac-load-path-from-shell nil)
+)
+
 (provide 'init-ivy)
