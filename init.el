@@ -73,6 +73,13 @@
 (require 'init-ui)
 (require 'init-ui-theme)
 (require 'init-tree-sitter)
+
+;; (require 'init-lsp)
+;; (require 'init-company)
+
+(require 'init-lsp-bridge)
+(require 'init-corfu)
+
 ;; (require 'sniper-modeline)
 ;; (sniper-modeline-mode)
 
