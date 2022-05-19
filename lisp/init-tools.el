@@ -157,8 +157,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
 
-;; [2020-12-02 三 16:38:53] 折腾了半天，也改了代码，发现不稳定，一切换到rime，输入字符，就把emacs卡死了，还是
-;; 用外部输入法切换吧，比较稳定。舒服了
 (if (eq system-type 'darwin)
     (progn
       ;; (defvar asc-ime (mac-input-source))
@@ -192,9 +190,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   ;; fix non-prefix "s-t" key error.
   (define-key global-map (kbd "s-t") (make-sparse-keymap))
   ;; (global-set-key (kbd "s-t p") 'sdcv-search-pointer)
-  ;; (global-set-key (kbd "s-t t") 'sdcv-search-pointer+)
-  ;; (global-set-key (kbd "s-t i") 'sdcv-search-input)
-  ;; (global-set-key (kbd "s-t ;") 'sdcv-search-input+)
 
   :config
   (when IS-WINDOWS
@@ -205,7 +200,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 
   (when (eq system-type 'darwin)
     (progn
-      ;; (bind-key* "s-t" sdcv-search-pointer+)
       (setq sdcv-dictionary-data-dir "/Users/albert/stardict")))
 
   (setq sdcv-dictionary-simple-list        ;; a simple dictionary list
@@ -234,6 +228,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                     (insert-file-contents-literally "~/.path")
                     (buffer-string))))
         (setenv "PATH" path)
+        ;; for pyenv
+        (setenv "PYENV_ROOT" "/usr/local/var/pyenv")
         (setq exec-path (append (parse-colon-path path) (list exec-directory))))
     (error (warn "%s" (error-message-string err)))))
 
