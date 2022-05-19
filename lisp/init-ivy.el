@@ -225,8 +225,15 @@ If N is not nil, only list directories in current project."
 (use-package color-rg
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/color-rg"
+  :bind (("s-x g" . color-rg-search-symbol)
+   ("s-x h" . color-rg-search-input)
+   ("s-x j" . color-rg-search-symbol-in-project)
+   ("s-x k" . color-rg-search-input-in-project)
+   ("s-x ," . color-rg-search-symbol-in-current-file)
+   ("s-x ." . color-rg-search-input-in-current-file))
   :init
   (setq color-rg-mac-load-path-from-shell nil)
+  (define-key global-map (kbd "s-x") (make-sparse-keymap))
 )
 
 (provide 'init-ivy)
