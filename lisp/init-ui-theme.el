@@ -75,9 +75,9 @@
 
   (setq doom-modeline-buffer-file-name-style 'file-name)
   :config
-  (setq display-time-day-and-date t)
+  ;; (setq display-time-day-and-date t)
   ;; (setq display-time-format "%Y-%m-%d %a %H:%M")
-  (setq display-time-format "%-m月%-d日 %a %H:%M")
+  ;; (setq display-time-format "%-m月%-d日 %a %H:%M")
   (setq display-time-default-load-average nil)
   
   ;; 在modeline显示时间
