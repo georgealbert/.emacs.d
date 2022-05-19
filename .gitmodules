@@ -25,3 +25,6 @@
 [submodule "lsp-bridge"]
 	path = site-lisp/extensions/lsp-bridge
 	url = git@github.com:manateelazycat/lsp-bridge.git
+[submodule "color-rg"]
+	path = site-lisp/extensions/color-rg
+	url = git@github.com:manateelazycat/color-rg

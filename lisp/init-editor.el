@@ -56,10 +56,15 @@
   ;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
   (define-key evil-normal-state-map "gh" 'beginning-of-defun)
 
-  ;; (evil-define-minor-mode-key 'normal 'lsp-bridge-mode "C-t" 'lsp-bridge-return-from-def)
-  ;; (evil-define-minor-mode-key 'motion 'lsp-bridge-mode "C-]" 'lsp-bridge-find-define)
   (evil-define-key 'motion 'lsp-bridge-mode (kbd "C-]") 'lsp-bridge-find-define)
+  (evil-define-key 'motion 'lsp-bridge-mode (kbd "gd") 'lsp-bridge-find-define)
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "C-t") 'lsp-bridge-return-from-def)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "gr") 'lsp-bridge-find-references)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "gi") 'lsp-bridge-find-impl)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "K") 'lsp-bridge-lookup-documentation)
+
+  (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
+  (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
 
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
@@ -93,6 +98,8 @@
                ;; (ivy-occur-mode . emacs)
                ;; (ffip-file-mode . emacs)
 
+               (lsp-bridge-ref-mode . emacs)
+               (color-rg-mode . emacs)
                ;;
                ;; ivy-occur-grep-mode
                ;;
