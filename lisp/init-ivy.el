@@ -61,6 +61,7 @@
 
 (use-package ivy
   :defer t
+  :diminish ivy-mode
   :bind
   (:map ivy-minibuffer-map
         ("<tab>" . albert-ivy-done))
@@ -107,6 +108,7 @@
 
 (use-package ivy-rich
   :defer 1
+  :diminish
   ;; :hook (after-init . ivy-rich-mode)
   :config
   ;; 性能更好点
@@ -191,6 +193,7 @@ If N is not nil, only list directories in current project."
     (counsel-rg "" rootdir)))
 
 (use-package counsel
+  :diminish
   :bind (
          ("M-x" . counsel-M-x)
          ("C-c n" . counsel-buffer-or-recentf)
@@ -199,12 +202,10 @@ If N is not nil, only list directories in current project."
          ("C-x C-f" . counsel-find-file))
   :init
   (setq enable-recursive-minibuffers t) ; Allow commands in minibuffers
-
   :config
   ;; Integrate with `helpful'
   (setq counsel-describe-function-function #'helpful-callable
-        counsel-describe-variable-function #'helpful-variable)
-  )
+        counsel-describe-variable-function #'helpful-variable))
 
 (use-package ivy-posframe
   :after ivy
