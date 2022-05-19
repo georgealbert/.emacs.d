@@ -1,7 +1,25 @@
 ;;; init-ui-theme.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
+
+(use-package emacs
+  :init
+  :disabled t
+  ;; Add all your customizations prior to loading the themes
+  (setq ;; modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
+        ;; modus-themes-region '(bg-only no-extend)
+        ;; modus-themes-hl-line '(underline accented)
+        modus-themes-hl-line '(underline intense)
+        )
+  :config
+  ;; Load the theme of your choice:
+  (load-theme 'deeper-blue)
+  ;; (load-theme 'modus-vivendi)
+  )
+
 (use-package doom-themes
   :config
+  ;; :disabled t
   (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/theme"))
 
   (setq ;; 禁用粗体，否则org-mode的outline字体太难看
@@ -12,6 +30,7 @@
   ;; (setq doom-deeper-blue-brighter-modeline nil)
 
   (load-theme 'doom-deeper-blue t)
+  ;; (load-theme 'doom-one t)
   
   ;; org-mode的序号带颜色显示
   (doom-themes-org-config)
