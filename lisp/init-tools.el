@@ -157,7 +157,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
 
-(if (eq system-type 'darwin)
+(if (and (eq system-type 'darwin) (fboundp 'mac-input-source))
     (progn
       ;; (defvar asc-ime (mac-input-source))
       (defvar last-ime (mac-input-source))
