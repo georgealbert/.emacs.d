@@ -64,13 +64,14 @@
       ;; "cd" 'counsel-recent-directory
 
       "b"  '(:ignore t :which-key "buffer")
-      ;; "bb" '(counsel-ibuffer :which-key "Switch buffer")
-      "bb" '(counsel-switch-buffer :which-key "Switch buffer")
+      "bb" '(consult-buffer :which-key "Switch buffer")
+      ;; "bb" '(counsel-switch-buffer :which-key "Switch buffer")
       "bk" '(kill-current-buffer :which-key "Kill buffer")
       "br" '(revert-buffer :which-key "Revert buffer")
       ;; "bo" 'my-overview-of-current-buffer ;; 移动会很卡
       ;; "bm" '((lambda () (interactive) (counsel-evil-marks +1)) :which-key "counsel-evil-marks")
-      "bm" '(counsel-evil-marks :which-key "counsel-evil-marks")
+      ;; "bm" '(counsel-evil-marks :which-key "counsel-evil-marks")
+      "bm" '(consult-mark :which-key "consult-mark")
 
       ;; "e"  '(:ignore t :which-key "eshell")
       ;; "ee" '(aweshell-dedicated-toggle :which-key "dedicated eshell")

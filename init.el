@@ -61,7 +61,10 @@
 
 (require 'init-core)
 (require 'init-editor)
-(require 'init-ivy)
+
+;; (require 'init-ivy)
+(require 'init-vertico)
+
 (require 'init-keybinds)
 (require 'init-lang)
 (require 'init-tools)
@@ -77,8 +80,8 @@
 ;; (require 'init-lsp)
 ;; (require 'init-company)
 
-(require 'init-lsp-bridge)
 (require 'init-corfu)
+(require 'init-lsp-bridge)
 
 ;; (require 'sniper-modeline)
 ;; (sniper-modeline-mode)
