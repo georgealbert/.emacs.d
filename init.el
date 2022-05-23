@@ -62,8 +62,8 @@
 (require 'init-core)
 (require 'init-editor)
 
-;; (require 'init-ivy)
-(require 'init-vertico)
+(require 'init-ivy)
+;; (require 'init-vertico)
 
 (require 'init-keybinds)
 (require 'init-lang)
