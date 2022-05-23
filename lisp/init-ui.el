@@ -75,6 +75,14 @@
 (setq resize-mini-windows t)
 (setq max-mini-window-height 0.33)
 
+;;
+;;; Fringes
+
+;; Reduce the clutter in the fringes; we'd like to reserve that space for more
+;; useful information, like git-gutter and flycheck.
+;; (setq indicate-buffer-boundaries nil
+;;       indicate-empty-lines nil)
+
 ;; 不要总是没完没了的问yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -105,7 +113,6 @@
   :defer t
   :hook (prog-mode . display-line-numbers-mode)
         (org-mode . albert-display-line-numbers)
-  ;; :init
   :config
   ;; Explicitly define a width to reduce the cost of on-the-fly computation
   (setq-default display-line-numbers-width 3)
@@ -197,25 +204,57 @@
     ;; https://github.com/belluzj/fantasque-sans
     ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
     (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
+
+    ;; https://www.codingfont.com/
+    ;; (set-face-attribute 'default nil :font "Red Hat Mono 18")
+
+    ;; https://github.com/lxgw/LxgwWenKai/releases
+    ;; (set-face-attribute 'default nil :font "霞鹜文楷等宽 18")
+
+    ;; (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono 18")
+    ;; (set-face-attribute 'default nil :font "Iosevka Custom 16")
+
+    ;; (set-face-attribute 'default nil :font "Monolisa NF 18")
+
+    ;; 问题是中文太大了，不美观
+    ;; FiraCode size=16, HarmonyOS Sans SC size=20; rescale=1.25
+    ;; (set-face-attribute 'default nil :font "Fira Code Retina 16")
+    ;; (set-face-attribute 'default nil :font "Fira Code Albert 16")
+    ;; (set-face-attribute 'default nil :font "FiraCodeAlbert Nerd Font Mono 16")
     
     ;; (set-face-attribute 'default nil :font "MesloLGS NF 18")
-
+    ;; (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "BlexMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "LiterationMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "SauceCodePro Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "SauceCodePro Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "VictorMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "SpaceMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "NotoSansMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "ProFontIIx Nerd Font 18")
+    
     ;; 设置中文字体和英文字体的缩放比例，用1:1即可。
 
     ;; 鸿蒙字体比更纱黑体显示更清晰
     ;; https://developer.harmonyos.com/cn/docs/design/des-guides/font-0000001157868583
     (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1)))
+    ;; (setq face-font-rescale-alist '(("霞鹜文楷等宽" . 1)))
+
+    ;; (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1.25)))
 
     ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
     ;; 系统自带的`苹方-简'比`更纱黑'的字体稍微大了一点
     ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
 
+    ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         ;; (font-spec :family "苹方-简")))
                         ;; (font-spec :family "等距更纱黑体 T SC"))
+                        ;; (font-spec :family "霞鹜文楷等宽"))
                         (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
       )))
 
