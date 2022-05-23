@@ -169,8 +169,8 @@ If N is not nil, only list directories in current project."
   (interactive)
   (let (my-current-dir (file-name-directory (buffer-file-name)))
     (if (stringp my-current-dir)
-        (counsel-rg "" (file-name-directory (buffer-file-name)))
-      (counsel-rg "" default-directory)
+        (counsel-rg "" (file-name-directory (buffer-file-name)) nil (concat "rg (" default-directory "):"))
+      (counsel-rg "" default-directory nil (concat "rg (" default-directory "):"))
       )))
 
 ;; (defun counsel-ag--project-root ()
@@ -187,7 +187,7 @@ If N is not nil, only list directories in current project."
   (let ((rootdir (counsel--git-root)))
     (unless rootdir
       (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
-    (counsel-ag "" rootdir)))
+    (counsel-ag "" rootdir nil (concat "ag (" rootdir "):"))))
 
 (defun counsel-rg-project-root (&optional query)
   "Not documented, QUERY."
@@ -195,7 +195,7 @@ If N is not nil, only list directories in current project."
   (let ((rootdir (counsel--git-root)))
     (unless rootdir
       (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
-    (counsel-rg "" rootdir)))
+    (counsel-rg "" rootdir nil (concat "rg (" rootdir "):"))))
 
 (use-package counsel
   :diminish
