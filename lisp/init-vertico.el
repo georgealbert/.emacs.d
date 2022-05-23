@@ -37,6 +37,7 @@
   :bind
   (
    ;; ("C-s" . consult-line)
+   ("s-r". albert-consult-rg-project-root)
    ("s-f". consult-ripgrep)
    ("C-c n" . consult-buffer))
   :config
@@ -44,12 +45,32 @@
   (recentf-mode +1)
 
   (setq ;; consult-project-root-function #'doom-project-root
-        consult-narrow-key "<"
-        consult-line-numbers-widen t
-        consult-async-min-input 2
-        consult-async-refresh-delay  0.15
-        consult-async-input-throttle 0.2
-        consult-async-input-debounce 0.1)
+   consult-narrow-key "<"
+   consult-line-numbers-widen t
+   consult-async-min-input 2
+   consult-async-refresh-delay  0.15
+   consult-async-input-throttle 0.2
+   consult-async-input-debounce 0.1)
+
+  (defun albert-consult--dominating-file (file &optional dir)
+    "Look up directory hierarchy for FILE, starting in DIR.
+Like `locate-dominating-file', but DIR defaults to
+`default-directory' and the return value is expanded."
+    (and (setq dir (locate-dominating-file (or dir default-directory) file))
+         (expand-file-name dir)))
+
+  (defun albert-consult--git-root ()
+    "Return root of current project or nil on failure.
+Use the presence of a \".git\" file to determine the root."
+    (albert-consult--dominating-file ".git"))
+
+  (defun albert-consult-rg-project-root (&optional query)
+    "consult-rg-project-root, QUERY."
+    (interactive)
+    (let ((rootdir (albert-consult--git-root)))
+      (unless rootdir
+        (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
+      (consult-ripgrep rootdir)))
   )
 
 (use-package embark
