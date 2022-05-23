@@ -133,7 +133,10 @@
 (use-package all-the-icons-ivy-rich
   :ensure t
   :after ivy-rich
-  :init (all-the-icons-ivy-rich-mode 1))
+  :config
+  ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中上下移动时，闪屏
+  (setq all-the-icons-ivy-rich-icon nil)
+  (all-the-icons-ivy-rich-mode 1))
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
