@@ -23,6 +23,7 @@
      ;; If the first charater of input in ivy is ":",
      ;; remaining input is converted into Chinese pinyin regex.
      ((string= (substring str 0 1) ":")
+      (require 'pinyinlib)
       ;; pinyinlib-build-regexp-string加上最后2个参数 "nil t"，只搜索简体中文，不包括开头的首字母。
       (let ((str (pinyinlib-build-regexp-string (substring str 1 len) t nil t)))
         ;; 拼音不要按字模糊匹配，否则太慢了。
@@ -59,6 +60,15 @@
       (ivy--regex-plus str)))))
     ;; (ivy--regex-ignore-order str)))
 
+;; doc: https://zhuanlan.zhihu.com/p/67307599
+;;      pinyinlib搜索中文首字母开头的中文，按26个字母，每个字母有几个中文
+;;      :搜索，!排除
+;;      :zw !by
+;; homepage: https://github.com/cute-jumper/pinyinlib.el
+(use-package pinyinlib
+  :defer t
+  :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
+
 (use-package ivy
   :defer t
   :diminish ivy-mode
@@ -89,14 +99,6 @@
         ;; enable ability to select prompt (alternative to `ivy-immediate-done')
         ivy-use-selectable-prompt t)
 
-  ;; doc: https://zhuanlan.zhihu.com/p/67307599
-  ;;      pinyinlib搜索中文首字母开头的中文，按26个字母，每个字母有几个中文
-  ;;      :搜索，!排除
-  ;;      :zw !by
-  ;; homepage: https://github.com/cute-jumper/pinyinlib.el
-  (use-package pinyinlib
-    :defer 2
-    :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
 
   (setq ivy-re-builders-alist '(
                                 ;; (counsel-evil-marks . ivy--regex-plus)

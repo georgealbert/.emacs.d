@@ -239,7 +239,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   :ensure nil
   :defer t
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
-  :bind ("M-x" . amx)
+  ;; :bind ("M-x" . amx)
   :init
   (setq amx-history-length 50))
 
