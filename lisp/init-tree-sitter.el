@@ -2,9 +2,10 @@
 ;;; --- Configure for tree sitter
 
 (use-package tree-sitter
-  :defer 3
+  ;; :defer 3
+  :hook (prog-mode . tree-sitter-mode)
   :config
-  (global-tree-sitter-mode)
+  ;; (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
   ;; https://github.com/manateelazycat/lazycat-emacs/blob/master/site-lisp/config/init-tree-sitter.el
