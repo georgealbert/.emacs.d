@@ -98,8 +98,8 @@ function to the relevant margin-formatters list."
               ("\C-n" . corfu-next)
               ("\C-p" . corfu-previous)
               )
-  :init
-  (global-corfu-mode)
+  ;; :init
+  ;; (global-corfu-mode)
   :config
   ;; (setq corfu-cycle t) ;; Enable cycling for `corfu-next/previous'
 
@@ -108,11 +108,31 @@ function to the relevant margin-formatters list."
                #'kind-all-the-icons-margin-formatter)
 
   (setq corfu-auto t)
+  ;; (require 'corfu-info)
+  ;; (require 'corfu-history)
+  (global-corfu-mode)               ;; use corfu as completion ui
+  (corfu-history-mode t)
   )
 
 (use-package orderless
   :after corfu
   :config
+        (use-package pinyinlib
+          :defer t
+          :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib")
+
+  (defun completion--regex-pinyin (str)
+    (let* ((len (length str)))
+      (cond
+       ((string= (substring str 0 1) ":")
+        (require 'pinyinlib)
+        ;; pinyinlib-build-regexp-string加上最后2个参数 "nil t"，只搜索简体中文，不包括开头的首字母。
+        (orderless-regexp (pinyinlib-build-regexp-string (substring str 1 len) t nil t)))
+
+       (t str))))
+
+  (add-to-list 'orderless-matching-styles 'completion--regex-pinyin)
+  
   (setq completion-styles '(orderless partial-completion)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)) ;; partial-completion is tried first
@@ -122,7 +142,7 @@ function to the relevant margin-formatters list."
                                         (symbol (styles +orderless-with-initialism)))
         orderless-component-separator #'orderless-escapable-split-on-space ;; allow escaping space with backslash!
         orderless-style-dispatchers '(+orderless-dispatch)
-        orderless-matching-styles '(orderless-flex)
+        ;; orderless-matching-styles '(orderless-flex)
         orderless-style-dispatchers nil
         )
   )
@@ -162,6 +182,5 @@ function to the relevant margin-formatters list."
   ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
   ;;(add-to-list 'completion-at-point-functions #'cape-line)
 )
-
 
 (provide 'init-corfu)

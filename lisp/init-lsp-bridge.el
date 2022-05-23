@@ -2,6 +2,7 @@
 
 (use-package lsp-bridge
   :ensure nil
+  :defer t
   :load-path "~/.emacs.d/site-lisp/extensions/lsp-bridge"
   :hook ((python-mode sh-mode lua-mode) . (lambda ()
                                             (require 'lsp-bridge-orderless) ;; make lsp-bridge support fuzzy match, optional
@@ -18,16 +19,10 @@
   ;; (require 'corfu-history)
   ;; (global-corfu-mode)               ;; use corfu as completion ui
   ;; (corfu-history-mode t)
+
   ;; (global-lsp-bridge-mode)
 
   ;; (setq lsp-bridge-enable-log t)
-  ;; (dolist (hook (list
-  ;;                'python-mode-hook
-  ;;                ))
-  ;;   (add-hook hook (lambda ()
-  ;;                    (setq-local corfu-auto nil)  ;; let lsp-bridge control when popup completion frame
-  ;;                    (lsp-bridge-mode 1)
-  ;;                    )))
   )
 
 (provide 'init-lsp-bridge)
