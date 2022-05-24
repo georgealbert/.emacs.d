@@ -131,6 +131,9 @@
 ;;   )
 
 ;; homepage: https://github.com/emacs-lsp/lsp-pyright
+;; 1. 先安装nodejs
+;; 2. npm install -g pyright
+;; 3. npm update -g pyright
 (use-package lsp-pyright
   ;; :ensure t
   :load-path "~/.emacs.d/site-lisp/extensions/lsp-pyright"
