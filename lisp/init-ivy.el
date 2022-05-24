@@ -134,8 +134,10 @@
   :ensure t
   :after ivy-rich
   :config
-  ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中上下移动时，闪屏
-  (setq all-the-icons-ivy-rich-icon nil)
+  ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中快速上下移动时，闪屏
+  (setq all-the-icons-ivy-rich-icon t)
+  ;; 调整到0.65时闪屏情况有好转，0.5不闪屏，但图标会比较小
+  (setq all-the-icons-ivy-rich-icon-size 0.65)
   (all-the-icons-ivy-rich-mode 1))
 
 (defun counsel-recent-directory (&optional n)
