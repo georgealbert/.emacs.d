@@ -19,7 +19,6 @@
 (use-package evil
   :ensure t
   :defer 1
-  ;; :hook (after-init . evil-mode)
   :preface
   (setq evil-want-visual-char-semi-exclusive t
         evil-echo-state t
