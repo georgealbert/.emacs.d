@@ -225,9 +225,8 @@ they were loaded at startup."
     (set-selection-coding-system 'utf-8)))
 
 (use-package gcmh
-  :defer t
   ;; :diminish
-  ;; :defer 10
+  :hook (after-init . gcmh-mode)
   ;; :config
   ;; (gcmh-mode +1)
   )
