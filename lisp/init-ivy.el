@@ -136,8 +136,8 @@
   :config
   ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中快速上下移动时，闪屏
   (setq all-the-icons-ivy-rich-icon t)
-  ;; 调整到0.65时闪屏情况有好转，0.5不闪屏，但图标会比较小
-  (setq all-the-icons-ivy-rich-icon-size 0.65)
+  ;; 调整到0.75时闪屏情况有好转，0.5不闪屏，但图标会比较小
+  (setq all-the-icons-ivy-rich-icon-size 0.75)
   (all-the-icons-ivy-rich-mode 1))
 
 (defun counsel-recent-directory (&optional n)
@@ -228,19 +228,5 @@ If N is not nil, only list directories in current project."
      (t               . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
-
-(use-package color-rg
-  :ensure nil
-  :load-path "~/.emacs.d/site-lisp/extensions/color-rg"
-  :bind (("s-x g" . color-rg-search-symbol)
-   ("s-x h" . color-rg-search-input)
-   ("s-x j" . color-rg-search-symbol-in-project)
-   ("s-x k" . color-rg-search-input-in-project)
-   ("s-x ," . color-rg-search-symbol-in-current-file)
-   ("s-x ." . color-rg-search-input-in-current-file))
-  :init
-  (setq color-rg-mac-load-path-from-shell nil)
-  (define-key global-map (kbd "s-x") (make-sparse-keymap))
-)
 
 (provide 'init-ivy)
