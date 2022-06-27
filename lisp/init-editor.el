@@ -65,6 +65,9 @@
   (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
   (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
 
+  (evil-define-key 'insert 'acm-mode (kbd "C-n") 'acm-select-next)
+  (evil-define-key 'insert 'acm-mode (kbd "C-p") 'acm-select-prev)
+
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.

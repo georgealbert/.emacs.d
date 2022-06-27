@@ -80,7 +80,7 @@
 ;; (require 'init-lsp)
 ;; (require 'init-company)
 
-(require 'init-corfu)
+;; (require 'init-corfu)
 (require 'init-lsp-bridge)
 
 ;; (require 'sniper-modeline)
