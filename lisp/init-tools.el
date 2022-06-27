@@ -45,15 +45,15 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 ;; (flycheck-mode 1)
                 (ggtags-mode 1)))))
 
-(use-package undo-tree
-  :disabled t
-  :defer 1
-  :diminish
-  :config
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+;; (use-package undo-tree
+;;   :disabled t
+;;   :defer 1
+;;   :diminish
+;;   :config
+;;   (progn
+;;     (global-undo-tree-mode)
+;;     (setq undo-tree-visualizer-timestamps t)
+;;     (setq undo-tree-visualizer-diff t)))
 
 (use-package aweshell
   :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
@@ -63,8 +63,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-x s-x" . aweshell-dedicated-toggle)))
 
 (defun my-overview-of-current-buffer ()
-  "toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
-"
+  "toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/"
   (interactive)
   (set-selective-display (if selective-display nil 1)))
 
