@@ -17,6 +17,9 @@
   ;;                                           (lsp-bridge-mode 1)
   ;;                                           ))
   :config
+  (setq lsp-bridge-default-mode-hooks
+        (remove 'org-mode-hook lsp-bridge-default-mode-hooks))
+
   (setq lsp-bridge-python-command "/Users/albert/.virtualenvs/pandas/bin/python")
 
   ;; (setq lsp-bridge-completion-provider 'corfu)
