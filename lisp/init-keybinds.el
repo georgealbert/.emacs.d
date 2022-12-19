@@ -34,7 +34,7 @@
        "bu" 'backward-up-list
        ;; "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
        "ef" 'end-of-defun
-       ;; "sc" 'scratch
+       ;; "sc" 'scratch-buffer
 
        "t"  '(:ignore t :which-key "tags")
        "tr" 'counsel-etags-recent-tag
@@ -110,7 +110,8 @@
       "s"  '(:ignore t :which-key "search")
       "si" 'evilmi-select-items
       ;; "sf" '(helm-ag :which-key "Search current directory")
-      "sc" 'counsel-grep-or-swiper
+      "sc" 'scratch-buffer
+      "ss" 'counsel-grep-or-swiper
       ;; "ss" 'helm-ag-this-file
       ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
