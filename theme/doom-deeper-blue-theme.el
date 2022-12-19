@@ -149,6 +149,7 @@ determine the exact padding."
     :foreground doc-comments)
 
    (doom-modeline-bar :background (if -modeline-bright modeline-bg highlight))
+   (doom-modeline-buffer-modified :foreground red)
 
    (mode-line
     :background modeline-bg :foreground modeline-fg
