@@ -204,6 +204,7 @@
     ;; https://github.com/belluzj/fantasque-sans
     ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
     (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
+    ;; (set-face-attribute 'default nil :font "FantasqueSansMono NFM 18")
 
     ;; https://www.codingfont.com/
     ;; (set-face-attribute 'default nil :font "Red Hat Mono 18")
@@ -277,6 +278,9 @@
 
 (use-package winum
   :hook (after-init . winum-mode)
+  :config
+  ;; (add-to-list 'winum-ignored-buffers " *sort-tab*")
+  (add-to-list 'winum-ignored-buffers "*sort-tab*")
   :init
   (setq winum-keymap
         (if (or IS-WINDOWS IS-LINUX)
@@ -296,6 +300,11 @@
             (define-key map (kbd "s-4") 'winum-select-window-4)
             (define-key map (kbd "s-5") 'winum-select-window-5)
             map))))
+
+;; [2023-01-06 Fri 23:54:33]
+(add-to-list 'load-path "~/workspace/sort-tab") ; add sort-tab to your load-path
+(require 'sort-tab)
+(sort-tab-mode 1)
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
 ;; Restore old window configurations
