@@ -49,6 +49,24 @@
        ;; "sh" 'my-select-from-search-text-history
 
        "ir" 'ivy-resume
+
+       "1" 'sort-tab-select-visible-tab
+       "2" 'sort-tab-select-visible-tab
+       "3" 'sort-tab-select-visible-tab
+       "4" 'sort-tab-select-visible-tab
+       "5" 'sort-tab-select-visible-tab
+       "6" 'sort-tab-select-visible-tab
+       "7" 'sort-tab-select-visible-tab
+       "8" 'sort-tab-select-visible-tab
+       "9" 'sort-tab-select-visible-tab
+       "Q" 'sort-tab-close-all-tabs
+       "q" 'sort-tab-close-mode-tabs
+       "a" 'sort-tab-close-current-tab
+
+       "sq" 'delete-window
+       "sa" 'split-window-vertically
+       "sd" 'split-window-horizontally
+       "oo" 'delete-other-windows
        )
 
      ;; [2020-03-28 周六 21:45:52] binding太多快捷键到evil的normal和visual mode中，在debug native-comp在visual block mode insert时的问题，从evil-insert-state的debug看，可能会慢。不用的快捷键都去掉。

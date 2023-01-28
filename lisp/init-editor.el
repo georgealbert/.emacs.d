@@ -47,6 +47,10 @@
   ;; 使用isearch时，增加search结束后的，高亮时间到30s
   (setq evil-flash-delay 30)
 
+  ;; evil re-assign "M-." to `evil-repeat-pop-next` which I don't use actually.
+  ;; Restore "M-." to original binding command
+  (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+
   ;; evil keymap
   (define-key evil-normal-state-map "go" 'goto-char)
   ;; (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
@@ -55,12 +59,21 @@
   ;; https://github.com/redguardtoo/emacs.d/lisp/init.evil.el
   (define-key evil-normal-state-map "gh" 'beginning-of-defun)
 
-  (evil-define-key 'motion 'lsp-bridge-mode (kbd "C-]") 'lsp-bridge-find-define)
-  (evil-define-key 'motion 'lsp-bridge-mode (kbd "gd") 'lsp-bridge-find-define)
-  (evil-define-key 'normal 'lsp-bridge-mode (kbd "C-t") 'lsp-bridge-return-from-def)
+  ;; I prefer Emacs way after pressing ":" in evil-mode
+  (define-key evil-ex-completion-map (kbd "C-a") 'move-beginning-of-line)
+  (define-key evil-ex-completion-map (kbd "C-b") 'backward-char)
+  (define-key evil-ex-completion-map (kbd "M-p") 'previous-complete-history-element)
+  (define-key evil-ex-completion-map (kbd "M-n") 'next-complete-history-element)
+
+  (define-key evil-insert-state-map (kbd "C-e") 'move-end-of-line)
+  (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
+
+  (evil-define-key 'motion 'lsp-bridge-mode (kbd "C-]") 'lsp-bridge-find-def)
+  (evil-define-key 'motion 'lsp-bridge-mode (kbd "gd") 'lsp-bridge-find-def)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "C-t") 'lsp-bridge-find-def-return)
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "gr") 'lsp-bridge-find-references)
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "gi") 'lsp-bridge-find-impl)
-  (evil-define-key 'normal 'lsp-bridge-mode (kbd "K") 'lsp-bridge-lookup-documentation)
+  (evil-define-key 'normal 'lsp-bridge-mode (kbd "K") 'lsp-bridge-popup-documentation)
 
   (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
   (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
