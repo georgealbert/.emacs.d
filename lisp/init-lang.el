@@ -98,7 +98,8 @@
   :ensure t
   :defer t
   :init
-    (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+    (add-hook 'python-mode-hook 'py-autopep8-mode))
+    ;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
 
 (use-package cmuscheme
   :ensure nil
