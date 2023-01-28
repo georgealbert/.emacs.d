@@ -98,13 +98,20 @@
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 
-(setq org-agenda-files (list "~/org"))
+(when (or IS-LINUX IS-WINDOWS)
+  (setq org-agenda-files (list "~/org"))
 
-;; '(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
-;;                               ("albert.org" :level . 2))))
+  ;; '(org-refile-targets (quote (("newgtd.org" :maxlevel . 1) 
+  ;;                               ("albert.org" :level . 2))))
 
-(setq org-directory "~/org")
-(setq org-default-notes-file "~/org/refile.org")
+  (setq org-directory "~/org")
+  (setq org-default-notes-file "~/org/refile.org")
+  )
+
+(when IS-MAC
+  (setq org-directory "~/Documents/org")
+  (setq org-agenda-files (list "~/Documents/org"))
+  (setq org-default-notes-file "~/Documents/org/refile.org"))
 
 (defun bh/hide-other ()
   (interactive)
