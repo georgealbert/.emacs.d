@@ -184,4 +184,7 @@
   (define-key global-map (kbd "s-x") (make-sparse-keymap))
 )
 
+;; (add-hook 'python-mode-hook 'python-ts-mode)
+;; (add-hook 'json-mode-hook 'json-ts-mode)
+
 (provide 'init-lang)
