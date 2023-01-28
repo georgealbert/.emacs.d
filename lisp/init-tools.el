@@ -262,4 +262,5 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
   )
 
+
 (provide 'init-tools)
