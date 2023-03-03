@@ -316,9 +316,15 @@
             map))))
 
 ;; [2023-01-06 Fri 23:54:33]
-(add-to-list 'load-path "~/workspace/sort-tab") ; add sort-tab to your load-path
-(require 'sort-tab)
-(sort-tab-mode 1)
+;; (add-to-list 'load-path "~/workspace/sort-tab") ; add sort-tab to your load-path
+;; (require 'sort-tab)
+;; (sort-tab-mode 1)
+(use-package sort-tab
+  :defer 2
+  :disabled t
+  :load-path "~/workspace/sort-tab"
+  :config
+  (sort-tab-mode 1))
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
 ;; Restore old window configurations
