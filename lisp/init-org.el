@@ -1152,7 +1152,7 @@ The only change I made is wrapping it in the .sitemap div."
    "#+TITLE: " title
    "\n\n"
    "#+begin_sitemap\n"
-   ;; "#+attr_html: :class list-group-item title\n"
+   "#+attr_html: :class list-group-item title\n"
    (org-list-to-org list)
    "\n#+end_sitemap"))
 
@@ -1162,7 +1162,7 @@ The only change I made is wrapping it in the .sitemap div."
   '(
     ;; 把各部分的配置文件写到这里面来
     ("blog-notes"
-      :base-directory "~/org/notes"
+      :base-directory "~/Documents/org/notes"
       :base-extension "org"
       ;:publishing-directory "~/org/public_html/"
       :publishing-directory "~/workspace/georgealbert.github.io/"
@@ -1349,8 +1349,8 @@ contextual information."
 (setq org-static-blog-publish-url "")
 ;; (setq org-static-blog-publish-directory "~/workspace/blog/")
 (setq org-static-blog-publish-directory "~/workspace/georgealbert.github.io/")
-(setq org-static-blog-posts-directory "~/org/notes/")
-(setq org-static-blog-drafts-directory "~/org/drafts/")
+(setq org-static-blog-posts-directory "~/Documents/org/notes/")
+(setq org-static-blog-drafts-directory "~/Documents/org/drafts/")
 (setq org-static-blog-enable-tags nil)
 (setq org-export-with-toc nil)
 (setq org-export-with-section-numbers nil)
