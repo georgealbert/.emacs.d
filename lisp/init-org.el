@@ -1338,6 +1338,27 @@ contextual information."
 	    type)))
 
 
+;; 去掉 figure 标签里面的id
+(advice-add #'org-html--wrap-image :override #'albert|org-html--wrap-image)
+(defun albert|org-html--wrap-image (contents info &optional caption label)
+  "Wrap CONTENTS string within an appropriate environment for images.
+INFO is a plist used as a communication channel.  When optional
+arguments CAPTION and LABEL are given, use them for caption and
+\"id\" attribute."
+  (let ((html5-fancy (org-html--html5-fancy-p info)))
+    (format (if html5-fancy "\n<figure>\n%s%s\n</figure>"
+	      "\n<div class=\"figure\">\n%s%s\n</div>")
+	    ;; ID.
+	    ;; (if (org-string-nw-p label) (format " id=\"%s\"" label) "")
+	    ;; Contents.
+	    (if html5-fancy contents (format "<p>%s</p>" contents))
+	    ;; Caption.
+	    (if (not (org-string-nw-p caption)) ""
+	      (format (if html5-fancy "\n<figcaption>%s</figcaption>"
+			"\n<p>%s</p>")
+		      caption)))))
+
+
 (use-package org-static-blog
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/org-static-blog"
