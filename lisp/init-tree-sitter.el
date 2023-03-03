@@ -4,6 +4,7 @@
 (use-package tree-sitter
   ;; :defer 3
   :hook ((prog-mode . tree-sitter-mode)
+         ;; (markdown-mode . tree-sitter-mode)
          (yaml-mode . tree-sitter-mode))
   :config
   ;; (global-tree-sitter-mode)
@@ -132,6 +133,7 @@
   (add-hook 'json-mode-hook (lambda ()
                               (setq imenu-create-index-function #'meain/imenu-config-nesting-path))))
 
+;; imenu按`m-g i`进行补全
 (use-package yaml-mode
   :defer t
   ;; :disabled t
@@ -148,11 +150,11 @@
       (let ((thing-name (meain/tree-sitter-thing-name 'function-like))
             (config-nesting (meain/tree-sitter-config-nesting)))
         (if thing-name
-            (setq albert/treesit--inspect-name (format "methond:%s" thing-name))
+            (setq albert/treesit--inspect-name (format "methond: %s" thing-name))
           (if config-nesting
-              (setq albert/treesit--inspect-name (format "%s" config-nesting)))))
+              (setq albert/treesit--inspect-name (format "config-nesting: %s" config-nesting)))))
     (when-let (func-name (which-function))
-      (setq albert/treesit--inspect-name (format ":%s" func-name))))
+      (setq albert/treesit--inspect-name (format "func: %s" func-name))))
 
   ;; 貌似这行有了才行，哈哈
   (force-mode-line-update))
@@ -186,5 +188,23 @@ and its immediate parent.
     (setq mode-line-misc-info
           (remove '(:eval albert/treesit--inspect-name)
                   mode-line-misc-info))))
+
+(defun albert/treesit-thing-at-point ()
+  (interactive)
+  (when-let* ((query-s (cdr (assq major-mode meain/tree-sitter-config-nesting--queries))))
+    ;; (message (treesit-thing-at-point query-s "nested")))
+    ;; (message (treesit-inspect-node-at-point (point))))
+    (treesit-inspect-node-at-point (point)))
+  )
+
+;; (defun albert/treesit-thing-at-point ()
+;;   (interactive)
+;;   (require 'treesit)
+;;   (treesit-node-type
+;;    (treesit-parent-until
+;;     (treesit-node-at (point))
+;;     (lambda (parent)
+;;       (member (treesit-node-type parent) '("call_expression" "declaration" "function_definition")))))
+;;   )
 
 (provide 'init-tree-sitter)
