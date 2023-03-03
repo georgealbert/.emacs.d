@@ -95,7 +95,7 @@
    `(minibuffer-prompt ((,class (:foreground "CadetBlue1"))))
 
    ;; `(mode-line ((,class (:background "gray75" :foreground "black" :box (:line-width 1 :style released-button)))))
-   `(mode-line ((,class (:background "#181a26" :foreground nil :box (:line-width 1 :style released-button)))))
+   `(mode-line ((,class (:background "#181a26" :box (:line-width 1 :style released-button)))))
    ;; `(mode-line ((,class (:background "#181a26" :foreground "#ffe4b5"))))
 
    ;; `(mode-line-buffer-id ((,class (:weight bold :background nil :foreground "blue4"))))

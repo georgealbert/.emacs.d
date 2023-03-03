@@ -181,7 +181,7 @@ determine the exact padding."
    (markdown-code-face :background (doom-lighten base3 0.05))
 
    ;; outline (affects org-mode)
-   ((outline-1 &override) :foreground blue :background nil) ;; SkyBlue1
+   ((outline-1 &override) :foreground blue) ;; SkyBlue1
    ((outline-2 &override) :foreground "CadetBlue1") ;; CadetBlue1
    ((outline-3 &override) :foreground "LightSteelBlue1") ;; LightSteelBlue1(#cae1ff)
    ((outline-4 &override) :foreground "turquoise2") ;; turquoise2(#00e5ee)
