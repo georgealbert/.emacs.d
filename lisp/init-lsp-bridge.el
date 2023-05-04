@@ -18,7 +18,7 @@
         (remove 'emacs-lisp-mode-hook lsp-bridge-default-mode-hooks))
 
   ;; (setq lsp-bridge-python-command "/Users/albert/.virtualenvs/pandas/bin/python")
-  (setq lsp-bridge-python-command "/usr/local/var/pyenv/shims/python")
+  ;; (setq lsp-bridge-python-command "/usr/local/var/pyenv/shims/python")
 
   (global-lsp-bridge-mode)
 
