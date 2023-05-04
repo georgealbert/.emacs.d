@@ -14,7 +14,7 @@
    "%b"
 
     ;; line and column
-   ;; '%02' to set to 2 chars at least; prevents flickering
+    ;; '%02' to set to 2 chars at least; prevents flickering
     "(%02l,%01c)"
 
     "["
@@ -50,7 +50,7 @@
     "%M"
 
     ;; 在modeline显示时间
-    (display-time)
+    ;; (display-time)
 
     '(:eval my-extra-mode-line-info)
 

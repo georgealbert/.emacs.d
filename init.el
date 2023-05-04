@@ -82,9 +82,11 @@
 
 ;; (require 'init-corfu)
 (require 'init-lsp-bridge)
+;; (require 'init-modeline)
 
 ;; (require 'sniper-modeline)
 ;; (sniper-modeline-mode)
+(require 'init-erc)
 
 ;; maximize window
 (if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
