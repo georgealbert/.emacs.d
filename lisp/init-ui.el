@@ -122,7 +122,7 @@
   (setq-default display-line-numbers-widen t)
 
   (defun albert-display-line-numbers ()
-    "org-mode的文件，如果行数<10000行就显示行号."
+    "org-mode的文件，如果行数<=10000行就显示行号."
     (let ((num (line-number-at-pos (point-max))))
       (message "Opening %s, total lines: %d" (buffer-file-name) num)
       (if (< num 10000)
@@ -203,13 +203,14 @@
 
     ;; https://github.com/belluzj/fantasque-sans
     ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
-    (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "FantasqueSansMono NFM 18")
+    ;; (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
+    (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font Mono 18")
 
     ;; 2023.02.14
     ;; https://www.kreativekorp.com/software/fonts/fairfaxhd/
     ;; 可以和HarmonyOS Sans 1:1配合，但是中文字体有点大
     ;; (set-face-attribute 'default nil :font "Fairfax SM HD 18")
+    ;; (set-face-attribute 'default nil :font "Fairfax Hax HD 18")
 
     ;; (set-face-attribute 'default nil :font "iMWritingMonoS Nerd Font 16")
     ;; (set-face-attribute 'default nil :font "Anonymice Nerd Font 16")
@@ -234,7 +235,6 @@
     ;; (set-face-attribute 'default nil :font "BlexMono Nerd Font 18")
     ;; (set-face-attribute 'default nil :font "LiterationMono Nerd Font 18")
     ;; (set-face-attribute 'default nil :font "SauceCodePro Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "SauceCodePro Nerd Font 18")
     ;; (set-face-attribute 'default nil :font "VictorMono Nerd Font 18")
     ;; (set-face-attribute 'default nil :font "SpaceMono Nerd Font 18")
     ;; (set-face-attribute 'default nil :font "NotoSansMono Nerd Font 18")
@@ -242,6 +242,8 @@
 
     ;; 可以等宽，但是小写L和数字1不好区分
     ;; (set-face-attribute 'default nil :font "PragmataPro Mono 18")
+    ;; 2023.04.02 找到了nerd font。
+    ;; (set-face-attribute 'default nil :font "PragmataProMonoLiga Nerd Font 18")
 
     ;; (set-face-attribute 'default nil :font "Input Mono Narrow 18")
     ;; (set-face-attribute 'default nil :font "Input Mono 18")
@@ -255,9 +257,9 @@
 
     ;; 鸿蒙字体比更纱黑体显示更清晰
     ;; https://developer.harmonyos.com/cn/docs/design/des-guides/font-0000001157868583
-    (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1)))
+    ;; (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1)))
 
-    ;; (setq face-font-rescale-alist '(("霞鹜文楷等宽" . 1)))
+    (setq face-font-rescale-alist '(("霞鹜文楷等宽" . 1)))
     ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
     ;; 系统自带的`苹方-简'比`更纱黑'的字体稍微大了一点
@@ -270,7 +272,8 @@
                         ;; (font-spec :family "苹方-简")))
                         ;; (font-spec :family "等距更纱黑体 T SC"))
                         ;; (font-spec :family "霞鹜文楷等宽"))
-                        (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
+                        (font-spec :family "LXGW WenKai"))
+                        ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
       )))
 
 (when IS-MAC
@@ -293,7 +296,6 @@
 (use-package winum
   :hook (after-init . winum-mode)
   :config
-  ;; (add-to-list 'winum-ignored-buffers " *sort-tab*")
   (add-to-list 'winum-ignored-buffers "*sort-tab*")
   :init
   (setq winum-keymap
@@ -316,9 +318,6 @@
             map))))
 
 ;; [2023-01-06 Fri 23:54:33]
-;; (add-to-list 'load-path "~/workspace/sort-tab") ; add sort-tab to your load-path
-;; (require 'sort-tab)
-;; (sort-tab-mode 1)
 (use-package sort-tab
   :defer 2
   :disabled t
