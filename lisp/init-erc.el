@@ -2,6 +2,7 @@
 
 ;; Require ERC-SASL package
 
+;; https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bchat/erc/local/erc-sasl/erc-sasl.el
 (use-package erc-sasl
   :after erc
   :load-path "~/.emacs.d/site-lisp/extensions/erc-sasl"
