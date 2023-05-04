@@ -46,9 +46,13 @@
   ;;   (dolist (f (face-list))
   ;;     (set-face-attribute f nil :extend t)))
   )
+
+
+(use-package nerd-icons)
   
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
+  ;; :disabled t
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
@@ -57,7 +61,7 @@
   (setq doom-modeline-bar-width 3)
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-  (setq doom-modeline-icon t)
+  (setq doom-modeline-icon nil)
   
   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
   (setq doom-modeline-major-mode-icon nil)

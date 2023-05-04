@@ -132,6 +132,7 @@
 
 (use-package all-the-icons-ivy-rich
   :ensure t
+  :disabled t
   :after ivy-rich
   :config
   ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中快速上下移动时，闪屏
@@ -139,6 +140,19 @@
   ;; 调整到0.75时闪屏情况有好转，0.5不闪屏，但图标会比较小
   (setq all-the-icons-ivy-rich-icon-size 0.75)
   (all-the-icons-ivy-rich-mode 1))
+
+(use-package nerd-icons-ivy-rich
+  :ensure t
+  :after ivy-rich
+  :config
+  ;; Whether display the icons
+  (setq nerd-icons-ivy-rich-icon t)
+
+  ;; Whether display the colorful icons.
+  ;; It respects `nerd-icons-color-icons'.
+  (setq nerd-icons-ivy-rich-color-icon t)
+  (nerd-icons-ivy-rich-mode 1)
+  )
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
