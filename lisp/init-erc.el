@@ -6,6 +6,7 @@
 (use-package erc-sasl
   :after erc
   :load-path "~/.emacs.d/site-lisp/extensions/erc-sasl"
+  :bind (("C-c e" . erc-track-switch-buffer))
   :config
   (setq erc-fill-column 150)
 
@@ -30,11 +31,11 @@
   (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                   "324" "329" "332" "333" "353" "477"))
 
-  (setq erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#linuxba" "#linux" "#neovim")))
-  ;; (setq erc-channel-hide-list (
-  ;;                              ("#linux" "JOIN" "PART" "QUIT")
-  ;;                              ("#neovim" "JOIN" "PART" "QUIT")
-  ;;                              ("#emacs" "NICK")))
+  (setq erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#linuxba")))
+
+  (setq erc-channel-hide-list '(("#linuxba" "JOIN" "PART" "QUIT" "NICK" "324" "329" "332" "333" "353" "477")
+                                ("#neovim" "JOIN" "PART" "QUIT")
+                                ("#emacs" "JOIN" "PART" "QUIT" "NICK")))
 
   ;; Add SASL server to list of SASL servers (start a new list, if it did not exist)
   (add-to-list 'erc-sasl-server-regexp-list "irc\\.libera\\.chat")
@@ -66,6 +67,9 @@
 (defun start-libera ()
   "Connect to irc.libera.chat."
   (interactive)
+
+  (require 'erc)
+  (require 'erc-sasl)
   
   (defun read-lines (filePath)
     "Return a list of lines of a file at filePath."
