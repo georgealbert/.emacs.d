@@ -61,7 +61,7 @@
   (setq doom-modeline-bar-width 3)
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-  (setq doom-modeline-icon nil)
+  (setq doom-modeline-icon t)
   
   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
   (setq doom-modeline-major-mode-icon nil)
