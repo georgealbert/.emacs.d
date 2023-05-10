@@ -55,6 +55,12 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;;     (setq undo-tree-visualizer-timestamps t)
 ;;     (setq undo-tree-visualizer-diff t)))
 
+(use-package vundo
+  :defer 2
+  :config
+  ;; (setq vundo-glyph-alist vundo-unicode-symbols)
+  (set-face-attribute 'vundo-default nil :family "Symbola"))
+
 (use-package aweshell
   :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
   :disabled t

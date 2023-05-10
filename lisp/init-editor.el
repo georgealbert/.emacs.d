@@ -30,8 +30,8 @@
         ;; org-cycle broken while using evil https://github.com/emacs-evil/evil/issues/1505
         evil-want-C-i-jump nil
 
-        evil-undo-system
-        (cond (EMACS28+ 'undo-redo)))
+        evil-undo-system (cond (EMACS28+ 'undo-redo))
+        )
   :config 
   (evil-mode 1)
 
@@ -50,6 +50,8 @@
   ;; evil re-assign "M-." to `evil-repeat-pop-next` which I don't use actually.
   ;; Restore "M-." to original binding command
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+
+  (define-key evil-normal-state-map "u" 'vundo)
 
   ;; evil keymap
   (define-key evil-normal-state-map "go" 'goto-char)
