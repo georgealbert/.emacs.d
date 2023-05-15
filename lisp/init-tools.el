@@ -259,6 +259,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-x ," . color-rg-search-symbol-in-current-file)
          ("s-x f" . color-rg-search-input-in-current-file))
   :init
+  (setq color-rg-flash-line-delay 20.0)
   (setq color-rg-mac-load-path-from-shell nil)
   (define-key global-map (kbd "s-x") (make-sparse-keymap))
 )

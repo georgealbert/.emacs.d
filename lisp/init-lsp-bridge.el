@@ -17,6 +17,7 @@
   (setq lsp-bridge-default-mode-hooks
         (remove 'emacs-lisp-mode-hook lsp-bridge-default-mode-hooks))
 
+  (setq lsp-bridge-flash-region-delay 10.0)
   ;; (setq lsp-bridge-python-command "/Users/albert/.virtualenvs/pandas/bin/python")
   ;; (setq lsp-bridge-python-command "/usr/local/var/pyenv/shims/python")
 
