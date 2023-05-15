@@ -260,6 +260,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-x f" . color-rg-search-input-in-current-file))
   :init
   (setq color-rg-flash-line-delay 20.0)
+  ;; 设置在屏幕居中显示找到的行
+  (setq color-rg-recenter-match-line t)
   (setq color-rg-mac-load-path-from-shell nil)
   (define-key global-map (kbd "s-x") (make-sparse-keymap))
 )
