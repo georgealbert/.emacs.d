@@ -2,7 +2,8 @@
 
 (use-package lsp-bridge
   :ensure nil
-  :defer 2
+  ;; :defer 5
+  :hook ( (python-mode rust-mode bash-mode sh-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode
               ("C-s-j" . lsp-bridge-diagnostic-jump-next) ;显示下一个错误
               ("C-s-k" . lsp-bridge-diagnostic-jump-prev) ;显示上一个错误
