@@ -56,7 +56,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;;     (setq undo-tree-visualizer-diff t)))
 
 (use-package vundo
-  :defer 2
+  :defer t
   :config
   ;; (setq vundo-glyph-alist vundo-unicode-symbols)
   (set-face-attribute 'vundo-default nil :family "Symbola"))
@@ -277,13 +277,12 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; 用 Emacs 的都少不了 isearch, 但是 isearch 不方便的地方是每次都要手动输入或者 yank 当前 symbol 给 isearch， 同时要批量替换的按键流程也很繁琐。 在使用 symbol-overlay 之前我一直用我自己开发的 lazy-search, 这两个项目的目标都是启动后立即选中光标处的 symbol, 再按单按键比如按 n/p 后， 快速跳转上一个和下一个匹配项， 节省了大量选中当前 symbol 启动 isearch 再粘贴 symbol 的操作时间。 用了 symbol-overlay 后， 发现比我的 lazy-search 实现的更加简洁和强大， 包括搜索后快速按 r 键可以对所有匹配的 symbol 进行快速重命名操作， symbol-overlay 基本上是单文件重构场景下最好用的插件， 强烈推荐大家使用。
 ;;
 (use-package symbol-overlay
-  :defer 2
-  :config
-  (global-set-key (kbd "M-i") 'symbol-overlay-put)
-  (global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
-  (global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
-  (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-  (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+  :defer t
+  :bind (("M-i" . symbol-overlay-put)
+         ("M-n" . symbol-overlay-switch-forward)
+         ("M-p" . symbol-overlay-switch-backward)
+         ("<f7>" . symbol-overlay-mode)
+         ("<f8>" . symbol-overlay-remove-all))
   )
 
 
