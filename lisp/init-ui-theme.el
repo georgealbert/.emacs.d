@@ -48,11 +48,11 @@
   )
 
 
-(use-package nerd-icons)
+(use-package nerd-icons
+  :defer t)
   
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
-  ;; :disabled t
   :init
   (unless after-init-time
     ;; prevent flash of unstyled modeline at startup
@@ -95,8 +95,6 @@
   
   ;; 在modeline显示buffer或文件的大小
   ;; (size-indication-mode +1) 
-
-  ;; (doom-modeline-mode +1)
   )
 
 (provide 'init-ui-theme)
