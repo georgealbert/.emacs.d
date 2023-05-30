@@ -35,9 +35,7 @@
   (albert-if-dump
       (enable-theme 'doom-deeper-blue)))
 
-;; (require 'benchmark-init-modes)
 (require 'benchmark-init)
-;; (benchmark-init/activate)
 
 ;; Load path
 ;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
@@ -63,7 +61,6 @@
 (require 'init-editor)
 
 (require 'init-ivy)
-;; (require 'init-vertico)
 
 (require 'init-keybinds)
 (require 'init-lang)
@@ -71,21 +68,12 @@
 (require 'init-org)
 (require 'init-keyfreq)
 (require 'init-editor-paren)
-;; (require 'init-ui-treemacs)
 (require 'init-hydra)
 (require 'init-ui)
 (require 'init-ui-theme)
 (require 'init-tree-sitter)
 
-;; (require 'init-lsp)
-;; (require 'init-company)
-
-;; (require 'init-corfu)
 (require 'init-lsp-bridge)
-;; (require 'init-modeline)
-
-;; (require 'sniper-modeline)
-;; (sniper-modeline-mode)
 (require 'init-erc)
 
 ;; maximize window

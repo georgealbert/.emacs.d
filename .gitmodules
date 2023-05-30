@@ -28,3 +28,6 @@
 [submodule "color-rg"]
 	path = site-lisp/extensions/color-rg
 	url = git@github.com:manateelazycat/color-rg
+[submodule "fingertip"]
+	path = site-lisp/extensions/fingertip
+	url = https://github.com/manateelazycat/fingertip
