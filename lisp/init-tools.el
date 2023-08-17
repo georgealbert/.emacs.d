@@ -238,17 +238,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
         (setq exec-path (append (parse-colon-path path) (list exec-directory))))
     (error (warn "%s" (error-message-string err)))))
 
-;; helm可以使用amx作为后端了，branch: helm-amx
-;; https://github.com/DarwinAwardWinner/amx/issues/23
-(use-package amx
-  :ensure nil
-  :defer t
-  :load-path "~/.emacs.d/site-lisp/extensions/amx"
-  ;; :bind ("M-x" . amx)
-  :init
-  (setq amx-history-length 50))
-
-
 (use-package color-rg
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/color-rg"

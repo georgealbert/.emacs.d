@@ -71,11 +71,16 @@
 
 (use-package ivy
   :defer t
-  :diminish ivy-mode
+  :diminish ivy-mode counsel-mode
   :bind
   (:map ivy-minibuffer-map
         ("<tab>" . albert-ivy-done))
   :config
+  ;; The default sorter is much to slow and the default for `ivy-sort-max-size'
+  ;; is way too big (30,000). Turn it down so big repos affect project
+  ;; navigation less.
+  (setq ivy-sort-max-size 7500)
+
   ;; Counsel changes a lot of ivy's state at startup; to control for that, we
   ;; need to load it as early as possible. Some packages (like `ivy-prescient')
   ;; require this.
@@ -99,19 +104,23 @@
         ;; enable ability to select prompt (alternative to `ivy-immediate-done')
         ivy-use-selectable-prompt t)
 
-
   (setq ivy-re-builders-alist '(
                                 ;; (counsel-evil-marks . ivy--regex-plus)
                                 (t . re-builder-extended-pattern)
                                 ))
-  ;; (setq ivy-mode-map nil)
-  ;; enable ivy-mode后会把C-x b改为ivy-switch-buffer，非常不好。
-  (ivy-mode +1))
+  (use-package amx
+    :ensure nil
+    ;; :defer t
+    :load-path "~/.emacs.d/site-lisp/extensions/amx"
+    :init
+    (setq amx-history-length 50))
+
+  (ivy-mode +1)
+  )
 
 (use-package ivy-rich
   :defer 1
   :diminish
-  ;; :hook (after-init . ivy-rich-mode)
   :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
@@ -130,19 +139,7 @@
   (ivy-rich-mode +1)
   )
 
-(use-package all-the-icons-ivy-rich
-  :ensure t
-  :disabled t
-  :after ivy-rich
-  :config
-  ;; 显示图标的时候，有些图标如苹果的图标比其他的高，对不齐。导致在minibuffer中快速上下移动时，闪屏
-  (setq all-the-icons-ivy-rich-icon t)
-  ;; 调整到0.75时闪屏情况有好转，0.5不闪屏，但图标会比较小
-  (setq all-the-icons-ivy-rich-icon-size 0.75)
-  (all-the-icons-ivy-rich-mode 1))
-
 (use-package nerd-icons-ivy-rich
-  :ensure t
   :after ivy-rich
   :config
   ;; Whether display the icons
@@ -153,6 +150,29 @@
   (setq nerd-icons-ivy-rich-color-icon t)
   (nerd-icons-ivy-rich-mode 1)
   )
+
+;; ;; More friendly display transformer for Ivy
+;; ;; Enable before`ivy-rich-mode' for better performance
+;; (use-package nerd-icons-ivy-rich
+;;   :hook ((ivy-mode      . nerd-icons-ivy-rich-mode)
+;;          (counsel-mode  . ivy-rich-mode)
+;;          (ivy-rich-mode . ivy-rich-project-root-cache-mode)
+;;          (ivy-rich-mode . (lambda ()
+;;                             "Use abbreviate in `ivy-rich-mode'."
+;;                             (setq ivy-virtual-abbreviate
+;;                                   (or (and ivy-rich-mode 'abbreviate) 'name)))))
+;;   :init
+;;   ;; For better performance
+;;   (setq ivy-rich-parse-remote-buffer nil)
+;;   (setq nerd-icons-ivy-rich-icon t)
+;;   :config
+;;   (plist-put nerd-icons-ivy-rich-display-transformers-list
+;;              'centaur-load-theme
+;;              '(:columns
+;;                ((nerd-icons-ivy-rich-theme-icon)
+;;                 (ivy-rich-candidate))
+;;                :delimiter "\t"))
+;;   (nerd-icons-ivy-rich-reload))
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
