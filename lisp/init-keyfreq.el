@@ -2,7 +2,7 @@
 
 (use-package keyfreq
   ;; :disabled t
-  :defer 1
+  :defer 5
   :config
   (defun turnon-keyfreq-mode ()
     (interactive)
