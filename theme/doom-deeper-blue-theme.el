@@ -143,7 +143,8 @@ determine the exact padding."
 
    (font-lock-comment-face
     :foreground comments
-    :background (if doom-deeper-blue-comment-bg (doom-lighten bg 0.05)))
+    ;; :background (if doom-deeper-blue-comment-bg (doom-lighten bg 0.05))
+    )
    (font-lock-doc-face
     :inherit 'font-lock-comment-face
     :foreground doc-comments)
@@ -152,7 +153,8 @@ determine the exact padding."
    (doom-modeline-buffer-modified :foreground red)
 
    (mode-line
-    :background modeline-bg :foreground modeline-fg
+    ;; :background modeline-bg :foreground modeline-fg
+    :background modeline-bg
     :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg)))
    (mode-line-inactive
     :background modeline-bg-inactive :foreground modeline-fg-alt

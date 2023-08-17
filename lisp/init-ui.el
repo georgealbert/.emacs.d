@@ -2,6 +2,10 @@
 
 ;;; ui
 
+;; https://xenodium.com/my-emacs-eye-candy/
+;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+;; (add-to-list 'default-frame-alist '(ns-appearance . dark))
+
 ;; Frame title
 (setq frame-title-format "Albert@%f")
 
@@ -318,12 +322,12 @@
             map))))
 
 ;; [2023-01-06 Fri 23:54:33]
-(use-package sort-tab
-  :defer 2
-  :disabled t
-  :load-path "~/workspace/sort-tab"
-  :config
-  (sort-tab-mode 1))
+;; (use-package sort-tab
+;;   :defer 2
+;;   :disabled t
+;;   :load-path "~/workspace/sort-tab"
+;;   :config
+;;   (sort-tab-mode 1))
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
 ;; Restore old window configurations
