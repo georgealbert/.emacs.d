@@ -77,8 +77,8 @@
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "gi") 'lsp-bridge-find-impl)
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "K") 'lsp-bridge-popup-documentation)
 
-  (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
-  (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
+  ;; (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
+  ;; (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
 
   (evil-define-key 'insert 'acm-mode (kbd "C-n") 'acm-select-next)
   (evil-define-key 'insert 'acm-mode (kbd "C-p") 'acm-select-prev)
@@ -201,33 +201,33 @@
   (setq diredfl-write-priv 'my-diredfl-write-priv)
   )
 
-(use-package dirvirsh
-  :ensure nil
-  :disabled t
-  :defer t
-  :custom
-  (dirvish-bookmarks-alist
-   '(("h" "~/"                          "Home")
-     ("d" "~/Downloads/"                "Downloads")
-     ;; ("m" "/mnt/"                       "Drives")
-     ;; ("t" "~/.local/share/Trash/files/" "TrashCan")
-     ))
-  :config
-  (dirvish-override-dired-mode)
-  (dirvish-peek-mode)
-  :bind
-  (("C-x d" . dirvish)
-   :map dired-mode-map
-        ("SPC" . dirvish-show-history)
-        ("r"   . dirvish-roam)
-        ("b"   . dirvish-goto-bookmark)
-        ("f"   . dirvish-file-info-menu)
-        ("M-a" . dirvish-mark-actions-menu)
-        ("M-s" . dirvish-setup-menu)
-        ("M-f" . dirvish-toggle-fullscreen)
-        ([remap dired-summary] . dirvish-dispatch)
-        ([remap dired-do-copy] . dirvish-yank)
-        ([remap mode-line-other-buffer] . dirvish-other-buffer)))
+;; (use-package dirvirsh
+;;   :ensure nil
+;;   :disabled t
+;;   :defer t
+;;   :custom
+;;   (dirvish-bookmarks-alist
+;;    '(("h" "~/"                          "Home")
+;;      ("d" "~/Downloads/"                "Downloads")
+;;      ;; ("m" "/mnt/"                       "Drives")
+;;      ;; ("t" "~/.local/share/Trash/files/" "TrashCan")
+;;      ))
+;;   :config
+;;   (dirvish-override-dired-mode)
+;;   (dirvish-peek-mode)
+;;   :bind
+;;   (("C-x d" . dirvish)
+;;    :map dired-mode-map
+;;         ("SPC" . dirvish-show-history)
+;;         ("r"   . dirvish-roam)
+;;         ("b"   . dirvish-goto-bookmark)
+;;         ("f"   . dirvish-file-info-menu)
+;;         ("M-a" . dirvish-mark-actions-menu)
+;;         ("M-s" . dirvish-setup-menu)
+;;         ("M-f" . dirvish-toggle-fullscreen)
+;;         ([remap dired-summary] . dirvish-dispatch)
+;;         ([remap dired-do-copy] . dirvish-yank)
+;;         ([remap mode-line-other-buffer] . dirvish-other-buffer)))
 
 ;; History
 (use-package saveplace
@@ -272,6 +272,47 @@
   (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
   )
 
+;; https://github.com/manateelazycat/fingertip
+;; (use-package fingertip
+;;   :ensure nil
+;;   :load-path "~/.emacs.d/site-lisp/extensions/fingertip"
+;;   :hook (prog-mode . fingertip-mode)
+;;   :config
+;;   ;; 符号插入
+;;   (define-key fingertip-mode-map (kbd "%") 'fingertip-match-paren) ;括号跳转
+;;   (define-key fingertip-mode-map (kbd "(") 'fingertip-open-round)
+;;   (define-key fingertip-mode-map (kbd "[") 'fingertip-open-bracket)
+;;   (define-key fingertip-mode-map (kbd "{") 'fingertip-open-curly)
+;;   (define-key fingertip-mode-map (kbd ")") 'fingertip-close-round)
+;;   (define-key fingertip-mode-map (kbd "]") 'fingertip-close-bracket)
+;;   (define-key fingertip-mode-map (kbd "}") 'fingertip-close-curly)
+;;   (define-key fingertip-mode-map (kbd "=") 'fingertip-equal)
+
+;;   (define-key fingertip-mode-map (kbd "\"") 'fingertip-double-quote)
+;;   (define-key fingertip-mode-map (kbd "'") 'fingertip-single-quote)
+
+;;   (define-key fingertip-mode-map (kbd "SPC") 'fingertip-space)       ;智能 space
+;;   (define-key fingertip-mode-map (kbd "RET") 'fingertip-newline)     ;智能 newline
+;;   ;; 删除
+;;   (define-key fingertip-mode-map (kbd "M-o") 'fingertip-backward-delete) ;向后删除
+;;   (define-key fingertip-mode-map (kbd "C-d") 'fingertip-forward-delete)  ;向前删除
+;;   (define-key fingertip-mode-map (kbd "C-k") 'fingertip-kill)            ;向前kill
+;;   ;; 包围
+;;   (define-key fingertip-mode-map (kbd "M-\"") 'fingertip-wrap-double-quote)
+;;   (define-key fingertip-mode-map (kbd "M-'") 'fingertip-wrap-single-quote)
+;;   (define-key fingertip-mode-map (kbd "M-[") 'fingertip-wrap-bracket)
+;;   (define-key fingertip-mode-map (kbd "M-{") 'fingertip-wrap-curly)
+;;   (define-key fingertip-mode-map (kbd "M-(") 'fingertip-wrap-round)
+;;   (define-key fingertip-mode-map (kbd "M-)") 'fingertip-unwrap)
+;;   ;; 移动
+;;   (define-key fingertip-mode-map (kbd "M-p") 'fingertip-jump-right)
+;;   (define-key fingertip-mode-map (kbd "M-n") 'fingertip-jump-left)
+;;   ;; 跳出并换行缩进
+;;   (define-key fingertip-mode-map (kbd "M-:") 'fingertip-jump-out-pair-and-newline) ;跳出括号并换行
+;;   ;; 向父节点跳动
+;;   (define-key fingertip-mode-map (kbd "C-j") 'fingertip-jump-up)
+;;   )
+
 ;; from seagle0128/.emacs.d/lisp/init-edit.el
 ;; doc: Jump to things in Emacs tree-style
 (use-package avy
@@ -290,7 +331,6 @@
 ;; doc: a better *help* buffer
 (use-package helpful
   :defer t
-  ;; :disabled t
   :commands helpful--read-symbol
   :init
   ;; https://github.com/hlissner/doom-emacs/commit/c6d3ceef7e8f3abdfce3cd3e51f1e570603bd230
