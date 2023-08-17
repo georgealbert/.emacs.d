@@ -2,7 +2,6 @@
 ;;; --- Configure for tree sitter
 
 (use-package tree-sitter
-  ;; :defer 3
   :hook ((prog-mode . tree-sitter-mode)
          ;; (markdown-mode . tree-sitter-mode)
          (yaml-mode . tree-sitter-mode))

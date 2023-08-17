@@ -171,7 +171,7 @@ they were loaded at startup."
 
 (setq load-prefer-newer t)
 
-(require 'package)
+;; (require 'package)
 
 (add-to-list 'package-archives
              '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
@@ -182,7 +182,9 @@ they were loaded at startup."
 
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
-(require 'use-package)
+
+(eval-when-compile
+  (require 'use-package))
 
 ;; use win key in windows
 (when IS-WINDOWS
@@ -230,7 +232,7 @@ they were loaded at startup."
     (set-selection-coding-system 'utf-8)))
 
 (use-package gcmh
-  ;; :diminish
+  :diminish
   :hook (after-init . gcmh-mode)
   ;; :config
   ;; (gcmh-mode +1)
