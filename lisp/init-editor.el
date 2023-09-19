@@ -20,8 +20,8 @@
   :ensure t
   :defer 1
   :preface
-  (setq evil-want-visual-char-semi-exclusive t
-        evil-echo-state t
+  (setq evil-want-visual-char-semi-exclusive t)
+  (setq evil-echo-state t
         evil-ex-search-vim-style-regexp t
         ;; foo-bar vim认为就是一个word，emacs会认为是2个
         evil-symbol-word-search t
