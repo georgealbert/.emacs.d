@@ -74,7 +74,7 @@
 (require 'init-tree-sitter)
 
 (require 'init-lsp-bridge)
-(require 'init-erc)
+;; (require 'init-erc)
 
 ;; maximize window
 (if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
