@@ -74,6 +74,7 @@
 (require 'init-tree-sitter)
 
 (require 'init-lsp-bridge)
+(require 'init-vcs)
 ;; (require 'init-erc)
 
 ;; maximize window

@@ -106,8 +106,9 @@
       "fn" '(find-file-with-similar-name :which-key "ff similar-name") ; ffip v5.3.1
       "fd" '(find-directory-in-project-by-selected :which-key "fdip selected")
 
-      ;; "g"  '(:ignore t :which-key "git")
-      ;; "gg" 'magit-status
+      "g"  '(:ignore t :which-key "git")
+      "gh" 'magit-status
+      "gg" 'git-messenger:popup-message
 
       "h" '(:ignore t :which-key "help")
       "h'" 'describe-char

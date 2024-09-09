@@ -24,15 +24,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; disable default vc
 (setq vc-handled-backends nil)
 
-(use-package magit
-  :mode (("\\COMMIT_EDITMSG\\'" . text-mode)
-         ("\\MERGE_MSG\\'" . text-mode))
-  :bind (("C-x g" . magit-status)
-         ("C-x M-g" . magit-dispatch)
-         ("C-c M-g" . magit-file-popup))
-  :config
-  (progn
-    (setq magit-last-seen-setup-instructions "1.4.0")))
 
 (use-package ggtags
   :ensure t
