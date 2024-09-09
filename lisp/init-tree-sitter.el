@@ -27,8 +27,8 @@
   ;; 1. git clone git@github.com:ikatyang/tree-sitter-vue.git
   ;; 2. cd ~/workspace/tree-sitter-vue && g++ ./src/parser.c ./src/scanner.cc -fPIC -I./ -I./src -v --shared -o vue.dylib
   ;; 3. cp -p ./vue.dylib ~/.emacs.d/elpa/tree-sitter-langs-*/bin (~/.tree-sitter-langs/bin is path of your tree-sitter-langs repo)
-  (tree-sitter-load 'vue)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(web-mode . vue))
+  ;; (tree-sitter-load 'vue)
+  ;; (add-to-list 'tree-sitter-major-mode-language-alist '(web-mode . vue))
 
   ;; Add Typescript for tree-sitter.
   ;;
