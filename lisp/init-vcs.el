@@ -20,6 +20,11 @@
              (margin-body-face magit-blame-dimmed))
             ))))
 
+(use-package vc-msg
+  ;; :disabled t
+  :defer t
+  )
+
 ;; https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-vcs.el
 ;; Walk through git revisions of a file
 (use-package git-timemachine

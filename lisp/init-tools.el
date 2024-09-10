@@ -246,7 +246,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   (define-key global-map (kbd "s-x") (make-sparse-keymap))
 )
 
-
 ;; symbol-overlay
 ;; homepage: https://github.com/wolray/symbol-overlay
 ;;
@@ -264,6 +263,5 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("<f7>" . symbol-overlay-mode)
          ("<f8>" . symbol-overlay-remove-all))
   )
-
 
 (provide 'init-tools)
