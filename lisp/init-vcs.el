@@ -21,7 +21,7 @@
             ))))
 
 (use-package vc-msg
-  ;; :disabled t
+  :disabled t
   :defer t
   )
 
