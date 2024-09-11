@@ -109,6 +109,7 @@
       "g"  '(:ignore t :which-key "git")
       "gh" 'magit-status
       "gg" 'git-messenger:popup-message
+      "gb" 'vc-msg-show
 
       "h" '(:ignore t :which-key "help")
       "h'" 'describe-char
