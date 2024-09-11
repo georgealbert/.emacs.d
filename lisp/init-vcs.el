@@ -21,116 +21,146 @@
             ))))
 
 (use-package vc-msg
-  :disabled t
+  ;; :disabled t
   :defer t
   :config
-  (defun my-vc-msg-git-format (info)
-    "Format the message for popup from INFO.
-From git-messenger."
-    (let* ((author (plist-get info :author)))
-      (cond
-       ((string-match-p "Not Committed Yet" author)
-        "* Not Committed Yet*")
-       (t
-        ;; (concat
-         (format "%s%s\n%s%s\n%s%s %s\n%s\n%s"
-                 (propertize "Commit: " 'face 'font-lock-keyword-face)
-                 (propertize (vc-msg-sdk-short-id (plist-get info :id)) 'face 'font-lock-comment-face)
-                 (propertize "Author: " 'face 'font-lock-keyword-face)
-                 (propertize author 'face 'font-lock-string-face)
-                 (propertize "Date  : " 'face 'font-lock-keyword-face)
-                 (propertize (vc-msg-sdk-format-datetime (plist-get info :author-time)) 'face 'font-lock-string-face)
-                 (plist-get info :author-tz)
-                 (propertize (make-string 38 ?─) 'face 'font-lock-comment-face)
-                 (plist-get info :summary)
-                 ;; (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic)))
-                 )
-         ;; )
-        ))))
+  (with-no-warnings
+    (with-eval-after-load 'hydra
+      (defhydra vc-msg-show-hydra (:color blue)
+        ("s" vc-msg-git-show-code "show")
+        ("c" (vc-msg-git-copy-info :id) "copy hash")
+        ("e" (vc-msg-git-copy-info :summary) "copy message")
+        ("m" (let* ((info vc-msg-previous-commit-info))
+               (funcall 'magit-find-file
+                        (plist-get info :id)
+                        (concat (vc-msg-sdk-git-rootdir)
+                                (plist-get info :filename)))) "magit-find-file")
+        ;; ("m" my-vc-msg-magit-find-file "magit-find-file")
+        ;; ("q" vc-msg-close "quit")
+        ))
 
-  (defun my-vc-msg-show ()
-    "Show commit message of current line.
+    ;; (defun my-vc-msg-magit-find-file ()
+    ;;   "不知道在hydra里面怎么写比较好，直接新写个函数好了。"
+    ;;   (interactive)
+    ;;   (let* ((info vc-msg-previous-commit-info))
+    ;;     (funcall 'magit-find-file
+    ;;              (plist-get info :id)
+    ;;              (concat (vc-msg-sdk-git-rootdir)
+    ;;                      (plist-get info :filename)))))
+
+    (defun my-vc-msg-git-format (info)
+      "Format the message for popup from INFO.
+From git-messenger."
+      (let* ((author (plist-get info :author)))
+        (cond
+         ((string-match-p "Not Committed Yet" author)
+          "* Not Committed Yet*")
+         (t
+          ;; (concat
+          (format "* vc-msg *\n%s%s\n%s%s\n%s%s %s\n%s\n%s"
+                  (propertize "Commit: " 'face 'font-lock-keyword-face)
+                  (propertize (vc-msg-sdk-short-id (plist-get info :id)) 'face 'font-lock-comment-face)
+                  (propertize "Author: " 'face 'font-lock-keyword-face)
+                  (propertize author 'face 'font-lock-string-face)
+                  (propertize "Date  : " 'face 'font-lock-keyword-face)
+                  (propertize (vc-msg-sdk-format-datetime (plist-get info :author-time)) 'face 'font-lock-string-face)
+                  (plist-get info :author-tz)
+                  (propertize (make-string 38 ?─) 'face 'font-lock-comment-face)
+                  (plist-get info :summary)
+                  ;; (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic)))
+                  )
+          ;; )
+          ))))
+
+    (defun my-vc-msg-show ()
+      "Show commit message of current line.
 If Git is used and some text inside the line is selected,
 the correct commit which submits the selected text is displayed."
-    (interactive)
-    (let* (finish
-           (plugin (vc-msg-find-plugin))
-           (current-file (funcall vc-msg-get-current-file-function)))
-      (if plugin
-          (let* ((executer (plist-get plugin :execute))
-                 (formatter (plist-get plugin :format))
-                 (commit-info (and current-file
-                                   (funcall executer
-                                            current-file
-                                            (funcall vc-msg-get-line-num-function)
-                                            (funcall vc-msg-get-version-function))))
-                 message
-                 (extra-commands (symbol-value (plist-get plugin :extra))))
+      (interactive)
+      (let* (finish
+             (plugin (vc-msg-find-plugin))
+             (current-file (funcall vc-msg-get-current-file-function)))
+        (if plugin
+            (let* ((executer (plist-get plugin :execute))
+                   (formatter (plist-get plugin :format))
+                   (commit-info (and current-file
+                                     (funcall executer
+                                              current-file
+                                              (funcall vc-msg-get-line-num-function)
+                                              (funcall vc-msg-get-version-function))))
+                   message
+                   ;; (extra-commands (symbol-value (plist-get plugin :extra)))
+                   (hydra-hint-display-type 'message))
 
-            (vc-msg-update-keymap extra-commands)
+              ;; (vc-msg-update-keymap extra-commands)
 
-            (cond
-             ((and commit-info (listp commit-info))
-              ;; the message to display
-              (setq message (funcall formatter commit-info))
+              (cond
+               ((and commit-info (listp commit-info))
+                ;; the message to display
+                (setq message (funcall formatter commit-info))
 
-              ;; Hint in minibuffer might be not visible enough
-              (if vc-msg-newbie-friendly-msg
-                  (setq message (format "%s\n\n%s"
-                                        message
-                                        vc-msg-newbie-friendly-msg)))
+                ;; Hint in minibuffer might be not visible enough
+                (if vc-msg-newbie-friendly-msg
+                    (setq message (format "%s\n\n%s"
+                                          message
+                                          vc-msg-newbie-friendly-msg)))
 
-              (setq vc-msg-previous-commit-info commit-info)
+                (setq vc-msg-previous-commit-info commit-info)
 
-              ;; copy the commit it/hash/changelist
-              (when vc-msg-copy-id-to-kill-ring
-                (let* ((id (vc-msg-get-friendly-id plugin commit-info)))
-                  (kill-new id)
-                  (message "%s => kill-ring" id)))
+                ;; copy the commit it/hash/changelist
+                (when vc-msg-copy-id-to-kill-ring
+                  (let* ((id (vc-msg-get-friendly-id plugin commit-info)))
+                    (kill-new id)
+                    (message "%s => kill-ring" id)))
 
-              (let* ((popuped-message (vc-msg-clean message)))
-                (cond ((and (fboundp 'posframe-workable-p) (posframe-workable-p))
-                       (let ((buffer-name "*my-vc-msg-show*")
-                             ;; (popuped-message (vc-msg-clean message))
-                             )
-                         (posframe-show buffer-name
-                                        :string (concat (propertize "\n" 'face '(:height 0.3))
-                                                        ;; (vc-msg-clean message)
-                                                        popuped-message
-                                                        "\n"
-                                                        (propertize "\n" 'face '(:height 0.3)))
-                                        :left-fringe 8
-                                        :right-fringe 8
-                                        :max-width (round (* (frame-width) 0.62))
-                                        :max-height (round (* (frame-height) 0.62))
-                                        :internal-border-width 1
-                                        ;; :internal-border-color (face-background 'posframe-border nil t)
-                                        :background-color (face-background 'tooltip nil t))
+                ;; (let* ((vc-msg-previous-commit-info commit-info))
+                ;;   (vc-msg-show-hydra/body)
+                ;;   )
+                (vc-msg-show-hydra/body)
+                (let* ((popuped-message (vc-msg-clean message)))
+                  (cond ((and (fboundp 'posframe-workable-p) (posframe-workable-p))
+                         (let ((buffer-name "*my-vc-msg-show*")
+                               ;; (popuped-message (vc-msg-clean message))
+                               )
+                           (posframe-show buffer-name
+                                          :string (concat (propertize "\n" 'face '(:height 0.3))
+                                                          ;; (vc-msg-clean message)
+                                                          popuped-message
+                                                          "\n"
+                                                          (propertize "\n" 'face '(:height 0.3)))
+                                          :left-fringe 8
+                                          :right-fringe 8
+                                          :max-width (round (* (frame-width) 0.62))
+                                          :max-height (round (* (frame-height) 0.62))
+                                          :internal-border-width 1
+                                          ;; :internal-border-color (face-background 'posframe-border nil t)
+                                          :background-color (face-background 'tooltip nil t))
+                           (unwind-protect
+                               (push (read-event) unread-command-events)
+                             (posframe-hide buffer-name))))
+                        ((and (fboundp 'pos-tip-show) (display-graphic-p))
+                         (pos-tip-show popuped-message))
+                        ((fboundp 'lv-message)
+                         (lv-message popuped-message)
                          (unwind-protect
                              (push (read-event) unread-command-events)
-                           (posframe-hide buffer-name))))
-                      ((and (fboundp 'pos-tip-show) (display-graphic-p))
-                       (pos-tip-show popuped-message))
-                      ((fboundp 'lv-message)
-                       (lv-message popuped-message)
-                       (unwind-protect
-                           (push (read-event) unread-command-events)
-                         (lv-delete-window)))
-                      (t (message "%s" popuped-message)))
+                           (lv-delete-window)))
+                        (t (message "%s" popuped-message)))
+                  )
+                (run-hook-with-args 'vc-msg-hook (vc-msg-detect-vcs-type) commit-info)
                 )
-              (run-hook-with-args 'vc-msg-hook (vc-msg-detect-vcs-type) commit-info)
-              )
-              ((stringp commit-info)
-               ;; Failed. Show the reason.
-               (kill-new commit-info)
-               (message commit-info))
-              (t
-               ;; Failed for unknown reason
-               (message "Shell command failed.")))
-            ))))
+               ((stringp commit-info)
+                ;; Failed. Show the reason.
+                (kill-new commit-info)
+                (message commit-info))
+               (t
+                ;; Failed for unknown reason
+                (message "Shell command failed.")))
+              ))))
 
-  (advice-add #'vc-msg-git-format :override #'my-vc-msg-git-format)
-  (advice-add #'vc-msg-show :override #'my-vc-msg-show)
+    (advice-add #'vc-msg-git-format :override #'my-vc-msg-git-format)
+    (advice-add #'vc-msg-show :override #'my-vc-msg-show)
+    )
   )
 
 ;; https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-vcs.el
@@ -176,8 +206,14 @@ the correct commit which submits the selected text is displayed."
         ("s" git-messenger:popup-show "show")
         ("c" git-messenger:copy-commit-id "copy hash")
         ("m" git-messenger:copy-message "copy message")
-        ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
+        ;; ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
+        ("," my-git-messenger:go-parent "go parent")
         ("q" git-messenger:popup-close "quit")))
+
+    (defun my-git-messenger:go-parent ()
+      (interactive)
+      (message "In my-git-messenger:go-parent")
+      (catch 'git-messenger-loop (git-messenger:show-parent)))
 
     (defun my-git-messenger:format-detail (vcs commit-id author message)
       (if (eq vcs 'git)
