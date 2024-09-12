@@ -113,7 +113,7 @@ the correct commit which submits the selected text is displayed."
                                           :max-width (round (* (frame-width) 0.62))
                                           :max-height (round (* (frame-height) 0.62))
                                           :internal-border-width 1
-                                          ;; :internal-border-color (face-background 'posframe-border nil t)
+                                          :internal-border-color "#61AFEF"
                                           :background-color (face-background 'tooltip nil t))
                            (unwind-protect
                                (push (read-event) unread-command-events)
@@ -186,14 +186,8 @@ the correct commit which submits the selected text is displayed."
         ("s" git-messenger:popup-show "show")
         ("c" git-messenger:copy-commit-id "copy hash")
         ("m" git-messenger:copy-message "copy message")
-        ;; ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
-        ("," my-git-messenger:go-parent "go parent")
+        ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
         ("q" git-messenger:popup-close "quit")))
-
-    (defun my-git-messenger:go-parent ()
-      (interactive)
-      (message "In my-git-messenger:go-parent")
-      (catch 'git-messenger-loop (git-messenger:show-parent)))
 
     (defun my-git-messenger:format-detail (vcs commit-id author message)
       (if (eq vcs 'git)
