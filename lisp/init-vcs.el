@@ -37,18 +37,7 @@
                         (plist-get info :id)
                         (concat (vc-msg-sdk-git-rootdir)
                                 (plist-get info :filename)))) "magit-find-file")
-        ;; ("m" my-vc-msg-magit-find-file "magit-find-file")
-        ;; ("q" vc-msg-close "quit")
         ))
-
-    ;; (defun my-vc-msg-magit-find-file ()
-    ;;   "不知道在hydra里面怎么写比较好，直接新写个函数好了。"
-    ;;   (interactive)
-    ;;   (let* ((info vc-msg-previous-commit-info))
-    ;;     (funcall 'magit-find-file
-    ;;              (plist-get info :id)
-    ;;              (concat (vc-msg-sdk-git-rootdir)
-    ;;                      (plist-get info :filename)))))
 
     (setq vc-msg-force-vcs "git")
     (setq vc-msg-copy-id-to-kill-ring nil)
