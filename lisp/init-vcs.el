@@ -260,12 +260,13 @@ the correct commit which submits the selected text is displayed."
     (advice-add #'git-messenger:popup-close :override #'ignore)
     (advice-add #'git-messenger:popup-message :override #'my-git-messenger:popup-message)))
 
+;; 需要设置 vc-handled-backends ，不然blamer显示不了
 (use-package blamer
   ;; :ensure t
   :disabled t
-  :bind (("s-n" . blamer-show-commit-info)
+  :bind (;;("s-n" . blamer-show-commit-info)
          ("C-c i" . blamer-show-posframe-commit-info))
-  :defer 3
+  :defer t
   :custom
   (blamer-idle-time 0.3)
   (blamer-min-offset 70)
