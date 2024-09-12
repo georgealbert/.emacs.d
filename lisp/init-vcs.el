@@ -21,7 +21,6 @@
             ))))
 
 (use-package vc-msg
-  ;; :disabled t
   :defer t
   :config
   (with-no-warnings
@@ -56,8 +55,8 @@ From git-messenger."
          ((string-match-p "Not Committed Yet" author)
           "* Not Committed Yet*")
          (t
-          ;; (concat
-          (format "* vc-msg *\n%s%s\n%s%s\n%s%s %s\n%s\n%s"
+          (format "%s\n%s%s\n%s%s\n%s%s %s\n%s\n%s\n%s"
+                  (propertize "* vc-msg *" 'face 'font-lock-comment-face)
                   (propertize "Commit: " 'face 'font-lock-keyword-face)
                   (propertize (vc-msg-sdk-short-id (plist-get info :id)) 'face 'font-lock-comment-face)
                   (propertize "Author: " 'face 'font-lock-keyword-face)
@@ -67,9 +66,7 @@ From git-messenger."
                   (plist-get info :author-tz)
                   (propertize (make-string 38 ?─) 'face 'font-lock-comment-face)
                   (plist-get info :summary)
-                  ;; (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic)))
-                  )
-          ;; )
+                  (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic))))
           ))))
 
     (defun my-vc-msg-show ()
@@ -81,7 +78,8 @@ the correct commit which submits the selected text is displayed."
              (plugin (vc-msg-find-plugin))
              (current-file (funcall vc-msg-get-current-file-function)))
         (if plugin
-            (let* ((executer (plist-get plugin :execute))
+            (let* ((hydra-hint-display-type 'message)
+                   (executer (plist-get plugin :execute))
                    (formatter (plist-get plugin :format))
                    (commit-info (and current-file
                                      (funcall executer
@@ -90,20 +88,13 @@ the correct commit which submits the selected text is displayed."
                                               (funcall vc-msg-get-version-function))))
                    message
                    ;; (extra-commands (symbol-value (plist-get plugin :extra)))
-                   (hydra-hint-display-type 'message))
-
+                   )
               ;; (vc-msg-update-keymap extra-commands)
 
               (cond
                ((and commit-info (listp commit-info))
                 ;; the message to display
                 (setq message (funcall formatter commit-info))
-
-                ;; Hint in minibuffer might be not visible enough
-                (if vc-msg-newbie-friendly-msg
-                    (setq message (format "%s\n\n%s"
-                                          message
-                                          vc-msg-newbie-friendly-msg)))
 
                 (setq vc-msg-previous-commit-info commit-info)
 
@@ -113,18 +104,12 @@ the correct commit which submits the selected text is displayed."
                     (kill-new id)
                     (message "%s => kill-ring" id)))
 
-                ;; (let* ((vc-msg-previous-commit-info commit-info))
-                ;;   (vc-msg-show-hydra/body)
-                ;;   )
                 (vc-msg-show-hydra/body)
                 (let* ((popuped-message (vc-msg-clean message)))
                   (cond ((and (fboundp 'posframe-workable-p) (posframe-workable-p))
-                         (let ((buffer-name "*my-vc-msg-show*")
-                               ;; (popuped-message (vc-msg-clean message))
-                               )
+                         (let ((buffer-name "*my-vc-msg-show*"))
                            (posframe-show buffer-name
                                           :string (concat (propertize "\n" 'face '(:height 0.3))
-                                                          ;; (vc-msg-clean message)
                                                           popuped-message
                                                           "\n"
                                                           (propertize "\n" 'face '(:height 0.3)))
@@ -145,14 +130,15 @@ the correct commit which submits the selected text is displayed."
                          (unwind-protect
                              (push (read-event) unread-command-events)
                            (lv-delete-window)))
-                        (t (message "%s" popuped-message)))
-                  )
-                (run-hook-with-args 'vc-msg-hook (vc-msg-detect-vcs-type) commit-info)
-                )
+                        (t (message "%s" popuped-message))))
+
+                (run-hook-with-args 'vc-msg-hook (vc-msg-detect-vcs-type) commit-info))
+
                ((stringp commit-info)
                 ;; Failed. Show the reason.
                 (kill-new commit-info)
                 (message commit-info))
+
                (t
                 ;; Failed for unknown reason
                 (message "Shell command failed.")))
@@ -160,8 +146,7 @@ the correct commit which submits the selected text is displayed."
 
     (advice-add #'vc-msg-git-format :override #'my-vc-msg-git-format)
     (advice-add #'vc-msg-show :override #'my-vc-msg-show)
-    )
-  )
+    ))
 
 ;; https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-vcs.el
 ;; Walk through git revisions of a file
