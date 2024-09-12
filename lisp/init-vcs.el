@@ -1,5 +1,8 @@
 ;;; init-vcs.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
+;; disable default vc
+(setq vc-handled-backends nil)
+
 ;; c-c c-q 退出 magit-blame
 (use-package magit
   :mode (("\\COMMIT_EDITMSG\\'" . text-mode)

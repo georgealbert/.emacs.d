@@ -21,10 +21,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
         flycheck-posframe-info-prefix "··· "
         flycheck-posframe-error-prefix "✕ "))
 
-;; disable default vc
-(setq vc-handled-backends nil)
-
-
 (use-package ggtags
   :ensure t
   :defer t)
