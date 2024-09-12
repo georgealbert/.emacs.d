@@ -47,6 +47,9 @@
     ;;              (concat (vc-msg-sdk-git-rootdir)
     ;;                      (plist-get info :filename)))))
 
+    (setq vc-msg-force-vcs "git")
+    (setq vc-msg-copy-id-to-kill-ring nil)
+
     (defun my-vc-msg-git-format (info)
       "Format the message for popup from INFO.
 From git-messenger."
