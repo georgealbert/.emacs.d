@@ -260,4 +260,22 @@ the correct commit which submits the selected text is displayed."
     (advice-add #'git-messenger:popup-close :override #'ignore)
     (advice-add #'git-messenger:popup-message :override #'my-git-messenger:popup-message)))
 
+(use-package blamer
+  ;; :ensure t
+  :disabled t
+  :bind (("s-n" . blamer-show-commit-info)
+         ("C-c i" . blamer-show-posframe-commit-info))
+  :defer 3
+  :custom
+  (blamer-idle-time 0.3)
+  (blamer-min-offset 70)
+  (blamer-show-avatar-p nil)
+  :custom-face
+  (blamer-face ((t :foreground "#7a88cf"
+                    ;; :background nil
+                    :height 140
+                    :italic t)))
+  :config
+  (global-blamer-mode 1))
+
 (provide 'init-vcs)
