@@ -37,6 +37,7 @@
                         (plist-get info :id)
                         (concat (vc-msg-sdk-git-rootdir)
                                 (plist-get info :filename)))) "magit-find-file")
+        ("q" vc-msg-close "quit")
         ))
 
     (setq vc-msg-force-vcs "git")
@@ -82,9 +83,7 @@ the correct commit which submits the selected text is displayed."
                                               (funcall vc-msg-get-line-num-function)
                                               (funcall vc-msg-get-version-function))))
                    message
-                   ;; (extra-commands (symbol-value (plist-get plugin :extra)))
                    )
-              ;; (vc-msg-update-keymap extra-commands)
 
               (cond
                ((and commit-info (listp commit-info))
@@ -139,6 +138,7 @@ the correct commit which submits the selected text is displayed."
                 (message "Shell command failed.")))
               ))))
 
+    (advice-add #'vc-msg-close :override #'ignore)
     (advice-add #'vc-msg-git-format :override #'my-vc-msg-git-format)
     (advice-add #'vc-msg-show :override #'my-vc-msg-show)
     ))
