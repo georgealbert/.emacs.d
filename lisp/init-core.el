@@ -231,12 +231,14 @@ they were loaded at startup."
     (set-keyboard-coding-system 'utf-8)
     (set-selection-coding-system 'utf-8)))
 
-(use-package gcmh
-  :diminish
-  :hook (after-init . gcmh-mode)
-  ;; :config
-  ;; (gcmh-mode +1)
-  )
+(when (not (fboundp 'igc-stats))
+  (use-package gcmh
+    :diminish
+    ;; :disabled t
+    :hook (after-init . gcmh-mode)
+    ;; :config
+    ;; (gcmh-mode +1)
+    ))
 
 (use-package general
   :defer t

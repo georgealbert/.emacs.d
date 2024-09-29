@@ -260,4 +260,53 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("<f8>" . symbol-overlay-remove-all))
   )
 
+;; for igc gc logging test.
+;; (setq garbage-collection-messages t)
+
+(setq igc-step-interval 5)
+
+;; https://emacs.stackexchange.com/questions/32150/how-to-add-a-timestamp-to-each-entry-in-emacs-messages-buffer
+
+;; Method 1:
+;; (defvar my-package--last-message nil
+;;   "Last message with timestamp appended to it.")
+
+;; (defun my-package-ad-timestamp-message (format-string &rest args)
+;;   "Prepend timestamp to each message in message buffer.
+
+;; FORMAT-STRING and ARGS are used by `message' to print a formatted string.
+
+;; Enable with (add-hook 'find-file-hook 'my-package-ad-timestamp-message)"
+;;   (when (and message-log-max
+;;              (not (string-equal format-string "%s%s")))
+;;     (let ((formatted-message-string (if args
+;;                                         (apply 'format `(,format-string ,@args))
+;;                                       format-string)))
+;;       (unless (string= formatted-message-string my-package--last-message)
+;;         (setq my-package--last-message formatted-message-string)
+;;         (let ((deactivate-mark nil)
+;;               (inhibit-read-only t))
+;;           (with-current-buffer "*Messages*"
+;;             (goto-char (point-max))
+;;             (when (not (bolp))
+;;               (newline))
+;;             (insert (format-time-string "[%F %T.%3N] "))))))))
+
+;; Method 2:
+;; (defun my/ad-timestamp-message (FORMAT-STRING &rest args)
+;;       "Advice to run before `message' that prepends a timestamp to each message.
+;;         Activate this advice with:
+;;           (advice-add 'message :before 'my/ad-timestamp-message)
+;;         Deactivate this advice with:
+;;           (advice-remove 'message 'my/ad-timestamp-message)"
+;;       (if message-log-max
+;;           (let ((deactivate-mark nil)
+;;                 (inhibit-read-only t))
+;;             (with-current-buffer "*Messages*"
+;;               (goto-char (point-max))
+;;               (if (not (bolp))
+;;                   (newline))
+;;               (insert (format-time-string "[%F %T.%3N] "))))))
+;; (advice-add 'message :before 'my/ad-timestamp-message)
+
 (provide 'init-tools)

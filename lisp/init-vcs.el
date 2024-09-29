@@ -112,7 +112,7 @@ the correct commit which submits the selected text is displayed."
                                           :max-width (round (* (frame-width) 0.62))
                                           :max-height (round (* (frame-height) 0.62))
                                           :internal-border-width 1
-                                          :internal-border-color "#61AFEF"
+                                          :internal-border-color "#61AFEF" ; #ed98cc
                                           :background-color (face-background 'tooltip nil t))
                            (unwind-protect
                                (push (read-event) unread-command-events)
