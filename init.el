@@ -66,7 +66,7 @@
 (require 'init-lang)
 (require 'init-tools)
 (require 'init-org)
-(require 'init-keyfreq)
+;; (require 'init-keyfreq)
 (require 'init-editor-paren)
 (require 'init-hydra)
 (require 'init-ui)
