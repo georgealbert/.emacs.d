@@ -3,6 +3,7 @@
 ;;; ui
 
 ;; https://xenodium.com/my-emacs-eye-candy/
+;; 设置以后看不清楚titlebar上的文件名了
 ;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 ;; (add-to-list 'default-frame-alist '(ns-appearance . dark))
 
@@ -33,7 +34,6 @@
 ;;
 ;;; Scrolling
 
-;; [2020-03-01 周日 14:44:10] 感觉3月1日编译后的emacs，移动光标时，屏幕刷新特别晃眼。先注释掉。
 (setq hscroll-margin 2
       hscroll-step 1
       ;; Emacs spends too much effort recentering the screen if you scroll the
@@ -208,7 +208,29 @@
     ;; https://github.com/belluzj/fantasque-sans
     ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
     ;; (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
-    (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font Mono 18")
+
+    ;; (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font Mono 18")
+
+    ;; 霞露文楷
+    ;; (set-face-attribute 'default nil :font "FantasqueSansMonoLXGW 18")
+    ;; 霞露文楷Lite版小一点
+    (set-face-attribute 'default nil :font "FantasqueSansMono LXGWLite Nerd Font Mono 18")
+
+    ;; FantasqueSansMNFM_LXGWLite_Regular-20241010.ttf用的是最新的Nerd Font，但是比老的显示少一行
+    ;; (set-face-attribute 'default nil :font "FantasqueSansM LXGWLite Nerd Font Mono 18")
+    
+    ;; 字体太粗了，不好看
+    ;; (set-face-attribute 'default nil :font "FiraFZH 16")
+
+    ;; HarmonyOS
+    ;; (set-face-attribute 'default nil :font "FantasqueSansMono HarmonyOS_Sans_SC Nerd Font Mono 18")
+
+    ;; FiraCode和LXGW Lite不能等宽，而且FiraCode太宽了
+    ;; (set-face-attribute 'default nil :font "FiraCode LXGWLite Nerd Font Mono 16")
+
+    ;; PragmataPro 配合 SimHei 可以实现等宽的同时等高，但是PragmataPro的1和l不好看
+    ;; (set-face-attribute 'default nil :font "PragmataPro Mono 18")
+
 
     ;; 2023.02.14
     ;; https://www.kreativekorp.com/software/fonts/fairfaxhd/
@@ -263,22 +285,24 @@
     ;; https://developer.harmonyos.com/cn/docs/design/des-guides/font-0000001157868583
     ;; (setq face-font-rescale-alist '(("HarmonyOS Sans SC" . 1)))
 
-    (setq face-font-rescale-alist '(("霞鹜文楷等宽" . 1)))
+    ;; (setq face-font-rescale-alist '(("霞鹜文楷等宽" . 1)))
+
     ;; (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
     ;; 系统自带的`苹方-简'比`更纱黑'的字体稍微大了一点
     ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
 
     ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-                        charset
-                        ;; (font-spec :family "苹方-简")))
-                        ;; (font-spec :family "等距更纱黑体 T SC"))
-                        ;; (font-spec :family "霞鹜文楷等宽"))
-                        (font-spec :family "LXGW WenKai"))
-                        ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
-      )))
+    ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    ;;   (set-fontset-font (frame-parameter nil 'font)
+    ;;                     charset
+    ;;                     ;; (font-spec :family "苹方-简")))
+    ;;                     ;; (font-spec :family "等距更纱黑体 T SC"))
+    ;;                     ;; (font-spec :family "霞鹜文楷等宽"))
+    ;;                     (font-spec :family "LXGW WenKai"))
+    ;;                     ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
+    ;;   )
+    ))
 
 (when IS-MAC
   (albert-macos-notebook-font)
