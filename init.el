@@ -61,6 +61,7 @@
 (require 'init-editor)
 
 (require 'init-ivy)
+;; (require 'init-consult)
 
 (require 'init-keybinds)
 (require 'init-lang)
