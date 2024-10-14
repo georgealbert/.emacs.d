@@ -151,29 +151,6 @@
   (nerd-icons-ivy-rich-mode 1)
   )
 
-;; ;; More friendly display transformer for Ivy
-;; ;; Enable before`ivy-rich-mode' for better performance
-;; (use-package nerd-icons-ivy-rich
-;;   :hook ((ivy-mode      . nerd-icons-ivy-rich-mode)
-;;          (counsel-mode  . ivy-rich-mode)
-;;          (ivy-rich-mode . ivy-rich-project-root-cache-mode)
-;;          (ivy-rich-mode . (lambda ()
-;;                             "Use abbreviate in `ivy-rich-mode'."
-;;                             (setq ivy-virtual-abbreviate
-;;                                   (or (and ivy-rich-mode 'abbreviate) 'name)))))
-;;   :init
-;;   ;; For better performance
-;;   (setq ivy-rich-parse-remote-buffer nil)
-;;   (setq nerd-icons-ivy-rich-icon t)
-;;   :config
-;;   (plist-put nerd-icons-ivy-rich-display-transformers-list
-;;              'centaur-load-theme
-;;              '(:columns
-;;                ((nerd-icons-ivy-rich-theme-icon)
-;;                 (ivy-rich-candidate))
-;;                :delimiter "\t"))
-;;   (nerd-icons-ivy-rich-reload))
-
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
 If N is not nil, only list directories in current project."
