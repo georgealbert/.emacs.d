@@ -84,7 +84,7 @@
   (evil-define-key 'insert 'acm-mode (kbd "C-p") 'acm-select-prev)
 
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
-  ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
+  ;; specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.
   (dolist (p '((minibuffer-inactive-mode . emacs)
                (calendar-mode . emacs)
@@ -126,7 +126,6 @@
                (messages-buffer-mode . normal)
                (js2-error-buffer-mode . emacs)))
     (evil-set-initial-state (car p) (cdr p)))
-  ;; }}
   )
 
 ;; homepage: https://github.com/redguardtoo/evil-matchit
