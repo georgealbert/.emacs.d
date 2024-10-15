@@ -73,6 +73,35 @@
 (use-package marginalia
   :hook (after-init . marginalia-mode))
 
+(defun albert/consult-rg-current-dir ()
+  "Runs `consult-rg' against the current buffer's directory."
+  (interactive)
+  (let (my-current-dir (file-name-directory (buffer-file-name)))
+    (if (stringp my-current-dir)
+        (consult-ripgrep (file-name-directory (buffer-file-name)) nil)
+      (consult-ripgrep default-directory nil)
+      )))
+
+(defun albert/consult--dominating-file (file &optional dir)
+  "Look up directory hierarchy for FILE, starting in DIR.
+Like `locate-dominating-file', but DIR defaults to
+`default-directory' and the return value is expanded."
+  (and (setq dir (locate-dominating-file (or dir default-directory) file))
+       (expand-file-name dir)))
+
+(defun albert/consult--git-root ()
+  "Return root of current project or nil on failure.
+Use the presence of a \".git\" file to determine the root."
+  (albert/consult--dominating-file ".git"))
+
+(defun albert/consult-rg-project-root (&optional query)
+  "Not documented, QUERY."
+  (interactive)
+  (let ((rootdir (albert/consult--git-root)))
+    (unless rootdir
+      (error "Could not find the project root. Create a git, hg, or svn repository there first"))
+    (consult-ripgrep rootdir nil)))
+
 (use-package consult
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
@@ -93,14 +122,15 @@
          ([remap Info-search]        . consult-info)
          ([remap isearch-forward]    . consult-line)
          ([remap recentf-open-files] . consult-recent-file)
+         ("C-c n"                    . consult-recent-file)
 
-         ("C-s"    . consult-line)
-         ;; ("C-c n"  . consult-recent-file)
+         ;; Super键就是macOS里改键后的Alt键，即Command键
+         ("S-f"  . albert/consult-rg-current-dir)
+         ("S-r"  . albert/consult-rg-project-root)
 
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x b"   . consult-buffer)              ;; orig. switch-to-buffer
-         ("C-c n"   . consult-buffer)              ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
