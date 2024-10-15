@@ -266,10 +266,28 @@ determine the exact padding."
    (magit-diff-context-highlight :foreground fg :background "gray30")
 
    ;; orderless & corfu
-   (orderless-match-face-0 :weight 'bold :foreground (doom-blend blue fg 0.6) :background (doom-blend orange bg 0.1))
-   (orderless-match-face-1 :weight 'bold :foreground (doom-blend yellow fg 0.6) :background (doom-blend orange bg 0.1))
-   (orderless-match-face-2 :weight 'bold :foreground (doom-blend teal fg 0.6) :background (doom-blend orange bg 0.1))
-   (orderless-match-face-3 :weight 'bold :foreground (doom-blend magenta fg 0.6) :background (doom-blend orange bg 0.1))
+   ;; (orderless-match-face-0 :weight 'bold :foreground (doom-blend blue fg 0.6) :background (doom-blend orange bg 0.1))
+   ;; (orderless-match-face-1 :weight 'bold :foreground (doom-blend yellow fg 0.6) :background (doom-blend orange bg 0.1))
+   ;; (orderless-match-face-2 :weight 'bold :foreground (doom-blend teal fg 0.6) :background (doom-blend orange bg 0.1))
+   ;; (orderless-match-face-3 :weight 'bold :foreground (doom-blend magenta fg 0.6) :background (doom-blend orange bg 0.1))
+
+   ;; 用了consult以后grep match的显示不明显
+   ;; (orderless-match-face-0 :weight 'bold :foreground (doom-blend magenta fg 0.6) :background "SlateBlue1")
+   ;; (orderless-match-face-1 :weight 'bold :foreground (doom-blend yellow  fg 0.6) :background "DeepSkyBlue1")
+   ;; (orderless-match-face-2 :weight 'bold :foreground (doom-blend green   fg 0.6) :background "DodgerBlue3")
+
+   ;; orange "MediumOrchid1" "PaleVioletRed1" "LightPink1" "burlywood1"
+   ;; blue的互补色 "#FFBE73" "#FFA640" #FF8900 #FFAE40
+   ;; (orderless-match-face-3 :weight 'bold :foreground (doom-blend blue    fg 0.6) :background "#FFAE40")
+   ;; (orderless-match-face-3 :weight 'bold :foreground "#3FA4F9" :background "#FFAE40")
+   ;; blue的辅助色 "#3CF28B" 
+   ;; (orderless-match-face-3 :weight 'bold :foreground (doom-blend blue    fg 0.6) :background "#3CF28B")
+
+   ;; 参考swiper，前景色黑，背景色不同
+   (orderless-match-face-0 :weight 'bold :foreground "black" :background blue)
+   (orderless-match-face-1 :weight 'bold :foreground "black" :background yellow)
+   (orderless-match-face-2 :weight 'bold :foreground "black" :background green)
+   (orderless-match-face-3 :weight 'bold :foreground "black" :background magenta)
 
    (corfu-current :background "gray30" :foreground fg)
 
