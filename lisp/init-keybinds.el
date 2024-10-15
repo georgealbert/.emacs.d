@@ -9,10 +9,6 @@
   ;; (setq which-key-allow-imprecise-window-fit t) ; performance 开了以后显示太小了，看着不舒服
   )
 
-;; https://oremacs.com/2019/04/07/swiper-isearch/
-;; https://pengpengxp.github.io/emacs/emacs_isearch_summary.html
-(global-set-key (kbd "C-s") 'swiper-isearch)
-
 (run-with-idle-timer
  1 nil
  #'(lambda ()

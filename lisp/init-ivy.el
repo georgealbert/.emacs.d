@@ -225,6 +225,10 @@ If N is not nil, only list directories in current project."
   (setq counsel-describe-function-function #'helpful-callable
         counsel-describe-variable-function #'helpful-variable))
 
+;; https://oremacs.com/2019/04/07/swiper-isearch/
+;; https://pengpengxp.github.io/emacs/emacs_isearch_summary.html
+(global-set-key (kbd "C-s") 'swiper-isearch)
+
 (use-package ivy-posframe
   :after ivy
   :disabled t
