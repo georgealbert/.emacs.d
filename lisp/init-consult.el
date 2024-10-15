@@ -158,6 +158,7 @@ Use the presence of a \".git\" file to determine the root."
          ("M-s G"   . consult-git-grep)
          ("M-s r"   . consult-ripgrep)
          ("M-s l"   . consult-line)
+         ("C-s"     . consult-line)
          ("M-s L"   . consult-line-multi)
          ("M-s k"   . consult-keep-lines)
          ("M-s u"   . consult-focus-lines)
@@ -180,6 +181,10 @@ Use the presence of a \".git\" file to determine the root."
 
   ;; The :init configuration is always executed (Not lazy)
   :init
+  (defface consult-file
+    '((t :inherit font-lock-comment-face))
+    "Face used to highlight files in `consult-buffer'.")
+
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
@@ -349,9 +354,9 @@ targets."
   :hook ((after-init . global-corfu-mode)
          (global-corfu-mode . corfu-popupinfo-mode)))
 
-(unless (display-graphic-p)
-  (use-package corfu-terminal
-    :hook (global-corfu-mode . corfu-terminal-mode)))
+;; (unless (display-graphic-p)
+;;   (use-package corfu-terminal
+;;     :hook (global-corfu-mode . corfu-terminal-mode)))
 
 (use-package nerd-icons-corfu
   :after corfu
