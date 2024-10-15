@@ -9,6 +9,7 @@
 ;; 2. 显示对齐
 ;; 3. posframe不显示
 ;; 4. 要拼音首字母查询不需要像ivy里一样，直接输入即可
+;; 5. consult-buffer里面的文件名的颜色不好看
 
 ;;; Code:
 
@@ -45,7 +46,9 @@
  (add-to-list 'orderless-matching-styles 'completion--regex-pinyin))
 
 (use-package vertico
-  :custom (vertico-count 15)
+  :custom
+  (vertico-count 15)
+  (vertico-resize nil)
   :bind (:map vertico-map
          ("RET" . vertico-directory-enter)
          ("DEL" . vertico-directory-delete-char)
