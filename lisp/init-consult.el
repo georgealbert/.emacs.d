@@ -5,11 +5,18 @@
 ;; Modern completion configuration.
 ;;
 
-;; TODO: 1. 如何实现counsel-buffer-or-recentf
-;; 2. 显示对齐
+;; Pros:
+;; 4. 要拼音首字母查询不需要像ivy里一样，直接输入即可，也不用写个函数
+
+;; TODO:
+;; 1. 如何实现counsel-buffer-or-recentf - 搞不定
+;; 2. 显示对齐 - 已解决
 ;; 3. posframe不显示
-;; 4. 要拼音首字母查询不需要像ivy里一样，直接输入即可
-;; 5. consult-buffer里面的文件名的颜色不好看
+;; 5. consult-buffer里面的文件名的颜色不好看 - 已解决
+;; 6. 在dired中不能用consult-rg-current-dir - 已解决，唉，快捷键配置错了，应该是 s-f，写错 S-f 了。
+;; 7. consult-line用的orderless match颜色不好看 - 已解决
+;; 8. consult-line查询后，在normal mode中按n不能像ivy一样查询 - 已解决，按 up和down键就可以了，不用像在ivy里面先按 C-o，然后按 j和k 键了。
+;; 9. consult-recent-file中，不能像counsel-buffer-or-recenf一样显示哪些文件是打开的
 
 ;;; Code:
 
@@ -122,11 +129,11 @@ Use the presence of a \".git\" file to determine the root."
          ([remap Info-search]        . consult-info)
          ([remap isearch-forward]    . consult-line)
          ([remap recentf-open-files] . consult-recent-file)
-         ("C-c n"                    . consult-recent-file)
+         ("C-c n"                    . albert/consult-recent-file)
 
          ;; Super键就是macOS里改键后的Alt键，即Command键
-         ("S-f"  . albert/consult-rg-current-dir)
-         ("S-r"  . albert/consult-rg-project-root)
+         ("s-f"  . albert/consult-rg-current-dir)
+         ("s-r"  . albert/consult-rg-project-root)
 
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -240,6 +247,22 @@ value of the selected COLOR."
                           :category 'color
                           :history '(:input consult-colors-history))))
     (insert color))
+
+  (defun albert/consult-recent-file ()
+    "Find recent file using `completing-read'. 去掉预览"
+    (interactive)
+    (find-file
+     (consult--read
+      (or
+       (mapcar #'consult--fast-abbreviate-file-name (bound-and-true-p recentf-list))
+       (user-error "No recent files, `recentf-mode' is %s"
+                   (if recentf-mode "enabled" "disabled")))
+      :prompt "Find recent file: "
+      :sort nil
+      :require-match t
+      :category 'file
+      :state nil
+      :history 'file-name-history)))
   :config
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
