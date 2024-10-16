@@ -14,6 +14,10 @@
 ;; we must prevent Emacs from doing it early!
 (setq package-enable-at-startup nil)
 
+;; `use-package' is builtin since 29.
+;; It must be set before loading `use-package'.
+(setq use-package-enable-imenu-support t)
+
 ;; (setq package-quickstart t)
 
 (advice-add #'package--ensure-init-file :override #'ignore)

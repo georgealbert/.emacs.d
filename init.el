@@ -57,6 +57,7 @@
 
 ;; (setq comp-deferred-compilation t)
 
+(require 'init-funcs)
 (require 'init-core)
 (require 'init-editor)
 

@@ -1,44 +1,18 @@
 ;;; init-core.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; doom-emacs/core/core-lib.el
-;; (defmacro delq! (elt list &optional fetcher)
-;;   "`delq' ELT from LIST in-place.
+;;
+;;; Custom hooks
 
-;; If FETCHER is a function, ELT is used as the key in LIST (an alist)."
-;;   `(setq ,list
-;;          (delq ,(if fetcher
-;;                     `(funcall ,fetcher ,elt ,list)
-;;                   elt)
-;;                ,list)))
+(defcustom doom-first-input-hook ()
+  "Transient hooks run before the first user input."
+  :type 'hook
+  :local 'permanent-local
+  :group 'doom)
 
 ;; (setq url-proxy-services
 ;;    '(("no_proxy" . "^\\(localhost\\|10.*\\)")
 ;;      ("http" . "127.0.0.1:7890")
 ;;      ("https" . "127.0.0.1:7890")))
-
-(defmacro add-transient-hook! (hook-or-function &rest forms)
-  "Attaches a self-removing function to HOOK-OR-FUNCTION.
-
-FORMS are evaluated once, when that function/hook is first invoked, then never
-again.
-
-HOOK-OR-FUNCTION can be a quoted hook or a sharp-quoted function (which will be
-advised)."
-  (declare (indent 1))
-  (let ((append (if (eq (car forms) :after) (pop forms)))
-        (fn (intern (format "doom--transient-%s-h" (sxhash hook-or-function)))))
-    `(let ((sym ,hook-or-function))
-       (defun ,fn (&rest _)
-         ,@forms
-         (let ((sym ,hook-or-function))
-           (cond ((functionp sym) (advice-remove sym #',fn))
-                 ((symbolp sym)   (remove-hook sym #',fn))))
-         (unintern ',fn nil))
-       (cond ((functionp sym)
-              (advice-add ,hook-or-function ,(if append :after :before) #',fn))
-             ((symbolp sym)
-              (put ',fn 'permanent-local-hook t)
-              (add-hook sym #',fn ,append))))))
 
 ;; doom-emacs/core/core.el
 (defconst EMACS27+   (> emacs-major-version 26))
@@ -146,16 +120,6 @@ they were loaded at startup."
 (unless IS-MAC   (setq command-line-ns-option-alist nil))
 (unless IS-LINUX (setq command-line-x-option-alist nil))
   
-;; ;; Adopt a sneaky garbage collection strategy of waiting until idle time to
-;; ;; collect; staving off the collector while the user is working.
-;; (when doom-interactive-mode
-;;   (add-transient-hook! 'pre-command-hook (gcmh-mode +1))
-;;   (with-eval-after-load 'gcmh
-;;     (setq gcmh-idle-delay 5
-;;           gcmh-high-cons-threshold (* 16 1024 1024)  ; 16mb
-;;           gcmh-verbose nil)
-;;     (add-hook 'focus-out-hook #'gcmh-idle-garbage-collect)))
-
 ;; The GC introduces annoying pauses and stuttering into our Emacs experience,
 ;; so we use `gcmh' to stave off the GC while we're using Emacs, and provoke it
 ;; when it's idle. However, if the idle delay is too long, we run the risk of
@@ -230,6 +194,8 @@ they were loaded at startup."
     (set-terminal-coding-system 'utf-8)
     (set-keyboard-coding-system 'utf-8)
     (set-selection-coding-system 'utf-8)))
+
+(doom-run-hook-on 'doom-first-input-hook  '(pre-command-hook))
 
 (when (not (fboundp 'igc-stats))
   (use-package gcmh
