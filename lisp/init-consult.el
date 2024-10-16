@@ -287,23 +287,33 @@ value of the selected COLOR."
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
 
-(use-package consult-flyspell
-  :bind ("M-g s" . consult-flyspell))
+;; (use-package consult-flyspell
+;;   :bind ("M-g s" . consult-flyspell))
 
-(use-package consult-yasnippet
-  :bind ("M-g y" . consult-yasnippet))
+;; (use-package consult-yasnippet
+;;   :bind ("M-g y" . consult-yasnippet))
 
+;; https://karthinks.com/software/fifteen-ways-to-use-embark/ 这个写得不错
 (use-package embark
   :bind (("s-."   . embark-act)
          ("C-s-." . embark-act)
          ("M-."   . embark-dwim)        ; overrides `xref-find-definitions'
          ([remap describe-bindings] . embark-bindings)
          :map minibuffer-local-map
-         ("M-." . my-embark-preview))
+         ;; C-o 和ivy一样了
+         ("C-o" . embark-act)
+         ("M-." . my-embark-preview)
+         ;; https://midirus.com/blog/from-ivy-to-vertico
+         :map vertico-map
+         ;; Use page-up/down to scroll vertico buffer, like ivy does by default.
+         ("<prior>" . 'vertico-scroll-down)
+         ("<next>"  . 'vertico-scroll-up))
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
+  ;; (define-key minibuffer-local-map (kbd "n") 'vertico-next)
+
   ;; Manual preview for non-Consult commands using Embark
   (defun my-embark-preview ()
     "Previews candidate in vertico buffer, unless it's a consult command."
