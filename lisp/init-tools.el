@@ -32,16 +32,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
                 ;; (flycheck-mode 1)
                 (ggtags-mode 1)))))
 
-;; (use-package undo-tree
-;;   :disabled t
-;;   :defer 1
-;;   :diminish
-;;   :config
-;;   (progn
-;;     (global-undo-tree-mode)
-;;     (setq undo-tree-visualizer-timestamps t)
-;;     (setq undo-tree-visualizer-diff t)))
-
 (use-package vundo
   :defer t
   :config
@@ -168,7 +158,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
-
 
 ;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv

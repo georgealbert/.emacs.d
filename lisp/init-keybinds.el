@@ -78,8 +78,10 @@
       ;; "cd" 'counsel-recent-directory
 
       "b"  '(:ignore t :which-key "buffer")
+
       ;; "bb" '(consult-buffer :which-key "Switch buffer")
       "bb" '(counsel-switch-buffer :which-key "Switch buffer")
+
       "bk" '(kill-current-buffer :which-key "Kill buffer")
       "br" '(revert-buffer :which-key "Revert buffer")
       ;; "bo" 'my-overview-of-current-buffer ;; 移动会很卡
