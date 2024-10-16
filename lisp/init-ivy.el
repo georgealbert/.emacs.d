@@ -86,7 +86,7 @@
   ;; require this.
   (require 'counsel nil t)
 
-  (setq ivy-height 15 ;; 11 -> 15
+  (setq ivy-height 15 ;;
         ;; 不循环，否则不知道是否到底了。
         ;; ivy-wrap t
         ivy-count-format "(%d/%d) "
@@ -110,7 +110,6 @@
                                 ))
   (use-package amx
     :ensure nil
-    ;; :defer t
     :load-path "~/.emacs.d/site-lisp/extensions/amx"
     :init
     (setq amx-history-length 50))
@@ -119,8 +118,9 @@
   )
 
 (use-package ivy-rich
-  :defer 1
+  ;; :defer 1
   :diminish
+  :hook (doom-first-input . ivy-rich-mode)
   :config
   ;; 性能更好点
   (setq ivy-rich-parse-remote-buffer nil)
