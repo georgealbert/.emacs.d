@@ -5,9 +5,6 @@
 ;; to skip the mtime checks on every *.elc file.
 (setq load-prefer-newer noninteractive)
 
-;; [2018-11-30 周五 11:45:50] 这个函数是必须的，否则启动报错。
-;; (package-initialize nil)
-
 (defvar albert-dumped nil
   "non-nil when a dump file is loaded (because dump.el sets this variable).")
 
@@ -77,7 +74,6 @@
 
 (require 'init-lsp-bridge)
 (require 'init-vcs)
-;; (require 'init-erc)
 
 ;; maximize window
 (if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))

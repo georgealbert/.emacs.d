@@ -70,30 +70,6 @@
     (setq process-coding-system-alist (cons (cons cmd '(cp936 . cp936))
                                             process-coding-system-alist))))
 
-;; (use-package python-mode
-;;   :mode (("SConstruct\\'" . python-mode)
-;;          ("SConscript\\'" . python-mode)
-;;          ("\\.py\\'"      . python-mode))
-;;   :defer t
-;;   ;; [2018-12-01 周六 22:13:10] 为什么execl-test.py不能显示中文doc，而且不停报错?
-;;   :init (elpy-enable)
-;;   :config
-;;   (use-package elpy
-;;     :ensure t
-;;     :defer t
-;;     :init
-;;     (progn
-;;       ;;(setq elpy-rpc-python-command "python3")
-;;       (elpy-use-ipython)
-;;       ;; (add-hook 'elpy-mode-hook (lambda () (elpy-shell-toggle-dedicated-shell 1)))
-;;       ;; use flycheck not flymake with elpy
-;;       ;; (when (require 'flycheck nil t)
-;;       ;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;       ;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
-;;       )))
-
-;; (elpy-enable)
-
 (use-package py-autopep8
   :ensure t
   :defer t
@@ -169,7 +145,6 @@
   ;; d/ -> <div></div>
   ;; s/ -> <span></span>
   (setq web-mode-enable-auto-expanding t))
-
 
 ;; (require 'treesit)
 ;; (add-hook 'markdown-mode-hook #'(lambda () (treesit-parser-create 'markdown)))

@@ -3,6 +3,7 @@
 ;;
 ;;; Custom hooks
 
+;; doom-start.el
 (defcustom doom-first-input-hook ()
   "Transient hooks run before the first user input."
   :type 'hook
@@ -135,8 +136,6 @@ they were loaded at startup."
 
 (setq load-prefer-newer t)
 
-;; (require 'package)
-
 (add-to-list 'package-archives
              '("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
              ;; '("melpa" . "http://elpa.emacs-china.org/melpa/") t)
@@ -200,20 +199,9 @@ they were loaded at startup."
 (when (not (fboundp 'igc-stats))
   (use-package gcmh
     :diminish
-    ;; :disabled t
-    :hook (after-init . gcmh-mode)
-    ;; :config
-    ;; (gcmh-mode +1)
-    ))
+    :hook (after-init . gcmh-mode)))
 
 (use-package general
-  :defer t
-  ;; :init
-  ;; Convenience aliases
-  ;; (defalias 'define-key! #'general-def)
-  ;; (defalias 'unmap! #'general-unbind)
-  ;; :config
-  ;; (general-evil-setup t)
-  )
+  :defer t)
 
 (provide 'init-core)
