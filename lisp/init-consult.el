@@ -16,7 +16,8 @@
 ;; 6. 在dired中不能用consult-rg-current-dir - 已解决，唉，快捷键配置错了，应该是 s-f，写错 S-f 了。
 ;; 7. consult-line用的orderless match颜色不好看 - 已解决
 ;; 8. consult-line查询后，在normal mode中按n不能像ivy一样查询 - 已解决，按 up和down键就可以了，不用像在ivy里面先按 C-o，然后按 j和k 键了。
-;; 9. consult-recent-file中，不能像counsel-buffer-or-recenf一样显示哪些文件是打开的
+;; 9. consult-recent-file中，不能像counsel-buffer-or-recenf一样显示哪些文件是打开的，可能要参考counsel写一个，有点难啊
+;; 10. M-x不能显示执行历史 - 已解决，在amx里新增了consult做为后端。直接用consult的问题是没有历史记录，只能打开emacs后执行过的。也没有找到怎么控制consult在执行extended-excute-command时不进行sort
 
 ;;; Code:
 
@@ -44,23 +45,24 @@
 
 ;; Support Pinyin
 (use-package pinyinlib
- :after orderless
- :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib"
- :autoload pinyinlib-build-regexp-string
- :init
- (defun completion--regex-pinyin (str)
-   (orderless-regexp (pinyinlib-build-regexp-string str)))
- (add-to-list 'orderless-matching-styles 'completion--regex-pinyin))
+  :after orderless
+  :load-path "~/.emacs.d/site-lisp/extensions/pinyinlib"
+  :autoload pinyinlib-build-regexp-string
+  :init
+  (defun completion--regex-pinyin (str)
+    (orderless-regexp (pinyinlib-build-regexp-string str)))
+  (add-to-list 'orderless-matching-styles 'completion--regex-pinyin))
 
 (use-package vertico
   :custom
   (vertico-count 15)
   (vertico-resize nil)
   :bind (:map vertico-map
-         ("RET" . vertico-directory-enter)
-         ("DEL" . vertico-directory-delete-char)
-         ("M-DEL" . vertico-directory-delete-word))
-  :hook ((after-init . vertico-mode)
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; :hook ((after-init . vertico-mode)
+  :hook ((doom-first-input . vertico-mode)
          (rfn-eshadow-update-overlay . vertico-directory-tidy)))
 
 ;; (when (childframe-completion-workable-p)
@@ -74,11 +76,12 @@
 ;; )
 
 (use-package nerd-icons-completion
-  ;; :when (icons-displayable-p)
+  ;; :after vertico)
   :hook (vertico-mode . nerd-icons-completion-mode))
 
 (use-package marginalia
   :hook (after-init . marginalia-mode))
+  ;; :hook (doom-first-input . marginalia-mode))
 
 (defun albert/consult-rg-current-dir ()
   "Runs `consult-rg' against the current buffer's directory."
@@ -132,8 +135,8 @@ Use the presence of a \".git\" file to determine the root."
          ("C-c n"                    . albert/consult-recent-file)
 
          ;; Super键就是macOS里改键后的Alt键，即Command键
-         ("s-f"  . albert/consult-rg-current-dir)
-         ("s-r"  . albert/consult-rg-project-root)
+         ("s-f"     . albert/consult-rg-current-dir)
+         ("s-r"     . albert/consult-rg-project-root)
 
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -257,7 +260,7 @@ value of the selected COLOR."
        (mapcar #'consult--fast-abbreviate-file-name (bound-and-true-p recentf-list))
        (user-error "No recent files, `recentf-mode' is %s"
                    (if recentf-mode "enabled" "disabled")))
-      :prompt "Find recent file: "
+      :prompt "My Find recent file: "
       :sort nil
       :require-match t
       :category 'file
@@ -370,7 +373,7 @@ targets."
 
 (use-package embark-consult
   :bind (:map minibuffer-mode-map
-         ("C-c C-o" . embark-export))
+              ("C-c C-o" . embark-export))
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Auto completion
@@ -384,7 +387,8 @@ targets."
   :custom-face
   (corfu-border ((t (:inherit region :background unspecified))))
   :bind ("M-/" . completion-at-point)
-  :hook ((after-init . global-corfu-mode)
+  ;; :hook ((after-init . global-corfu-mode)
+  :hook ((doom-first-input . global-corfu-mode)
          (global-corfu-mode . corfu-popupinfo-mode)))
 
 ;; (unless (display-graphic-p)
@@ -402,17 +406,15 @@ targets."
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-
-  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+  (add-to-list 'completion-at-point-functions #'cape-abbrev))
 
 (use-package amx
   :ensure nil
-  ;; :defer t
   :bind (("M-x" . amx))
   :load-path "~/.emacs.d/site-lisp/extensions/amx"
-  :init
-  (setq amx-history-length 50))
+  :config
+  (setq amx-history-length 50
+        amx-backend 'consult))
 
 (recentf-mode +1)
 
