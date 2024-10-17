@@ -77,8 +77,8 @@
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "gi") 'lsp-bridge-find-impl)
   (evil-define-key 'normal 'lsp-bridge-mode (kbd "K") 'lsp-bridge-popup-documentation)
 
-  ;; (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
-  ;; (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
+  (evil-define-key 'insert 'corfu-mode (kbd "C-n") 'corfu-next)
+  (evil-define-key 'insert 'corfu-mode (kbd "C-p") 'corfu-previous)
 
   (evil-define-key 'insert 'acm-mode (kbd "C-n") 'acm-select-next)
   (evil-define-key 'insert 'acm-mode (kbd "C-p") 'acm-select-prev)
