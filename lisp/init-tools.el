@@ -38,12 +38,12 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   ;; (setq vundo-glyph-alist vundo-unicode-symbols)
   (set-face-attribute 'vundo-default nil :family "Symbola"))
 
-(use-package aweshell
-  :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
-  :disabled t
-  :bind (("s-n" . aweshell-new)
-         ("s-h" . aweshell-toggle)
-         ("s-x s-x" . aweshell-dedicated-toggle)))
+;; (use-package aweshell
+;;   :load-path "~/.emacs.d/site-lisp/extensions/aweshell"
+;;   :disabled t
+;;   :bind (("s-n" . aweshell-new)
+;;          ("s-h" . aweshell-toggle)
+;;          ("s-x s-x" . aweshell-dedicated-toggle)))
 
 (defun my-overview-of-current-buffer ()
   "toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/"
