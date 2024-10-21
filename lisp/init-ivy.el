@@ -296,4 +296,58 @@ If N is not nil, only list directories in current project."
   :config
   (ivy-posframe-mode 1))
 
+;; Auto completion
+;; https://github.com/minad/corfu
+;; Supports the Orderless completion style. The filter string can contain arbitrary characters, after inserting a space via M-SPC (configurable via corfu-quit-at-boundary and corfu-separator).
+;; 按 M-SPC分割，但是需要consult。ivy不支持，唉
+(use-package corfu
+  ;; :disabled t
+  ;; :custom
+  ;; (corfu-auto t)
+  ;; (corfu-auto-prefix 2)
+  ;; (corfu-preview-current nil)
+  ;; (corfu-auto-delay 0.2)
+  ;; (corfu-popupinfo-delay '(0.4 . 0.2))
+  ;; TODO: 为什么设置了global-corfu-modes不在lsp-bridge-mode时激活，整个corfu就不能自动补全了呢？
+  ;; (global-corfu-modes '((not lsp-bridge-mode)))
+  :config
+  (setq corfu-auto t
+        corfu-auto-prefix 2
+        corfu-auto-delay 0.2
+        corfu-popupinfo-delay '(0.4 . 0.2)
+        ;; global-corfu-modes '((not
+        ;;                       lsp-bridge-mode
+        ;;                       circe-mode
+        ;;                       help-mode
+        ;;                       gud-mode)
+        ;;                      t)
+        ;; corfu-preselect 'prompt
+        ;; corfu-count 16
+        ;; corfu-max-width 120
+        ;; corfu-preview-current 'insert
+        ;; tab-always-indent 'complete
+        )
+  ;; :init
+  ;; (setopt global-corfu-modes '((not lsp-bridge-mode)))
+  ;; :custom-face
+  ;; (corfu-border ((t (:inherit region :background unspecified))))
+  :bind ("M-/" . completion-at-point) ;; TODO: 可能是给terminal中用minibuffer补全时使用的，在GUI中，总是吞掉之前输入的目录
+  :hook ((after-init . global-corfu-mode)
+         (global-corfu-mode . corfu-popupinfo-mode)
+         ))
+
+;; (use-package nerd-icons-corfu
+;;   :after corfu
+;;   :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+;; Add extensions
+(use-package cape
+  ;; :bind ("M-/" . completion-at-point)
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev))
+
 (provide 'init-ivy)
