@@ -60,6 +60,56 @@
       (ivy--regex-plus str)))))
     ;; (ivy--regex-ignore-order str)))
 
+
+(defun my-extended-regexp (str)
+  "Build regex compatible with pinyin from STR.
+
+https://github.com/redguardtoo/emacs.d/blob/55a3b4fe9bc981de51853af49754fa4c85d86c87/lisp/init-utils.el#L568
+"
+  (let* ((len (length str))
+         bn)
+    (cond
+     ;; do nothing
+     ((<= (length str) 1))
+
+     ;; If the first character of input in ivy is ":" or ";",
+     ;; remaining input is converted into Chinese pinyin regex.
+     ((or (and (string-match "[:\|;]" (substring str 0 1))
+               (setq str (substring str 1 len)))
+          (and (setq bn (buffer-name))
+               (or (member bn '("*Org Agenda*"))
+                   (string-match ".*EMMS Playlist\\|\\.org$" bn))))
+      ;; (my-ensure 'pinyinlib)
+      (require 'pinyinlib)
+      (setq str (pinyinlib-build-regexp-string str)))
+
+     ;; If the first character of input in ivy is "/",
+     ;; remaining input is converted to pattern to search camel case word
+     ;; For example, input "/ic" match "isController" or "isCollapsed"
+     ((string= (substring str 0 1) "/")
+      (let* ((rlt "")
+             (i 0)
+             (subs (substring str 1 len))
+             c)
+        (when (> len 2)
+          (setq subs (upcase subs))
+          (while (< i (length subs))
+            (setq c (elt subs i))
+            (setq rlt (concat rlt (cond
+                                   ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+                                    (format "%c" c))
+                                   (t
+                                    (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
+                                              (format "%c" c))
+                                            "[a-z]+")))))
+            (setq i (1+ i))))
+        (setq str rlt))))
+    str))
+
+(defun my-re-builder-extended-pattern (str)
+  "Build regex compatible with pinyin from STR."
+  (ivy--regex-plus (my-extended-regexp str)))
+
 ;; doc: https://zhuanlan.zhihu.com/p/67307599
 ;;      pinyinlib搜索中文首字母开头的中文，按26个字母，每个字母有几个中文
 ;;      :搜索，!排除
@@ -104,10 +154,12 @@
         ;; enable ability to select prompt (alternative to `ivy-immediate-done')
         ivy-use-selectable-prompt t)
 
-  (setq ivy-re-builders-alist '(
-                                ;; (counsel-evil-marks . ivy--regex-plus)
-                                (t . re-builder-extended-pattern)
-                                ))
+  (setq ivy-re-builders-alist '((t . my-re-builder-extended-pattern)))
+  ;; (setq ivy-re-builders-alist '(
+  ;;                               ;; (counsel-evil-marks . ivy--regex-plus)
+  ;;                               (t . re-builder-extended-pattern)
+  ;;                               ))
+
   (use-package amx
     :ensure nil
     :load-path "~/.emacs.d/site-lisp/extensions/amx"
