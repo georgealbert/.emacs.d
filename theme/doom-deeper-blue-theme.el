@@ -289,7 +289,8 @@ determine the exact padding."
    (orderless-match-face-2 :weight 'bold :foreground "black" :background green)
    (orderless-match-face-3 :weight 'bold :foreground "black" :background magenta)
 
-   (corfu-current :background "gray30" :foreground fg)
+   ;; (corfu-current :background "gray30" :foreground fg)
+   (corfu-current :foreground "black" :background blue)
 
    ;; ediff
 
