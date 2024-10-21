@@ -6,18 +6,17 @@
 ;;
 
 ;; Pros:
-;; 4. 要拼音首字母查询不需要像ivy里一样，直接输入即可，也不用写个函数
+;; 1. 要拼音首字母查询不需要像ivy里一样，直接输入即可，也不用写个函数
 
 ;; TODO:
-;; 1. 如何实现counsel-buffer-or-recentf - 搞不定
+;; 1. 如何实现counsel-buffer-or-recentf。consult-recent-file中，不能像counsel-buffer-or-recenf一样显示哪些文件是打开的，可能要参考counsel写一个，有点难啊 - 搞不定
 ;; 2. 显示对齐 - 已解决
 ;; 3. posframe不显示
 ;; 5. consult-buffer里面的文件名的颜色不好看 - 已解决
 ;; 6. 在dired中不能用consult-rg-current-dir - 已解决，唉，快捷键配置错了，应该是 s-f，写错 S-f 了。
 ;; 7. consult-line用的orderless match颜色不好看 - 已解决
-;; 8. consult-line查询后，在normal mode中按n不能像ivy一样查询 - 已解决，按 up和down键就可以了，不用像在ivy里面先按 C-o，然后按 j和k 键了。
-;; 9. consult-recent-file中，不能像counsel-buffer-or-recenf一样显示哪些文件是打开的，可能要参考counsel写一个，有点难啊
-;; 10. M-x不能显示执行历史 - 已解决，在amx里新增了consult做为后端。直接用consult的问题是没有历史记录，只能打开emacs后执行过的。也没有找到怎么控制consult在执行extended-excute-command时不进行sort
+;; 8. consult-line查询后，在normal mode中按n不能像ivy一样查询 - 已解决，按 up和down 键就可以了，不用像在ivy里面先按 C-o，然后按 j和k 键了。
+;; 9. M-x不能显示执行历史 - 已解决，在amx里新增了consult做为后端。直接用consult的问题是没有历史记录，只能打开emacs后执行过的。也没有找到怎么控制consult在执行extended-excute-command时不进行sort
 
 ;;; Code:
 
@@ -75,42 +74,12 @@
 ;;                  (right-fringe . 8))))
 ;; )
 
-(use-package nerd-icons-completion
-  ;; :after vertico)
-  :hook (vertico-mode . nerd-icons-completion-mode))
-
 (use-package marginalia
-  :hook (after-init . marginalia-mode))
-  ;; :hook (doom-first-input . marginalia-mode))
+  ;; :hook (after-init . marginalia-mode))
+  :hook (doom-first-input . marginalia-mode))
 
-(defun albert/consult-rg-current-dir ()
-  "Runs `consult-rg' against the current buffer's directory."
-  (interactive)
-  (let (my-current-dir (file-name-directory (buffer-file-name)))
-    (if (stringp my-current-dir)
-        (consult-ripgrep (file-name-directory (buffer-file-name)) nil)
-      (consult-ripgrep default-directory nil)
-      )))
-
-(defun albert/consult--dominating-file (file &optional dir)
-  "Look up directory hierarchy for FILE, starting in DIR.
-Like `locate-dominating-file', but DIR defaults to
-`default-directory' and the return value is expanded."
-  (and (setq dir (locate-dominating-file (or dir default-directory) file))
-       (expand-file-name dir)))
-
-(defun albert/consult--git-root ()
-  "Return root of current project or nil on failure.
-Use the presence of a \".git\" file to determine the root."
-  (albert/consult--dominating-file ".git"))
-
-(defun albert/consult-rg-project-root (&optional query)
-  "Not documented, QUERY."
-  (interactive)
-  (let ((rootdir (albert/consult--git-root)))
-    (unless rootdir
-      (error "Could not find the project root. Create a git, hg, or svn repository there first"))
-    (consult-ripgrep rootdir nil)))
+(use-package nerd-icons-completion
+  :hook (vertico-mode . nerd-icons-completion-mode))
 
 (use-package consult
   :bind (;; C-c bindings in `mode-specific-map'
@@ -251,21 +220,103 @@ value of the selected COLOR."
                           :history '(:input consult-colors-history))))
     (insert color))
 
+  (defun albert/counsel-recentf-candidates ()
+    "Return candidates for `counsel-recentf'.
+
+When `counsel-recentf-include-xdg-list' is non-nil, also include
+the files in said list, sorting the combined list by file access
+time."
+    (mapcar #'substring-no-properties (mapcar #'expand-file-name recentf-list)))
+
+
+  (defun albert/counsel-buffer-or-recentf-candidates ()
+    "Return candidates for `counsel-buffer-or-recentf'."
+    (require 'recentf)
+    (recentf-mode)
+    (let ((buffers (delq nil (mapcar #'buffer-file-name (buffer-list)))))
+      (nconc
+       buffers
+       (cl-remove-if (lambda (f) (member f buffers))
+                     ;; TODO: 这里有绝对路径和相当路径的问题
+                     (albert/counsel-recentf-candidates)))))
+
+  (defun albert/append-face (str face)
+    "Append to STR the property FACE."
+    (when face
+      (setq str (copy-sequence str))
+      (add-face-text-property 0 (length str) face t str))
+    str)
+
+  (defun albert/counsel-buffer-or-recentf-transformer (var)
+    "Propertize VAR if it's a buffer visiting a file."
+    (if (member (expand-file-name var) (mapcar #'buffer-file-name (buffer-list)))
+        ;; (albert/append-face var 'ivy-highlight-face)
+        (put-text-property 0 (length var) 'face 'ivy-highlight-face var)
+      var)
+    )
+
   (defun albert/consult-recent-file ()
     "Find recent file using `completing-read'. 去掉预览"
     (interactive)
+    (require 'recentf)
+    (recentf-mode)
     (find-file
      (consult--read
       (or
-       (mapcar #'consult--fast-abbreviate-file-name (bound-and-true-p recentf-list))
+       ;; (mapcar #'consult--fast-abbreviate-file-name (bound-and-true-p recentf-list))
+       (mapcar #'consult--fast-abbreviate-file-name (albert/counsel-buffer-or-recentf-candidates))
        (user-error "No recent files, `recentf-mode' is %s"
                    (if recentf-mode "enabled" "disabled")))
       :prompt "My Find recent file: "
       :sort nil
       :require-match t
       :category 'file
+      ;; :category 'minibuffer
+
+      ;; 我明白了，为什么匹配不上去，因为buffer-list里的文件名
+      ;; category 设置为 file后，就不显示颜色了
+      ;; :annotate #'albert/counsel-buffer-or-recentf-transformer
+      ;; :annotate (lambda (cand)
+      ;;             (if (member (expand-file-name cand) (mapcar #'buffer-file-name (buffer-list)))
+      ;;                 (put-text-property 0 (length cand) 'face 'ivy-highlight-face cand)))
+
+      ;; :group #'albert/counsel-buffer-or-recentf-transformer
+      ;; :group (lambda (cand transform)
+      ;;             (if (member (expand-file-name cand) (mapcar #'buffer-file-name (buffer-list)))
+      ;;                 "minibuffer"
+      ;;               ))
       :state nil
       :history 'file-name-history)))
+
+  (defun albert/consult-rg-current-dir ()
+    "Runs `consult-rg' against the current buffer's directory."
+    (interactive)
+    (let (my-current-dir (file-name-directory (buffer-file-name)))
+      (if (stringp my-current-dir)
+          (consult-ripgrep (file-name-directory (buffer-file-name)) nil)
+        (consult-ripgrep default-directory nil)
+        )))
+
+  (defun albert/consult--dominating-file (file &optional dir)
+    "Look up directory hierarchy for FILE, starting in DIR.
+Like `locate-dominating-file', but DIR defaults to
+`default-directory' and the return value is expanded."
+    (and (setq dir (locate-dominating-file (or dir default-directory) file))
+         (expand-file-name dir)))
+
+  (defun albert/consult--git-root ()
+    "Return root of current project or nil on failure.
+Use the presence of a \".git\" file to determine the root."
+    (albert/consult--dominating-file ".git"))
+
+  (defun albert/consult-rg-project-root (&optional query)
+    "Not documented, QUERY."
+    (interactive)
+    (let ((rootdir (albert/consult--git-root)))
+      (unless rootdir
+        (error "Could not find the project root. Create a git, hg, or svn repository there first"))
+      (consult-ripgrep rootdir nil)))
+
   :config
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
