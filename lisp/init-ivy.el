@@ -79,7 +79,6 @@ https://github.com/redguardtoo/emacs.d/blob/55a3b4fe9bc981de51853af49754fa4c85d8
           (and (setq bn (buffer-name))
                (or (member bn '("*Org Agenda*"))
                    (string-match ".*EMMS Playlist\\|\\.org$" bn))))
-      ;; (my-ensure 'pinyinlib)
       (require 'pinyinlib)
       (setq str (pinyinlib-build-regexp-string str)))
 
@@ -301,7 +300,7 @@ If N is not nil, only list directories in current project."
 ;; Supports the Orderless completion style. The filter string can contain arbitrary characters, after inserting a space via M-SPC (configurable via corfu-quit-at-boundary and corfu-separator).
 ;; 按 M-SPC分割，但是需要consult。ivy不支持，唉
 (use-package corfu
-  ;; :disabled t
+  :disabled t
   ;; :custom
   ;; (corfu-auto t)
   ;; (corfu-auto-prefix 2)
@@ -343,6 +342,7 @@ If N is not nil, only list directories in current project."
 ;; Add extensions
 (use-package cape
   ;; :bind ("M-/" . completion-at-point)
+  :disabled t
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
