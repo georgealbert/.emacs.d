@@ -428,4 +428,16 @@
                               `([,(cdr char-regexp) 0 font-shape-gstring]))))
     (set-char-table-parent composition-ligature-table composition-function-table)))
 
+;; (set-frame-parameter nil 'alpha 0.90)
+(use-package transwin
+  :config
+  (setq transwin-delta-alpha 5)
+  (setq transwin-parameter-alpha 'alpha-background)
+  :init
+  (set-frame-parameter nil 'alpha-background 80)
+  :bind
+  ("C-s-=" . transwin-inc)
+  ("C-s--" . transwin-dec)
+  ("C-s-0" . transwin-toggle))
+
 (provide 'init-ui)
