@@ -7,7 +7,8 @@
 ;; doc: emacs自带的paren.el
 (use-package paren
   :ensure nil
-  :defer 2
+  ;; :defer 2
+  :hook (doom-first-input . show-paren-mode)
   ;; :hook (prog-mode . show-paren-mode)
   ;; :hook (after-init . show-paren-mode)
   ;; :config
