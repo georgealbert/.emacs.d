@@ -29,7 +29,6 @@
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
 (use-package markdown-mode
-  ;; :ensure t
   :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -129,7 +128,6 @@
     (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
 
 (use-package paren-face
-  ;; :ensure t
   :disabled t
   :defer t
   :init (global-paren-face-mode 1))
@@ -146,12 +144,11 @@
   ;; s/ -> <span></span>
   (setq web-mode-enable-auto-expanding t))
 
-;; (require 'treesit)
-;; (add-hook 'markdown-mode-hook #'(lambda () (treesit-parser-create 'markdown)))
-;; (add-hook 'emacs-lisp-mode-hook #'(lambda () (treesit-parser-create 'elisp)))
-
-;; (add-hook 'python-mode-hook 'python-ts-mode)
-;; (add-hook 'json-mode-hook 'json-ts-mode)
-;; (add-hook 'rust-mode-hook 'rust-ts-mode)
+;; 默认在 .emacs.d/tree-sitter 目录，文件名格式：libtree-sitter-python.dylib -> ~/.local/share/nvim/lazy/nvim-treesitter/parser/python.so
+;; nvim中nvim-treesitter plugin, TSInstall java
+;; 也可以设置 (setq treesit-extra-load-path '("~/.local/share/nvim/lazy/nvim-treesitter/parser"))
+(use-package treesit-auto
+  :hook (after-init . global-treesit-auto-mode)
+  :init (setq treesit-auto-install 'prompt))
 
 (provide 'init-lang)
