@@ -131,7 +131,10 @@
 ;; homepage: https://github.com/redguardtoo/evil-matchit
 (use-package evil-matchit
   :defer t
-  :hook (prog-mode . turn-on-evil-matchit-mode)
+  ;; :hook (prog-mode . turn-on-evil-matchit-mode)
+  :hook (doom-first-input . turn-on-evil-matchit-mode)
+  ;; :init
+  ;; (global-evil-matchit-mode 1)
   )
 
 ;; doc: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim
@@ -249,6 +252,7 @@
   :ensure nil
   :load-path "~/.emacs.d/site-lisp/extensions/awesome-pair"
   :defer t
+  :disabled t
   :hook (prog-mode . awesome-pair-mode)
   :config
   (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)

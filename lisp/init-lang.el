@@ -127,11 +127,6 @@
     (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-last-sexp-split-window)
     (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-definition-split-window)))
 
-(use-package paren-face
-  :disabled t
-  :defer t
-  :init (global-paren-face-mode 1))
-
 ;; homepage: https://web-mode.org/
 (use-package web-mode
   :ensure t
@@ -148,7 +143,8 @@
 ;; nvim中nvim-treesitter plugin, TSInstall java
 ;; 也可以设置 (setq treesit-extra-load-path '("~/.local/share/nvim/lazy/nvim-treesitter/parser"))
 (use-package treesit-auto
-  :hook (after-init . global-treesit-auto-mode)
+  ;; :hook (after-init . global-treesit-auto-mode)
+  :hook (doom-first-init . global-treesit-auto-mode)
   :init (setq treesit-auto-install 'prompt))
 
 (provide 'init-lang)

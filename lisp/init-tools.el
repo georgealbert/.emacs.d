@@ -13,7 +13,6 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (flycheck-popup-tip-mode +1))))
 
 (use-package flycheck-posframe
-  ;; :when (and EMACS26+ (featurep! +childframe))
   :defer t
   :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
   :config

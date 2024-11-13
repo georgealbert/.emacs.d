@@ -322,7 +322,7 @@
 (set-fontset-font t nil "Symbola" nil 'append)
 
 (use-package winum
-  :hook (after-init . winum-mode)
+  :hook (doom-first-input . winum-mode)
   :config
   (add-to-list 'winum-ignored-buffers "*sort-tab*")
   :init
@@ -345,20 +345,13 @@
             (define-key map (kbd "s-5") 'winum-select-window-5)
             map))))
 
-;; [2023-01-06 Fri 23:54:33]
-;; (use-package sort-tab
-;;   :defer 2
-;;   :disabled t
-;;   :load-path "~/workspace/sort-tab"
-;;   :config
-;;   (sort-tab-mode 1))
-
 ;; From seagle0128/.emacs.d/lisp/init-window.el
 ;; Restore old window configurations
 (use-package winner
   :ensure nil
   ;; :commands (winner-undo winner-redo)
-  :hook (after-init . winner-mode)
+  ;; :hook (after-init . winner-mode)
+  :hook (doom-first-input . winner-mode)
   :init (setq winner-boring-buffers '("*Completions*"
                                       "*Compile-Log*"
                                       "*inferior-lisp*"
@@ -428,12 +421,12 @@
                               `([,(cdr char-regexp) 0 font-shape-gstring]))))
     (set-char-table-parent composition-ligature-table composition-function-table)))
 
-;; (set-frame-parameter nil 'alpha 0.90)
 (use-package transwin
   :config
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background)
   :init
+  ;; (set-frame-parameter nil 'alpha 0.90)
   (set-frame-parameter nil 'alpha-background 80)
   :bind
   ("C-s-=" . transwin-inc)
