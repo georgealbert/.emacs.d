@@ -26,18 +26,6 @@
 (defvar doom-interactive-mode (not noninteractive)
   "If non-nil, Emacs is in interactive mode.")
   
-;; (defvar doom--initial-file-name-handler-alist file-name-handler-alist)
-
-;; ;; This is consulted on every `require', `load' and various path/io functions.
-;; ;; You get a minor speed up by nooping this.
-;; (setq file-name-handler-alist nil)
-
-;; ;; Restore `file-name-handler-alist', because it is needed for handling
-;; ;; encrypted or compressed files, among other things.
-;; (defun doom-reset-file-handler-alist-h ()
-;;   (setq file-name-handler-alist doom--initial-file-name-handler-alist))
-;; (add-hook 'emacs-startup-hook #'doom-reset-file-handler-alist-h)
-
 ;; 显示加载时间
 (defvar doom-init-time 'nil
   "The time that emacs init took, in seconds, for Doom Emacs to initialize.")
