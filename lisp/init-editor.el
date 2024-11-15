@@ -35,9 +35,6 @@
   :config 
   (evil-mode 1)
 
-  ;; (eval-after-load 'helm-gtags
-  ;;    '(progn
-  ;;       (define-key evil-motion-state-map "C-]" 'helm-gtags-find-tag-from-here)))
   (eval-after-load 'ggtags
     '(progn
        (evil-make-overriding-map ggtags-mode-map 'normal)
@@ -133,8 +130,6 @@
   :defer t
   ;; :hook (prog-mode . turn-on-evil-matchit-mode)
   :hook (doom-first-input . turn-on-evil-matchit-mode)
-  ;; :init
-  ;; (global-evil-matchit-mode 1)
   )
 
 ;; doc: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim
@@ -203,34 +198,6 @@
   (setq diredfl-write-priv 'my-diredfl-write-priv)
   )
 
-;; (use-package dirvirsh
-;;   :ensure nil
-;;   :disabled t
-;;   :defer t
-;;   :custom
-;;   (dirvish-bookmarks-alist
-;;    '(("h" "~/"                          "Home")
-;;      ("d" "~/Downloads/"                "Downloads")
-;;      ;; ("m" "/mnt/"                       "Drives")
-;;      ;; ("t" "~/.local/share/Trash/files/" "TrashCan")
-;;      ))
-;;   :config
-;;   (dirvish-override-dired-mode)
-;;   (dirvish-peek-mode)
-;;   :bind
-;;   (("C-x d" . dirvish)
-;;    :map dired-mode-map
-;;         ("SPC" . dirvish-show-history)
-;;         ("r"   . dirvish-roam)
-;;         ("b"   . dirvish-goto-bookmark)
-;;         ("f"   . dirvish-file-info-menu)
-;;         ("M-a" . dirvish-mark-actions-menu)
-;;         ("M-s" . dirvish-setup-menu)
-;;         ("M-f" . dirvish-toggle-fullscreen)
-;;         ([remap dired-summary] . dirvish-dispatch)
-;;         ([remap dired-do-copy] . dirvish-yank)
-;;         ([remap mode-line-other-buffer] . dirvish-other-buffer)))
-
 ;; History
 (use-package saveplace
   :ensure nil
@@ -248,32 +215,32 @@
                 (lambda (file) (file-in-directory-p file package-user-dir))))
   :config (push (expand-file-name recentf-save-file) recentf-exclude))
 
-(use-package awesome-pair
-  :ensure nil
-  :load-path "~/.emacs.d/site-lisp/extensions/awesome-pair"
-  :defer t
-  :disabled t
-  :hook (prog-mode . awesome-pair-mode)
-  :config
-  (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
-  (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
-  (define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
-  (define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
-  (define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
-  (define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
-  (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
-  (define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
-  (define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete) 
-  (define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
-  (define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote) 
-  (define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
-  (define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
-  (define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
-  (define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
-  (define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-right) 
-  (define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-left) 
-  (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
-  )
+;; (use-package awesome-pair
+;;   :ensure nil
+;;   :load-path "~/.emacs.d/site-lisp/extensions/awesome-pair"
+;;   :defer t
+;;   :disabled t
+;;   :hook (prog-mode . awesome-pair-mode)
+;;   :config
+;;   (define-key awesome-pair-mode-map (kbd "(") 'awesome-pair-open-round)
+;;   (define-key awesome-pair-mode-map (kbd "[") 'awesome-pair-open-bracket)
+;;   (define-key awesome-pair-mode-map (kbd "{") 'awesome-pair-open-curly)
+;;   (define-key awesome-pair-mode-map (kbd ")") 'awesome-pair-close-round)
+;;   (define-key awesome-pair-mode-map (kbd "]") 'awesome-pair-close-bracket)
+;;   (define-key awesome-pair-mode-map (kbd "}") 'awesome-pair-close-curly)
+;;   (define-key awesome-pair-mode-map (kbd "%") 'awesome-pair-match-paren)
+;;   (define-key awesome-pair-mode-map (kbd "\"") 'awesome-pair-double-quote)
+;;   (define-key awesome-pair-mode-map (kbd "M-o") 'awesome-pair-backward-delete) 
+;;   (define-key awesome-pair-mode-map (kbd "C-k") 'awesome-pair-kill)
+;;   (define-key awesome-pair-mode-map (kbd "M-\"") 'awesome-pair-wrap-double-quote) 
+;;   (define-key awesome-pair-mode-map (kbd "M-[") 'awesome-pair-wrap-bracket)
+;;   (define-key awesome-pair-mode-map (kbd "M-{") 'awesome-pair-wrap-curly)
+;;   (define-key awesome-pair-mode-map (kbd "M-(") 'awesome-pair-wrap-round)
+;;   (define-key awesome-pair-mode-map (kbd "M-)") 'awesome-pair-unwrap)
+;;   (define-key awesome-pair-mode-map (kbd "M-p") 'awesome-pair-jump-right) 
+;;   (define-key awesome-pair-mode-map (kbd "M-n") 'awesome-pair-jump-left) 
+;;   (define-key awesome-pair-mode-map (kbd "M-:") 'awesome-pair-jump-out-pair-and-newline)
+;;   )
 
 ;; https://github.com/manateelazycat/fingertip
 ;; (use-package fingertip
