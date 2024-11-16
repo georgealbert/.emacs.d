@@ -64,7 +64,7 @@
   (setq doom-modeline-persp-name nil)
   (setq doom-modeline-irc nil)
   
-  ;; evil state icon
+  ;; 不显示evil state icon
   (setq doom-modeline-modal-icon nil)
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
@@ -73,7 +73,9 @@
   (setq doom-modeline-buffer-file-name-style 'file-name)
 
   ;; 调用verify-visited-file-modtime过于频繁，cpu开销大，不显示buffer file state
-  (setq doom-modeline-update-buffer-file-state-icon nil)
+  ;; 在文件发生变化时回多显示一个icon，如文件变化了多一个黄色icon提示文件有变化
+  ;; 去掉后就只有文件名会变成红色.
+  (setq doom-modeline-buffer-state-icon nil)
   :config
   ;; (setq display-time-day-and-date t)
   ;; (setq display-time-format "%Y-%m-%d %a %H:%M")
