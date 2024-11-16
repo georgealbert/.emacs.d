@@ -179,12 +179,6 @@ https://github.com/redguardtoo/emacs.d/blob/55a3b4fe9bc981de51853af49754fa4c85d8
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
 
-  ;; 下面的配置是seagle0128的
-  ;; Setting tab size to 1, to insert tabs as delimiters
-  ;; (add-hook 'minibuffer-setup-hook
-  ;;           (lambda ()
-  ;;             (setq tab-width 1)))
-
   ;; 'full or 'absolute 'abbrev
   (setq ivy-rich-path-style 'full)
   (ivy-rich-mode +1)
@@ -237,28 +231,21 @@ If N is not nil, only list directories in current project."
       (counsel-rg "" default-directory nil (concat "rg (" default-directory "):"))
       )))
 
-;; (defun counsel-ag--project-root ()
-;;   "Not documented."
-;;   (cl-loop for dir in '(".git/" ".git")
-;;            when (locate-dominating-file default-directory dir)
-;;            return it))
-
 ;;;###autoload
 (defun counsel-ag-project-root (&optional query)
-  "Not documented, QUERY."
+  "Runs `counsel-ag' against the current project's directory."
   (interactive)
-  ;; (let ((rootdir (counsel-ag--project-root)))
   (let ((rootdir (counsel--git-root)))
     (unless rootdir
-      (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
+      (error "Could not find the project root. Create a git, hg, or svn repository there first."))
     (counsel-ag "" rootdir nil (concat "ag (" rootdir "):"))))
 
 (defun counsel-rg-project-root (&optional query)
-  "Not documented, QUERY."
+  "Runs `counsel-rg' against the current project's directory."
   (interactive)
   (let ((rootdir (counsel--git-root)))
     (unless rootdir
-      (error "Could not find the project root.  Create a git, hg, or svn repository there first"))
+      (error "Could not find the project root. Create a git, hg, or svn repository there first."))
     (counsel-rg "" rootdir nil (concat "rg (" rootdir "):"))))
 
 (use-package counsel

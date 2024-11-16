@@ -134,6 +134,7 @@
 
 ;; doc: Comment/uncomment lines efficiently. Like Nerd Commenter in Vim
 ;; homepage: https://github.com/redguardtoo/evil-nerd-commenter
+;; shortcut: M-; / ,cc / ,cl
 (use-package evil-nerd-commenter
   :defer t
   :config

@@ -4,7 +4,6 @@
 (use-package which-key
   :diminish whick-key-mode
   ;; :bind (:map help-map ("C-h" . which-key-C-h-dispatch))
-  ;; :hook (after-init . which-key-mode)
   :hook (doom-first-input . which-key-mode)
   ;; :config
   ;; (setq which-key-allow-imprecise-window-fit t) ; performance 开了以后显示太小了，看着不舒服
