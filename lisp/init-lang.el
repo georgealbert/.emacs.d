@@ -143,8 +143,7 @@
 ;; nvim中nvim-treesitter plugin, TSInstall java
 ;; 也可以设置 (setq treesit-extra-load-path '("~/.local/share/nvim/lazy/nvim-treesitter/parser"))
 (use-package treesit-auto
-  ;; :hook (after-init . global-treesit-auto-mode)
-  :hook (doom-first-init . global-treesit-auto-mode)
-  :init (setq treesit-auto-install 'prompt))
+  :hook (after-init . global-treesit-auto-mode)
+  :config (setq treesit-auto-install 'prompt))
 
 (provide 'init-lang)
