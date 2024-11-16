@@ -365,6 +365,7 @@
 
 ;; doom-emacs/modules/ui/hl-todo
 (use-package hl-todo
+  :disabled t
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":"

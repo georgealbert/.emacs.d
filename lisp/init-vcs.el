@@ -262,7 +262,6 @@ the correct commit which submits the selected text is displayed."
 
 ;; 需要设置 vc-handled-backends ，不然blamer显示不了
 (use-package blamer
-  ;; :ensure t
   :disabled t
   :bind (;;("s-n" . blamer-show-commit-info)
          ("C-c i" . blamer-show-posframe-commit-info))
