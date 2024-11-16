@@ -70,9 +70,9 @@
 (require 'init-hydra)
 (require 'init-ui)
 (require 'init-ui-theme)
-(require 'init-tree-sitter)
+;; (require 'init-tree-sitter)
 
-(require 'init-lsp-bridge)
+;; (require 'init-lsp-bridge)
 (require 'init-vcs)
 
 ;; maximize window

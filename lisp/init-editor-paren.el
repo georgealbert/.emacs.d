@@ -8,8 +8,6 @@
 (use-package paren
   :ensure nil
   :hook (doom-first-input . show-paren-mode)
-  ;; :hook (prog-mode . show-paren-mode)
-  ;; :hook (after-init . show-paren-mode)
   ;; :config
   ;; (setq show-paren-delay 0.1
   ;;       show-paren-highlight-openparen t
