@@ -56,9 +56,6 @@
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
   (setq doom-modeline-icon t)
   
-  ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-  (setq doom-modeline-major-mode-icon t)
-  (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-minor-modes nil)
   
   (setq doom-modeline-lsp nil)
