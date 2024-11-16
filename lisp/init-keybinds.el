@@ -46,18 +46,18 @@
 
        "ir" 'ivy-resume
 
-       "1" 'sort-tab-select-visible-tab
-       "2" 'sort-tab-select-visible-tab
-       "3" 'sort-tab-select-visible-tab
-       "4" 'sort-tab-select-visible-tab
-       "5" 'sort-tab-select-visible-tab
-       "6" 'sort-tab-select-visible-tab
-       "7" 'sort-tab-select-visible-tab
-       "8" 'sort-tab-select-visible-tab
-       "9" 'sort-tab-select-visible-tab
-       "Q" 'sort-tab-close-all-tabs
-       "q" 'sort-tab-close-mode-tabs
-       "a" 'sort-tab-close-current-tab
+       ;; "1" 'sort-tab-select-visible-tab
+       ;; "2" 'sort-tab-select-visible-tab
+       ;; "3" 'sort-tab-select-visible-tab
+       ;; "4" 'sort-tab-select-visible-tab
+       ;; "5" 'sort-tab-select-visible-tab
+       ;; "6" 'sort-tab-select-visible-tab
+       ;; "7" 'sort-tab-select-visible-tab
+       ;; "8" 'sort-tab-select-visible-tab
+       ;; "9" 'sort-tab-select-visible-tab
+       ;; "Q" 'sort-tab-close-all-tabs
+       ;; "q" 'sort-tab-close-mode-tabs
+       ;; "a" 'sort-tab-close-current-tab
 
        "sq" 'delete-window
        "sa" 'split-window-vertically
@@ -113,12 +113,10 @@
       "h'" 'describe-char
       "hC" 'describe-coding-system
       ;; "hF" 'describe-face
-      ;; "ha" 'helm-apropos
       ;; "hd" 'describe-function
       "he" 'view-echo-area-messages
       ;; "hf" 'find-function
       ;; "hk" 'describe-key
-      ;; "hr" 'helm-resume
       ;; "hv" 'describe-variable
 
       "t"  '(:ignore t :which-key "toggle")
@@ -127,11 +125,8 @@
 
       "s"  '(:ignore t :which-key "search")
       "si" 'evilmi-select-items
-      ;; "sf" '(helm-ag :which-key "Search current directory")
       "sc" 'scratch-buffer
       "ss" 'counsel-grep-or-swiper
-      ;; "ss" 'helm-ag-this-file
-      ;; "sr" '(helm-ag-project-root  :which-key "Search project root")
 
       "w"  '(:ignore t :which-key "window")
       ;; "wh" 'evil-window-left
@@ -140,8 +135,8 @@
       ;; "wj" 'evil-window-down
       ;; "wr" 'evil-window-rotate-upwards
       ;; "wv" 'evil-window-vsplit
-      ;; "wu" 'winner-undo
-      ;; "wr" 'winner-redo
+      "wu" 'winner-undo
+      "wr" 'winner-redo
       "ww" 'narrow-or-widen-dwim
       )))
 
