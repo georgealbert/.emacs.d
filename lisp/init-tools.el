@@ -215,6 +215,16 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
          ("s-x r" . color-rg-search-input-in-project)
          ("s-x ," . color-rg-search-symbol-in-current-file)
          ("s-x f" . color-rg-search-input-in-current-file))
+  ;;
+  ;; emacs built-in use-pacakge不支持下面的带描述的bind key。只有elpa的可以，但是elpa上面已经没有use-package了
+  ;; ;; (KEY DESC . COMMAND), i.e. (KEY . (DESC . COMMAND))
+  ;;
+  ;; :bind (("s-x g" ("rg symbol in current dir" . color-rg-search-symbol))
+  ;;        ("s-x h" ("rg input in current dir" . color-rg-search-input))
+  ;;        ("s-x j" ("rg symbol in project" . color-rg-search-symbol-in-project))
+  ;;        ("s-x r" ("rg input in project" . color-rg-search-input-in-project))
+  ;;        ("s-x ," ("rg symbol in file" . color-rg-search-symbol-in-current-file))
+  ;;        ("s-x f" ("rg input in file" . color-rg-search-input-in-current-file)))
   :init
   (setq color-rg-flash-line-delay 20.0)
   ;; 设置在屏幕居中显示找到的行
