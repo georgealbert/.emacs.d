@@ -270,16 +270,15 @@ If N is not nil, only list directories in current project."
 (use-package ivy-posframe
   :after ivy
   :disabled t
-  :custom
-  (ivy-posframe-height-alist '((swiper . 15)
-                               (t      . 20)))
-  (ivy-posframe-display-functions-alist
-   '((swiper          . nil)
-     (swiper-isearch  . nil)
-     (complete-symbol . ivy-posframe-display-at-point)
-     (counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
-     (t               . ivy-posframe-display-at-frame-center)))
   :config
+  (setq ivy-posframe-height-alist '((swiper . 15)
+                                    (t      . 20)))
+  (setq ivy-posframe-display-functions-alist
+        '((swiper          . ivy-display-function-fallback)
+          (swiper-isearch  . ivy-display-function-fallback)
+          (complete-symbol . ivy-posframe-display-at-point)
+          (counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
+          (t               . ivy-posframe-display-at-frame-center)))
   (ivy-posframe-mode 1))
 
 ;; Auto completion
