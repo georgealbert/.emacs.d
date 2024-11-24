@@ -181,12 +181,34 @@
 
 ;; doc: Colourful dired from seagle0128/.emacs.d/lisp/init-dired.el，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
-  :defer t
+  ;; :defer t
+  :pretty-hydra
+  ((:title (pretty-hydra-title "Diretory Management" 'faicon "nf-fa-th")
+           :foreign-keys warn :exit t :quit-key ("q" "C-g"))
+   ("File"
+    (("R" dired-rename-file "Move")
+     ("cf" find-file "New")
+     ;; ("cc" my-dired-redo-last-command "Redo last command")
+     ("C" dired-do-copy "Copy")
+     ("rr" dired-toggle-read-only "Rename")
+     ("ff" (lambda (regexp)
+             (interactive "sMatching regexp: ")
+             (find-lisp-find-dired default-directory regexp)) "Find")
+     ("rb" (my-replace-dired-base (car kill-ring)) "Change base")
+     ("+" dired-create-directory "Create directory"))
+    "Copy Info"
+    (("pp" (my-copy-file-info 'file-truename) "Path")
+     ("nn" (my-copy-file-info 'file-name-nondirectory) "Name")
+     ("bb" (my-copy-file-info 'file-name-base) "Base")
+     ("dd" (my-copy-file-info 'file-name-directory) "Directory")
+     )))
+  :bind (:map dired-mode-map
+              ("y" . diredfl-hydra/body))
   :hook (dired-mode . diredfl-mode)
   :config
   (defface my-diredfl-read-priv
-  '((((background dark)) (:background "#181a26"))
-    (t                   (:background "LightGray")))
+    '((((background dark)) (:background "#181a26"))
+      (t                   (:background "LightGray")))
     "*Face used for read privilege indicator (r) in Dired buffers."
     :group 'diredfl)
   (setq diredfl-read-priv 'my-diredfl-read-priv)
@@ -197,6 +219,21 @@
     "*Face used for write privilege indicator (w) in Dired buffers."
     :group 'diredfl)
   (setq diredfl-write-priv 'my-diredfl-write-priv)
+
+  (defun my-replace-dired-base (base)
+    "Change file name in `wdired-mode'"
+    (let* ((fp (dired-file-name-at-point))
+           (fb (file-name-nondirectory fp))
+           (ext (file-name-extension fp))
+           (dir (file-name-directory fp))
+           (nf (concat base "." ext)))
+      (when (yes-or-no-p (format "%s => %s at %s?"
+                                 fb nf dir))
+        (rename-file fp (concat dir nf)))))
+
+  (defun my-copy-file-info (fn)
+    (message "%s => clipboard & yank ring"
+             (kill-new (funcall fn (dired-file-name-at-point)))))
   )
 
 ;; History

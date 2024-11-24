@@ -56,6 +56,7 @@
 
 (require 'init-funcs)
 (require 'init-core)
+(require 'init-hydra)
 (require 'init-editor)
 
 (require 'init-ivy)
@@ -67,7 +68,6 @@
 (require 'init-org)
 ;; (require 'init-keyfreq)
 (require 'init-editor-paren)
-(require 'init-hydra)
 (require 'init-ui)
 (require 'init-ui-theme)
 ;; (require 'init-tree-sitter)
