@@ -247,8 +247,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   :bind (("M-i" . symbol-overlay-put)
          ("M-n" . symbol-overlay-switch-forward)
          ("M-p" . symbol-overlay-switch-backward)
-         ("<f7>" . symbol-overlay-mode)
-         ("<f8>" . symbol-overlay-remove-all))
+         ("<f6>" . symbol-overlay-mode)
+         ("<f7>" . symbol-overlay-remove-all))
   )
 
 ;; for igc gc logging test.

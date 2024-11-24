@@ -65,7 +65,7 @@
 (global-set-key (kbd "<f3>") 'bh/org-todo)
 (global-set-key (kbd "<S-f3>") 'bh/widen)
 (global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
-(global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
+;; (global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
 (global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
 ;; (global-set-key (kbd "<f9> b") 'bbdb)
 ;; (global-set-key (kbd "<f9> c") 'calendar)
