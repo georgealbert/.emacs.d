@@ -2,26 +2,14 @@
 
 ;;; ui
 
-;; https://xenodium.com/my-emacs-eye-candy/
-;; 设置以后看不清楚titlebar上的文件名了
-;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-;; (add-to-list 'default-frame-alist '(ns-appearance . dark))
-
 ;; Frame title
 (setq frame-title-format "Albert@%f")
 
 ;; 去掉启动欢迎界面
-(setq inhibit-startup-message t) 
+(setq inhibit-startup-message t)
 
 ;; 光标靠近鼠标的时候，让鼠标自动让开，不挡住视线
 (mouse-avoidance-mode 'animate)
-
-;; 不显示工具栏和滚动条
-;; 在early-init.el里已经disable了menubar、toolbar和scrollbars了。
-;; (menu-bar-mode -1)
-;; (tool-bar-mode -1)
-
-;; core/core-ui.el
 
 ;;
 ;;; General UX
@@ -51,13 +39,6 @@
       mouse-wheel-scroll-amount '(5 ((shift) . 2))
       mouse-wheel-progressive-speed nil)  ; don't accelerate scrolling
 
-;; Remove hscroll-margin in shells, otherwise it causes jumpiness
-;; (setq-hook '(eshell-mode-hook term-mode-hook) hscroll-margin 0)
-
-;; (if (eq window-system 'w32)
-;; (when IS-WINDOWS
-;;   (scroll-bar-mode -1))
-  
 ;;
 ;;; Cursor [2020-01-02 周四 13:53:49]
 ;; 参考doom-emacs
@@ -139,10 +120,6 @@
       (progn
         (set-face-attribute 'default nil :font "UbuntuMono Nerd Font Mono 20")
 
-        ;; http://www.jinbuguo.com/gui/linux_fontconfig.html
-        ;; http://mix-mplus-ipa.osdn.jp/migu/
-        ;; (set-face-attribute 'default nil :font "Migu 1M 11")
-
         (setq face-font-rescale-alist '(("等距更纱黑体 T SC" . 1)))
 
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -207,78 +184,8 @@
 
     ;; https://github.com/belluzj/fantasque-sans
     ;; https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono
-    ;; (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font 18")
+    (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font Mono 18")
 
-    ;; (set-face-attribute 'default nil :font "FantasqueSansMono Nerd Font Mono 18")
-
-    ;; 霞露文楷
-    ;; (set-face-attribute 'default nil :font "FantasqueSansMonoLXGW 18")
-    ;; 霞露文楷Lite版小一点
-    (set-face-attribute 'default nil :font "FantasqueSansMono LXGWLite Nerd Font Mono 18")
-
-    ;; FantasqueSansMNFM_LXGWLite_Regular-20241010.ttf用的是最新的Nerd Font，但是比老的显示少一行
-    ;; (set-face-attribute 'default nil :font "FantasqueSansM LXGWLite Nerd Font Mono 18")
-    
-    ;; 字体太粗了，不好看
-    ;; (set-face-attribute 'default nil :font "FiraFZH 16")
-
-    ;; HarmonyOS
-    ;; (set-face-attribute 'default nil :font "FantasqueSansMono HarmonyOS_Sans_SC Nerd Font Mono 18")
-
-    ;; FiraCode和LXGW Lite不能等宽，而且FiraCode太宽了
-    ;; (set-face-attribute 'default nil :font "FiraCode LXGWLite Nerd Font Mono 16")
-
-    ;; PragmataPro 配合 SimHei 可以实现等宽的同时等高，但是PragmataPro的1和l不好看
-    ;; (set-face-attribute 'default nil :font "PragmataPro Mono 18")
-
-
-    ;; 2023.02.14
-    ;; https://www.kreativekorp.com/software/fonts/fairfaxhd/
-    ;; 可以和HarmonyOS Sans 1:1配合，但是中文字体有点大
-    ;; (set-face-attribute 'default nil :font "Fairfax SM HD 18")
-    ;; (set-face-attribute 'default nil :font "Fairfax Hax HD 18")
-
-    ;; (set-face-attribute 'default nil :font "iMWritingMonoS Nerd Font 16")
-    ;; (set-face-attribute 'default nil :font "Anonymice Nerd Font 16")
-
-    ;; https://www.codingfont.com/
-    ;; (set-face-attribute 'default nil :font "Red Hat Mono 18")
-
-    ;; https://github.com/lxgw/LxgwWenKai/releases
-    ;; (set-face-attribute 'default nil :font "霞鹜文楷等宽 18")
-
-    ;; (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono 18")
-
-    ;; (set-face-attribute 'default nil :font "Monolisa NF 18")
-
-    ;; 问题是中文太大了，不美观
-    ;; FiraCode size=16, HarmonyOS Sans SC size=20; rescale=1.25
-    ;; (set-face-attribute 'default nil :font "Fira Code Retina 16")
-    
-    ;; (set-face-attribute 'default nil :font "MesloLGS NF 18")
-    ;; (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "DejaVuSansMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "BlexMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "LiterationMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "SauceCodePro Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "VictorMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "SpaceMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "NotoSansMono Nerd Font 18")
-    ;; (set-face-attribute 'default nil :font "ProFontIIx Nerd Font 18")
-
-    ;; 可以等宽，但是小写L和数字1不好区分
-    ;; (set-face-attribute 'default nil :font "PragmataPro Mono 18")
-    ;; 2023.04.02 找到了nerd font。
-    ;; (set-face-attribute 'default nil :font "PragmataProMonoLiga Nerd Font 18")
-
-    ;; (set-face-attribute 'default nil :font "Input Mono Narrow 18")
-    ;; (set-face-attribute 'default nil :font "Input Mono 18")
-
-    ;; https://tosche.net/fonts/comic-code 收费
-    ;; https://github.com/your-local-developer/comic-mono-nerd-font 这里下载的，不等宽
-    ;; https://dtinth.github.io/comic-mono-font/
-    ;; (set-face-attribute 'default nil :font "ComicMono Nerd Font 18")
-    
     ;; 设置中文字体和英文字体的缩放比例，用1:1即可。
 
     ;; 鸿蒙字体比更纱黑体显示更清晰
@@ -293,19 +200,23 @@
     ;; (setq face-font-rescale-alist '(("苹方-简" . 1)))
 
     ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
-    ;; (dolist (charset '(kana han symbol cjk-misc bopomofo))
-    ;;   (set-fontset-font (frame-parameter nil 'font)
-    ;;                     charset
-    ;;                     ;; (font-spec :family "苹方-简")))
-    ;;                     ;; (font-spec :family "等距更纱黑体 T SC"))
-    ;;                     ;; (font-spec :family "霞鹜文楷等宽"))
-    ;;                     (font-spec :family "LXGW WenKai"))
-    ;;                     ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
-    ;;   )
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset
+                        ;; (font-spec :family "苹方-简")))
+                        ;; (font-spec :family "等距更纱黑体 T SC"))
+                        ;; (font-spec :family "霞鹜文楷等宽"))
+                        (font-spec :family "LXGW WenKai"))
+                        ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
+      )
     ))
 
 (when IS-MAC
-  (albert-macos-notebook-font)
+  ;; (albert-macos-notebook-font)
+
+  (set-face-attribute 'default nil :font "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite 16")
+  ;; (set-face-attribute 'default nil :font "Agave Nerd Font + LXGW WenKai Mono Lite 18")
+  ;; (set-face-attribute 'default nil :font "IosevkaTermSS05 Nerd Font + LXGW WenKai Mono Lite 16")
 
   ;; 让emacs左右分屏，mba在默认分辨率下是157
   ;; (list split-height-threshold split-width-threshold)
@@ -350,7 +261,7 @@
   ;; :disabled t
   :pretty-hydra
   ((:title (pretty-hydra-title "Window Management" 'faicon "nf-fa-th")
-    :foreign-keys warn :quit-key ("q" "C-g"))
+           :foreign-keys warn :quit-key ("q" "C-g"))
    ("Actions"
     (("TAB" other-window "switch")
      ("x" ace-delete-window "delete")
@@ -436,10 +347,13 @@
         (unless found
           (message "No specified window: %d" number)))))
   (dotimes (n 9)
-    (bind-key (format "s-%d" (1+ n))
-              (lambda ()
-                (interactive)
-                (aw--select-window (1+ n))))))
+    (let ((shortcut "s-%d"))
+      (if (or IS-WINDOWS IS-LINUX)
+          (setq shortcut "M-%d"))
+      (bind-key (format "s-%d" (1+ n))
+                (lambda ()
+                  (interactive)
+                  (aw--select-window (1+ n)))))))
 
 
 ;; From seagle0128/.emacs.d/lisp/init-window.el
