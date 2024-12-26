@@ -183,19 +183,21 @@
 (use-package diredfl
   ;; :defer t
   :pretty-hydra
-  ((:title (pretty-hydra-title "Diretory Management" 'faicon "nf-fa-th")
+  ;; ((:title (with-faicon "folder_open" "Diretory Management" 1 -0.05) 
+  ((:title (pretty-hydra-title "Diretory Management" 'faicon "nf-fa-folder_open_o")
            :foreign-keys warn :exit t :quit-key ("q" "C-g"))
    ("File"
     (("R" dired-rename-file "Move")
+     ("C" dired-do-copy "Copy")
      ("cf" find-file "New")
      ;; ("cc" my-dired-redo-last-command "Redo last command")
-     ("C" dired-do-copy "Copy")
      ("rr" dired-toggle-read-only "Rename")
      ("ff" (lambda (regexp)
              (interactive "sMatching regexp: ")
              (find-lisp-find-dired default-directory regexp)) "Find")
      ("rb" (my-replace-dired-base (car kill-ring)) "Change base")
      ("+" dired-create-directory "Create directory"))
+
     "Copy Info"
     (("pp" (my-copy-file-info 'file-truename) "Path")
      ("nn" (my-copy-file-info 'file-name-nondirectory) "Name")
