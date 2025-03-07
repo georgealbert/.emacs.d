@@ -1,4 +1,4 @@
-;;; init-tree-sit.el -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; init-treesit.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; 默认在 .emacs.d/tree-sitter 目录，文件名格式：libtree-sitter-python.dylib -> ~/.local/share/nvim/lazy/nvim-treesitter/parser/python.so
 ;; nvim中nvim-treesitter plugin, TSInstall java
