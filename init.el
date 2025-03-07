@@ -71,6 +71,7 @@
 (require 'init-ui)
 (require 'init-ui-theme)
 ;; (require 'init-tree-sitter)
+(require 'init-treesit)
 
 ;; (require 'init-lsp-bridge)
 (require 'init-vcs)
