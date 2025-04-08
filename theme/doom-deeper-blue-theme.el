@@ -311,6 +311,9 @@ determine the exact padding."
    (diff-changed :background "magenta4" :foreground "white")
    (diff-refine-changed :background "red" :foreground "whtie")
    ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
+
+   ;; 修改目录显示，改为和c-x c-f的一样，原来用的是builtin(magenta)，和高亮时的颜色一样，区分不了
+   (dired-directory  :foreground "#cccccc") ;; gray80:"#cccccc", "#ff6654", #bfbdb6 
    )
   
   ;; --- extra variables ---------------------
