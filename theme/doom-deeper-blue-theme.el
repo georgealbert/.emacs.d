@@ -66,7 +66,7 @@ determine the exact padding."
    (base7      '("#B0BED8" "#979797" "brightblack"   )) ;; 用于注释的颜色，这个颜色就很好，注释容易看清楚
    (base8      '("#BAC9E4" "#dfdfdf" "white"         )) ;; 在加亮modeline时，不确定是什么时候用的?
    (fg-alt     '("gray80" "#bfbfbf" "brightwhite"    )) ;; gray80(#cccccc)
-   (fg         '("gray80" "#2d2d2d" "white"          )) ;; gray80 #cccccc foreground from deeper-blue-theme.el
+   (fg         '("gray80" "#2d2d2d" "white"          )) ;; gray80(#cccccc) foreground from deeper-blue-theme.el
 
    (grey       base4)
    (red        '("#FF0000" "#ff6655" "red"               )) ;; red(#FF0000), #e45649 doom-one-light
@@ -76,7 +76,7 @@ determine the exact padding."
    ;; (yellow     '("CadetBlue1" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
    (yellow     '("#eeee00" "#ECBE7B" "yellow"            )) ;; CadetBlue1(#98f5ff), warning 即flycheck的warning，还有日期框，原来用Yellow2(#eeee00)
    (blue       '("DeepSkyBlue1" "#51afef" "brightblue"   )) ;; selection DeepSkyBlue1(#00bfff) or blue3(#0000cd)
-   (dark-blue  '("DodgerBlue4" "#2257A0" "blue"          )) ;; 查询时的highlight, DodgerBlue4  #104e8b
+   (dark-blue  '("DodgerBlue4" "#2257A0" "blue"          )) ;; 查询时的highlight, DodgerBlue4(#104e8b)
    (magenta    '("LightCoral" "#c678dd" "magenta"        )) ;; LightCoral(#f08080)
    (violet     '("#EE82EE" "#a9a1e1" "brightmagenta"     ))
    (cyan       '("DarkOliveGreen3" "#46D9FF" "brightcyan")) ;; DarkOliveGreen3(#a2cd5a)
@@ -94,9 +94,9 @@ determine the exact padding."
    (functions      teal) ;; goldenrod, function-name 
    (keywords       blue) ;; DeepSkyBlue1
    (methods        magenta) ;; LightCoral
-   (operators      orange) ;; gold(#ffd700, c mode中的 #include 的颜色, preprocessor-face
+   (operators      orange) ;; gold(#ffd700), c mode中的 #include 的颜色, preprocessor-face
    (type           "CadetBlue1") ;; CadetBlue1(#98f5ff)
-   (strings        base6) ;; Burlywood(#deb887)- ok
+   (strings        base6) ;; Burlywood(#deb887) - ok
    (variables      "SeaGreen2") ;; SeaGreen2(#4eee94)
    (numbers        orange) ;; gold
    (region         base2) ;; #103050
@@ -217,13 +217,13 @@ determine the exact padding."
 
    ;; porting from deeper-blue
    ;; isearch and match
-   (lazy-highlight :background "cadetblue" :foreground "white") ;; cadetblue #5f9ea0
+   (lazy-highlight :background "cadetblue" :foreground "white") ;; cadetblue(#5f9ea0)
    (isearch :background "coral2" :foreground "white")
    (isearch-lazy-highlight-face :background "coral4" :foreground "white")
 
    ;;(lazy-highlight :background dark-blue  :foreground base8 :distant-foreground base0 :weight 'bold)
    ;;(evil-search-highlight-persist-highlight-face :inherit 'lazy-highlight)
-   (match :background "DeepPink4")
+   (match :background "DeepPink4") ;; DeepPink4 #8b0a50
 
    ;; paren match
    (show-paren-match :background "DodgerBlue1" :foreground "white")
@@ -313,7 +313,7 @@ determine the exact padding."
    ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
 
    ;; 修改目录显示，改为和counsel-buffer-or-recentf一样的颜色(gray80)，原来用的是builtin(magenta)，和高亮时的颜色一样，区分不了
-   (dired-directory :foreground "#cccccc") ;; gray80:"#cccccc", "#ff6654", #bfbdb6
+   (dired-directory :foreground "#cccccc") ;; gray80(#cccccc), #ff6654, #bfbdb6
    )
   
   ;; --- extra variables ---------------------
