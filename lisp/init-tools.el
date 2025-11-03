@@ -14,11 +14,11 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 
 (use-package flycheck-posframe
   :defer t
-  :init (add-hook 'flycheck-mode-hook #'+flycheck|init-popups)
-  :config
-  (setq flycheck-posframe-warning-prefix "☎ "
-        flycheck-posframe-info-prefix "··· "
-        flycheck-posframe-error-prefix "✕ "))
+  :hook (flycheck-mode . +flycheck|init-popups)
+  :custom
+  (flycheck-posframe-warning-prefix "☎ ")
+  (flycheck-posframe-info-prefix "··· ")
+  (flycheck-posframe-error-prefix "✕ "))
 
 (use-package ggtags
   :ensure t
@@ -45,9 +45,8 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; homepage: https://github.com/technomancy/find-file-in-project
 (use-package find-file-in-project
   :defer t
-  :config
-  (when IS-WINDOWS
-    (setq ffip-find-executable "c:/msys64/usr/bin/find")))
+  :custom
+  (ffip-find-executable (when IS-WINDOWS "c:/msys64/usr/bin/find")))
 
 (use-package pyim
   :disabled t
@@ -225,13 +224,14 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
   ;;        ("s-x r" ("rg input in project" . color-rg-search-input-in-project))
   ;;        ("s-x ," ("rg symbol in file" . color-rg-search-symbol-in-current-file))
   ;;        ("s-x f" ("rg input in file" . color-rg-search-input-in-current-file)))
-  :init
-  (setq color-rg-flash-line-delay 20.0)
+  :custom
+  (color-rg-flash-line-delay 20.0)
   ;; 设置在屏幕居中显示找到的行
-  (setq color-rg-recenter-match-line t)
-  (setq color-rg-mac-load-path-from-shell nil)
+  (color-rg-recenter-match-line t)
+  (color-rg-mac-load-path-from-shell nil)
+  :init
   (define-key global-map (kbd "s-x") (make-sparse-keymap))
-)
+  )
 
 ;; symbol-overlay
 ;; homepage: https://github.com/wolray/symbol-overlay
