@@ -130,25 +130,24 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
       (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
       ))
 
+
+;; https://github.com/LuciusChen/.emacs.d/blob/main/patches/emacs-31/ns-mac-input-source.patch
+;; 我的patch给LuciusChen了。
+;; 编译前先在emacs的目录中执行：
+;; patch -p1 < ~/workspace/build-emacs-for-macos/ns-alpha-background.patch.emacs31
+;; 打上IME的patch，支持输入法切换，patch里面编译时有几个Warning，懒得改了，反正能用
 (if (and (eq system-type 'darwin) (fboundp 'mac-input-source))
     (progn
-      ;; (defvar asc-ime (mac-input-source))
       (defvar last-ime (mac-input-source))
       (defun emacs-ime-disable ()
-        ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "com.apple.keylayout.ABC"))
         (setq last-ime (mac-input-source))
-        (mac-select-input-source "com.apple.keylayout.ABC")
-        )
+        (mac-select-input-source "com.apple.keylayout.ABC"))
 
       (defun emacs-ime-enable ()
-        ;; (start-process "set-input-source" nil "/usr/local/bin/macism" "im.rime.inputmethod.Squirrel.Rime"))
-        ;; (mac-select-input-source "im.rime.inputmethod.Squirrel.Rime")
-        (mac-select-input-source last-ime)
-        )
+        (mac-select-input-source last-ime))
 
       (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
-      (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
-      ))
+      (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)))
 
 ;; https://www.albertzhou.net/blog/2020/03/emacs-sdcv.html
 (use-package sdcv
