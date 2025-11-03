@@ -179,6 +179,14 @@
   (add-hook 'ediff-prepare-buffer-hook 'ora-ediff-prepare-buffer)
   )
 
+
+;; Automatically reload files was modified by external program
+(use-package autorevert
+  :ensure nil
+  :diminish
+  :hook (after-init . global-auto-revert-mode))
+
+
 ;; doc: Colourful dired from seagle0128/.emacs.d/lisp/init-dired.el，比较轻量，dired-k的git用得太多了，有点慢
 (use-package diredfl
   ;; :defer t

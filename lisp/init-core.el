@@ -1,5 +1,7 @@
 ;;; init-core.el -*- lexical-binding: t; no-byte-compile: t; -*-
 
+(setq bytecomp--inhibit-lexical-cookie-warning t)
+
 ;;
 ;;; Custom hooks
 
@@ -19,6 +21,7 @@
 (defconst EMACS27+   (> emacs-major-version 26))
 (defconst EMACS28+   (> emacs-major-version 27))
 (defconst EMACS29+   (> emacs-major-version 28))
+(defconst EMACS31+   (> emacs-major-version 30))
 (defconst IS-MAC     (eq system-type 'darwin))
 (defconst IS-LINUX   (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))

@@ -218,12 +218,11 @@
 
   ;; (set-face-attribute 'default nil :font "Agave Nerd Font + LXGW WenKai Mono Lite 18")
 
-  (set-face-attribute 'default nil :font "IosevkaTermSS05 Nerd Font + LXGW WenKai Mono Lite 16")
-  ;; (set-face-attribute 'default nil :font "IosevkaTermSS05 Nerd Font + HarmonyOS Sans SC 16")
+  (set-face-attribute 'default nil :font "IosevkaTermSS05 Nerd Font Mono + LXGW WenKai Mono Lite 16")
+  ;; (set-face-attribute 'default nil :font "IosevkaTermSS05 Nerd Font Mono + LXGW WenKai Mono Lite 16"
+  ;;                     :font-features '((TXTR . 1)))
 
-  ;; (set-face-attribute 'default nil :font "MonaspiceArFrozen Nerd Font + LXGW WenKai Mono Lite 16")
-  ;; (set-face-attribute 'default nil :font "MonaspiceNeFrozen Nerd Font + LXGW WenKai Mono Lite 16")
-  ;; (set-face-attribute 'default nil :font "Inconsolata Nerd Font Mono + LXGW WenKai Mono Lite Retina-16")
+  ;; (set-face-attribute 'default nil :font "InconsolataNFM + LXGW WenKai Mono Lite 16")
 
   ;; 让emacs左右分屏，mba在默认分辨率下是157
   ;; (list split-height-threshold split-width-threshold)

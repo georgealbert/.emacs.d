@@ -26,6 +26,10 @@
 ;; (setq tab-width 4)
 ;; (setq tab-stop-list ())
 
+;; Emacs 31: Sematic Highlight for Elisp
+(when EMACS31+
+  (setq elisp-fontify-semantically t))
+
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
 (use-package markdown-mode
