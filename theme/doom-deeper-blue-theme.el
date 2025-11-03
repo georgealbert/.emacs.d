@@ -223,7 +223,7 @@ determine the exact padding."
 
    ;;(lazy-highlight :background dark-blue  :foreground base8 :distant-foreground base0 :weight 'bold)
    ;;(evil-search-highlight-persist-highlight-face :inherit 'lazy-highlight)
-   (match :background "DeepPink4") ;; DeepPink4 #8b0a50
+   (match :background "DeepPink4") ;; DeepPink4(#8b0a50) 
 
    ;; paren match
    (show-paren-match :background "DodgerBlue1" :foreground "white")
