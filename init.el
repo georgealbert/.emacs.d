@@ -47,9 +47,11 @@
           (expand-file-name "site-lisp" user-emacs-directory)))
     (normal-top-level-add-subdirs-to-load-path)))
 
-;; (advice-add #'package-initialize :after #'update-load-path)
-;; (advice-add #'package-initialize :after #'add-subdirs-to-load-path)
+;; Ensure these functions are called after `package-initialize`
+(advice-add #'package-initialize :after #'update-load-path)
+(advice-add #'package-initialize :after #'add-subdirs-to-load-path)
 
+;; Initialize load paths explicitly
 (update-load-path)
 
 ;; (setq comp-deferred-compilation t)
