@@ -29,14 +29,7 @@
   ;; (setq doom-deeper-blue-brighter-modeline nil)
 
   (load-theme 'doom-deeper-blue t)
-  ;; (load-theme 'doom-acario-dark t)
-  ;; (load-theme 'doom-bluloco-dark t)
-  ;; (load-theme 'doom-dark+ t)
-  ;; (load-theme 'doom-material-dark t)
-  ;; (load-theme 'tsdh-dark t)
-  ;; (load-theme 'doom-one t)
-  ;; (load-theme 'doom-one-light t)
-  
+ 
   ;; org-mode的序号带颜色显示
   (doom-themes-org-config)
   )

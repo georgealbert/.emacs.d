@@ -157,7 +157,6 @@
       ;; 根据显示器实际宽度(以毫米为单位)，显示字体.
       ;; DELL S2319HS 分辨率: 1920x1080, 屏幕尺寸: 509mm * 286mm
       ;; EIZO EV2451 分辨率: 1920x1080, 屏幕尺寸: 528mm * 297mm
-      ;; (display-mm-height)
       (if (>= (display-mm-width) 509)
         (albert-s2319-font))
 
@@ -208,8 +207,7 @@
                         ;; (font-spec :family "霞鹜文楷等宽"))
                         (font-spec :family "LXGW WenKai"))
                         ;; (font-spec :family "HarmonyOS Sans SC" :style "Regular"))
-      )
-    ))
+      )))
 
 (when IS-MAC
   ;; (albert-macos-notebook-font)
@@ -445,7 +443,6 @@
   (setq transwin-delta-alpha 5)
   (setq transwin-parameter-alpha 'alpha-background)
   :init
-  ;; (set-frame-parameter nil 'alpha 0.90)
   (set-frame-parameter nil 'alpha-background 80)
   :bind
   ("C-s-=" . transwin-inc)
