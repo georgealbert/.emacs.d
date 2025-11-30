@@ -295,26 +295,34 @@ the correct commit which submits the selected text is displayed."
   (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
   (setq blame-reveal-display-layout 'none)
 
-  (setq blame-reveal-show-uncommitted-fringe nil)
+  (setq blame-reveal-margin-time-format "%y/%m/%d")
+  (setq blame-reveal--margin-width 24)
 
-  ;; (setq blame-reveal-color-scheme
-  ;;       '(:hue 210                          ; 0=red, 120=green, 280=purple
-  ;;              :dark-newest 0.70                 ; Dark: higher = brighter
-  ;;              :dark-oldest 0.35
-  ;;              :light-newest 0.45                ; Light: lower = darker
-  ;;              :light-oldest 0.75
-  ;;              :saturation-min 0.25 :saturation-max 0.60))
+  (setq blame-reveal-show-uncommitted-fringe t)
+
+  (setq blame-reveal-color-scheme
+        '(:hue 210                          ; 0=red, 120=green, 280=purple
+               :dark-newest 0.70                 ; Dark: higher = brighter
+               :dark-oldest 0.30
+               :light-newest 0.35                ; Light: lower = darker
+               :light-oldest 0.85
+               :saturation-min 0.35 :saturation-max 0.70))
 
   (require 'blame-reveal-recursive)
 
   ;; Define custom formatter
   (defun my-minimal-header (commit-hash info color)
     "Minimal: just hash and message"
-    (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
-      (make-blame-reveal-commit-display
-       :lines (list (format "%s %s (%s): %s" hash _author _date msg))
-       :faces (list `(:foreground ,color :weight bold :height 0.8))
-       :color color)))
+    (if (string-match-p "^0+$" commit-hash)
+        (make-blame-reveal-commit-display
+         :lines (list "▸ *Not Committed Yet*")
+         :faces (list `(:foreground ,color :weight bold :height 0.8))
+         :color color)
+      (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
+        (make-blame-reveal-commit-display
+         :lines (list (format "▸ %s %s (%s): %s" hash _author _date msg))
+         :faces (list `(:foreground ,color :weight bold :height 0.8))
+         :color color))))
 
   ;; Apply it
   (setq blame-reveal-header-format-function #'my-minimal-header)
