@@ -285,7 +285,7 @@ the correct commit which submits the selected text is displayed."
 (use-package blame-reveal
   :load-path "~/workspace/blame-reveal"
   ;; :disabled t
-  ;; :defer t
+  :defer 2
   ;; :bind (:map blame-reveal-mode-map
   ;;             ("f" . blame-reveal-show-file-history)
   ;;             ;; ("n" . blame-reveal-show-line-history)
