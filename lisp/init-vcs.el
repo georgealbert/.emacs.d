@@ -14,11 +14,13 @@
   (progn
     (setq magit-last-seen-setup-instructions "1.4.0")
     ;; https://github.com/magit/magit/issues/4057
+    (setq magit-blame-time-format "%F")
     (setq magit-blame-styles
-          '((headings (heading-format . "%a (%C): %s - %H\n"))
+          '((headings (heading-format . "%a (%C): %s - %h\n"))
             (margin
-             (margin-format "%a (%C): %s - %H")
-             (margin-width . 42)
+             ;; (margin-format "%a (%C): %s - %H")
+             (margin-format "%C %a")
+             (margin-width . 20)
              (margin-face . magit-blame-margin)
              (margin-body-face magit-blame-dimmed))
             ))))
@@ -277,5 +279,70 @@ the correct commit which submits the selected text is displayed."
                     :italic t)))
   :config
   (global-blamer-mode 1))
+
+
+;; https://github.com/LuciusChen/blame-reveal
+(use-package blame-reveal
+  :load-path "~/workspace/blame-reveal"
+  ;; :disabled t
+  ;; :defer t
+  ;; :bind (:map blame-reveal-mode-map
+  ;;             ("f" . blame-reveal-show-file-history)
+  ;;             ;; ("n" . blame-reveal-show-line-history)
+  ;;             )
+  :config
+  (setq blame-reveal-recent-days-limit nil)        ; Smart calculation
+  (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
+  ;; (setq blame-reveal-display-layout 'compact)        ; Show commit info
+  (setq blame-reveal-display-layout 'none)
+
+  (setq blame-reveal-show-uncommitted-fringe nil)
+
+  ;; (setq blame-reveal-color-scheme
+  ;;       '(:hue 210                          ; 0=red, 120=green, 280=purple
+  ;;              :dark-newest 0.70                 ; Dark: higher = brighter
+  ;;              :dark-oldest 0.35
+  ;;              :light-newest 0.45                ; Light: lower = darker
+  ;;              :light-oldest 0.75
+  ;;              :saturation-min 0.25 :saturation-max 0.60))
+
+  (require 'blame-reveal-recursive)
+  ;; (defvar blame-reveal-mode-map
+  ;;   (let ((map (make-sparse-keymap)))
+  ;;     (define-key map (kbd "q") #'blame-reveal-mode)
+  ;;     (define-key map (kbd "c") #'blame-reveal-copy-commit-hash)
+  ;;     (define-key map (kbd "d") #'blame-reveal-show-commit-diff)
+  ;;     (define-key map (kbd "s") #'blame-reveal-show-commit-details)
+  ;;     (define-key map (kbd "f") #'blame-reveal-show-file-history)
+  ;;     (define-key map (kbd "n") #'blame-reveal-show-line-history)
+  ;;     (define-key map (kbd "b") #'blame-reveal-blame-recursively)
+  ;;     (define-key map (kbd "p") #'blame-reveal-blame-back)
+  ;;     (define-key map (kbd "^") #'blame-reveal-blame-back)
+  ;;     (define-key map (kbd "g") #'blame-reveal-blame-at-revision)
+  ;;     (define-key map (kbd "r") #'blame-reveal-reset-to-head)
+  ;;     map)
+
+  ;; Define custom formatter
+  (defun my-minimal-header (commit-hash info color)
+    "Minimal: just hash and message"
+    (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
+      (make-blame-reveal-commit-display
+       :lines (list (format "%s %s (%s): %s" hash _author _date msg))
+       :faces (list `(:foreground ,color :weight bold :height 0.8))
+       :color color)))
+
+  ;; Apply it
+  (setq blame-reveal-header-format-function #'my-minimal-header)
+  )
+
+
+;; https://github.com/bommbo/git-blame-sidebar.git
+(use-package git-blame-sidebar
+  :load-path "~/workspace/git-blame-sidebar"
+  :disabled t
+  :defer 2
+  :custom
+  (git-blame-sidebar-format "%h %an %ad")
+  )
 
 (provide 'init-vcs)
