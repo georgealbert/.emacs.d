@@ -293,7 +293,6 @@ the correct commit which submits the selected text is displayed."
   :config
   (setq blame-reveal-recent-days-limit nil)        ; Smart calculation
   (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
-  ;; (setq blame-reveal-display-layout 'compact)        ; Show commit info
   (setq blame-reveal-display-layout 'none)
 
   (setq blame-reveal-show-uncommitted-fringe nil)
@@ -307,20 +306,6 @@ the correct commit which submits the selected text is displayed."
   ;;              :saturation-min 0.25 :saturation-max 0.60))
 
   (require 'blame-reveal-recursive)
-  ;; (defvar blame-reveal-mode-map
-  ;;   (let ((map (make-sparse-keymap)))
-  ;;     (define-key map (kbd "q") #'blame-reveal-mode)
-  ;;     (define-key map (kbd "c") #'blame-reveal-copy-commit-hash)
-  ;;     (define-key map (kbd "d") #'blame-reveal-show-commit-diff)
-  ;;     (define-key map (kbd "s") #'blame-reveal-show-commit-details)
-  ;;     (define-key map (kbd "f") #'blame-reveal-show-file-history)
-  ;;     (define-key map (kbd "n") #'blame-reveal-show-line-history)
-  ;;     (define-key map (kbd "b") #'blame-reveal-blame-recursively)
-  ;;     (define-key map (kbd "p") #'blame-reveal-blame-back)
-  ;;     (define-key map (kbd "^") #'blame-reveal-blame-back)
-  ;;     (define-key map (kbd "g") #'blame-reveal-blame-at-revision)
-  ;;     (define-key map (kbd "r") #'blame-reveal-reset-to-head)
-  ;;     map)
 
   ;; Define custom formatter
   (defun my-minimal-header (commit-hash info color)
@@ -342,7 +327,6 @@ the correct commit which submits the selected text is displayed."
   :disabled t
   :defer 2
   :custom
-  (git-blame-sidebar-format "%h %an %ad")
-  )
+  (git-blame-sidebar-format "%h %an %ad"))
 
 (provide 'init-vcs)
