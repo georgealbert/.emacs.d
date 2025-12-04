@@ -328,13 +328,4 @@ the correct commit which submits the selected text is displayed."
   (setq blame-reveal-header-format-function #'my-minimal-header)
   )
 
-
-;; https://github.com/bommbo/git-blame-sidebar.git
-(use-package git-blame-sidebar
-  :load-path "~/workspace/git-blame-sidebar"
-  :disabled t
-  :defer 2
-  :custom
-  (git-blame-sidebar-format "%h %an %ad"))
-
 (provide 'init-vcs)
