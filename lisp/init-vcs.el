@@ -284,7 +284,6 @@ the correct commit which submits the selected text is displayed."
 ;; https://github.com/LuciusChen/blame-reveal
 (use-package blame-reveal
   :load-path "~/workspace/blame-reveal"
-  ;; :disabled t
   :defer 2
   ;; :bind (:map blame-reveal-mode-map
   ;;             ("f" . blame-reveal-show-file-history)
@@ -296,7 +295,8 @@ the correct commit which submits the selected text is displayed."
   (setq blame-reveal-display-layout 'none)
 
   (setq blame-reveal-margin-time-format "%y/%m/%d")
-  (setq blame-reveal--margin-width 24)
+  ;; (setq blame-reveal--margin-width 24)
+  (setq blame-reveal--margin-width nil)
 
   (setq blame-reveal-show-uncommitted-fringe t)
 
@@ -310,8 +310,12 @@ the correct commit which submits the selected text is displayed."
 
   (require 'blame-reveal-recursive)
 
-  ;; Define custom formatter
-  (defun my-minimal-header (commit-hash info color)
+  ;; v3.0新增
+  (setq blame-reveal-header-style 'inline)
+
+  ;; 可以用下面的icon点缀，试试哪个更好看
+  ;; ▸                        
+  (defun my/blame-reveal-block-header (commit-hash info color)
     "Minimal: just hash and message"
     (if (string-match-p "^0+$" commit-hash)
         (make-blame-reveal-commit-display
@@ -324,8 +328,31 @@ the correct commit which submits the selected text is displayed."
          :faces (list `(:foreground ,color :weight bold :height 0.8))
          :color color))))
 
+  (defun my/blame-reveal-inline-header (commit-hash commit-info color)
+    "Default inline format function."
+    (if (string-match-p "^0+$" commit-hash)
+        (make-blame-reveal-commit-display
+         :lines (list (format " [%s]" blame-reveal-uncommitted-label))
+         ;; 这些style也可以试试
+         ;; :underline (:style wave), :weight bold, :underline t, :box t
+         ;; :faces (list `(:foreground ,color :underline (:style wave) :height 0.95))
+         :faces (list `(:foreground ,color :height 0.9))
+         :color color)
+      (pcase-let ((`(,hash ,author ,date ,msg ,_timestamp ,_description) commit-info))
+        (make-blame-reveal-commit-display
+         :lines (list (format " [%s] %s (%s): %s"
+                              (substring hash 0 5)
+                              (blame-reveal--abbreviate-author author)
+                              (format-time-string "%y-%m-%d %H:%M" _timestamp)
+                              ;; (substring msg 0 (min 40 (length msg)))
+                              msg
+                              ))
+         :faces (list `(:foreground ,color :height 0.9))
+         :color color))))
+
   ;; Apply it
-  (setq blame-reveal-header-format-function #'my-minimal-header)
+  (setq blame-reveal-header-format-function #'my/blame-reveal-block-header)
+  (setq blame-reveal-inline-format-function #'my/blame-reveal-inline-header)
   )
 
 (provide 'init-vcs)
