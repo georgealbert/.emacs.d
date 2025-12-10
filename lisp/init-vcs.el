@@ -326,15 +326,15 @@ the correct commit which submits the selected text is displayed."
          :color color)
       (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
         (make-blame-reveal-commit-display
-         :lines (list (format "▸ %s %s (%s): %s" hash _author _date msg))
-         :faces (list `(:foreground ,color :weight bold :height 0.8))
+         :lines (list (format "▸ %s %s (%s): %s " hash _author (format-time-string "%y/%m/%d %H:%M" _ts) msg))
+         :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,color :weight bold :height 0.8))
          :color color))))
 
   (defun my/blame-reveal-inline-header (commit-hash commit-info color)
     "Default inline format function."
     (if (string-match-p "^0+$" commit-hash)
         (make-blame-reveal-commit-display
-         :lines (list (format " [%s]" blame-reveal-uncommitted-label))
+         :lines (list (format "      [%s]" blame-reveal-uncommitted-label))
          ;; 这些style也可以试试
          ;; :underline (:style wave), :weight bold, :underline t, :box t
          ;; :faces (list `(:foreground ,color :underline (:style wave) :height 0.95))
@@ -342,14 +342,17 @@ the correct commit which submits the selected text is displayed."
          :color color)
       (pcase-let ((`(,hash ,author ,date ,msg ,_timestamp ,_description) commit-info))
         (make-blame-reveal-commit-display
-         :lines (list (format " [%s] %s (%s): %s"
-                              (substring hash 0 5)
+         :lines (list (format " %s %s (%s): %s "
+                              ;; (substring hash 0 5)
+                              (propertize (substring hash 0 4) 'face '(:inherit font-lock-comment-face :foreground "red"))
                               (blame-reveal--abbreviate-author author)
-                              (format-time-string "%y-%m-%d %H:%M" _timestamp)
-                              ;; (substring msg 0 (min 40 (length msg)))
-                              msg
+                              (format-time-string "%y/%m/%d %H:%M" _timestamp)
+                              (substring msg 0 (min 60 (length msg)))
+                              ;; msg
                               ))
-         :faces (list `(:foreground ,color :height 0.9))
+         :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,color :underline t :height 0.8))
+         ;; :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :inherit font-lock-comment-face :underline t :height 0.8))
+         ;; :faces (list `(:foreground ,color :underline t :height 0.9))
          :color color))))
 
   ;; Apply it
