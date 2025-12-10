@@ -285,36 +285,38 @@ the correct commit which submits the selected text is displayed."
 (use-package blame-reveal
   :load-path "~/workspace/blame-reveal"
   :defer 2
-  ;; :bind (:map blame-reveal-mode-map
-  ;;             ("f" . blame-reveal-show-file-history)
-  ;;             ;; ("n" . blame-reveal-show-line-history)
-  ;;             )
+  :bind (:map blame-reveal-mode-map
+              ("h" . nil)
+              ("l" . nil)
+              ("f" . blame-reveal-show-file-history)
+              ("n" . blame-reveal-show-line-history))
   :config
-  (setq blame-reveal-recent-days-limit nil)        ; Smart calculation
+  (setq blame-reveal-recent-days-limit 'auto)        ; Smart calculation
   (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
   (setq blame-reveal-display-layout 'none)
 
-  (setq blame-reveal-margin-time-format "%y/%m/%d")
+  ;; (setq blame-reveal-margin-time-format "%y/%m/%d")
   ;; (setq blame-reveal--margin-width 24)
   (setq blame-reveal--margin-width nil)
 
   (setq blame-reveal-show-uncommitted-fringe t)
 
   (setq blame-reveal-color-scheme
-        '(:hue 210                          ; 0=red, 120=green, 280=purple
-               :dark-newest 0.70                 ; Dark: higher = brighter
+        '(:hue 280                          ; 0=red, 120=green, 280=purple
+               :dark-newest 0.80                 ; Dark: higher = brighter
                :dark-oldest 0.30
-               :light-newest 0.35                ; Light: lower = darker
-               :light-oldest 0.85
-               :saturation-min 0.35 :saturation-max 0.70))
+               :light-newest 0.30                ; Light: lower = darker
+               :light-oldest 0.80
+               :saturation-min 0.50 :saturation-max 0.80))
 
   (require 'blame-reveal-recursive)
 
   ;; v3.0新增
+  ;; (setq blame-reveal-header-style 'block)
   (setq blame-reveal-header-style 'inline)
 
   ;; 可以用下面的icon点缀，试试哪个更好看
-  ;; ▸                        
+  ;; ▸                            
   (defun my/blame-reveal-block-header (commit-hash info color)
     "Minimal: just hash and message"
     (if (string-match-p "^0+$" commit-hash)
