@@ -274,9 +274,9 @@ the correct commit which submits the selected text is displayed."
   (blamer-show-avatar-p nil)
   :custom-face
   (blamer-face ((t :foreground "#7a88cf"
-                    ;; :background nil
-                    :height 140
-                    :italic t)))
+                   ;; :background nil
+                   :height 140
+                   :italic t)))
   :config
   (global-blamer-mode 1))
 
@@ -295,8 +295,6 @@ the correct commit which submits the selected text is displayed."
   (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
   (setq blame-reveal-display-layout 'none)
 
-  ;; (setq blame-reveal-margin-time-format "%y/%m/%d")
-  ;; (setq blame-reveal--margin-width 24)
   (setq blame-reveal--margin-width nil)
 
   (setq blame-reveal-show-uncommitted-fringe t)
@@ -312,48 +310,76 @@ the correct commit which submits the selected text is displayed."
   (require 'blame-reveal-recursive)
 
   ;; v3.0新增
+  ;; block: 直观，能一眼找到commit message
+  ;; inline: 看代码时，不会受到行跳来跳去的影响
   ;; (setq blame-reveal-header-style 'block)
   (setq blame-reveal-header-style 'inline)
 
   ;; 可以用下面的icon点缀，试试哪个更好看
-  ;; ▸                            
+  ;; ▸                             
   (defun my/blame-reveal-block-header (commit-hash info color)
     "Minimal: just hash and message"
-    (if (string-match-p "^0+$" commit-hash)
-        (make-blame-reveal-commit-display
-         :lines (list "▸ *Not Committed Yet*")
-         :faces (list `(:foreground ,color :weight bold :height 0.8))
-         :color color)
-      (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
-        (make-blame-reveal-commit-display
-         :lines (list (format "▸ %s %s (%s): %s " hash _author (format-time-string "%y/%m/%d %H:%M" _ts) msg))
-         :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,color :weight bold :height 0.8))
-         :color color))))
+    (let* ((fg-main (blame-reveal--get-contrasting-foreground color)))
+      (if (string-match-p "^0+$" commit-hash)
+          (make-blame-reveal-commit-display
+           :lines (list "▸ *Not Committed Yet*")
+           :faces (list `(:foreground ,color :weight bold :height 0.8))
+           :color color)
+        (pcase-let ((`(,hash ,_author ,_date ,msg ,_ts ,_desc) info))
+          (make-blame-reveal-commit-display
+           :lines (list (format "▸ %s %s (%s): %s " hash _author (format-time-string "%y/%m/%d %H:%M" _ts) msg))
+           :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,fg-main :background ,color :height 0.8))
+           :color color)))))
+
+  ;; (defun my/blame-reveal-inline-header (commit-hash commit-info color)
+  ;;   "Default inline format function."
+  ;;   (if (string-match-p "^0+$" commit-hash)
+  ;;       (make-blame-reveal-commit-display
+  ;;        :lines (list (format "      [%s]" blame-reveal-uncommitted-label))
+  ;;        ;; 这些style也可以试试
+  ;;        ;; :underline (:style wave), :weight bold, :underline t, :box t
+  ;;        ;; :faces (list `(:foreground ,color :underline (:style wave) :height 0.95))
+  ;;        :faces (list `(:foreground ,color :height 0.9))
+  ;;        :color color)
+  ;;     (pcase-let ((`(,hash ,author ,date ,msg ,_timestamp ,_description) commit-info))
+  ;;       (make-blame-reveal-commit-display
+  ;;        :lines (list (format " %s %s (%s): %s "
+  ;;                             (substring hash 0 5)
+  ;;                             ;; (propertize (substring hash 0 4) 'face '(:inherit font-lock-comment-face :foreground "red"))
+  ;;                             (blame-reveal--abbreviate-author author)
+  ;;                             (format-time-string "%y/%m/%d %H:%M" _timestamp)
+  ;;                             (substring msg 0 (min 60 (length msg)))
+  ;;                             ))
+  ;;        :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,color :underline t :height 0.9))
+  ;;        ;; :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :inherit font-lock-comment-face :underline t :height 0.8))
+  ;;        :color color))))
 
   (defun my/blame-reveal-inline-header (commit-hash commit-info color)
-    "Default inline format function."
-    (if (string-match-p "^0+$" commit-hash)
-        (make-blame-reveal-commit-display
-         :lines (list (format "      [%s]" blame-reveal-uncommitted-label))
-         ;; 这些style也可以试试
-         ;; :underline (:style wave), :weight bold, :underline t, :box t
-         ;; :faces (list `(:foreground ,color :underline (:style wave) :height 0.95))
-         :faces (list `(:foreground ,color :height 0.9))
-         :color color)
-      (pcase-let ((`(,hash ,author ,date ,msg ,_timestamp ,_description) commit-info))
-        (make-blame-reveal-commit-display
-         :lines (list (format " %s %s (%s): %s "
-                              ;; (substring hash 0 5)
-                              (propertize (substring hash 0 4) 'face '(:inherit font-lock-comment-face :foreground "red"))
-                              (blame-reveal--abbreviate-author author)
-                              (format-time-string "%y/%m/%d %H:%M" _timestamp)
-                              (substring msg 0 (min 60 (length msg)))
-                              ;; msg
-                              ))
-         :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,color :underline t :height 0.8))
-         ;; :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :inherit font-lock-comment-face :underline t :height 0.8))
-         ;; :faces (list `(:foreground ,color :underline t :height 0.9))
-         :color color))))
+    "Default inline format function for blame-reveal v5.0.
+REFACTORED: Uses blame-reveal-format-context to eliminate duplicate code."
+    (let* ((ctx (blame-reveal--prepare-format-context commit-hash commit-info color))
+           (fg-main (blame-reveal--get-contrasting-foreground color)))
+      (if (blame-reveal-format-context-is-uncommitted ctx)
+          ;; Uncommitted changes
+          (make-blame-reveal-commit-display
+           :lines (list (format " [%s]" blame-reveal-uncommitted-label))
+           :faces (list `(:foreground ,fg-main :background ,color :height 0.9))
+           :color color)
+        ;; Normal commit
+        (let* ((base-text (format " %s %s (%s): %s "
+                                  ;; (blame-reveal-format-context-icon ctx)
+                                  (blame-reveal-format-context-short-hash ctx)
+                                  (blame-reveal-format-context-abbrev-author ctx)
+                                  (format-time-string "%y/%m/%d %H:%M" (blame-reveal-format-context-timestamp ctx))
+                                  (blame-reveal-format-context-summary ctx)))
+               (move-meta (blame-reveal-format-context-move-meta ctx))
+               (move-info (when move-meta
+                            (blame-reveal--format-move-copy-for-inline move-meta)))
+               (full-text (concat base-text (or move-info ""))))
+          (make-blame-reveal-commit-display
+           :lines (list full-text)
+           :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,fg-main :background ,color :height 0.9))
+           :color color)))))
 
   ;; Apply it
   (setq blame-reveal-header-format-function #'my/blame-reveal-block-header)
