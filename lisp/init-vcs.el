@@ -367,7 +367,6 @@ REFACTORED: Uses blame-reveal-format-context to eliminate duplicate code."
            :color color)
         ;; Normal commit
         (let* ((base-text (format " %s %s (%s): %s "
-                                  ;; (blame-reveal-format-context-icon ctx)
                                   (blame-reveal-format-context-short-hash ctx)
                                   (blame-reveal-format-context-abbrev-author ctx)
                                   (format-time-string "%y/%m/%d %H:%M" (blame-reveal-format-context-timestamp ctx))
