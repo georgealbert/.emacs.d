@@ -261,7 +261,58 @@ If N is not nil, only list directories in current project."
   :config
   ;; Integrate with `helpful'
   (setq counsel-describe-function-function #'helpful-callable
-        counsel-describe-variable-function #'helpful-variable))
+        counsel-describe-variable-function #'helpful-variable)
+
+  ;; 为标记跳转设置特殊的正则构建器
+  (defun my/ivy-re-builder-for-marks (str)
+    "为标记跳转特别定制的正则表达式构建器。"
+    (cond
+     ;; 空输入：显示所有
+     ((string-empty-p str) "")
+     ;; 单个字符：匹配以该字符开头的项
+     ((= (length str) 1) (concat "^" (regexp-quote str)))
+     ;; 多个字符：使用模糊匹配
+     (t (ivy--regex-fuzzy str))))
+
+  (defun my/counsel-evil-goto-mark ()
+    "使用 counsel 可视化跳转到 evil 标记。"
+    (interactive)
+    (let (marks)
+      ;; 收集本地标记 (a-z) 和 全局标记 (A-Z)
+      (dolist (char-range '((?a . ?z) (?A . ?Z)))
+        (cl-loop for char from (car char-range) to (cdr char-range)
+                 for pos = (evil-get-marker char)
+                 when pos
+                 do (save-excursion
+                      (goto-char pos)
+                      (push (cons (format "%c: %s:%d %s"
+                                          char
+                                          (buffer-name)
+                                          (line-number-at-pos)
+                                          (truncate-string-to-width
+                                           (string-trim
+                                            (buffer-substring
+                                             (line-beginning-position)
+                                             (line-end-position)))
+                                           60))
+                                  (list (current-buffer) pos))
+                            marks))))
+      
+      (if marks
+          (ivy-read "标记 (输入字符过滤): " (nreverse marks)
+                    :action (lambda (mark)
+                              (let ((buffer (nth 0 (cdr mark)))
+                                    (pos (nth 1 (cdr mark))))
+                                (switch-to-buffer buffer)
+                                (goto-char pos)))
+                    :caller 'my/counsel-evil-goto-mark
+                    ;; :require-match t
+                    ;; ;; 关键设置：使用自定义正则构建器
+                    :re-builder #'my/ivy-re-builder-for-marks
+                    ;; :dynamic-collection t
+                    ;; :sort nil
+                    )
+        (user-error "没有标记")))))
 
 ;; https://oremacs.com/2019/04/07/swiper-isearch/
 ;; https://pengpengxp.github.io/emacs/emacs_isearch_summary.html
@@ -280,60 +331,5 @@ If N is not nil, only list directories in current project."
           (counsel-M-x     . ivy-posframe-display-at-window-bottom-left)
           (t               . ivy-posframe-display-at-frame-center)))
   (ivy-posframe-mode 1))
-
-;; Auto completion
-;; https://github.com/minad/corfu
-;; Supports the Orderless completion style. The filter string can contain arbitrary characters, after inserting a space via M-SPC (configurable via corfu-quit-at-boundary and corfu-separator).
-;; 按 M-SPC分割，但是需要consult。ivy不支持，唉
-(use-package corfu
-  :disabled t
-  ;; :custom
-  ;; (corfu-auto t)
-  ;; (corfu-auto-prefix 2)
-  ;; (corfu-preview-current nil)
-  ;; (corfu-auto-delay 0.2)
-  ;; (corfu-popupinfo-delay '(0.4 . 0.2))
-  ;; TODO: 为什么设置了global-corfu-modes不在lsp-bridge-mode时激活，整个corfu就不能自动补全了呢？
-  ;; (global-corfu-modes '((not lsp-bridge-mode)))
-  :config
-  (setq corfu-auto t
-        corfu-auto-prefix 2
-        corfu-auto-delay 0.2
-        corfu-popupinfo-delay '(0.4 . 0.2)
-        ;; global-corfu-modes '((not
-        ;;                       lsp-bridge-mode
-        ;;                       circe-mode
-        ;;                       help-mode
-        ;;                       gud-mode)
-        ;;                      t)
-        ;; corfu-preselect 'prompt
-        ;; corfu-count 16
-        ;; corfu-max-width 120
-        ;; corfu-preview-current 'insert
-        ;; tab-always-indent 'complete
-        )
-  ;; :init
-  ;; (setopt global-corfu-modes '((not lsp-bridge-mode)))
-  ;; :custom-face
-  ;; (corfu-border ((t (:inherit region :background unspecified))))
-  :bind ("M-/" . completion-at-point) ;; TODO: 可能是给terminal中用minibuffer补全时使用的，在GUI中，总是吞掉之前输入的目录
-  :hook ((after-init . global-corfu-mode)
-         (global-corfu-mode . corfu-popupinfo-mode)
-         ))
-
-;; (use-package nerd-icons-corfu
-;;   :after corfu
-;;   :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
-;; Add extensions
-(use-package cape
-  ;; :bind ("M-/" . completion-at-point)
-  :disabled t
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev))
 
 (provide 'init-ivy)

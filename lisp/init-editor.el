@@ -80,6 +80,9 @@
   (evil-define-key 'insert 'acm-mode (kbd "C-n") 'acm-select-next)
   (evil-define-key 'insert 'acm-mode (kbd "C-p") 'acm-select-prev)
 
+  ;; 绑定到 ' 键
+  (evil-define-key 'normal 'global "'" 'my/counsel-evil-goto-mark)
+
   ;; github.com/redguardtoo/.emacs.d/lisp/init-evil.el
   ;; specify major mode uses Evil (vim) NORMAL state or EMACS original state.
   ;; You may delete this setup to use Evil NORMAL state always.
