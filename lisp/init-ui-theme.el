@@ -29,7 +29,9 @@
   ;; (setq doom-deeper-blue-brighter-modeline nil)
 
   (load-theme 'doom-deeper-blue t)
+  ;; (load-theme 'doom-bluloco-dark t)
   ;; (load-theme 'doom-acario-light t)
+  ;; (load-theme 'leuven t)
  
   ;; org-mode的序号带颜色显示
   (doom-themes-org-config)
@@ -65,6 +67,9 @@
   (setq doom-modeline-persp-name nil)
 
   (setq doom-modeline-buffer-file-name-style 'file-name)
+
+  ;; 2026.01.24更新后新增的
+  (setq doom-modeline-unicode-number nil)
 
   ;; 调用verify-visited-file-modtime过于频繁，cpu开销大，不显示buffer file state
   ;; 在文件发生变化时回多显示一个icon，如文件变化了多一个黄色icon提示文件有变化
