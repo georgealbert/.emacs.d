@@ -292,10 +292,10 @@ the correct commit which submits the selected text is displayed."
               ("n" . blame-reveal-show-line-history))
   :config
   (setq blame-reveal-recent-days-limit 'auto)        ; Smart calculation
-  (setq blame-reveal-gradient-quality 'strict)         ; Balanced quality
-  (setq blame-reveal-display-layout 'none)
+  (setq blame-reveal-gradient-quality 'auto)         ; Balanced quality 'strict
+  ;; (setq blame-reveal-display-layout 'none)
 
-  (setq blame-reveal--margin-width nil)
+  ;; (setq blame-reveal--margin-width nil)
 
   (setq blame-reveal-show-uncommitted-fringe t)
 
@@ -316,7 +316,7 @@ the correct commit which submits the selected text is displayed."
   (setq blame-reveal-header-style 'inline)
 
   ;; 可以用下面的icon点缀，试试哪个更好看
-  ;; ▸                             
+  ;; ▸                              ◉
   (defun my/blame-reveal-block-header (commit-hash info color)
     "Minimal: just hash and message"
     (let* ((fg-main (blame-reveal--get-contrasting-foreground color)))
@@ -380,7 +380,6 @@ REFACTORED: Uses blame-reveal-format-context to eliminate duplicate code."
            :faces (list `(:family "FantasqueSansM Nerd Font Mono + LXGW WenKai Mono Lite" :foreground ,fg-main :background ,color :height 0.9))
            :color color)))))
 
-  ;; Apply it
   (setq blame-reveal-header-format-function #'my/blame-reveal-block-header)
   (setq blame-reveal-inline-format-function #'my/blame-reveal-inline-header)
   )
