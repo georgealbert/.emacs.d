@@ -136,7 +136,7 @@ Do nothing if `lsp-ui-mode' is active and `lsp-ui-sideline-enable' is non-nil."
 ;; 编译前先在emacs的目录中执行：
 ;; patch -p1 < ~/workspace/build-emacs-for-macos/ns-alpha-background.patch.emacs31
 ;; 打上IME的patch，支持输入法切换，patch里面编译时有几个Warning，懒得改了，反正能用
-(if (and (eq system-type 'darwin) (fboundp 'mac-input-source))
+(if (and (display-graphic-p) (eq system-type 'darwin) (fboundp 'mac-input-source))
     (progn
       (defvar last-ime (mac-input-source))
       (defun emacs-ime-disable ()

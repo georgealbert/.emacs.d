@@ -79,8 +79,9 @@
 (require 'init-vcs)
 
 ;; maximize window
-(if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
-    (toggle-frame-maximized))
+(if (display-graphic-p)
+    (if (or (eq system-type 'windows-nt) (eq system-type 'darwin) (eq window-system 'x))
+        (toggle-frame-maximized)))
 
 (setq custom-file (expand-file-name "~/.emacs.d/custom.el"))
 (load custom-file 'no-error 'no-message)
