@@ -117,11 +117,9 @@ determine the exact padding."
       (if (integerp doom-deeper-blue-padded-modeline) doom-deeper-blue-padded-modeline 4)))
 
    (modeline-fg     nil)
-   ;; (modeline-fg-alt base5)
    ;; 参考doom-vibrant的modeline inactive时的前景色
    (modeline-fg-alt "#485060")
    ;; modeline inactive的时候用fg的gray80，不够醒目，继续用base5的颜色
-   ;; (modeline-fg-alt fg)
 
    (modeline-bg
     (if -modeline-bright
@@ -235,7 +233,6 @@ determine the exact padding."
    (helm-selection :background "DarkGreen" :distant-foreground "gold" :extend t) ;; :background "darkgreen" 好像和 "green4" 差不多
    (helm-match :foreground "gold" :distant-foreground base8)
    (helm-source-header :background base2 :foreground base5 :extend t)
-   ;; (helm-source-header :background "#223377" :foreground base5 :extend t)
 
    (cursor :background "green")
 
@@ -309,10 +306,8 @@ determine the exact padding."
    (ediff-fine-diff-A :background "red" :foreground "white" :weight 'bold)
 
    ;; vdiff使用diff-mode的faces
-   ;; (diff-changed :background "coral2" :foreground "white")
    (diff-changed :background "magenta4" :foreground "white")
    (diff-refine-changed :background "red" :foreground "whtie")
-   ;; (diff-refine-changed :inherit 'diff-changed :inverse-video t)
 
    ;; 修改目录显示，改为和counsel-buffer-or-recentf一样的颜色(gray80)，原来用的是builtin(magenta)，和高亮时的颜色一样，区分不了
    (dired-directory :foreground "#cccccc") ;; gray80(#cccccc), #ff6654, #bfbdb6
