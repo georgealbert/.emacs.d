@@ -16,6 +16,9 @@
 (global-set-key [(f5)] #'(lambda () (interactive) 
                           (insert (format-time-string "[%Y-%m-%d %a %T]"))))
 
+;; 在kitty中映射M-x，即Alt-x
+(define-key input-decode-map (kbd "ESC [ 120 ; 9 u") (kbd "M-x"))
+
 (use-package evil
   :ensure t
   :defer 1
