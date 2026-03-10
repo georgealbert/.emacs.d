@@ -288,6 +288,7 @@ the correct commit which submits the selected text is displayed."
   :bind (:map blame-reveal-mode-map
               ("h" . nil)
               ("l" . nil)
+              ("q" . blame-reveal-mode)
               ("f" . blame-reveal-show-file-history)
               ("n" . blame-reveal-show-line-history))
   :config
