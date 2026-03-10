@@ -51,7 +51,7 @@
 
   ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
   (setq doom-modeline-icon t)
-  
+
   (setq doom-modeline-minor-modes nil)
   
   (setq doom-modeline-lsp nil)
@@ -62,6 +62,14 @@
   
   ;; 不显示evil state icon
   (setq doom-modeline-modal-icon nil)
+
+  ;; 2026.03.09 新增
+  ;; 同时修改 doom-modeline-core.el 的 doom-modeline-icon 函数
+  ;; 把
+  ;; (propertize text 'face `(:inherit ,face :inverse-video t)))
+  ;; 改回：
+  ;; (propertize text 'face face))
+  (setq doom-modeline-modal-use-evil-tag t)
 
   ;; [2020-01-05 周日 21:56:42] 从find-file-hook看见有hook，去掉
   (setq doom-modeline-persp-name nil)
